@@ -4,12 +4,15 @@ import { FaSearch } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import Logo from '../assets/th-removebg-preview.png'
+import UploadAdmin from "../admin/UloadAdmin";
+import { useState } from "react";
 const Header = () => {
+       const [uploadAdmin,setuploadAdmin]= useState(false)
   return (
     <header className='h-19 shadow-md bg-white'>
     <div className='h-full container mx-auto flex items-center px-9 justify-between'>
         <div className=''>
-         <Link to={'/'}><img  width={150} height={150} src={Logo}/></Link>
+         <Link to={'upload'}><img  width={150} height={150} src={Logo}/></Link>
         </div>
         <div className='hidden lg:flex items-center w-full justify-between max-w-sm border rounded-full focus-within:shadow'>
             <input type='text' placeholder='search product here...' className='w-full outline-none'/>
@@ -31,7 +34,9 @@ const Header = () => {
         </div>
        
     </div>
-
+    {uploadAdmin &&(
+         <UploadAdmin onClose={()=>setuploadAdmin(false)}/>
+        )}
     </header>
   )
 }

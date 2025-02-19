@@ -9,7 +9,7 @@ const QuanLySize = () => {
     <>
      <div>
       <div className='bg-white py-2 px-4 flex justify-between items-center'>
-        <h2 className='font-bold text-lg'>Site</h2>
+        <h2 className='font-bold text-lg'>Size</h2>
         <button className='border-2 border-red-600 px-3 py-1 text-red-400 rounded-full hover:bg-red-300' onClick={()=>setsetopenUploadCategoty(true)}>Thêm site</button>
       </div>
     </div>
@@ -17,7 +17,7 @@ const QuanLySize = () => {
       <table className='w-full userTable'>
         <thead>
           <tr>
-            <th>Tên site</th>
+            <th>Tên size</th>
             <th>Trạng thái</th>
             <th>Ghi chú</th>
             <th>Hành động</th>

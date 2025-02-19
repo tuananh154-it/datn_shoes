@@ -6,7 +6,7 @@ const UploadSize = ({onClose}:any) => {
           <div className="bg-white p-4 rounded w-full max-w-[40%] max-h[200px] overflow-y-scroll">
             <div className="flex">
               <div>
-                <h1 className="font-bold text-2xl">Thêm site</h1>
+                <h1 className="font-bold text-2xl">Thêm size</h1>
               </div>
               <button className="block ml-auto text-2xl" onClick={onClose}>
                 <MdClose />

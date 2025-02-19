@@ -13,6 +13,8 @@ import QuanLySize from './admin/QuanLySize';
 import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import ForgotPassword from './pages/ForgotPassword';
+import QuanLyBanner from './admin/QuanLyBanner';
+import UploadAdmin from './admin/UloadAdmin';
 
 function App() {
   const router = [
@@ -25,7 +27,9 @@ function App() {
         {path:'/admin/all-products',element:<AllProducts/>},
         {path:'/admin/all-categotys', element:<QuanLyDanhMuc/>},
         {path:'/admin/all-order',element:<QuanLyDonhang/>},
+        {path:'/admin/update-admin',element:<UploadAdmin/>},
         {path:'/admin/voucher',element:<MaGiamGia/>},
+        {path:'/admin/banner',element:<QuanLyBanner/>},
         {path:'/admin/brand',element:<QuanLyThuongHieu/>},
         {path:'/admin/size',element:<QuanLySize/>},
        ]}
