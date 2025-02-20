@@ -15,6 +15,7 @@ import SignUp from './pages/SignUp';
 import ForgotPassword from './pages/ForgotPassword';
 import QuanLyBanner from './admin/QuanLyBanner';
 import UploadAdmin from './admin/UloadAdmin';
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   const router = [
@@ -39,6 +40,7 @@ const routerLig = useRoutes(router);
   return (
    <>
      <div>{routerLig}</div>
+     <Toaster/>
    </>
   )
 }

@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import UploadProduct from './UploadProduct'
-
+import { MdModeEditOutline } from "react-icons/md";
+import UpdateProduct from './UpdateProduct';
 const AllProducts = () => {
   const [openUploadProduct,setOpenUploadProduct]= useState(false)
+  const [updateProduct,setupdateProduct]= useState(false)
+
   return (
     <>
     <div>
@@ -23,12 +26,28 @@ const AllProducts = () => {
             <th>Hành động</th>
           </tr>
         </thead>
+        <tbody>
+          <tr>
+            <td>Sản phẩm 1</td>
+            <td><img src=""/></td>
+            <td>100</td>
+            <td>Sản phẩm 1</td>
+            <td>Sử dụng</td>
+            <td><button className='bg-green-300 p-2 rounded-full hover:bg-green-500 hover:text-white' onClick={()=> setupdateProduct(true)}><MdModeEditOutline/></button></td>
+          </tr>
+
+        </tbody>
       </table>
     </div>
     <div>
       {
         openUploadProduct && (
           <UploadProduct onClose={()=>setOpenUploadProduct(false)}/>
+        )
+      }
+       {
+        updateProduct && (
+          <UpdateProduct onClose={()=>setupdateProduct(false)}/>
         )
       }
     </div>

@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import UploadCategory from './UploadCategory'
-
+import { MdModeEditOutline } from "react-icons/md";
+import UpdateDanhMuc from './UpdateDanhMuc';
 const QuanLyDanhMuc = () => {
     const [openUploadCategoty,setsetopenUploadCategoty]= useState(false)
-  
+    const [updateDanhMuc,setupdateDanhMuc]= useState(false)
+    
   return (
     <>
      <div>
@@ -22,11 +24,25 @@ const QuanLyDanhMuc = () => {
             <th>Hành động</th>
           </tr>
         </thead>
+        <tbody>
+                  <tr>
+                    <td>Danh mục 1</td>
+                    <td>Sử dụng</td>
+                    <td>Danh mục</td>
+                    <td><button className='bg-green-300 p-2 rounded-full hover:bg-green-500 hover:text-white' onClick={()=> setupdateDanhMuc(true)}><MdModeEditOutline/></button></td>
+                  </tr>
+        
+                </tbody>
       </table>
     </div>
     {
         openUploadCategoty && (
           <UploadCategory onClose={()=>setsetopenUploadCategoty(false)}/>
+        )
+      }
+       {
+        updateDanhMuc && (
+          <UpdateDanhMuc onClose={()=>setupdateDanhMuc(false)}/>
         )
       }
     </>

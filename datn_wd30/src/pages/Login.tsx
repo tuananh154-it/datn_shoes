@@ -5,13 +5,23 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import iconUser from '../assets/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTAxL3JtNjA5LXNvbGlkaWNvbi13LTAwMi1wLnBuZw.jpg'
 import { Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { signup } from '../validate/validateForm';
+import { signin } from '../validate/validateForm';
+import { LoginUser } from '../types/User';
 const Login = () => {
     const [showPassword,setshowPassword]= useState(false);
-    const {register, handleSubmit,formState:{errors}}= useForm({resolver:zodResolver(signup)})
-    const onSubmit = (data:any)=>{
+    const {register, handleSubmit,formState:{errors}}= useForm<LoginUser>({resolver:zodResolver(signin)})
+   
+    const onSubmit = (data:LoginUser) =>{
         console.log(data)
-    }
+        // loginForm(data).then(({data})=>{
+        //  toast.success("Đã đăng nhập thành công")
+        // //  console.log(localStorage.setItem("user", JSON.stringify(data.token)));
+        //  localStorage.setItem("user", JSON.stringify(data.data))
+        //  localStorage.setItem("token",data.token)
+        //  nav("/admin")
+        // })
+        // .catch((e)=>{toast.error("Error:"+e.message)})
+      }
   return (
    <>
    <section id='login'>
@@ -49,7 +59,7 @@ const Login = () => {
 
                     </div>
                     <Link className='block w-fit hover:underline hover:text-red-300 ml-auto' to={'/forgot-password'}>Quên mật khẩu?</Link>
-                    <button className='bg-red-600 px-5 py-2 w-full max-w-[150px] rounded-full text-white hover:scale-105 mx-auto block mt-6'>Đăng nhập</button>
+                    <button type='submit' className='bg-red-600 px-5 py-2 w-full max-w-[150px] rounded-full text-white hover:scale-105 mx-auto block mt-6'>Đăng nhập</button>
                   </form>
                   <p className='my-4'>Không có tài khoản ? <Link className='text-red-600 hover:underline hover:text-red-300' to={'/sign-up'}>Tạo tài khoản</Link></p>
               </div>
