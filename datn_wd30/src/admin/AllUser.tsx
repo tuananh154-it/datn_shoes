@@ -1,10 +1,18 @@
 import  { useState } from 'react'
 import { MdModeEditOutline } from "react-icons/md";
 import EditUser from './EditUser';
+import UploadAdmin from './UploadAdmin';
 const AllUser = () => {
   const [openUpdateUser,setopenUpdateUser]= useState(false);
+  const [openUploadAdmin,setopenUploadAdmin]= useState(false);
   return (
    <>
+   <div>
+      <div className='bg-white py-2 px-4 flex justify-between items-center'>
+        <h2 className='font-bold text-lg'>Admin User</h2>
+        <button className='border-2 border-red-600 px-3 py-1 text-red-400 rounded-full hover:bg-red-300 hover:text-white' onClick={()=>setopenUploadAdmin(true)}>Thêm admin</button>
+      </div>
+    </div>
   <div className='bg-white pb-4'>
   <table className='w-full userTable'>
     <thead>
@@ -48,6 +56,11 @@ const AllUser = () => {
   {
     openUpdateUser && (
       <EditUser onClose={()=>setopenUpdateUser(false)}/>
+    )
+  }
+  {
+    openUploadAdmin && (
+      <UploadAdmin onClose={()=>setopenUploadAdmin(false)}/>
     )
   }
    </>

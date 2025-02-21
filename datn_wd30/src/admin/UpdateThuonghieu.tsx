@@ -1,12 +1,12 @@
 import { MdClose } from "react-icons/md";
 
-const UploadCategory = ({onClose}:any) => {
+const UpdateThuongHieu = ({onClose}:any) => {
   return (
       <div className="fixed bg-slate-200 top-0 right-0 bottom-0 left-0 bg-opacity-35 flex justify-center items-center overflow-hidden">
           <div className="bg-white p-4 rounded w-full max-w-[40%] max-h[200px] overflow-y-scroll">
             <div className="flex">
               <div>
-                <h1 className="font-bold text-2xl">Thêm danh mục</h1>
+                <h1 className="font-bold text-2xl">Update thương hiệu</h1>
               </div>
               <button className="block ml-auto text-2xl" onClick={onClose}>
                 <MdClose />
@@ -16,9 +16,9 @@ const UploadCategory = ({onClose}:any) => {
             <div className="p-4 flex w-full h-ful max-h-[70%] ">
               <main className="w-full">
                 <form className="grid p-4 gap-2">
-                  <label>Tên danh mục</label>
+                  <label>Tên thương hiệu</label>
                   <input
-                    placeholder="Tên danh mục..."
+                    placeholder="Tên thương hiệu..."
                     className="p-2 bg-slate-100 border rounded focus:outline-none focus:border-4 focus:border-blue-300 bordermota"
                   />
 
@@ -37,7 +37,7 @@ const UploadCategory = ({onClose}:any) => {
               </div>
             </div>
             <button className="border-2 mt-7 bg-blue-500 px-3 py-2 block ml-auto text-white rounded-full hover:bg-blue-400">
-              Thêm mới
+              Update
             </button>
                 </form>
               </main>
@@ -49,4 +49,4 @@ const UploadCategory = ({onClose}:any) => {
   )
 }
 
-export default UploadCategory
+export default UpdateThuongHieu

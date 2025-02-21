@@ -4,7 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { FaShoppingCart } from "react-icons/fa";
 import { Link } from 'react-router-dom';
 import Logo from '../assets/th-removebg-preview.png'
-import UploadAdmin from "../admin/UloadAdmin";
+import UploadAdmin from "../admin/UpdateAdmin";
 import { useState } from "react";
 const Header = () => {
        const [uploadAdmin,setuploadAdmin]= useState(false)

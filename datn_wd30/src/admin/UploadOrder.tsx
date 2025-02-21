@@ -11,6 +11,7 @@ const UploadOrder = ({ onClose }:any) => {
             <MdClose />
           </button>
         </div>
+        <div className="border-b-2 border-gray-300 my-4"></div>
         <div className="p-4 flex w-full h-ful max-h-[70%] ">
           <aside className=" w-[50%]">
             <h2 className="text-xl font-bold">Thông tin đơn hàng</h2>

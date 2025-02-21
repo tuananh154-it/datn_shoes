@@ -9,8 +9,8 @@ const QuanLySize = () => {
     <>
      <div>
       <div className='bg-white py-2 px-4 flex justify-between items-center'>
-        <h2 className='font-bold text-lg'>Size</h2>
-        <button className='border-2 border-red-600 px-3 py-1 text-red-400 rounded-full hover:bg-red-300' onClick={()=>setsetopenUploadCategoty(true)}>Thêm site</button>
+        <h2 className='font-bold text-lg'>Quản lý size</h2>
+        <button className='border-2 border-red-600 px-3 py-1 text-red-400 rounded-full hover:text-white hover:bg-red-300' onClick={()=>setsetopenUploadCategoty(true)}>Thêm site</button>
       </div>
     </div>
     <div>

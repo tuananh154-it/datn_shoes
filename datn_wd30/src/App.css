@@ -11,6 +11,15 @@
 .userTable td{
   @apply border text-base text-center
 }
+.userTableKhachHang{
+  @apply bg-white
+}
+.userTableKhachHang th{
+    @apply border bg-gray-800 text-white text-base font-medium py-2
+}
+.userTableKhachHang td{
+  @apply border text-base text-center py-7
+}
 .bordermota:focus{
   border-radius: 10px;
 }

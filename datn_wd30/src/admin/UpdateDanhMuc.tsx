@@ -12,6 +12,7 @@ const UpdateDanhMuc = ({onClose}:any) => {
                 <MdClose />
               </button>
             </div>
+        <div className="border-b-2 border-gray-300 my-4"></div>
             <div className="p-4 flex w-full h-ful max-h-[70%] ">
               <main className="w-full">
                 <form className="grid p-4 gap-2">

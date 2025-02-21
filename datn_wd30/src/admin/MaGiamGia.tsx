@@ -9,8 +9,8 @@ const MaGiamGia = () => {
     <>
      <div>
       <div className='bg-white py-2 px-4 flex justify-between items-center'>
-        <h2 className='font-bold text-lg'>Danh mục</h2>
-        <button className='border-2 border-red-600 px-3 py-1 text-red-400 rounded-full hover:bg-red-300' onClick={()=>setsetopenUploadCategoty(true)}>Thêm Vocher</button>
+        <h2 className='font-bold text-lg'>Quản lý Voucher</h2>
+        <button className='border-2 border-red-600 px-3 py-1 hover:text-white text-red-400 rounded-full hover:bg-red-300' onClick={()=>setsetopenUploadCategoty(true)}>Thêm Vocher</button>
       </div>
     </div>
     <div>

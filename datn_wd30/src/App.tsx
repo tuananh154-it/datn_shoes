@@ -14,8 +14,9 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import ForgotPassword from './pages/ForgotPassword';
 import QuanLyBanner from './admin/QuanLyBanner';
-import UploadAdmin from './admin/UloadAdmin';
+import UploadAdmin from './admin/UpdateAdmin';
 import { Toaster } from 'react-hot-toast';
+import AllKhachHang from './admin/AllKhachHang';
 
 function App() {
   const router = [
@@ -30,6 +31,7 @@ function App() {
         {path:'/admin/all-order',element:<QuanLyDonhang/>},
         {path:'/admin/update-admin',element:<UploadAdmin/>},
         {path:'/admin/voucher',element:<MaGiamGia/>},
+        {path:'/admin/customer',element:<AllKhachHang/>},
         {path:'/admin/banner',element:<QuanLyBanner/>},
         {path:'/admin/brand',element:<QuanLyThuongHieu/>},
         {path:'/admin/size',element:<QuanLySize/>},

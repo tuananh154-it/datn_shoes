@@ -12,7 +12,8 @@ import { AiFillWechat } from "react-icons/ai";
 import { AiOutlineSortAscending } from "react-icons/ai";
 import { BiCamera } from "react-icons/bi";
 import { useState } from "react";
-import UploadAdmin from "./UloadAdmin";
+// import UploadAdmin from "./UpdateAdmin";
+import UpdateAdmin from "./UpdateAdmin";
 const HomeAdmin = () => {
    const [uploadAdmin,setuploadAdmin]= useState(false)
   return (
@@ -32,7 +33,7 @@ const HomeAdmin = () => {
                 <Link to={'all-categotys'} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><MdOutlineInventory className="text-2xl"/>Quản lý danh mục</Link>
                 <Link to={'brand'} className= 'px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><GrCertificate className="text-2xl"/>Quản lý thương hiệu</Link>
                 <Link to={'size'} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><AiOutlineSortAscending className="text-2xl"/> Quản lý size</Link>
-                <Link to={''} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><ImProfile className="text-2xl"/> Quản lý khách hàng</Link>
+                <Link to={'customer'} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><ImProfile className="text-2xl"/> Quản lý khách hàng</Link>
                 <Link to={'banner'} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><BiCamera className="text-2xl"/> Quản lý banner</Link>
                 <Link to={''} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><AiFillWechat className="text-2xl"/> Quản lý liên hệ</Link>
                 <Link to={'voucher'} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><BiGift className="text-2xl"/> Quản lý mã giảm giá</Link>
@@ -43,7 +44,7 @@ const HomeAdmin = () => {
            <Outlet/>
         </main>
         {uploadAdmin &&(
-         <UploadAdmin onClose={()=>setuploadAdmin(false)}/>
+         <UpdateAdmin onClose={()=>setuploadAdmin(false)}/>
         )}
     </div>
     </>

@@ -1,51 +1,56 @@
-
 import { MdClose } from "react-icons/md";
-
-const UpLoadVoucher = ({ onClose}:any) => {
+// import { FaUserEdit } from "react-icons/fa";
+const OpenKhachHang = ({ onClose }: any) => {
   return (
     <div className="fixed bg-slate-200 top-0 right-0 bottom-0 left-0 bg-opacity-35 flex justify-center items-center overflow-hidden">
-      <div className="bg-white p-4 rounded w-full max-w-[40%] h-full overflow-y-scroll">
+      <div className="bg-white p-4 rounded w-full max-w-[70%] h-full max-h[80%] overflow-y-scroll">
         <div className="flex">
           <div>
-            <h1 className="font-bold text-2xl">Thêm mới vocher</h1>
+            <h1 className="font-bold text-2xl">Thông tin chi tiết khách hàng</h1>
           </div>
           <button className="block ml-auto text-2xl" onClick={onClose}>
             <MdClose />
           </button>
         </div>
         <div className="border-b-2 border-gray-300 my-4"></div>
-        <div className="p-4 flex w-full h-ful max-h-[70%] ">
-          <main className="w-full">
+        <div className="p-4 flex w-full h-ful min-h-[70%] ">
+          <aside className=" w-[50%]">
+            <p>Ảnh đại diện</p>
+            <div>
+              <img
+                src=""
+                width={300}
+                height={300}
+                className="bg-slate-200 flex justify-center border mt-6"
+              />
+            </div>
+          </aside>
+          <main className="w-[50%]">
             <form className="grid p-4 gap-2">
-              <label>Tên mã giảm giá</label>
+              <label>Họ và tên</label>
               <input
-                placeholder="Tên mã giảm giá..."
+                placeholder="Họ và tên..."
                 className="p-2 bg-slate-100 border rounded focus:outline-none focus:border-4 focus:border-blue-300 bordermota"
               />
-              <label>Số lượng</label>
+              <label>Email</label>
               <input
-                type="number"
-                placeholder="Số lượng..."
+                type="email"
+                placeholder="Email..."
                 className="p-2 bg-slate-100 border rounded focus:outline-none focus:border-4 focus:border-blue-300 bordermota"
               />
 
-              <label>Ngày bắt đầu</label>
+              <label>Số điện thoại</label>
               <input
-              type="date"
-                placeholder=""
+                type="text"
+                placeholder="Số điện thoại..."
                 className="p-2 bg-slate-100 border rounded focus:outline-none focus:border-4 focus:border-blue-300 bordermota"
               />
-               <label>Ngày kết thúc</label>
+              <label>Địa chỉ</label>
               <input
-              type="date"
-                placeholder=""
+                type="email"
+                placeholder="Địa chỉ..."
                 className="p-2 bg-slate-100 border rounded focus:outline-none focus:border-4 focus:border-blue-300 bordermota"
               />
-              <label>Trạng thái</label>
-              <select className="p-2 bg-slate-100 border rounded focus:outline-none focus:border-4 focus:border-blue-300 bordermota">
-                <option>Sử dụng</option>
-                <option>Không sử dụng</option>
-              </select>
               <div className="mt-1">
                 <h2>Ghi chú</h2>
                 <div className="">
@@ -55,9 +60,6 @@ const UpLoadVoucher = ({ onClose}:any) => {
                   />
                 </div>
               </div>
-              <button className="border-2 mt-7 bg-blue-500 px-3 py-2 block ml-auto text-white rounded-full hover:bg-blue-400">
-                Thêm mới
-              </button>
             </form>
           </main>
         </div>
@@ -66,4 +68,4 @@ const UpLoadVoucher = ({ onClose}:any) => {
   );
 };
 
-export default UpLoadVoucher;
+export default OpenKhachHang;
