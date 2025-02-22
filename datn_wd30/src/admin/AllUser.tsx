@@ -6,7 +6,8 @@ const AllUser = () => {
   const [openUploadAdmin,setopenUploadAdmin]= useState(false);
   return (
    <>
-      <section id="main-content">
+     <section id="main-content">
+     <section className="wrapper">
       <div className="row">
                   <div className="col-lg-12">
                       <section className="card">
@@ -74,6 +75,7 @@ const AllUser = () => {
                       </section>
                   </div>
               </div>
+      </section>
       </section>
   {
     openUpdateUser && (

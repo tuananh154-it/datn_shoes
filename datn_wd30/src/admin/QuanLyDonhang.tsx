@@ -47,7 +47,6 @@ const QuanLyDonhang = () => {
                                   <th><i className=" fa fa-edit"></i> Trạng thái thanh toán</th>
                                   <th><i className=" fa fa-edit"></i> Id người dùng</th>
                                   <th><i className=" fa fa-edit"></i> Id nhân viên</th>
-                                  <th><i className=" fa fa-edit"></i> Trạng thái thanh toán</th>
                                   <th><i className=" fa fa-edit"></i> Ghi chú</th>
                                   <th><i className=" fa fa-edit"></i> Hành động</th>
                                   <th></th>
@@ -59,7 +58,10 @@ const QuanLyDonhang = () => {
                                   <td className="hidden-phone">0123456789</td>
                                   <td>Đang xử lý</td>
                                   <td>100.000 đ</td>
-                                  <td><span className="badge badge-info label-mini">Due</span></td>
+                                  <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
+                                  <td>0111</td>
+                                  <td>1222</td>
+                                  <td>note</td>
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
@@ -67,10 +69,14 @@ const QuanLyDonhang = () => {
                                   </td>
                               </tr>
                               <tr>
-                                  <td><a href="#">Sản phẩm 1</a></td>
-                                  <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
-                                  <td>100</td>
-                                  <td><span className="badge badge-info label-mini">Due</span></td>
+                                  <td><a href="#">Hà Nội</a></td>
+                                  <td className="hidden-phone">0123456789</td>
+                                  <td>Đang xử lý</td>
+                                  <td>100.000 đ</td>
+                                  <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
+                                  <td>0111</td>
+                                  <td>1222</td>
+                                  <td>note</td>
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
@@ -78,10 +84,14 @@ const QuanLyDonhang = () => {
                                   </td>
                               </tr>
                               <tr>
-                                  <td><a href="#">Sản phẩm 1</a></td>
-                                  <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
-                                  <td>100</td>
-                                  <td><span className="badge badge-info label-mini">Due</span></td>
+                                  <td><a href="#">Hà Nội</a></td>
+                                  <td className="hidden-phone">0123456789</td>
+                                  <td>Đang xử lý</td>
+                                  <td>100.000 đ</td>
+                                  <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
+                                  <td>0111</td>
+                                  <td>1222</td>
+                                  <td>note</td>
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
@@ -89,16 +99,21 @@ const QuanLyDonhang = () => {
                                   </td>
                               </tr>
                               <tr>
-                                  <td><a href="#">Sản phẩm 1</a></td>
-                                  <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
-                                  <td>100</td>
-                                  <td><span className="badge badge-info label-mini">Due</span></td>
+                                  <td><a href="#">Hà Nội</a></td>
+                                  <td className="hidden-phone">0123456789</td>
+                                  <td>Đang xử lý</td>
+                                  <td>100.000 đ</td>
+                                  <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
+                                  <td>0111</td>
+                                  <td>1222</td>
+                                  <td>note</td>
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
                                       <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
                                   </td>
                               </tr>
+                              
                               </tbody>
                           </table>
                       </section>
