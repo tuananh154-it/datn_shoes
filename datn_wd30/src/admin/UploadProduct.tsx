@@ -43,8 +43,8 @@ const UploadProduct = ({ onClose }: any) => {
     }
   };
   return (
-    <div className="fixed bg-slate-200 top-0 right-0 bottom-0 left-0 bg-opacity-35 flex justify-center items-center overflow-hidden">
-      <div className="bg-white p-4 rounded w-full max-w-[70%] h-full max-h[70%] overflow-y-scroll">
+    <section id="main-content">
+        <section className="wrapper">
         <div className="flex">
           <div>
             <h1 className="font-bold text-2xl">Thêm mới sản phẩm</h1>
@@ -208,8 +208,8 @@ const UploadProduct = ({ onClose }: any) => {
         >
           Thêm mới
         </button>
-      </div>
-    </div>
+        </section>
+        </section>
   );
 };
 

@@ -20,7 +20,7 @@ const AllUser = () => {
                                   <th><i className="fa fa-bullhorn"></i> Name</th>
                                   <th className="hidden-phone"><i className="fa fa-question-circle"></i> Email</th>
                                   <th><i className="fa fa-bookmark"></i> Role</th>
-                                  <th><i className=" fa fa-edit"></i> Created date</th>
+                                  <th><i className=" fa fa-tags"></i> Created date</th>
                                   <th><i className=" fa fa-edit"></i> Action</th>
                                   <th></th>
                               </tr>

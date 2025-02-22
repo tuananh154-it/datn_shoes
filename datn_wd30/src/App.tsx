@@ -34,8 +34,8 @@ function App() {
         {path:'/admin/update-admin',element:<UploadAdmin/>},
         {path:'/admin/voucher',element:<MaGiamGia/>},
         {path:'/admin/customer',element:<AllKhachHang/>},
-        {path:'/admin/banner',element:<QuanLyBanner/>},
-        {path:'/admin/brand',element:<QuanLyThuongHieu/>},
+        {path:'/admin/all-banner',element:<QuanLyBanner/>},
+        {path:'/admin/all-brand',element:<QuanLyThuongHieu/>},
         {path:'/admin/size',element:<QuanLySize/>},
        ]}
     ]}

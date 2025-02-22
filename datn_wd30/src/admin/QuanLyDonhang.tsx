@@ -43,11 +43,11 @@ const QuanLyDonhang = () => {
                                   <th><i className="fa fa-bullhorn"></i> Địa chỉ</th>
                                   <th className="hidden-phone"><i className="fa fa-question-circle"></i>Số điện thoại</th>
                                   <th><i className="fa fa-bookmark"></i> Trạng thái</th>
-                                  <th><i className=" fa fa-edit"></i>Tổng tiền</th>
-                                  <th><i className=" fa fa-edit"></i> Trạng thái thanh toán</th>
-                                  <th><i className=" fa fa-edit"></i> Id người dùng</th>
-                                  <th><i className=" fa fa-edit"></i> Id nhân viên</th>
-                                  <th><i className=" fa fa-edit"></i> Ghi chú</th>
+                                  <th><i className=" fa fa-tags"></i>Tổng tiền</th>
+                                  <th><i className=" fa fa-star"></i> Trạng thái thanh toán</th>
+                                  <th><i className=" fa fa-users"></i> Id người dùng</th>
+                                  <th><i className=" fa fa-user"></i> Id nhân viên</th>
+                                  <th><i className=" fa fa-comments"></i> Ghi chú</th>
                                   <th><i className=" fa fa-edit"></i> Hành động</th>
                                   <th></th>
                               </tr>

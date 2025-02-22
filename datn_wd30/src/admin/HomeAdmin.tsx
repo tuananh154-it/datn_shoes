@@ -20,61 +20,61 @@ const HomeAdmin = () => {
                   </li>
                   <li>
                       <Link  className="active" to={'all-users'}>
-                      <i  className="fa fa-laptop"></i>
+                      <i  className="fa fa-user"></i>
                           <span>Admin</span>
                       </Link>
                   </li>
                   <li>
                       <Link  className="active" to={'all-order'}>
-                      <i  className="fa fa-laptop"></i>
+                      <i className="fa fa-shopping-cart"></i>
                           <span>Quản lý đơn hàng</span>
                       </Link>
                   </li>
                   <li>
                       <Link  className="active" to={'all-products'}>
-                      <i  className="fa fa-laptop"></i>
+                      <i  className="fa fa-bookmark"></i>
                           <span>Quản lý sản phẩm</span>
                       </Link>
                   </li>
                   <li>
-                      <Link  className="active" to={'all-products'}>
-                      <i  className="fa fa-laptop"></i>
+                      <Link  className="active" to={'all-categotys'}>
+                      <i  className="fa fa-bar-chart-o"></i>
                           <span>Quản lý danh mục</span>
                       </Link>
                   </li>
                   <li>
-                      <Link  className="active" to={'all-products'}>
-                      <i  className="fa fa-laptop"></i>
+                      <Link  className="active" to={'all-brand'}>
+                      <i  className="fa fa-tags"></i>
                           <span>Quản lý thương hiệu</span>
                       </Link>
                   </li>
                   <li>
                       <Link  className="active" to={'all-products'}>
-                      <i  className="fa fa-laptop"></i>
+                      <i  className="fa fa-sort-alpha-asc"></i>
                           <span>Quản lý size</span>
                       </Link>
                   </li>
                   <li>
                       <Link  className="active" to={'all-products'}>
-                      <i  className="fa fa-laptop"></i>
+                      <i  className="fa fa-users"></i>
                           <span>Quản lý khách hàng</span>
                       </Link>
                   </li>
                   <li>
                       <Link  className="active" to={'all-products'}>
-                      <i  className="fa fa-laptop"></i>
+                      <i  className="fa fa-camera"></i>
                           <span>Quản lý banner</span>
                       </Link>
                   </li>
                   <li>
                       <Link  className="active" to={'all-products'}>
-                      <i  className="fa fa-laptop"></i>
+                      <i className="fa fa-comments-o"></i>
                           <span>Quản lý liên hệ</span>
                       </Link>
                   </li>
                   <li>
                       <Link  className="active" to={'all-products'}>
-                      <i  className="fa fa-laptop"></i>
+                      <i  className="fa fa-ticket"></i>
                           <span>Quản lý mã giảm giá</span>
                       </Link>
                   </li>
