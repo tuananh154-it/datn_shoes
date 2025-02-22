@@ -180,7 +180,7 @@ const UpdateProduct = ({ onClose }:any) => {
           </div>
         </div>
         <button className="border-2 mt-7 bg-blue-500 px-3 py-2 block ml-auto text-white rounded-full hover:bg-blue-400">
-          Upload sản phẩm
+          Update sản phẩm
         </button>
       </div>
     </div>

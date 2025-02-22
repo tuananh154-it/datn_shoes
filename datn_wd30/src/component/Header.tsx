@@ -15,7 +15,7 @@ const Header = () => {
          <Link to={'upload'}><img  width={150} height={150} src={Logo}/></Link>
         </div>
         <div className='hidden lg:flex items-center w-full justify-between max-w-sm border rounded-full focus-within:shadow'>
-            <input type='text' placeholder='search product here...' className='w-full outline-none'/>
+            <input type='text' placeholder='search product here...' className='w-full outline-none ml-2'/>
             <div className='text-lg min-w-[50px] h-8 bg-red-600 flex justify-center items-center rounded-r-full text-white'><FaSearch/></div>
         </div>
         <div className='flex items-center gap-4'>

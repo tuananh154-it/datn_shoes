@@ -27,7 +27,7 @@ const dataPie = [
 
 const Dashboard: React.FC = () => {
   return (
-    <div className="w-full h-full ml-4">
+    <div className="w-full h-full">
       <h1 className="text-2xl font-bold mb-4 mt-4">Trang chủ</h1>
       {/* Cards */}
       <div className="grid grid-cols-4 gap-4">
