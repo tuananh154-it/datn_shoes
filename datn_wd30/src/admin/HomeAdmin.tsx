@@ -12,6 +12,7 @@ import { AiFillWechat } from "react-icons/ai";
 import { AiOutlineSortAscending } from "react-icons/ai";
 import { BiCamera } from "react-icons/bi";
 import { useState } from "react";
+import { AiFillHome } from "react-icons/ai";
 // import UploadAdmin from "./UpdateAdmin";
 import UpdateAdmin from "./UpdateAdmin";
 const HomeAdmin = () => {
@@ -27,6 +28,7 @@ const HomeAdmin = () => {
            </div>
            <div>
             <nav className='grid p-4'>
+                <Link to={'dashboard'} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><AiFillHome className="text-2xl"/> Trang chủ</Link>
                 <Link to={'all-users'} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><FaHouseUser className="text-2xl"/> Admin</Link>
                 <Link to={'all-order'} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><BsFillCartCheckFill className="text-2xl"/>Quản lý đơn hàng</Link>
                 <Link to={'all-products'} className='px-3 py-2 flex items-center hover:bg-slate-100 hover:text-black'><FaStore className="text-2xl"/>Quản lý sản phẩm</Link>

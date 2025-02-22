@@ -17,6 +17,7 @@ import QuanLyBanner from './admin/QuanLyBanner';
 import UploadAdmin from './admin/UpdateAdmin';
 import { Toaster } from 'react-hot-toast';
 import AllKhachHang from './admin/AllKhachHang';
+import Dashboard from './admin/Dashboard';
 
 function App() {
   const router = [
@@ -26,6 +27,7 @@ function App() {
       {path:'/sign-up',element:<SignUp/>},
       {path:'/admin',element:<HomeAdmin/>,children:[
         {path:'/admin/all-users',element:<AllUser/>},
+        {path:'/admin/dashboard',element:<Dashboard/>},
         {path:'/admin/all-products',element:<AllProducts/>},
         {path:'/admin/all-categotys', element:<QuanLyDanhMuc/>},
         {path:'/admin/all-order',element:<QuanLyDonhang/>},
