@@ -13,6 +13,7 @@ return new class extends Migration
 {
     Schema::create('product_details', function (Blueprint $table) {
         $table->id();
+        $table->string('image')->nullable();
         $table->foreignId('product_id')->constrained('products');
         $table->foreignId('size_id')->constrained('sizes');
         $table->foreignId('color_id')->constrained('colors');
