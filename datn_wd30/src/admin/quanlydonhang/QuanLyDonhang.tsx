@@ -40,16 +40,22 @@ const QuanLyDonhang = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
-                                  <th><i className="fa fa-bullhorn"></i> Địa chỉ</th>
-                                  <th className="hidden-phone"><i className="fa fa-question-circle"></i>Số điện thoại</th>
+                                  <th><i className="fa fa-bullhorn"></i> Id </th>
+                                  <th className="hidden-phone"><i className="fa fa-question-circle"></i>voucher_id</th>
                                   <th><i className="fa fa-bookmark"></i> Trạng thái</th>
+<<<<<<< HEAD
                                   <th><i className=" fa fa-tags"></i>Tổng tiền</th>
                                   <th><i className=" fa fa-star"></i> Trạng thái thanh toán</th>
                                   <th><i className=" fa fa-users"></i> Id người dùng</th>
                                   <th><i className=" fa fa-user"></i> Id nhân viên</th>
                                   <th><i className=" fa fa-comments"></i> Ghi chú</th>
+=======
+                                  <th><i className=" fa fa-edit"></i>Tổng tiền</th>
+                                  <th><i className=" fa fa-edit"></i> Trạng thái thanh toán</th>
+                                  <th><i className=" fa fa-edit"></i> Id người dùng</th>
+                                  <th><i className=" fa fa-edit"></i> Ghi chú</th>
+>>>>>>> 41c0d6cfea867c82416f1e27bb1800f9f891660e
                                   <th><i className=" fa fa-edit"></i> Hành động</th>
-                                  <th></th>
                               </tr>
                               </thead>
                               <tbody>
@@ -58,10 +64,16 @@ const QuanLyDonhang = () => {
                                   <td className="hidden-phone">0123456789</td>
                                   <td>Đang xử lý</td>
                                   <td>100.000 đ</td>
+<<<<<<< HEAD
                                   <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
                                   <td>0111</td>
                                   <td>1222</td>
                                   <td>note</td>
+=======
+                                  <td>100.000 đ</td>
+                                  <td>100.000 đ</td>
+                                  <td>100.000 đ</td>
+>>>>>>> 41c0d6cfea867c82416f1e27bb1800f9f891660e
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
@@ -73,10 +85,16 @@ const QuanLyDonhang = () => {
                                   <td className="hidden-phone">0123456789</td>
                                   <td>Đang xử lý</td>
                                   <td>100.000 đ</td>
+<<<<<<< HEAD
                                   <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
                                   <td>0111</td>
                                   <td>1222</td>
                                   <td>note</td>
+=======
+                                  <td>100.000 đ</td>
+                                  <td>100.000 đ</td>
+                                  <td>100.000 đ</td>
+>>>>>>> 41c0d6cfea867c82416f1e27bb1800f9f891660e
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
@@ -88,10 +106,16 @@ const QuanLyDonhang = () => {
                                   <td className="hidden-phone">0123456789</td>
                                   <td>Đang xử lý</td>
                                   <td>100.000 đ</td>
+<<<<<<< HEAD
                                   <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
                                   <td>0111</td>
                                   <td>1222</td>
                                   <td>note</td>
+=======
+                                  <td>100.000 đ</td>
+                                  <td>100.000 đ</td>
+                                  <td>100.000 đ</td>
+>>>>>>> 41c0d6cfea867c82416f1e27bb1800f9f891660e
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
@@ -103,10 +127,16 @@ const QuanLyDonhang = () => {
                                   <td className="hidden-phone">0123456789</td>
                                   <td>Đang xử lý</td>
                                   <td>100.000 đ</td>
+<<<<<<< HEAD
                                   <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
                                   <td>0111</td>
                                   <td>1222</td>
                                   <td>note</td>
+=======
+                                  <td>100.000 đ</td>
+                                  <td>100.000 đ</td>
+                                  <td>100.000 đ</td>
+>>>>>>> 41c0d6cfea867c82416f1e27bb1800f9f891660e
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
