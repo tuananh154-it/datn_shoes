@@ -6,8 +6,8 @@ const Header = () => {
         <i className="fa fa-bars"></i>
       </div>
       {/* Logo */}
-      <a href="index.html" className="logo">
-        Flat<span>lab</span>
+      <a href="#" className="logo">
+        Foot<span>Vibe</span>
       </a>
 
       <div className="nav notify-row" id="top_menu">

@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 // import UploadAdmin from "./UpdateAdmin";
-import UpdateAdmin from "./UpdateAdmin";
+import UpdateAdmin from "./quanlyadmin/UpdateAdmin";
 import { Link, Outlet } from "react-router-dom";
 const HomeAdmin = () => {
    const [uploadAdmin,setuploadAdmin]= useState(false)
@@ -66,88 +66,47 @@ const HomeAdmin = () => {
                           <li><a  href="file_upload.html">Multiple File Upload</a></li>
                       </ul>
                   </li>
-                  <li  className="sub-menu">
-                      <a href="javascript:;" >
-                          <i  className="fa fa-th"></i>
-                          <span>Data Tables</span>
-                      </a>
-                      <ul  className="sub">
-                          <li><a  href="basic_table.html">Basic Table</a></li>
-                          <li><a  href="responsive_table.html">Responsive Table</a></li>
-                          <li><a  href="dynamic_table.html">Dynamic Table</a></li>
-                          <li><a  href="editable_table.html">Editable Table</a></li>
-                      </ul>
-                  </li>
-                  <li  className="sub-menu">
-                      <a href="javascript:;" >
-                          <i  className=" fa fa-envelope"></i>
-                          <span>Mail</span>
-                      </a>
-                      <ul  className="sub">
-                          <li><a  href="inbox.html">Inbox</a></li>
-                          <li><a  href="inbox_details.html">Inbox Details</a></li>
-                      </ul>
-                  </li>
-                  <li  className="sub-menu">
-                      <a href="javascript:;" >
-                          <i  className=" fa fa-bar-chart-o"></i>
-                          <span>Charts</span>
-                      </a>
-                      <ul  className="sub">
-                          <li><a  href="morris.html">Morris</a></li>
-                          <li><a  href="chartjs.html">Chartjs</a></li>
-                          <li><a  href="flot_chart.html">Flot Charts</a></li>
-                          <li><a  href="xchart.html">xChart</a></li>
-                      </ul>
-                  </li>
-                  <li  className="sub-menu">
-                      <a href="javascript:;" >
-                          <i  className="fa fa-shopping-cart"></i>
-                          <span>Shop</span>
-                      </a>
-                      <ul  className="sub">
-                          <li><a  href="product_list.html">List View</a></li>
-                          <li><a  href="product_details.html">Details View</a></li>
-                      </ul>
+                  <li>
+                      <Link  className="active" to={'size'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý Size</span>
+                      </Link>
                   </li>
                   <li>
-                      <a href="google_maps.html" >
-                          <i  className="fa fa-map-marker"></i>
-                          <span>Google Maps </span>
-                      </a>
+                      <Link  className="active" to={'customer'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý khách hàng</span>
+                      </Link>
                   </li>
-                  <li  className="sub-menu">
-                      <a href="javascript:;">
-                          <i  className="fa fa-comments-o"></i>
-                          <span>Chat Room</span>
-                      </a>
-                      <ul  className="sub">
-                          <li><a  href="lobby.html">Lobby</a></li>
-                          <li><a  href="chat_room.html"> Chat Room</a></li>
-                      </ul>
+                  <li>
+                      <Link  className="active" to={'banner'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý banner</span>
+                      </Link>
                   </li>
-                  <li  className="sub-menu">
-                      <a href="javascript:;" >
-                          <i  className="fa fa-glass"></i>
-                          <span>Extra</span>
-                      </a>
-                      <ul  className="sub">
-                          <li><a  href="blank.html">Blank Page</a></li>
-                          <li><a  href="sidebar_closed.html">Sidebar Closed</a></li>
-                          <li><a  href="people_directory.html">People Directory</a></li>
-                          <li><a  href="coming_soon.html">Coming Soon</a></li>
-                          <li><a  href="lock_screen.html">Lock Screen</a></li>
-                          <li><a  href="profile.html">Profile</a></li>
-                          <li><a  href="invoice.html">Invoice</a></li>
-                          <li><a  href="project_list.html">Project List</a></li>
-                          <li><a  href="project_details.html">Project Details</a></li>
-                          <li><a  href="search_result.html">Search Result</a></li>
-                          <li><a  href="pricing_table.html">Pricing Table</a></li>
-                          <li><a  href="faq.html">FAQ</a></li>
-                          <li><a  href="fb_wall.html">FB Wall</a></li>
-                          <li><a  href="404.html">404 Error</a></li>
-                          <li><a  href="500.html">500 Error</a></li>
-                      </ul>
+                  <li>
+                      <Link  className="active" to={'lienhe'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý liên hệ</span>
+                      </Link>
+                  </li>
+                  <li>
+                      <Link  className="active" to={'voucher'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý mã giảm giá</span>
+                      </Link>
+                  </li>
+                  <li>
+                      <Link  className="active" to={'binhluan'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý bình luận</span>
+                      </Link>
+                  </li>
+                  <li>
+                      <Link  className="active" to={'mausac'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý màu sắc</span>
+                      </Link>
                   </li>
                   <li>
                       <a  href="login.html">
