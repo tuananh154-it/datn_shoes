@@ -18,6 +18,7 @@ return new class extends Migration
         $table->text('comment');
         $table->integer('star_rating')->default(5); // Rating from 1 to 5
         $table->timestamps();
+        $table->softDeletes();
     });
 }
     /**

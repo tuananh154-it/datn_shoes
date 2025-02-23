@@ -22,6 +22,7 @@ return new class extends Migration
         $table->decimal('discount_price', 15, 2)->nullable();
         $table->enum('status', ['active', 'inactive'])->default('active');
         $table->timestamps();
+        $table->softDeletes();
     });
 }
 

@@ -17,6 +17,7 @@ public function up()
         $table->text('content');
         $table->string('image')->nullable();
         $table->timestamps();
+        $table->softDeletes();
     });
 }
 

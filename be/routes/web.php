@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\ColorController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductDetailController;
+use App\Http\Controllers\SizeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddressController;
 
@@ -16,6 +20,24 @@ use App\Http\Controllers\AddressController;
 
 // Route::get('/addresses', [AddressController::class, 'showAddresses']);
 
-Route::get('/', function () {
-    return view('master');
+// Route::get('/', function () {
+//     return view('master');
+// });
+// Route::resource('products', ProductController::class);
+// Route::resource('product-details', ProductDetailController::class);
+// Route::resource('colors', ColorController::class);
+// Route::resource('sizes', SizeController::class);
+
+
+
+Route::prefix('admin')->group(function () {
+    Route::get('/', function () {
+        return view('master');
+    });
+
+    Route::resource('products', ProductController::class);
+    Route::resource('product-details', ProductDetailController::class);
+    Route::resource('colors', ColorController::class);
+    Route::resource('sizes', SizeController::class);
 });
+

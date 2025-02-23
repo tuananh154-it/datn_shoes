@@ -16,6 +16,7 @@ public function up()
         $table->string('image_url');
         $table->string('link');
         $table->timestamps();
+        $table->softDeletes();
     });
 }
 

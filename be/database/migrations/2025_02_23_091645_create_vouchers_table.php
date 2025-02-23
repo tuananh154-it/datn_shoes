@@ -21,6 +21,7 @@ return new class extends Migration
         $table->text('terms_and_conditions')->nullable();
         $table->enum('status', ['active', 'inactive'])->default('active');
         $table->timestamps();
+        $table->softDeletes();
     });
 }
 
