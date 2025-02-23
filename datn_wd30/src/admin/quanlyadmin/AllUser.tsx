@@ -17,6 +17,7 @@ const AllUser = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
+                              <th><i className="fa fa-bullhorn"></i> Id</th>
                                   <th><i className="fa fa-bullhorn"></i> Name</th>
                                   <th><i className="fa fa-bookmark"></i>Display_name</th>
                                   <th className="hidden-phone"><i className="fa fa-question-circle"></i> Email</th>
@@ -28,6 +29,7 @@ const AllUser = () => {
                               </thead>
                               <tbody>
                               <tr>
+                              <td>1 </td>
                                   <td><a href="#">Vector Ltd</a></td>
                                   <td>Admin </td>
                                   <td className="hidden-phone">a@gmail.com</td>
@@ -40,6 +42,7 @@ const AllUser = () => {
                                   </td>
                               </tr>
                               <tr>
+                              <td>1 </td>
                                   <td><a href="#">Vector Ltd</a></td>
                                   <td>Admin </td>
                                   <td className="hidden-phone">a@gmail.com</td>
@@ -52,6 +55,7 @@ const AllUser = () => {
                                   </td>
                               </tr>
                               <tr>
+                              <td>1 </td>
                                   <td><a href="#">Vector Ltd</a></td>
                                   <td>Admin </td>
                                   <td className="hidden-phone">a@gmail.com</td>
@@ -64,6 +68,7 @@ const AllUser = () => {
                                   </td>
                               </tr>
                               <tr>
+                              <td>1 </td>
                                   <td><a href="#">Vector Ltd</a></td>
                                   <td>Admin </td>
                                   <td className="hidden-phone">a@gmail.com</td>

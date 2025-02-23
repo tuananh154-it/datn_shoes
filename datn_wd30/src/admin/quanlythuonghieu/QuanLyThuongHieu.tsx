@@ -18,6 +18,7 @@ const QuanLyThuongHieu = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
+                              <th><i className="fa fa-bullhorn"></i>Id</th>
                                   <th><i className="fa fa-bullhorn"></i>Name</th>
                                   <th><i className="fa fa-question-circle"></i> Status</th>
                                   <th><i className="fa fa-comments"></i>Created_at</th>
@@ -27,6 +28,7 @@ const QuanLyThuongHieu = () => {
                               </thead>
                               <tbody>
                               <tr>
+                              <td>1</td>
                                   <td><a href="#">Thương hiệu 1</a></td>
                                   <td><span className="badge badge-info label-mini">Sử dụng</span></td>
                                   <td>Created_at</td>
