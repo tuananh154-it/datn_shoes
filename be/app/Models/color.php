@@ -6,14 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class Color extends Model
 {
+ 
     protected $table = 'color';
-
-    public $timestamps = false;
+    protected $primaryKey = 'id';
+    public $timestamps = true;
 
     protected $fillable = [
         'name',
-        'status',
-        'created_at',
-        'updated_at'
+        'status'
     ];
 }
