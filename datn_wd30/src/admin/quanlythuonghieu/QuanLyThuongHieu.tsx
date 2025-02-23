@@ -20,7 +20,7 @@ const QuanLyThuongHieu = () => {
                               <tr>
                                   <th><i className="fa fa-bullhorn"></i>Tên thương hiệu</th>
                                   <th><i className="fa fa-question-circle"></i> Trạng thái</th>
-                                  <th><i className="fa fa-bookmark"></i> Ghi chú</th>
+                                  <th><i className="fa fa-comments"></i> Ghi chú</th>
                                   <th><i className=" fa fa-edit"></i> Hành động</th>
                                   <th></th>
                               </tr>

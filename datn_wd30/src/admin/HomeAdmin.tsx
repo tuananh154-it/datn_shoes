@@ -2,7 +2,7 @@
 import { useState } from "react";
 
 // import UploadAdmin from "./UpdateAdmin";
-import UpdateAdmin from "./UpdateAdmin";
+import UpdateAdmin from "./quanlyadmin/UpdateAdmin";
 import { Link, Outlet } from "react-router-dom";
 const HomeAdmin = () => {
    const [uploadAdmin,setuploadAdmin]= useState(false)
@@ -49,37 +49,45 @@ const HomeAdmin = () => {
                       </Link>
                   </li>
                   <li>
-                      <Link  className="active" to={'all-products'}>
+                      <Link  className="active" to={'size'}>
                       <i  className="fa fa-sort-alpha-asc"></i>
-                          <span>Quản lý size</span>
+                          <span>Quản lý Size</span>
                       </Link>
                   </li>
                   <li>
-                      <Link  className="active" to={'all-products'}>
+                      <Link  className="active" to={'customer'}>
                       <i  className="fa fa-users"></i>
                           <span>Quản lý khách hàng</span>
                       </Link>
                   </li>
                   <li>
-                      <Link  className="active" to={'all-products'}>
+                      <Link  className="active" to={'all-banner'}>
                       <i  className="fa fa-camera"></i>
                           <span>Quản lý banner</span>
                       </Link>
                   </li>
+                  
                   <li>
-                      <Link  className="active" to={'all-products'}>
-                      <i className="fa fa-comments-o"></i>
-                          <span>Quản lý liên hệ</span>
-                      </Link>
-                  </li>
-                  <li>
-                      <Link  className="active" to={'all-products'}>
+                      <Link  className="active" to={'voucher'}>
                       <i  className="fa fa-ticket"></i>
                           <span>Quản lý mã giảm giá</span>
                       </Link>
                   </li>
+                  <li>
+                      <Link  className="active" to={'binhluan'}>
+                      <i  className="fa fa-comments"></i>
+                          <span>Quản lý bình luận</span>
+                      </Link>
+                  </li>
+                  <li>
+                      <Link  className="active" to={'mausac'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý màu sắc</span>
+                      </Link>
+                  </li>
+                
               </ul>
-           
+              
           </div>
       </aside>
         <main  className='w-full h-full p-2'>
