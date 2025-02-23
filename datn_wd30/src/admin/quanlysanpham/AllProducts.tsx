@@ -52,53 +52,29 @@ const AllProducts = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
+                                  <th><i className="fa fa-bullhorn"></i> ID</th>
                                   <th><i className="fa fa-bullhorn"></i> Tên sản phẩm</th>
+                                  <th><i className="fa fa-bullhorn"></i> Mô tả</th>
+                                  <th><i className="fa fa-bookmark"></i> Danh mục</th>
+                                  <th><i className="fa fa-bookmark"></i> Thương hiệu</th>
+                                  <th><i className="fa fa-bookmark"></i> Giá</th>
+                                  <th><i className="fa fa-bookmark"></i> Giá giảm</th>
                                   <th className="hidden-phone"><i className="fa fa-question-circle"></i> Ảnh sản phẩm</th>
-                                  <th><i className="fa fa-bookmark"></i> Số phân loại</th>
                                   <th><i className=" fa fa-edit"></i> Ghi chú</th>
                                   <th><i className=" fa fa-edit"></i> Hành động</th>
-                                  <th></th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                                  <td><a href="#">Sản phẩm 1</a></td>
-                                  <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
+                                  <td><a href="#">11</a></td>
+                                  <td>sản phẩm 1</td>
+                                  <td>Hàng mới</td>
+                                  <td>Giày chạy bộ</td>
+                                  <td>AdidasAdidas</td>
+                                  <td>200</td>
                                   <td>100</td>
-                                  <td><span className="badge badge-info label-mini">Due</span></td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">Sản phẩm 1</a></td>
                                   <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
-                                  <td>100</td>
-                                  <td><span className="badge badge-info label-mini">Due</span></td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">Sản phẩm 1</a></td>
-                                  <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
-                                  <td>100</td>
-                                  <td><span className="badge badge-info label-mini">Due</span></td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">Sản phẩm 1</a></td>
-                                  <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
-                                  <td>100</td>
-                                  <td><span className="badge badge-info label-mini">Due</span></td>
+                                  <td>Ghi chu moi</td>
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
