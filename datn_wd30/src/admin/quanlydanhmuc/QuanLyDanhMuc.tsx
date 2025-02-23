@@ -1,33 +1,35 @@
 import { useState } from 'react'
-import UploadThuongHieu from './UploadThuongHieu'
+import UploadCategory from './UploadCategory'
 // import { MdModeEditOutline } from "react-icons/md";
-import UpdateThuongHieu from './UpdateThuonghieu';
-const QuanLyThuongHieu = () => {
+// import { RiEdit2Fill } from "react-icons/ri";
+import UpdateDanhMuc from './UpdateDanhMuc';
+const QuanLyDanhMuc = () => {
     const [openUploadCategoty,setsetopenUploadCategoty]= useState(false)
-    const [updateThuongHieu,setupdateThuongHieu]= useState(false)
+    const [updateDanhMuc,setupdateDanhMuc]= useState(false)
+    
   return (
     <>
-     <section id="main-content">
+      <section id="main-content">
           <section className="wrapper">
               <div className="row">
                   <div className="col-lg-12">
                       <section className="card">
                           <header className="card-header">
-                             Quản lý thương hiệu
+                             Quản lý danh mục
                           </header>
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
-                                  <th><i className="fa fa-bullhorn"></i>Tên thương hiệu</th>
+                                  <th><i className="fa fa-bullhorn"></i>Tên danh mục</th>
                                   <th><i className="fa fa-question-circle"></i> Trạng thái</th>
-                                  <th><i className="fa fa-bookmark"></i> Ghi chú</th>
+                                  <th><i className="fa fa-comments"></i> Ghi chú</th>
                                   <th><i className=" fa fa-edit"></i> Hành động</th>
                                   <th></th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                                  <td><a href="#">Thương hiệu 1</a></td>
+                                  <td><a href="#">Danh mục 1</a></td>
                                   <td><span className="badge badge-info label-mini">Sử dụng</span></td>
                                   <td>Ghi chú</td>
                                   <td>
@@ -37,7 +39,7 @@ const QuanLyThuongHieu = () => {
                                   </td>
                               </tr>
                               <tr>
-                                  <td><a href="#">Thương hiệu 1</a></td>
+                                  <td><a href="#">Danh mục 1</a></td>
                                   <td><span className="badge badge-info label-mini">Sử dụng</span></td>
                                   <td>Ghi chú</td>
                                   <td>
@@ -47,7 +49,7 @@ const QuanLyThuongHieu = () => {
                                   </td>
                               </tr>
                               <tr>
-                                  <td><a href="#">Thương hiệu 1</a></td>
+                                  <td><a href="#">Danh mục 1</a></td>
                                   <td><span className="badge badge-info label-mini">Sử dụng</span></td>
                                   <td>Ghi chú</td>
                                   <td>
@@ -57,7 +59,7 @@ const QuanLyThuongHieu = () => {
                                   </td>
                               </tr>
                               <tr>
-                                  <td><a href="#">Thương hiệu 1</a></td>
+                                  <td><a href="#">Danh mục 1</a></td>
                                   <td><span className="badge badge-info label-mini">Sử dụng</span></td>
                                   <td>Ghi chú</td>
                                   <td>
@@ -76,16 +78,16 @@ const QuanLyThuongHieu = () => {
       </section>
     {
         openUploadCategoty && (
-          <UploadThuongHieu onClose={()=>setsetopenUploadCategoty(false)}/>
+          <UploadCategory onClose={()=>setsetopenUploadCategoty(false)}/>
         )
       }
        {
-        updateThuongHieu && (
-          <UpdateThuongHieu onClose={()=>setupdateThuongHieu(false)}/>
+        updateDanhMuc && (
+          <UpdateDanhMuc onClose={()=>setupdateDanhMuc(false)}/>  
         )
       }
     </>
   )
 }
 
-export default QuanLyThuongHieu
+export default QuanLyDanhMuc
