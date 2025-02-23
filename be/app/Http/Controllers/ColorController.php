@@ -7,53 +7,52 @@ use Illuminate\Http\Request;
 
 class ColorController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        return response()->json(Color::all(), 200);
+        $colors = Color::all();
+        return view('blocks.color.index', compact('colors'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function create()
+    {
+        return view('blocks.color.create');
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:100',
-            'status' => 'string|nullable'
+        $validated = $request->validate([
+            'name' => 'required|string',
         ]);
 
-        $color = Color::create($request->all());
-        return response()->json($color, 201);
+        Color::create($validated);
+        return redirect()->route('colors.index')->with('Thành công', 'Màu đã được tạo thành công!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function edit($id)
     {
         $color = Color::findOrFail($id);
-        $color->update($request->all());
-        return response()->json($color, 200);
+        return view('blocks.color.edit', compact('color'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function update(Request $request, $id)
+    {
+        $color = Color::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'status' => 'required|in:active,inactive', 
+        ]);
+
+        $color->update($validated);
+        return redirect()->route('colors.index')->with('Thành công', 'Màu đã được cập nhật thành côgn!');
+    }
+
+    public function destroy($id)
     {
         $color = Color::findOrFail($id);
         $color->delete();
-        return response()->json(['message' => 'Color deleted'], 200);
+        return redirect()->route('colors.index')->with('Thành công', 'Màu đã được xóa thành công!');
     }
+
 }

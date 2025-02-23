@@ -42,7 +42,7 @@
         <!--main content start-->
         <section class="wrapper">
             <!--state overview start-->
-            <div class="row state-overview">
+            {{-- <div class="row state-overview">
                 <div class="col-lg-3 col-sm-6">
                     <section class="card">
                         <div class="symbol terques">
@@ -95,10 +95,10 @@
                         </div>
                     </section>
                 </div>
-            </div>
+            </div> --}}
             <!--state overview end-->
 
-            <div class="row">
+            {{-- <div class="row">
                 <div class="col-lg-8">
                     <!--custom chart start-->
                     <div class="border-head">
@@ -714,9 +714,11 @@
                     </section>
                     <!--weather statement end-->
                 </div>
-            </div>
+            </div> --}}
+            @yield('content')
 
         </section>
+    
         <!--main content end-->
 
         <!-- Right Slidebar start -->
