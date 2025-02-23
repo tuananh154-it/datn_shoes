@@ -40,73 +40,26 @@ const QuanLyDonhang = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
-                                  <th><i className="fa fa-bullhorn"></i> Địa chỉ</th>
-                                  <th className="hidden-phone"><i className="fa fa-question-circle"></i>Số điện thoại</th>
-                                  <th><i className="fa fa-bookmark"></i> Trạng thái</th>
-                                  <th><i className=" fa fa-tags"></i>Tổng tiền</th>
-                                  <th><i className=" fa fa-star"></i> Trạng thái thanh toán</th>
-                                  <th><i className=" fa fa-users"></i> Id người dùng</th>
-                                  <th><i className=" fa fa-user"></i> Id nhân viên</th>
-                                  <th><i className=" fa fa-comments"></i> Ghi chú</th>
-                                  <th><i className=" fa fa-edit"></i> Hành động</th>
+                              <th><i className="fa fa-bullhorn"></i> Id</th>
+                                  <th><i className="fa fa-bullhorn"></i> Voucher_id</th>
+                                  <th><i className="fa fa-bookmark"></i> Customer_id</th>
+                                  <th><i className=" fa fa-tags"></i>Total_amount</th>
+                                  <th><i className=" fa fa-star"></i> Created_at</th>
+                                  <th><i className=" fa fa-users"></i> Updated_at</th>
+                                  <th><i className=" fa fa-edit"></i> Action</th>
                                   <th></th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
-                                  <td><a href="#">Hà Nội</a></td>
-                                  <td className="hidden-phone">0123456789</td>
-                                  <td>Đang xử lý</td>
+                                  <td><a href="#">01</a></td>
+                                  <td className="">Vuocher</td>
+                                  <td>001</td>
                                   <td>100.000 đ</td>
-                                  <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
-                                  <td>0111</td>
-                                  <td>1222</td>
-                                  <td>note</td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">Hà Nội</a></td>
-                                  <td className="hidden-phone">0123456789</td>
-                                  <td>Đang xử lý</td>
-                                  <td>100.000 đ</td>
-                                  <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
-                                  <td>0111</td>
-                                  <td>1222</td>
-                                  <td>note</td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">Hà Nội</a></td>
-                                  <td className="hidden-phone">0123456789</td>
-                                  <td>Đang xử lý</td>
-                                  <td>100.000 đ</td>
-                                  <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
-                                  <td>0111</td>
-                                  <td>1222</td>
-                                  <td>note</td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">Hà Nội</a></td>
-                                  <td className="hidden-phone">0123456789</td>
-                                  <td>Đang xử lý</td>
-                                  <td>100.000 đ</td>
-                                  <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td>
-                                  <td>0111</td>
-                                  <td>1222</td>
-                                  <td>note</td>
+                                  {/* <td><span className="badge badge-info label-mini">Thanh toán khi nhận hàng</span></td> */}
+                                  <td>Created_at</td>
+                                  <td>Created_up</td>
+                                  {/* <td>note</td> */}
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>

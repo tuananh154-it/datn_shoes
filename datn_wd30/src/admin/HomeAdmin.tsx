@@ -55,6 +55,12 @@ const HomeAdmin = () => {
                       </Link>
                   </li>
                   <li>
+                      <Link  className="active" to={'mausac'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý màu sắc</span>
+                      </Link>
+                  </li>
+                  <li>
                       <Link  className="active" to={'customer'}>
                       <i  className="fa fa-users"></i>
                           <span>Quản lý khách hàng</span>
@@ -77,12 +83,6 @@ const HomeAdmin = () => {
                       <Link  className="active" to={'binhluan'}>
                       <i  className="fa fa-comments"></i>
                           <span>Quản lý bình luận</span>
-                      </Link>
-                  </li>
-                  <li>
-                      <Link  className="active" to={'mausac'}>
-                      <i  className="fa fa-laptop"></i>
-                          <span>Quản lý màu sắc</span>
                       </Link>
                   </li>
                 

@@ -14,8 +14,10 @@ const QuanLyBanner = () => {
                               <thead>
                               <tr>
                                   <th><i className="fa fa-bullhorn"></i>ID</th>
-                                  <th className=""><i className="fa fa-question-circle"></i>Ảnh Banner</th>
-                                  <th><i className=" fa fa-edit"></i> Hành động</th>
+                                  <th className=""><i className="fa fa-question-circle"></i>Image_url</th>
+                                  <th className=""><i className="fa fa-question-circle"></i>Created_at</th>
+                                  <th className=""><i className="fa fa-question-circle"></i>Created_up</th>
+                                  <th><i className=" fa fa-edit"></i> Action</th>
                               </tr>
                               </thead>
                               <tbody>
@@ -24,6 +26,8 @@ const QuanLyBanner = () => {
                                   <td className="hidden-phone flex p-2"><img width={200} className=" " height={200} src='https://tse3.mm.bing.net/th?id=OIP.zPwNViOhSeP4Se_bZV6gAAHaDt&pid=Api&P=0&h=180'/>
                                   <img width={200} height={200} className="ml-3" src='https://tse3.mm.bing.net/th?id=OIP.zPwNViOhSeP4Se_bZV6gAAHaDt&pid=Api&P=0&h=180'/>
                                   <img width={200} height={200} className="ml-3" src='https://tse3.mm.bing.net/th?id=OIP.zPwNViOhSeP4Se_bZV6gAAHaDt&pid=Api&P=0&h=180'/></td>
+                                  <td>Created_at</td>
+                                  <td>Created_up</td>
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>

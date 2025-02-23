@@ -17,7 +17,8 @@ const QuanLyBinhLuan = () => {
                                 <th><i className="fa fa-users"></i>product_id</th>
                                 <th><i className=" fa fa-comments"></i>comment</th>
                                 <th><i className=" fa fa-bookmark"></i>rating</th>
-                                <th><i className=" fa fa-edit"></i> Tùy Chọn</th>
+                                <th><i className=" fa fa-bookmark"></i>Created-at</th>
+                                <th><i className=" fa fa-edit"></i> Action</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -27,6 +28,7 @@ const QuanLyBinhLuan = () => {
                                 <td>3</td>
                                 <td>tot</td>
                                 <td>5 sao</td>
+                                <td>20/2/2025</td>
                                 <td>
                                     <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                     <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
@@ -39,6 +41,7 @@ const QuanLyBinhLuan = () => {
                                 <td>3</td>
                                 <td>tot</td>
                                 <td>5 sao</td>
+                                <td>20/2/2025</td>
                                 <td>
                                     <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                     <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
@@ -51,6 +54,7 @@ const QuanLyBinhLuan = () => {
                                 <td>3</td>
                                 <td>tot</td>
                                 <td>5 sao</td>
+                                <td>20/2/2025</td>
                                 <td>
                                     <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                     <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>

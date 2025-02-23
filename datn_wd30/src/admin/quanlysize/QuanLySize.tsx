@@ -19,15 +19,23 @@ const QuanLySize = () => {
                               <thead>
                               <tr>
                                   <th><i className="fa fa-bullhorn"></i>Id</th>
-                                  <th><i className="fa fa-bullhorn"></i>Size</th>
-                                  <th><i className="fa fa-bookmark"></i> Ghi chú</th>
-                                  <th><i className=" fa fa-edit"></i> Hành động</th>
+                                  <th><i className="fa fa-bullhorn"></i>Name</th>
+                                  <th><i className="fa fa-bullhorn"></i>Discount_price</th>
+                                  <th><i className="fa fa-bookmark"></i>image_url</th>
+                                  <th><i className="fa fa-bookmark"></i>Created_at</th>
+                                  <th><i className="fa fa-bookmark"></i>Created_up</th>
+                                  <th><i className="fa fa-bookmark"></i>Status</th>
+                                  <th><i className=" fa fa-edit"></i> Action</th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
                                   <td><a href="#">1</a></td>
                                   <td><a href="#">38</a></td>
+                                  <td><a href="#">100.000đ</a></td>
+                                  <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
+                                  <td>created_at</td>
+                                  <td>created_up</td>
                                   <td><span className="badge badge-info label-mini">Sử dụng</span></td>
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
@@ -35,36 +43,7 @@ const QuanLySize = () => {
                                       <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
                                   </td>
                               </tr>
-                              <tr>
-                                  <td><a href="#">1</a></td>
-                                  <td><a href="#">38</a></td>
-                                  <td><span className="badge badge-info label-mini">Sử dụng</span></td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">1</a></td>
-                                  <td><a href="#">38</a></td>
-                                  <td><span className="badge badge-info label-mini">Sử dụng</span></td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">1</a></td>
-                                  <td><a href="#">38</a></td>
-                                  <td><span className="badge badge-info label-mini">Sử dụng</span></td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
+                              
                               </tbody>
                           </table>
                       </section>

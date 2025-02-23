@@ -20,53 +20,28 @@ const AllKhachHang = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
-                                  <th><i className="fa fa-bullhorn"></i> Name</th>
+                                  <th><i className="fa fa-bullhorn"></i> User name</th>
+                                  <th><i className="fa fa-bullhorn"></i> Phone_number</th>
                                   <th><i className="fa fa-bookmark"></i> Email</th>
-                                  <th><i className="fa fa-bookmark"></i> Số điện thoại</th>
-                                  <th><i className=" fa fa-edit"></i> Địa chỉ</th>
-                                  <th><i className=" fa fa-edit"></i> Hành động</th>
+                                  <th><i className="fa fa-bookmark"></i> Addess</th>
+                                  <th><i className=" fa fa-edit"></i>Date_of_birth</th>
+                                  <th><i className=" fa fa-edit"></i> Gender</th>
+                                  <th><i className=" fa fa-edit"></i> Ceated_at</th>
+                                  <th><i className=" fa fa-edit"></i> Ceated_up</th>
+                                  <th><i className=" fa fa-edit"></i> Action</th>
                                   <th></th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
                                   <td><a href="#">Nguyễn Văn a</a></td>  
-                                  <td>a@gmail.com</td>
                                   <td>0123456789</td>
-                                  <td>Hà Nội</td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">Nguyễn Văn a</a></td>  
                                   <td>a@gmail.com</td>
-                                  <td>0123456789</td>
                                   <td>Hà Nội</td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">Nguyễn Văn a</a></td>  
-                                  <td>a@gmail.com</td>
-                                  <td>0123456789</td>
-                                  <td>Hà Nội</td>
-                                  <td>
-                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
-                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
-                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
-                                  </td>
-                              </tr>
-                              <tr>
-                                  <td><a href="#">Nguyễn Văn a</a></td>  
-                                  <td>a@gmail.com</td>
-                                  <td>0123456789</td>
-                                  <td>Hà Nội</td>
+                                  <td>01/01/2000</td>
+                                  <td>Nam</td>
+                                  <td>Created_at</td>
+                                  <td>Created_up</td>
                                   <td>
                                       <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
                                       <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>

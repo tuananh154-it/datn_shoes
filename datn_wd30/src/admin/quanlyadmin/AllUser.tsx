@@ -17,17 +17,19 @@ const AllUser = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
-                                  <th><i className="fa fa-bullhorn"></i> Tên admin</th>
+                                  <th><i className="fa fa-bullhorn"></i> Name</th>
+                                  <th><i className="fa fa-bookmark"></i>Display_name</th>
                                   <th className="hidden-phone"><i className="fa fa-question-circle"></i> Email</th>
-                                  <th><i className="fa fa-bookmark"></i> Chức vụ</th>
-                                  <th><i className=" fa fa-tags"></i> Ngày tạo</th>
-                                  <th><i className=" fa fa-edit"></i> Hành động</th>
+                                  <th><i className="fa fa-bookmark"></i>Role</th>
+                                  <th><i className=" fa fa-tags"></i> Created date</th>
+                                  <th><i className=" fa fa-edit"></i> Action</th>
                                   <th></th>
                               </tr>
                               </thead>
                               <tbody>
                               <tr>
                                   <td><a href="#">Vector Ltd</a></td>
+                                  <td>Admin </td>
                                   <td className="hidden-phone">a@gmail.com</td>
                                   <td>Admin </td>
                                   <td>20/2/2025</td>
@@ -39,6 +41,7 @@ const AllUser = () => {
                               </tr>
                               <tr>
                                   <td><a href="#">Vector Ltd</a></td>
+                                  <td>Admin </td>
                                   <td className="hidden-phone">a@gmail.com</td>
                                   <td>Admin </td>
                                   <td>20/2/2025</td>
@@ -50,6 +53,7 @@ const AllUser = () => {
                               </tr>
                               <tr>
                                   <td><a href="#">Vector Ltd</a></td>
+                                  <td>Admin </td>
                                   <td className="hidden-phone">a@gmail.com</td>
                                   <td>Admin </td>
                                   <td>20/2/2025</td>
@@ -61,6 +65,7 @@ const AllUser = () => {
                               </tr>
                               <tr>
                                   <td><a href="#">Vector Ltd</a></td>
+                                  <td>Admin </td>
                                   <td className="hidden-phone">a@gmail.com</td>
                                   <td>Admin </td>
                                   <td>20/2/2025</td>
