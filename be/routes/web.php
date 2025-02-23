@@ -16,6 +16,6 @@ use App\Http\Controllers\AddressController;
 
 // Route::get('/addresses', [AddressController::class, 'showAddresses']);
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('master');
+});

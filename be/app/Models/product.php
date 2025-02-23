@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    protected $table = 'product'; 
+    protected $table = 'product';
     protected $primaryKey = 'id';
-    public $timestamps = true; 
-    
+    public $timestamps = true;
+
     protected $fillable = [
         'name', 'description', 'category_id', 'brand_id', 'price', 'discount_price', 'image_url', 'status'
     ];
@@ -18,4 +18,5 @@ class Product extends Model
     {
         return $this->hasMany(ProductDetail::class, 'product_id');
     }
+
 }
