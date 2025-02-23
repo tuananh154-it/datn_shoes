@@ -9,33 +9,41 @@ const QuanLyDanhMuc = () => {
     
   return (
     <>
-     <div>
-      <div className='bg-white py-2 px-4 flex justify-between items-center'>
-        <h2 className='font-bold text-lg'>Quản lý danh mục</h2>
-        <button className='border-2 border-red-600 px-3 py-1 text-red-400 rounded-full hover:bg-red-300 hover:text-white' onClick={()=>setsetopenUploadCategoty(true)}>Thêm danh mục</button>
-      </div>
-    </div>
-    <div>
-      <table className='w-full userTable'>
-        <thead>
-          <tr>
-            <th>Tên danh mục</th>
-            <th>Trạng thái</th>
-            <th>Ghi chú</th>
-            <th>Hành động</th>
-          </tr>
-        </thead>
-        <tbody>
-                  <tr>
-                    <td>Danh mục 1</td>
-                    <td>Sử dụng</td>
-                    <td>Danh mục</td>
-                    <td><button className='bg-green-300 p-2 rounded-full hover:bg-green-500 hover:text-white' onClick={()=> setupdateDanhMuc(true)}><RiEdit2Fill/></button></td>
-                  </tr>
-        
-                </tbody>
-      </table>
-    </div>
+     <section id="main-content">
+          <section className="wrapper">
+              <div className="row">
+                  <div className="col-lg-12">
+                      <section className="card">
+                          <header className="card-header">
+                             Quản lý danh mục
+                          </header>
+                          <table className="table table-striped table-advance table-hover">
+                              <thead>
+                              <tr>
+                                  <th><i className="fa fa-bullhorn"></i>Id</th>
+                                  <th><i className="fa fa-bullhorn"></i>Tên danh mục</th>
+                                  <th><i className=" fa fa-edit"></i> Mô tả</th>
+                                  <th><i className=" fa fa-edit"></i> Hành động</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr>
+                                  <td><a href="#">1</a></td>
+                                  <td><a href="#">Giày chạy bộ</a></td>
+                                  <td><span className="badge badge-info label-mini">Due</span></td>
+                                  <td>
+                                      <button className="btn btn-success btn-sm"><i className="fa fa-check"></i></button>
+                                      <button className="btn btn-primary btn-sm"><i className="fa fa-pencil"></i></button>
+                                      <button className="btn btn-danger btn-sm"><i className="fa fa-trash-o "></i></button>
+                                  </td>
+                              </tr>
+                              </tbody>
+                          </table>
+                      </section>
+                  </div>
+              </div>
+          </section>
+      </section>
     {
         openUploadCategoty && (
           <UploadCategory onClose={()=>setsetopenUploadCategoty(false)}/>

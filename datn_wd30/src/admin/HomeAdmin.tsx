@@ -37,6 +37,18 @@ const HomeAdmin = () => {
                       </Link>
                   </li>
                   <li>
+                      <Link  className="active" to={'all-categories'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý danh mục</span>
+                      </Link>
+                  </li>
+                  <li>
+                      <Link  className="active" to={'brand'}>
+                      <i  className="fa fa-laptop"></i>
+                          <span>Quản lý thương hiệu</span>
+                      </Link>
+                  </li>
+                  <li>
                       <Link  className="active" to={'size'}>
                       <i  className="fa fa-laptop"></i>
                           <span>Quản lý Size</span>

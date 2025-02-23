@@ -32,7 +32,7 @@ function App() {
         {path:'/admin/all-users',element:<AllUser/>},
         {path:'/admin/dashboard',element:<Dashboard/>},
         {path:'/admin/all-products',element:<AllProducts/>},
-        {path:'/admin/all-categotys', element:<QuanLyDanhMuc/>},
+        {path:'/admin/all-categories', element:<QuanLyDanhMuc/>},
         {path:'/admin/all-order',element:<QuanLyDonhang/>},
         {path:'/admin/update-admin',element:<UploadAdmin/>},
         {path:'/admin/voucher',element:<MaGiamGia/>},
