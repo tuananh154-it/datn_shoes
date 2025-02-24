@@ -63,6 +63,10 @@
                                         <i class="fa fa-trash-o"></i> 
                                     </button>
                                 </form>
+                                <a href="{{ route('products.show', $product->id) }}" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                                
                             </td>
                         </tr>
                     @endforeach

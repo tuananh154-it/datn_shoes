@@ -39,5 +39,8 @@ Route::prefix('admin')->group(function () {
     Route::resource('product-details', ProductDetailController::class);
     Route::resource('colors', ColorController::class);
     Route::resource('sizes', SizeController::class);
+    Route::get('products/{product}/details/create', [ProductController::class, 'createDetail'])->name('products.details.create');
+    Route::post('products/{product}/details', [ProductController::class, 'storeDetail'])->name('products.details.store');
+
 });
 

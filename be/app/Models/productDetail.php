@@ -8,12 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class ProductDetail extends Model
 {
     use HasFactory;
-    protected $table = 'product_detail';
+    protected $table = 'product_details';
     protected $primaryKey = 'id';
     public $timestamps = true;
 
     protected $fillable = [
-        'product_id', 'size_id', 'color_id', 'price', 'quantity', 'status'
+        'product_id', 'size_id', 'color_id', 'default_price','discount_price','image', 'quantity', 'status'
     ];
 
     public function product()

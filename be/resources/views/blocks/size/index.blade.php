@@ -36,7 +36,7 @@
                             <td>{{ $size->id }}</td>
                             <td class="hidden-phone">{{ $size->name }}</td>
                             <td>
-                                @if($color->status == 'active')
+                                @if($size->status == 'active')
                                 <span class="badge badge-info label-mini">Hoạt động</span>
                             @else
                                 <span class="badge badge-danger label-mini">Không hoạt động</span>

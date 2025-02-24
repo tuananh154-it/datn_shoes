@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductDetail;
+use App\Models\Size;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -16,15 +18,15 @@ class ProductController extends Controller
     public function index()
     {
         $products = Product::with('category', 'brand')->get();
-        return view('blocks.products.index', compact('products')); 
+        return view('blocks.products.index', compact('products'));
     }
 
 
 
     public function create()
     {
-        $categories = Category::all(); 
-        $brands = Brand::all(); 
+        $categories = Category::all();
+        $brands = Brand::all();
         return view('blocks.products.create', compact('categories', 'brands'));
     }
 
@@ -34,7 +36,7 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif',
@@ -45,7 +47,7 @@ class ProductController extends Controller
             'brand_id' => 'required|exists:brands,id',
         ]);
 
-        
+
         $imagePath = null;
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('product_images', 'public');
@@ -77,18 +79,34 @@ class ProductController extends Controller
     //     }
     //     return view('products.show', compact('product')); 
     // }
-    
+
 
     /**
      * Update the specified resource in storage.
      */
     public function edit(string $id)
     {
-        $categories = Category::all(); 
-        $brands = Brand::all(); 
+        $categories = Category::all();
+        $brands = Brand::all();
         $product = Product::findOrFail($id);
-        return view('blocks.products.edit', compact('product','categories', 'brands')); 
+        return view('blocks.products.edit', compact('product', 'categories', 'brands'));
     }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+       
+        $product = Product::with('category', 'brand')->find($id);
+
+        if (!$product) {
+            return redirect()->route('products.index')->with('error', 'Sản phẩm không tồn tại.');
+        }
+
+        return view('blocks.products.show', compact('product'));
+    }
+
 
     /**
      * Update the specified resource in storage.
@@ -105,22 +123,22 @@ class ProductController extends Controller
             'category_id' => 'required|exists:categories,id',
             'brand_id' => 'required|exists:brands,id',
         ]);
-    
-       
+
+
         $product = Product::findOrFail($id);
-    
+
         $imagePath = $product->image;
-    
+
         if ($request->hasFile('image')) {
-           
+
             if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
-                unlink(storage_path('app/public/' . $product->image)); 
+                unlink(storage_path('app/public/' . $product->image));
             }
-    
+
             $imagePath = $request->file('image')->store('product_images', 'public');
         }
-    
-       
+
+
         $product->update([
             'name' => $request->name,
             'image' => $imagePath,
@@ -130,10 +148,51 @@ class ProductController extends Controller
             'category_id' => $request->category_id,
             'brand_id' => $request->brand_id,
         ]);
-    
+
         return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
     }
-    
+
+//     public function createDetail($productId)
+//     {
+//         $product = Product::findOrFail($productId);
+//         $sizes = Size::all(); 
+//         $colors = Color::all(); 
+        
+//         return view('blocks.products.details.create', compact('product', 'sizes', 'colors'));
+//     }
+
+//     public function storeDetail(Request $request, $productId)
+// {
+//     $request->validate([
+//         'size_id' => 'required|exists:sizes,id',
+//         'color_id' => 'required|exists:colors,id',
+//         'quantity' => 'required|integer',
+//         'default_price' => 'required|numeric',
+//         'discount_price' => 'nullable|numeric',
+//         'status' => 'required|in:active,inactive',
+//         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif',
+//     ]);
+
+//     // Handle the image upload if exists
+//     $imagePath = null;
+//     if ($request->hasFile('image')) {
+//         $imagePath = $request->file('image')->store('product_details', 'public');
+//     }
+
+//     // Create the product detail
+//     ProductDetail::create([
+//         'product_id' => $productId,
+//         'size_id' => $request->size_id,
+//         'color_id' => $request->color_id,
+//         'quantity' => $request->quantity,
+//         'default_price' => $request->default_price,
+//         'discount_price' => $request->discount_price,
+//         'status' => $request->status,
+//         'image' => $imagePath,
+//     ]);
+
+//     return redirect()->route('products.show', $productId)->with('success', 'Chi tiết sản phẩm đã được thêm!');
+// }
 
     /**
      * Remove the specified resource from storage.
@@ -142,7 +201,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $product->delete();
-        
+
         return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
     }
 }
