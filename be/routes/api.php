@@ -23,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('products', ProductController::class);
-Route::apiResource('colors', ColorController::class);
-Route::apiResource('sizes', SizeController::class);
-Route::apiResource('product-details', ProductDetailController::class);
+// Route::apiResource('products', ProductController::class);
+// Route::apiResource('colors', ColorController::class);
+// Route::apiResource('sizes', SizeController::class);
+// Route::apiResource('product-details', ProductDetailController::class);

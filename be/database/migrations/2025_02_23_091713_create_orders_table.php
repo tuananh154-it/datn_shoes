@@ -25,6 +25,7 @@ return new class extends Migration
             $table->decimal('total_price', 15, 2);
             $table->text('note')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

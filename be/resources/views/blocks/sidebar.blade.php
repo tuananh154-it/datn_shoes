@@ -9,20 +9,29 @@
                 </a>
             </li>
 
+          
             <li class="sub-menu">
-                <a href="javascript:;" >
-                    <i class="fa fa-shopping-cart"></i>
-                    <span>Quản lý đơn hàng</span>
+                <a href="{{ route('sizes.index') }}" >
+                    <i class="fa fa-user"></i>
+                    <span>Quản lý kích thước</span>
+                </a>
+            </li>
+            
+            <li class="sub-menu">
+                <a href="{{ route('colors.index') }}" >
+                    <i class="fa fa-user"></i>
+                    <span>Quản lý màu sắc</span>
                 </a>
             </li>
 
             <li class="sub-menu">
-                <a href="javascript:;" >
-                    <i class="fa fa-book"></i>
+                <a href="{{ route('products.index') }}" >
+                    <i class="fa fa-user"></i>
                     <span>Quản lý sản phẩm</span>
                 </a>
             </li>
 
+            
             <li class="sub-menu">
                 <a href="javascript:;" >
                     <i class="fa fa-user"></i>

@@ -29,6 +29,7 @@ return new class extends Migration
         $table->text('notes')->nullable();
         $table->enum('gender', ['male', 'female', 'other']);
         $table->timestamps();
+        $table->softDeletes();
     });
 }
 
