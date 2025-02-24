@@ -60,7 +60,7 @@
                 </a>
             </li>
             <li class="sub-menu">
-                <a href="javascript:;" >
+                <a href="{{route('comments.index')}}" >
                     <i class="fa fa-comments-o"></i>
                     <span>Quản lý bình luận</span>
                 </a>
