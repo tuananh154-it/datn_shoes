@@ -17,11 +17,22 @@
             </li>
 
             <li class="sub-menu">
-                <a href="javascript:;" >
+                <a href="{{ route('products.index') }}" >
                     <i class="fa fa-book"></i>
                     <span>Quản lý sản phẩm</span>
                 </a>
+                <ul class="sub">
+                    <!-- Quản lý sản phẩm -->
+                    <li><a href="{{ route('products.index') }}">Danh sách sản phẩm</a></li>
+                    
+                    <!-- Quản lý màu sắc -->
+                    <li><a href="{{ route('colors.index') }}">Quản lý màu sắc</a></li>
+                    
+                    <!-- Quản lý kích thước -->
+                    <li><a href="{{ route('sizes.index') }}">Quản lý kích thước</a></li>
+                </ul>
             </li>
+            
 
             <li class="sub-menu">
                 <a href="javascript:;" >

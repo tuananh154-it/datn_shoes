@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductDetail;
 use Illuminate\Http\Request;
@@ -13,55 +15,79 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('details.size', 'details.color')->get();
-        return response()->json($products, 200);
-       
+        $products = Product::with('category', 'brand')->get();
+        return view('blocks.products.index', compact('products')); 
     }
+
+
+
+    public function create()
+    {
+        $categories = Category::all(); 
+        $brands = Brand::all(); 
+        return view('blocks.products.create', compact('categories', 'brands'));
+    }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        
         $request->validate([
             'name' => 'required|string|max:255',
-            'category_id' => 'required|integer',
-            'brand_id' => 'required|integer',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif',
             'price' => 'required|numeric',
-            'discount_price' => 'nullable|numeric',
-            'image_url' => 'nullable|string',
-            'status' => 'string|nullable',
-            'variants' => 'array'
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
         ]);
 
-        $product = Product::create($request->only(['name', 'description', 'category_id', 'brand_id', 'price', 'discount_price', 'image_url', 'status']));
-
-        if ($request->has('variants')) {
-            foreach ($request->variants as $variant) {
-                ProductDetail::create([
-                    'product_id' => $product->id,
-                    'size_id' => $variant['size_id'],
-                    'color_id' => $variant['color_id'],
-                    'price' => $variant['price'],
-                    'quantity' => $variant['quantity'],
-                    'status' => $variant['status']
-                ]);
-            }
+        
+        $imagePath = null;
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('product_images', 'public');
         }
 
-        return response()->json($product->load('details.size', 'details.color'), 201);
+        // Tạo sản phẩm mới
+        $product = Product::create([
+            'name' => $request->name,
+            'image' => $imagePath,
+            'price' => $request->price,
+            'description' => $request->description,
+            'status' => $request->status,
+            'category_id' => $request->category_id,
+            'brand_id' => $request->brand_id,
+        ]);
+
+        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được tạo thành công!');
     }
+
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    // public function show(string $id)
+    // {
+    //     $product = Product::with('details.size', 'details.color')->find($id);
+    //     if (!$product) {
+    //         return redirect()->route('products.index')->with('error', 'Product not found');
+    //     }
+    //     return view('products.show', compact('product')); 
+    // }
+    
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function edit(string $id)
     {
-        $product = Product::with('details.size', 'details.color')->find($id);
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
-        return response()->json($product, 200);
+        $categories = Category::all(); 
+        $brands = Brand::all(); 
+        $product = Product::findOrFail($id);
+        return view('blocks.products.edit', compact('product','categories', 'brands')); 
     }
 
     /**
@@ -69,10 +95,45 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        // Validate input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg,gif',
+            'price' => 'required|numeric',
+            'description' => 'nullable|string',
+            'status' => 'required|in:active,inactive',
+            'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'required|exists:brands,id',
+        ]);
+    
+       
         $product = Product::findOrFail($id);
-        $product->update($request->only(['name', 'description', 'category_id', 'brand_id', 'price', 'discount_price', 'image_url', 'status']));
-        return response()->json($product, 200);
+    
+        $imagePath = $product->image;
+    
+        if ($request->hasFile('image')) {
+           
+            if ($product->image && file_exists(storage_path('app/public/' . $product->image))) {
+                unlink(storage_path('app/public/' . $product->image)); 
+            }
+    
+            $imagePath = $request->file('image')->store('product_images', 'public');
+        }
+    
+       
+        $product->update([
+            'name' => $request->name,
+            'image' => $imagePath,
+            'price' => $request->price,
+            'description' => $request->description,
+            'status' => $request->status,
+            'category_id' => $request->category_id,
+            'brand_id' => $request->brand_id,
+        ]);
+    
+        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
     }
+    
 
     /**
      * Remove the specified resource from storage.
@@ -81,6 +142,7 @@ class ProductController extends Controller
     {
         $product = Product::findOrFail($id);
         $product->delete();
-        return response()->json(['message' => 'Product deleted'], 200);
+        
+        return redirect()->route('products.index')->with('success', 'Product deleted successfully!');
     }
 }

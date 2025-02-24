@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Size extends Model
 {
     use HasFactory;
-    protected $table = 'size';
+    protected $table = 'sizes';
     protected $primaryKey = 'id';
     public $timestamps = true;
 

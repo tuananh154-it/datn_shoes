@@ -12,48 +12,50 @@ class SizeController extends Controller
      */
     public function index()
     {
-        return response()->json(Size::all(), 200);
+        $sizes = Size::all();
+        return view('blocks.size.index', compact('sizes'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
+    public function create()
+    {
+        return view('blocks.size.create');
+    }
+
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:100',
-            'status' => 'string|nullable'
+        $validated = $request->validate([
+            'name' => 'required|string',
         ]);
 
-        $size = Size::create($request->all());
-        return response()->json($size, 201);
+        Size::create($validated);
+        return redirect()->route('sizes.index')->with('Thành công', 'Kích thước đã được tạo thành công!');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function edit($id)
     {
         $size = Size::findOrFail($id);
-        $size->update($request->all());
-        return response()->json($size, 200);
+        return view('blocks.size.edit', compact('size'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function update(Request $request, $id)
+    {
+        $size = Size::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'status' => 'required|in:active,inactive', 
+        ]);
+
+        $size->update($validated);
+        return redirect()->route('sizes.index')->with('Thành công', 'Kích thước đã được cập nhật thành côgn!');
+    }
+
+    public function destroy($id)
     {
         $size = Size::findOrFail($id);
         $size->delete();
-        return response()->json(['message' => 'Size deleted'], 200);
+        return redirect()->route('sizes.index')->with('Thành công', 'kích thước đã được xóa thành công!');
     }
+
 }
