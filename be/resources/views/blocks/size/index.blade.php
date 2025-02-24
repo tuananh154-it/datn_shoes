@@ -1,4 +1,10 @@
-@extends('master')
+
+<style>
+
+    .row{
+        padding-top: 60px;
+    }
+</style>@extends('master')
 
 @section('content')
 
@@ -25,7 +31,7 @@
                 <thead>
                     <tr>
                         <th><i class=""></i> ID</th>
-                        <th class="hidden-phone"><i class=""></i> Tên</th>
+                        <th class="hidden-phone"><i class=""></i> Kích thước</th>
                         <th><i class=""></i> Trạng thái</th>
                         <th></th>
                     </tr>

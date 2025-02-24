@@ -8,18 +8,14 @@
                     <span>Dashboard</span>
                 </a>
             </li>
-{{-- 
+
+          
             <li class="sub-menu">
-                <a href="{{ route('products.index') }}">
-                    <i class="fa fa-book"></i>
-                    <span>Quản lý sản phẩm</span>
+                <a href="{{ route('sizes.index') }}" >
+                    <i class="fa fa-user"></i>
+                    <span>Quản lý kích thước</span>
                 </a>
-                <ul class="sub">
-                    <li><a href="{{ route('products.index') }}">Danh sách sản phẩm</a></li>
-                    <li><a href="{{ route('colors.index') }}">Quản lý màu sắc</a></li>
-                    <li><a href="{{ route('sizes.index') }}">Quản lý kích thước</a></li>
-                </ul>
-            </li> --}}
+            </li>
             
             <li class="sub-menu">
                 <a href="{{ route('colors.index') }}" >
@@ -29,19 +25,13 @@
             </li>
 
             <li class="sub-menu">
-                <a href="{{ route('sizes.index') }}" >
-                    <i class="fa fa-user"></i>
-                    <span>Quản lý kích thước</span>
-                </a>
-            </li>
-            <li class="sub-menu">
                 <a href="{{ route('products.index') }}" >
                     <i class="fa fa-user"></i>
                     <span>Quản lý sản phẩm</span>
                 </a>
             </li>
-            
 
+            
             <li class="sub-menu">
                 <a href="javascript:;" >
                     <i class="fa fa-user"></i>

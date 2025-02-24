@@ -1,3 +1,9 @@
+<style>
+
+    .row{
+        padding-top: 60px;
+    }
+</style>
 @extends('master')
 
 @section('content')

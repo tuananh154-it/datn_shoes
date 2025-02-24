@@ -1,3 +1,9 @@
+<style>
+
+    .row{
+        padding-top: 60px;
+    }
+</style>
 @extends('master')
 
 @section('content')
@@ -25,8 +31,8 @@
 
                     <!-- Tên kích thước -->
                     <div class="form-group">
-                        <label for="name">Tên kích thước</label>
-                        <input type="text" name="name" id="name" class="form-control form-control-lg mb-2" placeholder="Tên kích thước" value="{{ old('name') }}">
+                        <label for="name">Kích thước</label>
+                        <input type="text" name="name" id="name" class="form-control form-control-lg mb-2" placeholder="Kích thước" value="{{ old('name') }}">
                     </div>
 
                     <!-- Nút Thêm -->
