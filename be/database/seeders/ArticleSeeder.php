@@ -23,9 +23,10 @@ class ArticleSeeder extends Seeder
                 'image' => 'article' . $i . '.jpg',
                 'created_at' => now(),
                 'updated_at' => now(),
+                "đ"=>fake()
             ];
         }
- 
+
         Article::insert($articles);
     }
 }

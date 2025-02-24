@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ArticlesController;
 
 
@@ -22,6 +23,8 @@ use App\Http\Controllers\ArticlesController;
 Route::get('/', function () {
     return view('master');
 });
-
+//quan lý bài viết
 Route::resource('/articles', ArticlesController::class);
+//quan ly comment
+Route::resource('/comments', CommentController::class);
 
