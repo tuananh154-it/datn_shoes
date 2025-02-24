@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\ArticlesController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +22,6 @@ use App\Http\Controllers\AddressController;
 Route::get('/', function () {
     return view('master');
 });
+
+Route::resource('/articles', ArticlesController::class);
+
