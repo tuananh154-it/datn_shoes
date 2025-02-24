@@ -2,10 +2,21 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
-    protected $table = 'brand';
-    public $timestamps = false;
+    use HasFactory;
+    protected $table = 'brands';
+    public $timestamps = true;
+    protected $fillable = [
+        'name',
+        'status',
+    ];
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
