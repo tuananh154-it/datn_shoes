@@ -6,6 +6,10 @@ use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\SizeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\CommentController;
+use App\Http\Controllers\ArticlesController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -43,4 +47,8 @@ Route::prefix('admin')->group(function () {
     Route::post('products/{product}/details', [ProductController::class, 'storeDetail'])->name('products.details.store');
 
 });
+//quan lý bài viết
+Route::resource('/articles', ArticlesController::class);
+//quan ly comment
+Route::resource('/comments', CommentController::class);
 

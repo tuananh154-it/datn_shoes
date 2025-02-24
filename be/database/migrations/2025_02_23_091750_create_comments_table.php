@@ -13,12 +13,17 @@ return new class extends Migration
 {
     Schema::create('comments', function (Blueprint $table) {
         $table->id();
-        $table->foreignId('customer_id')->constrained('customers');
-        $table->foreignId('product_id')->constrained('products');
-        $table->text('comment');
-        $table->integer('star_rating')->default(5); // Rating from 1 to 5
-        $table->timestamps();
-        $table->softDeletes();
+        $table->unsignedBigInteger('user_id'); // ID của người dùng đã tạo bình luận
+        $table->unsignedBigInteger('product_id'); // ID của sản phẩm
+        $table->string('comment')->nullable(); // Nội dung bình luận
+        $table->string('file')->nullable(); // Đường dẫn tới file đính kèm
+        $table->unsignedTinyInteger('star_rating')->default(0); // Đánh giá sao, giá trị từ 0-5
+        $table->softDeletes(); // Cột dùng cho soft delete
+        $table->timestamps(); // Cột thời gian tạo và cập nhật
+
+        // Khóa ngoại liên kết với bảng users và products
+        $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+        $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
     });
 }
     /**

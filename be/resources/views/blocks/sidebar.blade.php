@@ -67,7 +67,7 @@
                 </a>
             </li>
             <li class="sub-menu">
-                <a href="javascript:;" >
+                <a href="{{route('articles.index')}}" >
                     <i class="fa fa-file-text"></i>
                     <span>Quản lý bài viết</span>
                 </a>

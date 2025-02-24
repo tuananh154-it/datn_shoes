@@ -13,11 +13,11 @@ public function up()
 {
     Schema::create('articles', function (Blueprint $table) {
         $table->id();
+        $table->string('name')->nullable(false);
         $table->string('title');
         $table->text('content');
         $table->string('image')->nullable();
         $table->timestamps();
-        $table->softDeletes();
     });
 }
 
