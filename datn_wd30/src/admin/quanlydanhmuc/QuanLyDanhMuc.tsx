@@ -20,6 +20,7 @@ const QuanLyDanhMuc = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
+                              <th><i className="fa fa-bullhorn"></i>Id</th>
                                   <th><i className="fa fa-bullhorn"></i>Category</th>
                                   <th><i className="fa fa-bullhorn"></i>Description</th>
                                   <th><i className="fa fa-question-circle"></i> Status</th>
@@ -31,6 +32,7 @@ const QuanLyDanhMuc = () => {
                               </thead>
                               <tbody>
                               <tr>
+                              <td>1</td>
                                   <td><a href="#">Danh mục 1</a></td>
                                   <td>desscription</td>
                                   <td><span className="badge badge-info label-mini">Sử dụng</span></td>
@@ -43,6 +45,7 @@ const QuanLyDanhMuc = () => {
                                   </td>
                               </tr>
                               <tr>
+                              <td>1</td>
                                   <td><a href="#">Danh mục 1</a></td>
                                   <td>desscription</td>
                                   <td><span className="badge badge-info label-mini">Sử dụng</span></td>

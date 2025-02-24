@@ -20,6 +20,7 @@ const AllProducts = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
+                              <th><i className="fa fa-bullhorn"></i>Id</th>
                                   <th><i className="fa fa-bullhorn"></i>Name</th>
                                   <th className="hidden-phone"><i className="fa fa-question-circle"></i>image_url</th>
                                   <th><i className="fa fa-bullhorn"></i>Brand_id</th>
@@ -33,6 +34,7 @@ const AllProducts = () => {
                               </thead>
                               <tbody>
                               <tr>
+                              <td>1</td>
                                   <td><a href="#">Sản phẩm 1</a></td>
                                   <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
                                   <td>001</td>
@@ -47,6 +49,7 @@ const AllProducts = () => {
                                   </td>
                               </tr>
                               <tr>
+                              <td>1</td>
                                   <td><a href="#">Sản phẩm 1</a></td>
                                   <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
                                   <td>001</td>
@@ -61,6 +64,7 @@ const AllProducts = () => {
                                   </td>
                               </tr>
                               <tr>
+                              <td>1</td>
                                   <td><a href="#">Sản phẩm 1</a></td>
                                   <td className="hidden-phone"><img width={200} height={200} src='https://salt.tikicdn.com/cache/w1200/ts/product/c9/97/70/46f4d5b4ffc1fe8b29f272ac0261b773.jpg'/></td>
                                   <td>001</td>

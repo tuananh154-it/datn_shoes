@@ -2,11 +2,20 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Size extends Model
 {
-    protected $table = 'size';
+    use HasFactory;
+    protected $table = 'sizes';
+    protected $primaryKey = 'id';
+    public $timestamps = true;
 
-    public $timestamps = false;
+    protected $fillable = ['name', 'discount_price', 'image_url', 'status'];
+    public function productDetails()
+    {
+        return $this->hasMany(ProductDetail::class, 'size_id');
+    }
+
 }

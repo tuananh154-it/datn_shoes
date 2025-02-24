@@ -20,6 +20,7 @@ const AllKhachHang = () => {
                           <table className="table table-striped table-advance table-hover">
                               <thead>
                               <tr>
+                              <th><i className="fa fa-bullhorn"></i>Id</th>
                                   <th><i className="fa fa-bullhorn"></i> User name</th>
                                   <th><i className="fa fa-bullhorn"></i> Phone_number</th>
                                   <th><i className="fa fa-bookmark"></i> Email</th>
@@ -34,6 +35,7 @@ const AllKhachHang = () => {
                               </thead>
                               <tbody>
                               <tr>
+                              <td>1</td>
                                   <td><a href="#">Nguyễn Văn a</a></td>  
                                   <td>0123456789</td>
                                   <td>a@gmail.com</td>
