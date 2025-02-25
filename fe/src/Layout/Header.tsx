@@ -59,7 +59,7 @@ const Header = () => {
                         </ul>
                     </li>
                     <li className="nav-item dropdown mega-dropdown">
-                        <a className="nav-link text-uppercase" href="grids_blog_list.html">Blog</a>
+                        <a className="nav-link text-uppercase" href="/blog">Blog</a>
                         <span className="menu_arrow flaticon-down-arrow-1"></span>
                         <ul className="dropdown-menu mega-dropdown-menu">                                    
                             <li className="w-100"><a href="grid_blog_list_with_sidebar.html">1 grid blog list with sidebar </a></li>
@@ -95,7 +95,7 @@ const Header = () => {
                 <a href="/login"><i className="flaticon-social"></i></a>
             </li>
             <li className="wishlist_icon">
-                <a href="wishlist.html"><i className="flaticon-heart"></i></a>
+                <a href="/wishlist"><i className="flaticon-heart"></i></a>
             </li>
             <li className="search_icon">
                 <a href="javascript:void(0);"><i className="flaticon-magnifying-glass"></i></a>

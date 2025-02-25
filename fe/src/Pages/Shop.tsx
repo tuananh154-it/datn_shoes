@@ -1,10 +1,11 @@
+import { Link } from "react-router-dom"
 
 const Shop = () => {
   return (
      <> 
     <div className="menu_overlay"></div>
      <div className="main_section">
-     <section className="breadcrumb_section nav">
+        <section className="breadcrumb_section nav">
                 <div className="container">
                     <nav aria-label="breadcrumb">
                         <ol className="breadcrumb">
@@ -467,8 +468,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product1.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                        <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
                                 </div>
@@ -505,8 +506,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product2.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
                                 </div>
@@ -535,8 +536,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product3.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  new-label ">new<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -558,8 +559,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product5.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  new-label ">new<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -606,8 +607,9 @@ const Shop = () => {
                                         </li>
                                     </ul>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                        {/* <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>  */}
+                                        <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                        <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  sale-label ">sale<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -648,8 +650,8 @@ const Shop = () => {
                                         </li>
                                     </ul>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase sale-label ">sale<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -672,8 +674,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product8.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail;" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
                                 </div>
@@ -694,8 +696,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product1.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
                                 </div>
@@ -759,8 +761,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product3.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  new-label ">new<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -812,8 +814,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product1.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
                                 </div>
@@ -850,8 +852,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product2.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
                                 </div>
@@ -880,8 +882,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product3.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  new-label ">new<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -903,8 +905,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product5.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  new-label ">new<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -951,8 +953,8 @@ const Shop = () => {
                                         </li>
                                     </ul>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  sale-label ">sale<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -1007,8 +1009,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product8.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
                                 </div>
@@ -1029,8 +1031,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product1.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
                                 </div>
@@ -1067,8 +1069,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product5.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  new-label ">new<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -1094,8 +1096,8 @@ const Shop = () => {
                                 <div className="featured_img_content">
                                     <img src="src/images/f_product3.png" alt="f_product" className="img-fluid"/>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  new-label ">new<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
@@ -1123,8 +1125,8 @@ const Shop = () => {
                                         </li>
                                     </ul>
                                     <div className="featured_btn vertical_middle">
-                                        <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>
-                                        <a href="javascript:void(0);" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
+                                    <Link to="/cart" className="text-uppercase background-btn add_to_bag_btn" > Add to bag</Link>
+                                    <a href="/product_detail" className="text-uppercase border-btn popup_btn" data-modal="#modalone">Quick View</a>
                                     </div>
                                     <div className="product-label  text-uppercase  sale-label ">sale<span className="diamond_shape"></span></div>
                                     <a href="javascript:void(0);" className="heart  rounded-circle text-center "><i className="flaticon-heart vertical_middle"></i></a>
