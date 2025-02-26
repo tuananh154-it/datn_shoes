@@ -104,12 +104,30 @@
                 </table>
             </div>
 
-            <div class="row">
-                <div class="col-md-6">
-                    <p>Hiển thị từ {{ $articles->firstItem() }} đến {{ $articles->lastItem() }} của tổng cộng {{ $articles->total() }} mục</p>
+            <div class="row-fluid">
+                <div class="span6">
+                    <div class="dataTables_info" id="hidden-table-info_info">
+                        Hiển thị từ {{ $articles->firstItem() }} đến {{ $articles->lastItem() }} của tổng
+                        cộng {{ $articles->total() }} mục
+                    </div>
                 </div>
-                <div class="col-md-6 text-right">
-                    {{ $articles->links() }}
+                <div class="span6">
+                    <div class="dataTables_paginate paging_bootstrap pagination">
+                        <ul class="pagination">
+                            <li class="prev">
+                                <a href="{{ $articles->previousPageUrl() }}" aria-label="Previous">←
+                                    Trước</a>
+                            </li>
+                            @foreach ($articles->getUrlRange(1, $articles->lastPage()) as $page => $url)
+                                <li class="{{ $page == $articles->currentPage() ? 'active' : '' }}">
+                                    <a href="{{ $url }}">{{ $page }}</a>
+                                </li>
+                            @endforeach
+                            <li class="next">
+                                <a href="{{ $articles->nextPageUrl() }}" aria-label="Next">Sau →</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </section>
