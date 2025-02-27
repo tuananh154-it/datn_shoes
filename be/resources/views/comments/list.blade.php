@@ -109,8 +109,31 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="d-flex justify-content-center mt-3">
-                    {{ $comments->links() }}
+                <div class="row-fluid">
+                    <div class="span6">
+                        <div class="dataTables_info" id="hidden-table-info_info">
+                            Hiển thị từ {{ $comments->firstItem() }} đến {{ $comments->lastItem() }} của tổng
+                            cộng {{ $comments->total() }} mục
+                        </div>
+                    </div>
+                    <div class="span6">
+                        <div class="dataTables_paginate paging_bootstrap pagination">
+                            <ul class="pagination">
+                                <li class="prev">
+                                    <a href="{{ $comments->previousPageUrl() }}" aria-label="Previous">←
+                                        Trước</a>
+                                </li>
+                                @foreach ($comments->getUrlRange(1, $comments->lastPage()) as $page => $url)
+                                    <li class="{{ $page == $comments->currentPage() ? 'active' : '' }}">
+                                        <a href="{{ $url }}">{{ $page }}</a>
+                                    </li>
+                                @endforeach
+                                <li class="next">
+                                    <a href="{{ $comments->nextPageUrl() }}" aria-label="Next">Sau →</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>
