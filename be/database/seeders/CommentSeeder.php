@@ -33,5 +33,4 @@ class CommentSeeder extends Seeder
             ]);
         }
     }
-
 }

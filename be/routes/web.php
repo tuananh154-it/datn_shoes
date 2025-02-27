@@ -6,8 +6,11 @@ use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\SizeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\Admins\ContactController as AdminsContactController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ArticlesController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\BannerController;
 
 
 
@@ -48,10 +51,11 @@ Route::prefix('admin')->group(function () {
     Route::get('product-details/{id}/edit', [ProductDetailController::class, 'edit'])->name('product-details.edit');
     Route::put('product-details/{id}', [ProductDetailController::class, 'update'])->name('product-details.update');
     Route::delete('product-details/{id}', [ProductDetailController::class, 'destroy'])->name('product-details.destroy');
+    //quan lý bài viết
+    Route::resource('articles', ArticlesController::class);
+    //quan ly comment
+    Route::resource('comments', CommentController::class);
+    Route::resource('contacts', ContactController::class);
 
+    Route::resource('banners', BannerController::class);
 });
-//quan lý bài viết
-Route::resource('/articles', ArticlesController::class);
-//quan ly comment
-Route::resource('/comments', CommentController::class);
-
