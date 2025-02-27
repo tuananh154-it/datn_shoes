@@ -8,6 +8,7 @@ use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductDetail;
 use App\Models\Size;
+
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -71,14 +72,7 @@ class ProductController extends Controller
     /**
      * Display the specified resource.
      */
-    // public function show(string $id)
-    // {
-    //     $product = Product::with('details.size', 'details.color')->find($id);
-    //     if (!$product) {
-    //         return redirect()->route('products.index')->with('error', 'Product not found');
-    //     }
-    //     return view('products.show', compact('product')); 
-    // }
+   
 
 
     /**
@@ -151,48 +145,6 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
     }
-
-//     public function createDetail($productId)
-//     {
-//         $product = Product::findOrFail($productId);
-//         $sizes = Size::all(); 
-//         $colors = Color::all(); 
-        
-//         return view('blocks.products.details.create', compact('product', 'sizes', 'colors'));
-//     }
-
-//     public function storeDetail(Request $request, $productId)
-// {
-//     $request->validate([
-//         'size_id' => 'required|exists:sizes,id',
-//         'color_id' => 'required|exists:colors,id',
-//         'quantity' => 'required|integer',
-//         'default_price' => 'required|numeric',
-//         'discount_price' => 'nullable|numeric',
-//         'status' => 'required|in:active,inactive',
-//         'image' => 'nullable|image|mimes:jpg,png,jpeg,gif',
-//     ]);
-
-//     // Handle the image upload if exists
-//     $imagePath = null;
-//     if ($request->hasFile('image')) {
-//         $imagePath = $request->file('image')->store('product_details', 'public');
-//     }
-
-//     // Create the product detail
-//     ProductDetail::create([
-//         'product_id' => $productId,
-//         'size_id' => $request->size_id,
-//         'color_id' => $request->color_id,
-//         'quantity' => $request->quantity,
-//         'default_price' => $request->default_price,
-//         'discount_price' => $request->discount_price,
-//         'status' => $request->status,
-//         'image' => $imagePath,
-//     ]);
-
-//     return redirect()->route('products.show', $productId)->with('success', 'Chi tiết sản phẩm đã được thêm!');
-// }
 
     /**
      * Remove the specified resource from storage.

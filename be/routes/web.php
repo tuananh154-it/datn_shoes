@@ -43,8 +43,11 @@ Route::prefix('admin')->group(function () {
     Route::resource('product-details', ProductDetailController::class);
     Route::resource('colors', ColorController::class);
     Route::resource('sizes', SizeController::class);
-    // Route::get('products/{product}/details/create', [ProductController::class, 'createDetail'])->name('products.details.create');
-    // Route::post('products/{product}/details', [ProductController::class, 'storeDetail'])->name('products.details.store');
+    Route::get('products/{productId}/details/create', [ProductDetailController::class, 'create'])->name('product-details.create');
+    Route::post('products/{productId}/details', [ProductDetailController::class, 'store'])->name('product-details.store');
+    Route::get('product-details/{id}/edit', [ProductDetailController::class, 'edit'])->name('product-details.edit');
+    Route::put('product-details/{id}', [ProductDetailController::class, 'update'])->name('product-details.update');
+    Route::delete('product-details/{id}', [ProductDetailController::class, 'destroy'])->name('product-details.destroy');
 
 });
 //quan lý bài viết
