@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Category extends Model
 {
-    protected $table = 'category';
+    use HasFactory;
+    protected $table = 'categories';
 
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
         'name',
@@ -16,4 +18,8 @@ class Category extends Model
         'created_at',
         'updated_at'
     ];
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
