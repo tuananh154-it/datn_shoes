@@ -44,7 +44,7 @@
             @yield('content')
 
         </section>
-    
+
         <!--main content end-->
 
         <!-- Right Slidebar start -->
@@ -246,7 +246,7 @@
           owl.reinit();
       });
 
-      
+
 
   </script>
 

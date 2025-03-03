@@ -5,20 +5,16 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\SizeController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AddressController;
-use App\Http\Controllers\Admins\ContactController as AdminsContactController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ArticlesController;
-<<<<<<< HEAD
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
-=======
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BannerController;
->>>>>>> origin/duc
+
 
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -61,12 +57,12 @@ Route::prefix('admin')->middleware(['role:admin|super admin'])->group(function (
     Route::resource('product-details', ProductDetailController::class);
     Route::resource('colors', ColorController::class);
     Route::resource('sizes', SizeController::class);
-<<<<<<< HEAD
+
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     // Route::get('products/{product}/details/create', [ProductController::class, 'createDetail'])->name('products.details.create');
     // Route::post('products/{product}/details', [ProductController::class, 'storeDetail'])->name('products.details.store');
-=======
+
     Route::get('products/{productId}/details/create', [ProductDetailController::class, 'create'])->name('product-details.create');
     Route::post('products/{productId}/details', [ProductDetailController::class, 'store'])->name('product-details.store');
     Route::get('product-details/{id}/edit', [ProductDetailController::class, 'edit'])->name('product-details.edit');
@@ -76,17 +72,11 @@ Route::prefix('admin')->middleware(['role:admin|super admin'])->group(function (
     Route::resource('articles', ArticlesController::class);
     //quan ly comment
     Route::resource('comments', CommentController::class);
+    //lien he
     Route::resource('contacts', ContactController::class);
->>>>>>> origin/duc
-
+    //banner
     Route::resource('banners', BannerController::class);
 });
-<<<<<<< HEAD
-//quan lý bài viết
-Route::resource('/articles', ArticlesController::class);
-//quan ly comment
-Route::resource('/comments', CommentController::class);
-
 
 // Auth::routes();
 
@@ -117,5 +107,4 @@ Route::resource('profiles', ProfileController::class);
 
 // Routes cho Roles
 // Route::resource('roles', RoleController::class);
-=======
->>>>>>> origin/duc
+
