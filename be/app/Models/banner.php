@@ -2,11 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Banner extends Model
 {
-    protected $table = 'banners';
+    use HasFactory, SoftDeletes;
 
-    public $timestamps = false;
+    protected $fillable = ['image_url', 'link'];
+
+    protected $dates = ['deleted_at'];
 }

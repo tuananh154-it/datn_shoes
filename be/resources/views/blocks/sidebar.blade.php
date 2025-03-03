@@ -9,14 +9,14 @@
                 </a>
             </li>
 
-          
+
             <li class="sub-menu">
                 <a href="{{ route('sizes.index') }}" >
                     <i class="fa fa-user"></i>
                     <span>Quản lý kích thước</span>
                 </a>
             </li>
-            
+
             <li class="sub-menu">
                 <a href="{{ route('colors.index') }}" >
                     <i class="fa fa-user"></i>
@@ -31,7 +31,7 @@
                 </a>
             </li>
 
-            
+
             <li class="sub-menu">
                 <a href="javascript:;" >
                     <i class="fa fa-user"></i>
@@ -63,13 +63,13 @@
                 </a>
             </li>
             <li class="sub-menu">
-                <a href="javascript:;" >
+                <a href="{{route('banners.index')}}" >
                     <i class="fa fa-tag"></i>
                     <span>Quản lý Banner</span>
                 </a>
             </li>
             <li class="sub-menu">
-                <a href="javascript:;" >
+                <a href="{{route('comments.index')}}" >
                     <i class="fa fa-comments-o"></i>
                     <span>Quản lý bình luận</span>
                 </a>
@@ -81,7 +81,7 @@
                 </a>
             </li>
             <li class="sub-menu">
-                <a href="javascript:;">
+                <a href="{{route('contacts.index')}}">
                     <i class="fa fa-phone"></i>
                     <span>Quản lý liên hệ</span>
                 </a>
