@@ -16,11 +16,31 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::with('category', 'brand')->get();
+        // Lấy các tham số tìm kiếm từ form
+        $searchTerm = $request->input('search');
+        $status = $request->input('status');
+    
+        $query = Product::query();
+    
+        // Tìm kiếm theo tên nếu có
+        if ($searchTerm) {
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+    
+        // Tìm kiếm theo trạng thái nếu có
+        if ($status) {
+            $query->where('status', $status);
+        }
+    
+        
+        // Lấy sản phẩm sau khi lọc và phân trang
+        $products = $query->orderBy('id', 'desc')->paginate(5);
+    
         return view('blocks.products.index', compact('products'));
     }
+    
 
 
 
@@ -39,7 +59,7 @@ class ProductController extends Controller
     {
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:products,name',
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif',
             'price' => 'required|numeric',
             'description' => 'nullable|string',
@@ -57,7 +77,7 @@ class ProductController extends Controller
         // Tạo sản phẩm mới
         $product = Product::create([
             'name' => $request->name,
-            'image' => $imagePath,
+            'image' => $imagePath, 
             'price' => $request->price,
             'description' => $request->description,
             'status' => $request->status,

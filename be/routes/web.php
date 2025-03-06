@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductDetailController;
@@ -51,6 +52,8 @@ Route::prefix('admin')->group(function () {
     Route::get('product-details/{id}/edit', [ProductDetailController::class, 'edit'])->name('product-details.edit');
     Route::put('product-details/{id}', [ProductDetailController::class, 'update'])->name('product-details.update');
     Route::delete('product-details/{id}', [ProductDetailController::class, 'destroy'])->name('product-details.destroy');
+    Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('ckeditor.upload');
+
     //quan lý bài viết
     Route::resource('articles', ArticlesController::class);
     //quan ly comment

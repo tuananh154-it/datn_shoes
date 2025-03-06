@@ -35,7 +35,8 @@
                     <div class="col-md-6">
                         <h4>{{ $product->name }}</h4>
                         <p><strong>Giá:</strong> {{ number_format($product->price, 2) }} VNĐ</p>
-                        <p><strong>Mô tả:</strong> {{ $product->description ?? 'Chưa có mô tả.' }}</p>
+                      
+                        <p ><strong>Mô tả:</strong> {!! $product->description ?? 'Chưa có mô tả.' !!}</p>
                         <p><strong>Trạng thái:</strong> 
                             @if($product->status == 'active')
                                 <span class="badge badge-success">Hoạt động</span>
@@ -132,5 +133,18 @@
         </section>
     </div>
 </div>
+<style>
+    /* Giới hạn kích thước hình ảnh trong mô tả sản phẩm */
+.image img {
+    max-width: 100%;
+    height: auto;
+    max-height: 200px; /* Hoặc một giá trị bạn muốn */
+}
+p img {
+    max-width: 100%;
+    height: auto;
+    max-height: 200px; /* Hoặc một giá trị bạn muốn */
+}
 
+</style>
 @endsection
