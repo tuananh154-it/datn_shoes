@@ -7,12 +7,25 @@ use Illuminate\Http\Request;
 
 class ColorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $colors = Color::all();
+        $searchTerm = $request->input('search');
+        $status = $request->input('status');
+        
+        $query = Color::query(); 
+        
+        if ($searchTerm) {
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+        
+      
+        if ($status) {
+            $query->where('status', $status); 
+        }
+        $colors = $query->orderBy('id', 'desc')->paginate(5);
+        
         return view('blocks.color.index', compact('colors'));
     }
-
     public function create()
     {
         return view('blocks.color.create');
