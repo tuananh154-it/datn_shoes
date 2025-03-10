@@ -14,8 +14,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BannerController;
-
-
+use App\Http\Controllers\CKEditorController;
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -48,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-Route::prefix('admin')->middleware(['role:admin|super admin'])->group(function () {
+Route::prefix('admin')->group(function () {
     Route::get('/', function () {
         return view('master');
     });

@@ -27,6 +27,9 @@
 
     <link href="/client/flatlab-4/css/style.css" rel="stylesheet">
     <link href="client/flatlab-4/css/style-responsive.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/44.3.0/ckeditor5.css" />
+    <script src="https://cdn.ckeditor.com/ckeditor5/37.0.1/classic/ckeditor.js"></script>
+
 
   </head>
 
@@ -42,8 +45,9 @@
         <!--main content start-->
         <section id="main-content">
             @yield('content')
-
+            @yield('js-cus')
         </section>
+
 
         <!--main content end-->
 
