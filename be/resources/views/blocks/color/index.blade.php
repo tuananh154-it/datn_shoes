@@ -20,6 +20,27 @@
                     {{ session('success') }}
                 </div>
             @endif
+           
+            <div class="mb-3">
+                <form action="{{ route('colors.index') }}" method="GET">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm màu sắc" value="{{ request()->search }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="status" class="form-control">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="active" {{ request()->status == 'active' ? 'selected' : '' }}>Hoạt động</option>
+                                <option value="inactive" {{ request()->status == 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
 
             <div class="mb-3">
                 <a href="{{ route('colors.create') }}" class="btn btn-success btn-sm">
@@ -67,6 +88,9 @@
             </table>
         </section>
     </div>
+</div>
+<div class="pagination">
+    {{ $colors->links() }}
 </div>
 
 @endsection

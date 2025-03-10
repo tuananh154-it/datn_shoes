@@ -49,9 +49,13 @@
                     </div>
 
                     <!-- Mô tả sản phẩm -->
-                    <div class="form-group">
+                    {{-- <div class="form-group">
                         <label for="description">Mô tả sản phẩm</label>
                         <textarea name="description" id="description" class="form-control" rows="4" placeholder="Mô tả sản phẩm">{{ old('description') }}</textarea>
+                    </div> --}}
+                    <div class="form-group">
+                        <label for="description">Mô tả sản phẩm</label>
+                        <textarea name="description" id="description"  rows="10" placeholder="Mô tả sản phẩm">{{ old('description') }}</textarea>
                     </div>
 
                     <!-- Trạng thái sản phẩm -->
@@ -90,6 +94,64 @@
                 </form>
             </div>
         </section>
+        
+        {{-- <script>
+            ClassicEditor
+                .create(document.querySelector('#description'))
+                .catch(error => {
+                    console.error(error);
+                });
+        </script> --}}
+        <script>
+    //        ClassicEditor
+    // .create(document.querySelector('#description'), {
+    //     ckfinder: {
+    //         uploadUrl: '{{ route('ckeditor.upload') }}',
+    //     },
+    //     toolbar: [
+    //         'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
+    //     ]
+    // })
+    // .catch(error => {
+    //     console.error(error);
+    // });
+
+    // Thêm CSRF token vào header yêu cầu
+// ClassicEditor
+//     .create(document.querySelector('#description'), {
+//         ckfinder: {
+//             uploadUrl: '{{ route('ckeditor.upload') }}', // Đảm bảo route này đúng
+//             options: {
+//                 // Thêm CSRF token vào header
+//                 headers: {
+//                     'X-CSRF-TOKEN': '{{ csrf_token() }}' // Thêm CSRF token vào header
+//                 }
+//             }
+//         },
+//         toolbar: [
+//             'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
+//         ]
+//     })
+//     .catch(error => {
+//         console.error(error);
+//     });
+
+
+ClassicEditor
+    .create(document.querySelector('#description'), {
+        ckfinder: {
+            uploadUrl: '{{ route('ckeditor.upload') }}',
+        },
+        debug: 'all',  // Bật chế độ debug để theo dõi lỗi chi tiết
+        toolbar: [
+            'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
+        ]
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
+        </script>
     </div>
 </div>
 @endsection

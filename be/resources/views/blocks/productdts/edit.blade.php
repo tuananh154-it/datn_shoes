@@ -13,6 +13,15 @@
             <header class="card-header">
                 Chỉnh sửa chi tiết sản phẩm: {{ $detail->product->name }}
             </header>
+            @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
             <div class="card-body">
                 <!-- Hiển thị thông báo thành công nếu có -->
                 @if(session('success'))

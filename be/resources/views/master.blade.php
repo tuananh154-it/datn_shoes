@@ -27,6 +27,9 @@
 
     <link href="/client/flatlab-4/css/style.css" rel="stylesheet">
     <link href="client/flatlab-4/css/style-responsive.css" rel="stylesheet" />
+<!-- Thêm CKEditor -->
+<script src="https://cdn.ckeditor.com/ckeditor5/34.1.0/classic/ckeditor.js"></script>
+
 
   </head>
 

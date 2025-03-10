@@ -10,12 +10,30 @@ class SizeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $sizes = Size::all();
+        // Lấy tham số tìm kiếm từ form
+        $searchTerm = $request->input('search');
+        $status = $request->input('status');
+        
+        $query = Size::query(); // Dùng Size model thay vì Product
+        
+        // Tìm kiếm theo tên size nếu có
+        if ($searchTerm) {
+            $query->where('name', 'like', '%' . $searchTerm . '%'); // Tìm kiếm theo tên
+        }
+        
+        // Tìm kiếm theo trạng thái nếu có
+        if ($status) {
+            $query->where('status', $status); // Tìm kiếm theo trạng thái
+        }
+        
+        // Lấy kết quả tìm kiếm và phân trang
+        $sizes = $query->orderBy('id', 'desc')->paginate(5);
+        
         return view('blocks.size.index', compact('sizes'));
     }
-
+    
     public function create()
     {
         return view('blocks.size.create');
@@ -44,7 +62,7 @@ class SizeController extends Controller
 
         $validated = $request->validate([
             'name' => 'required|string',
-            'status' => 'required|in:active,inactive', 
+            'status' => 'required|in:active,inactive',
         ]);
 
         $size->update($validated);
@@ -57,5 +75,4 @@ class SizeController extends Controller
         $size->delete();
         return redirect()->route('sizes.index')->with('Thành công', 'kích thước đã được xóa thành công!');
     }
-
 }
