@@ -19,7 +19,6 @@ return array(
     'App\\Http\\Controllers\\Auth\\ResetPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ResetPasswordController.php',
     'App\\Http\\Controllers\\Auth\\VerificationController' => $baseDir . '/app/Http/Controllers/Auth/VerificationController.php',
     'App\\Http\\Controllers\\BannerController' => $baseDir . '/app/Http/Controllers/BannerController.php',
-    'App\\Http\\Controllers\\CKEditorController' => $baseDir . '/app/Http/Controllers/CKEditorController.php',
     'App\\Http\\Controllers\\ColorController' => $baseDir . '/app/Http/Controllers/ColorController.php',
     'App\\Http\\Controllers\\CommentController' => $baseDir . '/app/Http/Controllers/CommentController.php',
     'App\\Http\\Controllers\\ContactController' => $baseDir . '/app/Http/Controllers/ContactController.php',
