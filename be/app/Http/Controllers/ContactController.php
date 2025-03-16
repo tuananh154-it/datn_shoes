@@ -30,5 +30,18 @@ class ContactController extends Controller
 
     return view('contacts.index', compact('contacts', 'noResults'));
 }
+public function edit(Contact $contact)
+{
+    return view('contacts.edit', compact('contact'));
+}
+
+// Cập nhật thông tin liên hệ
+public function update(Request $request, $id )
+{
+    $contact = Contact::findOrFail($id);
+    $contact->update($request->all());
+
+    return redirect()->route('contacts.index')->with('success', 'Liên hệ đã được cập nhật thành công.');
+}
 
 }
