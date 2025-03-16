@@ -10,6 +10,9 @@ class CommentController extends Controller
 {
     public function index(Request $request)
     {
+        $searchTerm = $request->input('search');
+        $query = Comment::query();
+
         $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi
 
         $comments = Comment::withTrashed()
@@ -24,7 +27,7 @@ class CommentController extends Controller
     public function show(string $id)
     {
         $comments = Comment::findOrFail($id); // Lấy tất cả bình luận cùng với user và product liên quan
-        return view('comment.show', compact('comments')); // Trả về view kèm dữ liệu bình luận
+        return view('comments.show', compact('comments')); // Trả về view kèm dữ liệu bình luận
 
     }
 

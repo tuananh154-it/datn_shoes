@@ -110,12 +110,6 @@
         <!-- Slidebar content -->
     </div>
     <!-- Right Slidebar end -->
-
-    <!--footer start-->
-    @include('blocks.footer')
-    <!--footer end-->
-    </section>
-
     <!-- js placed at the end of the document so the pages load faster -->
     <script src="/client/flatlab-4/js/jquery.js"></script>
     <script src="/client/flatlab-4/js/bootstrap.bundle.min.js"></script>
@@ -175,24 +169,6 @@
             owl.reinit();
         });
     </script>
-
-</body>
-{{-- //custom select box
-
-$(function(){
-$('select.styled').customSelect();
-});
-
-$(window).on("resize",function(){
-var owl = $("#owl-demo").data("owlCarousel");
-owl.reinit();
-}); --}}
-
-
-</script>
-
-</body>
-
 <!-- Mirrored from thevectorlab.net/flatlab-4/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Mon, 26 Aug 2024 14:11:19 GMT -->
 
 </html>

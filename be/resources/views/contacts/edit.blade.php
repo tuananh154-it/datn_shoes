@@ -1,20 +1,29 @@
 @extends('master')
 @section('content')
+<style>
+    .row {
+        padding-top: 60px;
+    }
+
+    .text-truncate {
+        max-width: 200px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .custom-select-small {
+        font-size: 0.70rem;
+        height: 20px;
+        padding: 2px 6px;
+        width: auto;
+    }
+</style>
 <div class="row">
     <div class="col-sm-12">
             <div class="card shadow-sm">
                 <header class="card-header">
-                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chỉnh sửa Liên Hệ</h1>
-                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('contacts.index') }}" style="color: inherit;">Liên Hệ</a>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">Chỉnh Sửa</li>
-                            </ol>
-                        </nav>
-                    </div>
+                    Chỉnh sửa liên hệ
                 </header>
 
                 <div class="card-body">
