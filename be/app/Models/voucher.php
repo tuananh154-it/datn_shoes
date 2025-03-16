@@ -7,7 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 class Voucher extends Model
 {
 
-    protected $table = 'voucher';
+    protected $table = 'vouchers';
 
     public $timestamps = true;
+    protected $fillable = [
+        'code', 'discount_amount', 'expiry_date'
+    ];
+
+    // Quan hệ: Một voucher có thể có nhiều đơn hàng
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

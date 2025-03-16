@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\ColorController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\SizeController;
@@ -48,9 +49,9 @@ Route::middleware(['auth'])->group(function () {
 // Route::resource('colors', ColorController::class);
 // Route::resource('sizes', SizeController::class);
 
+// ->middleware(['role:admin|super admin'])
 
-
-Route::prefix('admin')->middleware(['role:admin|super admin'])->group(function () {
+Route::prefix('admin')->group(function () {
     Route::get('/', function () {
         return view('master');
     });
@@ -69,6 +70,10 @@ Route::prefix('admin')->middleware(['role:admin|super admin'])->group(function (
     Route::put('product-details/{id}', [ProductDetailController::class, 'update'])->name('product-details.update');
     Route::delete('product-details/{id}', [ProductDetailController::class, 'destroy'])->name('product-details.destroy');
     Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('ckeditor.upload');
+    // đơn hàng
+    Route::resource('orders', OrderController::class);
+    // Đảm bảo rằng route này đã được khai báo trong `routes/web.php`
+Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update_status');
 
     //quan lý bài viết
     Route::resource('articles', ArticlesController::class);
