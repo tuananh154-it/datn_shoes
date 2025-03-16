@@ -14,20 +14,20 @@
 <div class="row">
 
     <div class="col-lg-12">
-        <section class="card">
             <header class="card-header">
-                <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                    <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh sách bài viết</h1>
-                    <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                        <ol class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <a href="{{ route('articles.index') }}" style="color: inherit;">Bài viết</a>
-                            </li>
-                            <li class="breadcrumb-item active" aria-current="page">Danh sách bài viết</li>
-                        </ol>
-                    </nav>
-                </div>
+                Danh sách bài viết
             </header>
+            @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        <div class="">
+            <a href="{{ route('articles.create') }}" class="btn btn-success btn-sm">
+                <i class="fa fa-plus"></i> Thêm bài viết
+            </a>
+        </div>
             <div class="span6">
                 <div id="hidden-table-info_length" class="dataTables_length">
                     <form action="{{ route('articles.index') }}" method="GET">
@@ -47,13 +47,6 @@
                     </form>
                 </div>
             </div>
-            <div class="span6">
-                <div class="dataTables_filter" id="hidden-table-info_filter">
-                    <a href="{{ route('articles.create') }}" class="btn btn-success btn-sm">Tạo
-                        mới</a>
-                </div>
-            </div>
-
             <div class="table-responsive">
                 <table class="table table-striped" style="table-layout: fixed; width: 100%;">
                     <thead>
@@ -130,7 +123,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+
     </div>
 </div>
 
