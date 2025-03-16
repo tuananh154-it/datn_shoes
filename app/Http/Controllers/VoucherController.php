@@ -41,13 +41,14 @@ class VoucherController extends Controller
     public function store(Request $request)
 {
     $request->validate([
-        'name' => 'required|string|max:255',
+        'name' => 'required|string|max:255|unique:vouchers,name',
         'discount_amount' => 'required|numeric|min:0|lte:min_purchase_amount|lte:max_discount_amount',
         'discount_percent' => 'required|numeric|min:0|max:100',
         'expiration_date' => 'required|date|after:today',
         'min_purchase_amount' => 'required|numeric|min:0',
         'max_discount_amount' => 'required|numeric|min:0|gte:discount_amount',
     ], [
+         'name.unique' => 'Tên voucher đã tồn tại. Vui lòng chọn tên khác.',
         'required' => 'Trường này không được để trống.',
         'numeric' => 'Vui lòng nhập số hợp lệ.',
         'min' => 'Giá trị phải lớn hơn hoặc bằng 0.',
@@ -74,22 +75,24 @@ class VoucherController extends Controller
     {
         $voucher = Voucher::findOrFail($id);
         
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'discount_amount' => 'required|numeric|min:0|lte:min_purchase_amount|lte:max_discount_amount',
-        'discount_percent' => 'required|numeric|min:0|max:100',
-        'expiration_date' => 'required|date',
-        'min_purchase_amount' => 'required|numeric|min:0',
-        'max_discount_amount' => 'required|numeric|min:0|gte:discount_amount',
-    ], [
-        'required' => 'Trường này không được để trống.',
-        'numeric' => 'Vui lòng nhập số hợp lệ.',
-        'min' => 'Giá trị phải lớn hơn hoặc bằng 0.',
-        'max' => 'Phần trăm giảm giá không thể lớn hơn 100%.',
-        'lte' => 'Số tiền giảm giá phải nhỏ hơn hoặc bằng số tiền mua tối thiểu và mức giảm tối đa.',
-        'gte' => 'Mức giảm tối đa phải lớn hơn hoặc bằng số tiền giảm giá.',
-        'after' => 'Ngày hết hạn phải lớn hơn ngày hiện tại.',
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255|unique:vouchers,name',
+            'discount_amount' => 'required|numeric|min:0|lte:max_discount_amount',
+            'discount_percent' => 'required|numeric|min:0|max:100',
+            'expiration_date' => 'required|date|after:today',
+            'min_purchase_amount' => 'required|numeric|min:0',
+            'max_discount_amount' => 'required|numeric|min:0|gte:discount_amount',
+        ], [
+            'name.unique' => 'Tên voucher đã tồn tại. Vui lòng chọn tên khác.',
+            'required' => 'Trường này không được để trống.',
+            'numeric' => 'Vui lòng nhập số hợp lệ.',
+            'min' => 'Giá trị phải lớn hơn hoặc bằng 0.',
+            'max' => 'Phần trăm giảm giá không thể lớn hơn 100%.',
+            'lte' => 'Số tiền giảm giá phải nhỏ hơn hoặc bằng mức giảm tối đa.',
+            'gte' => 'Mức giảm tối đa phải lớn hơn hoặc bằng số tiền giảm giá.',
+            'after' => 'Ngày hết hạn phải lớn hơn ngày hiện tại.',
+        ]);
+        
 
         $voucher->update($request->all());
         return redirect()->route('vouchers.index')->with('success', 'Voucher updated successfully!');
