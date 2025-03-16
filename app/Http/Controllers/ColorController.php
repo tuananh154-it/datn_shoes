@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 
 class ColorController extends Controller
 {
+
     public function index(Request $request)
     {
         $searchTerm = $request->input('search');
@@ -68,4 +69,6 @@ class ColorController extends Controller
         return redirect()->route('colors.index')->with('Thành công', 'Màu đã được xóa thành công!');
     }
 
+
+    
 }

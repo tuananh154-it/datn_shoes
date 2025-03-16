@@ -29,4 +29,9 @@ class Product extends Model
     {
         return $this->belongsTo(Brand::class);
     }
+
+    public function order_details()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
 }

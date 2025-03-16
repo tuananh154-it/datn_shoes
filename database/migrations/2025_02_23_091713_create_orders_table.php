@@ -15,10 +15,18 @@ return new class extends Migration
             $table->id();
             $table->string('username');
             $table->foreignId('voucher_id')->nullable()->constrained('vouchers');
-            $table->enum('status', ['pending', 'completed', 'cancelled'])->default('pending');
+            $table->enum('status', [
+                'waiting_for_confirmation',
+                'waiting_for_pickup',
+                'waiting_for_delivery',
+                'delivered',
+                'returned',
+                'cancelled'
+            ]);
             $table->decimal('deliver_fee', 15, 2);
             $table->foreignId('customer_id')->constrained('customers');
-            $table->decimal('total_amount', 15, 2);
+            $table->enum('payment_status', ['paid', 'unpaid', 'pending', 'failed'])->default('unpaid');
+            $table->enum('payment_method', ['credit_card', 'cash_on_delivery', 'paypal']);
             $table->string('address');
             $table->string('phone_number');
             $table->string('email');

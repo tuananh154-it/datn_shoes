@@ -30,3 +30,4 @@ public function up()
         Schema::dropIfExists('articles');
     }
 };
+

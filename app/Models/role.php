@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
+
     protected $table = 'roles';
 
     public $timestamps = false;
@@ -13,4 +14,5 @@ class Role extends Model
     {
         return $this->belongsToMany(User::class);
     }
+
 }

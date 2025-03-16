@@ -71,4 +71,8 @@ class User extends Authenticatable implements JWTSubject  // Implement JWTSubjec
     {
         return [];  // Trả về mảng rỗng nếu không cần custom claims
     }
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

@@ -12,7 +12,11 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
+<<<<<<< HEAD
         // 'ckeditor/upload', 
         'admin/ckeditor/upload',
+=======
+        //
+>>>>>>> origin/dev
     ];
 }
