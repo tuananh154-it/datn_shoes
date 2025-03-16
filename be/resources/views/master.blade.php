@@ -177,7 +177,7 @@
     </script>
 
 </body>
-//custom select box
+{{-- //custom select box
 
 $(function(){
 $('select.styled').customSelect();
@@ -186,7 +186,7 @@ $('select.styled').customSelect();
 $(window).on("resize",function(){
 var owl = $("#owl-demo").data("owlCarousel");
 owl.reinit();
-});
+}); --}}
 
 
 </script>

@@ -16,6 +16,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BannerController;
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\VoucherController;
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -82,6 +85,12 @@ Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'
 
     //banner
     Route::resource('banners', BannerController::class);
+     //quan ly voucher
+     Route::resource('vouchers', VoucherController::class);
+     //quan ly danh muc
+     Route::resource('categories', CategoryController::class);
+     //quan ly thuong hieu
+     Route::resource('brands', BrandController::class);
 });
 
 
