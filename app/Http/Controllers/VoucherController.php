@@ -20,19 +20,17 @@ class VoucherController extends Controller
             $query->where('name', 'like', '%' . $searchTerm . '%');
         }
     
-        // Tìm kiếm theo trạng thái nếu có
-        if ($status) {
+        // Lọc theo trạng thái nếu có
+        if ($status !== null && in_array($status, ['active', 'inactive'])) {
             $query->where('status', $status);
         }
     
-        
-        // Lấy sản phẩm sau khi lọc và phân trang
+        // Lấy danh sách voucher sau khi lọc và phân trang
         $vouchers = $query->orderBy('id', 'desc')->paginate(5);
     
         return view('vouchers.index', compact('vouchers'));
     }
  
-
     // Hiển thị form tạo voucher mới
     public function create()
     {
@@ -41,20 +39,28 @@ class VoucherController extends Controller
 
     // Lưu voucher mới
     public function store(Request $request)
-    {
-        $request->validate([
-            'discount_amount' => 'nullable|numeric',
-            'discount_percent' => 'nullable|numeric',
-            'expiration_date' => 'required|date',
-            'min_purchase_amount' => 'nullable|numeric',
-            'max_discount_amount' => 'nullable|numeric',
-            'terms_and_conditions' => 'nullable|string',
-            'status' => 'required|in:active,inactive',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'discount_amount' => 'required|numeric|min:0|lte:min_purchase_amount|lte:max_discount_amount',
+        'discount_percent' => 'required|numeric|min:0|max:100',
+        'expiration_date' => 'required|date|after:today',
+        'min_purchase_amount' => 'required|numeric|min:0',
+        'max_discount_amount' => 'required|numeric|min:0|gte:discount_amount',
+    ], [
+        'required' => 'Trường này không được để trống.',
+        'numeric' => 'Vui lòng nhập số hợp lệ.',
+        'min' => 'Giá trị phải lớn hơn hoặc bằng 0.',
+        'max' => 'Phần trăm giảm giá không thể lớn hơn 100%.',
+        'lte' => 'Số tiền giảm giá phải nhỏ hơn hoặc bằng số tiền mua tối thiểu và mức giảm tối đa.',
+        'gte' => 'Mức giảm tối đa phải lớn hơn hoặc bằng số tiền giảm giá.',
+        'after' => 'Ngày hết hạn phải lớn hơn ngày hiện tại.',
+    ]);
 
-        Voucher::create($request->all());
-        return redirect()->route('vouchers.index')->with('success', 'Voucher created successfully!');
-    }
+    Voucher::create($request->all());
+
+    return redirect()->route('vouchers.index')->with('success', 'Voucher đã được thêm thành công!');
+}
 
     // Hiển thị form sửa voucher
     public function edit($id)
@@ -67,18 +73,33 @@ class VoucherController extends Controller
     public function update(Request $request, $id)
     {
         $voucher = Voucher::findOrFail($id);
-        $request->validate([
-            'discount_amount' => 'nullable|numeric',
-            'discount_percent' => 'nullable|numeric',
-            'expiration_date' => 'required|date',
-            'min_purchase_amount' => 'nullable|numeric',
-            'max_discount_amount' => 'nullable|numeric',
-            'terms_and_conditions' => 'nullable|string',
-            'status' => 'required|in:active,inactive',
-        ]);
+        
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'discount_amount' => 'required|numeric|min:0|lte:min_purchase_amount|lte:max_discount_amount',
+        'discount_percent' => 'required|numeric|min:0|max:100',
+        'expiration_date' => 'required|date',
+        'min_purchase_amount' => 'required|numeric|min:0',
+        'max_discount_amount' => 'required|numeric|min:0|gte:discount_amount',
+    ], [
+        'required' => 'Trường này không được để trống.',
+        'numeric' => 'Vui lòng nhập số hợp lệ.',
+        'min' => 'Giá trị phải lớn hơn hoặc bằng 0.',
+        'max' => 'Phần trăm giảm giá không thể lớn hơn 100%.',
+        'lte' => 'Số tiền giảm giá phải nhỏ hơn hoặc bằng số tiền mua tối thiểu và mức giảm tối đa.',
+        'gte' => 'Mức giảm tối đa phải lớn hơn hoặc bằng số tiền giảm giá.',
+        'after' => 'Ngày hết hạn phải lớn hơn ngày hiện tại.',
+    ]);
 
         $voucher->update($request->all());
         return redirect()->route('vouchers.index')->with('success', 'Voucher updated successfully!');
+    }
+
+    // Hiển thị chi tiết voucher
+    public function show($id)
+    {
+        $voucher = Voucher::findOrFail($id);
+        return view('vouchers.show', compact('voucher'));
     }
 
     // Xóa mềm voucher

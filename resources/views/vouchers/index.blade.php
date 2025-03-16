@@ -15,11 +15,7 @@
                 Danh sách Voucher
             </header>
            
-            <div class="mb-3">
-                <a href="{{ route('vouchers.create') }}" class="btn btn-success btn-sm">
-                    <i class="fa fa-plus"></i> Thêm Voucher
-                </a>
-            </div>
+           
             {{-- tim kiem ,loc voucher --}}
             <div class="mb-3">
                 <form action="{{ route('vouchers.index') }}" method="GET">
@@ -38,10 +34,19 @@
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                         </div>
+                        <div class="col-md-2">
+                            <a href="{{route("vouchers.index")}}" class="btn btn-success btn-sm">Quay lai danh sach</a>
+                        </div>
                     </div>
+
                 </form>
             </div>
-
+            {{-- them moi  --}}
+            <div class="mb-3">
+                <a href="{{ route('vouchers.create') }}" class="btn btn-success btn-sm">
+                    <i class="fa fa-plus"></i> Thêm Voucher
+                </a>
+            </div>
             <table class="table table-striped table-advance table-hover">
                 <thead>
                     <tr>
@@ -79,11 +84,12 @@
                             @endif
                         </td>
                         
-                        <td>{{ $voucher->created_at }}</td>
-                        <td>{{ $voucher->updated_at }}</td>
+                       
                       
                         <td>
                             {{-- <button class="btn btn-success btn-sm"><i class="fa fa-check"></i></button> --}}
+                            {{-- <a class="btn btn-success btn-sm" href="{{ route('vouchers.show ', $voucher->id) }}"><i class="fa fa-check"></i></a> --}}
+                            <a class="btn btn-success btn-sm" href="{{route('vouchers.show',$voucher->id)}}"><i class="fa fa-check"></i></a>
                             <a class="btn btn-success btn-sm" href="{{ route('vouchers.edit', $voucher->id) }}"><i class="fa fa-pencil"></i></a> 
                             <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Ban co chac chan muon xoa voucher?');">
                                 @csrf
@@ -95,8 +101,12 @@
                     @endforeach
                     </tbody>
             </table>
+            <div class="d-flex justify-content-center">
+                {!! $vouchers->links() !!}
+            </div>
         </section>
     </div>
 </div>
+
 
 @endsection

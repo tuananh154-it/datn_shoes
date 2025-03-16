@@ -14,14 +14,38 @@
             <header class="card-header">
                 Danh sách Thương hiệu  
             </header>
-           
+            
+             {{-- tim kiem ,loc thuong hieu--}}
+             <div class="mb-3">
+                <form action="{{ route('brands.index') }}" method="GET">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm" value="{{ request()->search }}">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="status" class="form-control">
+                                <option value="">Tất cả trạng thái</option>
+                                <option value="active" {{ request()->status == 'active' ? 'selected' : '' }}>Hoạt động</option>
+                                <option value="inactive" {{ request()->status == 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
+                            </select>
+                        </div>
+                       
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="{{route("brands.index")}}" class="btn btn-success btn-sm">Quay lai danh sach</a>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            {{-- them moi  --}}
             <div class="mb-3">
                 <a href="{{ route('brands.create') }}" class="btn btn-success btn-sm">
                     <i class="fa fa-plus"></i> Thêm thương hiệu 
                 </a>
-                @if(session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
+               
             </div>
 
             <table class="table table-striped table-advance table-hover">
@@ -60,6 +84,9 @@
                     @endforeach
                     </tbody>
             </table>
+            <div class="d-flex justify-content-center">
+                {!! $brands->links() !!}
+            </div>
         </section>
     </div>
 </div>

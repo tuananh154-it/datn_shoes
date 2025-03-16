@@ -39,7 +39,7 @@
                 </a>
             </li>
             <li class="sub-menu">
-                <a href="javascript:;" >
+                <a href="{{ route('users.index') }}" >
                     <i class="fa fa-user"></i>
                     <span>Quản lý User</span>
                 </a>
