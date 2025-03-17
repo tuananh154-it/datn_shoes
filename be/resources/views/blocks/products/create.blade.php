@@ -100,38 +100,7 @@
             </section>
 
             <script>
-                //        ClassicEditor
-                // .create(document.querySelector('#description'), {
-                //     ckfinder: {
-                //         uploadUrl: '{{ route('ckeditor.upload') }}',
-                //     },
-                //     toolbar: [
-                //         'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
-                //     ]
-                // })
-                // .catch(error => {
-                //     console.error(error);
-                // });
-            
-                // Thêm CSRF token vào header yêu cầu
-            // ClassicEditor
-            //     .create(document.querySelector('#description'), {
-            //         ckfinder: {
-            //             uploadUrl: '{{ route('ckeditor.upload') }}', // Đảm bảo route này đúng
-            //             options: {
-            //                 // Thêm CSRF token vào header
-            //                 headers: {
-            //                     'X-CSRF-TOKEN': '{{ csrf_token() }}' // Thêm CSRF token vào header
-            //                 }
-            //             }
-            //         },
-            //         toolbar: [
-            //             'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
-            //         ]
-            //     })
-            //     .catch(error => {
-            //         console.error(error);
-            //     });
+             
             
             
             ClassicEditor

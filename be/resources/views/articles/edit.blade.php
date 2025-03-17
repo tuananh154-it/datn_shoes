@@ -2,7 +2,13 @@
 
 @section('content')
 <style>
-
+   
+    .card-body img {
+        width: 400px;
+        height: auto; /* Giữ tỉ lệ cho ảnh */
+        display: block;
+        margin: 0 auto; /* Căn giữa các hình ảnh */
+    }
     .row{
         padding-top: 60px;
     }
@@ -62,9 +68,8 @@
 
                         <!-- Mô tả -->
                         <div class="form-group mb-3">
-                            <label for="content" class="form-label">Mô tả:</strong></label>
-                            <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content"
-                                rows="4" placeholder="Nhập mô tả bài viết">{{ old('content', $articles->content) }}</textarea>
+                            <label for="content" class="form-label">Mô tả:</label>
+                            <textarea class="form-control @error('content') is-invalid @enderror" id="content" name="content" rows="4" placeholder="Nhập mô tả bài viết">{{ old('content', $articles->content) }}</textarea>
                             @error('content')
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
@@ -80,5 +85,14 @@
                 </div>
             </div>
         </div>
+        <script src="https://cdn.ckeditor.com/ckeditor5/38.0.1/classic/ckeditor.js"></script>
+
+        <script>
+            ClassicEditor
+                .create(document.querySelector('#content'))
+                .catch(error => {
+                    console.error(error);
+                });
+        </script>
     </div>
 @endsection

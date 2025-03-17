@@ -24,7 +24,7 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <!-- Hiển thị hình ảnh sản phẩm nếu có -->
+                       
                         @if($product->image)
                             <img src="{{ asset('storage/' . $product->image) }}" class="img-fluid" alt="{{ $product->name }}">
                         @else

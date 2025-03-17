@@ -100,11 +100,27 @@
                     </form>
                 </div>
             </div>
+            <script>
+                ClassicEditor
+                    .create(document.querySelector('#content'), {
+                        ckfinder: {
+                            uploadUrl: '{{ route('ckeditor.upload') }}', // Route để xử lý upload ảnh
+                        },
+                        toolbar: [
+                            'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|',
+                            'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
+                        ]
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            </script>
         </div>
     </div>
+
 @endsection
 
-@section('js')
+{{-- @section('js')
     <script>
         ClassicEditor
             .create(document.querySelector('#content'), {
@@ -120,8 +136,8 @@
                 console.error(error);
             });
     </script>
-@endsection
-
+@endsection --}}
+{{-- 
 
 @section('js-cus')
     <script>
@@ -131,4 +147,4 @@
                 console.error(error);
             });
     </script>
-@endsection
+@endsection --}}
