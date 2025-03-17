@@ -7,8 +7,6 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\SizeController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AddressController;
-use App\Http\Controllers\Admins\ContactController as AdminsContactController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ArticlesController;
 use App\Http\Controllers\AuthController;
@@ -18,7 +16,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BannerController;
-
+use App\Http\Controllers\BrandController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\VoucherController;
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -60,6 +60,7 @@ Route::prefix('admin')->group(function () {
     Route::resource('product-details', ProductDetailController::class);
     Route::resource('colors', ColorController::class);
     Route::resource('sizes', SizeController::class);
+
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
     // Route::get('products/{product}/details/create', [ProductController::class, 'createDetail'])->name('products.details.create');
@@ -79,14 +80,20 @@ Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'
     Route::resource('articles', ArticlesController::class);
     //quan ly comment
     Route::resource('comments', CommentController::class);
+    //lien he
     Route::resource('contacts', ContactController::class);
 
+    //banner
     Route::resource('banners', BannerController::class);
+     //quan ly voucher
+     Route::resource('vouchers', VoucherController::class);
+     //quan ly danh muc
+     Route::resource('categories', CategoryController::class);
+     //quan ly thuong hieu
+     Route::resource('brands', BrandController::class);
 });
-//quan lý bài viết
-Route::resource('/articles', ArticlesController::class);
-//quan ly comment
-Route::resource('/comments', CommentController::class);
+
+
 
 
 // Auth::routes();
@@ -118,3 +125,4 @@ Route::resource('profiles', ProfileController::class);
 
 // Routes cho Roles
 // Route::resource('roles', RoleController::class);
+

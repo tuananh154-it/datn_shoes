@@ -26,31 +26,9 @@
         <div class="col-lg-12">
             <section class="card">
                 <header class="card-header">
-                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh Sách Liên Hệ</h1>
-                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('contacts.index') }}" style="color: inherit;">Liên Hệ</a>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">Danh Sách Liên Hệ</li>
-                            </ol>
-                        </nav>
-                    </div>
+                    Quản lý liên hệ
                 </header>
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <form action="{{ route('contacts.index') }}" method="GET">
-                            <label class="me-2">Xem
-                                <select class="form-control-sm custom-select-small" name="per_page" onchange="this.form.submit()">
-                                    <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
-                                    <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
-                                    <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
-                                    <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
-                                </select> mục
-                            </label>
-                        </form>
-                    </div>
                     <div class="table-responsive">
                         <table class="table table-striped table-hover">
                             <thead class="text-center">

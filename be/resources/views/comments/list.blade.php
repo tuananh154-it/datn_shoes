@@ -6,38 +6,54 @@
         .row {
             padding-top: 60px;
         }
+        .table th, .table td {
+        vertical-align: middle;
+        text-align: center;
+    }
 
-        .text-truncate {
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    .table th {
+        white-space: nowrap;
+        background-color: #f8f9fa;
+    }
 
-        .custom-select-small {
-            font-size: 0.70rem;
-            height: 20px;
-            padding: 2px 6px;
-            width: auto;
-        }
+    .table td {
+        word-wrap: break-word;
+        max-width: 300px; /* Giới hạn chiều rộng của ô nội dung */
+    }
+
+    .table-responsive {
+        overflow-x: auto;
+    }
+
+    .text-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        max-width: 250px;
+    }
     </style>
 
     <div class="row">
         <div class="col-lg-12">
             <section class="card">
                 <header class="card-header">
-                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Danh Sách Bình Luận</h1>
-                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('comments.index') }}" style="color: inherit;">Bình Luận</a>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">Danh Sách</li>
-                            </ol>
-                        </nav>
-                    </div>
+                    Danh sách bình luận
                 </header>
+                 {{-- tim kiem ,loc thuong hieu--}}
+                 <div class="mb-3">
+                    <form action="{{ route('comments.index') }}" method="GET">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="text" name="search" class="form-control" placeholder="Tìm kiếm bình luận" value="{{ request()->search }}">
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
                 <div class="d-flex justify-content-between px-3 py-2">
                     <form action="{{ route('comments.index') }}" method="GET">
                         <label>Xem
@@ -55,7 +71,6 @@
                     <table class="table table-striped">
                         <thead>
                             <tr class="text-center">
-                                <th>#</th>
                                 <th>Người dùng</th>
                                 <th>Sản phẩm</th>
                                 <th>Nội dung</th>
@@ -73,7 +88,7 @@
                                 @foreach ($comments as $item)
                                     <tr>
                                         <td>{{ $item->id }}</td>
-                                        <td>{{ $item->user->username }}</td>
+
                                         <td class="text-truncate">{{ $item->product->name }}</td>
                                         <td class="text-truncate" style="max-width: 300px;">{{ $item->comment }}</td>
                                         <td>
@@ -98,7 +113,7 @@
                                                     @csrf
                                                     @method('DELETE')
                                                     <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa bình luận này?')">
-                                                        <i class="bi bi-trash"></i>
+                                                        <i class="fa fa-trash-o"></i>
                                                     </button>
                                                 </form>
                                             @endif

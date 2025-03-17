@@ -22,8 +22,8 @@
                     <li><a href="{{ route('products.index') }}">Danh sách sản phẩm</a></li>
                     <li><a href="{{ route('sizes.index') }}">Quản lý kích thước</a></li>
                     <li><a href="{{ route('colors.index') }}">Quản lý màu sắc</a></li>
-                    <li><a href="javascript:;">Quản lý danh mục</a></li>
-                    <li><a href="javascript:;">Quản lý Thương hiệu</a></li>
+                    <li><a href="{{ route('categories.index') }}">Quản lý danh mục</a></li>
+                    <li><a href="{{ route('brands.index') }}">Quản lý Thương hiệu</a></li>
                 </ul>
             </li>
 
@@ -64,7 +64,7 @@
 
             <!-- Phiếu giảm giá -->
             <li>
-                <a href="google_maps.html">
+                <a href="{{ route('vouchers.index') }}">
                     <i class="fa fa-ticket"></i>
                     <span>Quản lý Voucher</span>
                 </a>

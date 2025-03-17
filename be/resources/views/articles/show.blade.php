@@ -14,17 +14,7 @@
         <div class="col-12"> <!-- Đảm bảo chiếm hết màn hình -->
             <div class="card shadow-sm w-100"> <!-- Thêm w-100 để mở rộng -->
                 <header class="card-header">
-                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Chi Tiết Bài Viết</h1>
-                        <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item">
-                                    <a href="{{ route('articles.index') }}" style="color: inherit;">Bài Viết</a>
-                                </li>
-                                <li class="breadcrumb-item active" aria-current="page">Chi Tiết Bài Viết</li>
-                            </ol>
-                        </nav>
-                    </div>
+                    Chi tiết bài viết
                 </header>
 
                 <div class="card-body">
@@ -32,7 +22,7 @@
                         @csrf
 
                         @if ($article->image)
-                            <label class="form-label"><strong>Hình ảnh:</strong></label>
+                            <label class="form-label">Hình ảnh:</strong></label>
                             <div class="text-center"> <!-- Căn giữa ảnh -->
                                 <img src="{{ Storage::url($article->image) }}" alt="{{ $article->title }}"
                                     class="img-fluid img-thumbnail" style="max-width: 600px;"> <!-- img-fluid để responsive -->
@@ -40,17 +30,17 @@
                         @endif
 
                         <div class="mb-3">
-                            <label for="name" class="form-label"><strong>Tên :</strong></label>
+                            <label for="name" class="form-label">Tên :</strong></label>
                             <input type="text" name="name" id="name" class="form-control" value="{{ $article->name }}" readonly>
                         </div>
 
                         <div class="mb-3">
-                            <label for="title" class="form-label"><strong>Tiêu Đề :</strong></label>
+                            <label for="title" class="form-label">Tiêu Đề :</strong></label>
                             <input type="text" name="title" id="title" class="form-control" value="{{ $article->title }}" readonly>
                         </div>
 
                         <div class="mb-3">
-                            <label for="content" class="form-label"><strong>Nội Dung :</strong></label>
+                            <label for="content" class="form-label">Nội Dung :</strong></label>
                             <textarea name="content" id="content" class="form-control" rows="5" readonly>{{ $article->content }}</textarea>
                         </div>
 

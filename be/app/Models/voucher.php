@@ -11,7 +11,9 @@ class Voucher extends Model
 
     public $timestamps = true;
     protected $fillable = [
-        'code', 'discount_amount', 'expiry_date'
+        'name', 'discount_amount', 'discount_percent', 'expiration_date', 
+        'min_purchase_amount', 'max_discount_amount', 'terms_and_conditions', 'status'
+
     ];
 
     // Quan hệ: Một voucher có thể có nhiều đơn hàng
