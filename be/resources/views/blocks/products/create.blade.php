@@ -142,7 +142,7 @@ ClassicEditor
         ckfinder: {
             uploadUrl: '{{ route('ckeditor.upload') }}',
         },
-        debug: 'all',  // Bật chế độ debug để theo dõi lỗi chi tiết
+        debug: 'all',  
         toolbar: [
             'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
         ]
