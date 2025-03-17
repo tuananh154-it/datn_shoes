@@ -27,7 +27,7 @@ const ProductDetail = () => {
                                             <img src="/src/images/blue_jacket_img.png" alt="blue_jacket_img" className="vertical_middle img-fluid" />
                                         </div>
                                     </div>
-                                    <div className="item">
+                                    {/* <div className="item">
                                         <div className="product_img">
                                             <img src="src/images/blue_jacket_img2.png" alt="blue_jacket_img" className="vertical_middle img-fluid" />
                                         </div>
@@ -41,9 +41,9 @@ const ProductDetail = () => {
                                         <div className="product_img">
                                             <img src="src/images/blue_jacket_img4.png" alt="blue_jacket_img" className="vertical_middle img-fluid" />
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
-                                <div id="sync2" className="owl-carousel owl-theme">
+                                {/* <div id="sync2" className="owl-carousel owl-theme">
                                     <div className="item">
                                         <div className="product_img">
                                             <img src="src/images/blue_jacket_img.png" alt="blue_jacket_img" className="vertical_middle img-fluid" />
@@ -74,7 +74,7 @@ const ProductDetail = () => {
                                             <img src="src/images/blue_jacket_img4.png" alt="blue_jacket_img" className="vertical_middle img-fluid" />
                                         </div>
                                     </div>
-                                </div>
+                                </div> */}
                             </div>
                             <div className="col-lg-6 wow fadeInLeft" data-wow-duration="1300ms">
                                 <div className="product_content">
