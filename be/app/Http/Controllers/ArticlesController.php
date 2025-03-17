@@ -14,21 +14,24 @@ class ArticlesController extends Controller
      */
     public function index(Request $request)
     {
-        $search = $request->input('search');
-        $perPage = $request->input('per_page',8); // Mặc định 10 bản ghi
+        $searchTerm = $request->input('search');
 
-        // Tìm kiếm và phân trang
-        $articles = Article::when($search, function ($query, $search) {
-            return $query->where('title', 'LIKE', "%{$search}%")
-                ->orWhere('content', 'LIKE', "%{$search}%"); // Có thể tìm thêm ở trường 'content' nếu cần
-        })
-            ->orderBy('id', 'desc') // Sắp xếp giảm dần theo cột 'id'
-            ->paginate($perPage);
+        $query = Article::query();
+
+        // Tìm kiếm theo tên nếu có
+        if ($searchTerm) {
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+
+        // Sắp xếp giảm dần theo cột 'id'
+        $articles = $query->orderBy('id', 'desc')->paginate(10); // Hoặc dùng ->get() nếu không cần phân trang
 
         $noResults = $articles->isEmpty(); // Kiểm tra nếu không có kết quả tìm kiếm
 
         return view('articles.index', compact('articles', 'noResults'));
     }
+
+
 
 
     /**

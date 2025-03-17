@@ -27,9 +27,5 @@ class Comment extends Model
     {
         return $this->belongsTo(Product::class);
     }
-//     public function productVariant()
-// {
-//     return $this->belongsTo(ProductVariant::class);
-// }
 
 }

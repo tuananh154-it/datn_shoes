@@ -8,13 +8,19 @@ use Illuminate\Support\Facades\Storage;
 
 class BannerController extends Controller
 {
-    public function index()
-{
-    $banners = Banner::orderBy('id', 'desc')->paginate(10);
-    $noResults = $banners->isEmpty(); // Kiểm tra danh sách rỗng
+    public function index(Request $request)
+    {
+        $searchTerm = $request->input('search');
 
-    return view('banners.list', compact('banners', 'noResults'));
-}
+        $query = Banner::query();
+
+    // Sắp xếp giảm dần theo cột 'id'
+        $banners = $query->orderBy('id', 'desc')->paginate(10); // Hoặc dùng ->get() nếu không cần phân trang
+
+        $noResults = $banners->isEmpty(); // Kiểm tra nếu không có kết quả tìm kiếm
+
+        return view('banners.list', compact('banners', 'noResults'));
+    }
 
 
     public function create()
