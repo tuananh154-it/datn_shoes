@@ -40,14 +40,18 @@ class SizeController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string',
-        ]);
+{
+    $validated = $request->validate([
+        'name' => 'required|string|unique:sizes,name',
+    ], [
+        'name.unique' => 'Kích thước này đã tồn tại, vui lòng chọn tên khác!',
+    ]);
 
-        Size::create($validated);
-        return redirect()->route('sizes.index')->with('Thành công', 'Kích thước đã được tạo thành công!');
-    }
+    Size::create($validated);
+
+    return redirect()->route('sizes.index')->with('Thành công', 'Kích thước đã được tạo thành công!');
+}
+
 
 
     public function edit($id)

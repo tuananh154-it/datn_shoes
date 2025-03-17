@@ -34,12 +34,17 @@ class ColorController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|unique:colors,name',
+        ], [
+            'name.unique' => 'Tên màu này đã tồn tại, vui lòng chọn tên khác!',
         ]);
-
+    
         Color::create($validated);
+        
         return redirect()->route('colors.index')->with('Thành công', 'Màu đã được tạo thành công!');
     }
+    
+    
 
 
     public function edit($id)

@@ -59,7 +59,6 @@
                             <th style="width: 5%;">#</th>
                             <th style="width: 15%;">Tên</th>
                             <th style="width: 20%;">Tiêu đề</th>
-                            <th style="width: 30%;">Nội dung</th>
                             <th style="width: 20%;">Hình ảnh</th>
                             <th style="width: 10%;">Thao tác</th>
                         </tr>
@@ -75,7 +74,6 @@
                                     <td class="text-center">{{ $item->id }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->title }}</td>
-                                    <td>{{ Str::limit($item->content, 50) }}</td>
                                     <td class="text-center">
                                         @if ($item->image)
                                             <img src="{{ Storage::url($item->image) }}" alt="Hình ảnh bài viết"
