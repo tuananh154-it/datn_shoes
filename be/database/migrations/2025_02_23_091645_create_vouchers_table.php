@@ -13,6 +13,7 @@ return new class extends Migration
 {
     Schema::create('vouchers', function (Blueprint $table) {
         $table->id();
+        $table->string('name');  
         $table->decimal('discount_amount', 15, 2)->nullable();
         $table->decimal('discount_percent', 5, 2)->nullable();
         $table->date('expiration_date');

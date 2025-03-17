@@ -20,6 +20,13 @@
       0 => 'Laravel\\Tinker\\TinkerServiceProvider',
     ),
   ),
+  'laravel/ui' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Laravel\\Ui\\UiServiceProvider',
+    ),
+  ),
   'nesbot/carbon' => 
   array (
     'providers' => 
@@ -50,6 +57,25 @@
     'providers' => 
     array (
       0 => 'Spatie\\LaravelIgnition\\IgnitionServiceProvider',
+    ),
+  ),
+  'spatie/laravel-permission' => 
+  array (
+    'providers' => 
+    array (
+      0 => 'Spatie\\Permission\\PermissionServiceProvider',
+    ),
+  ),
+  'tymon/jwt-auth' => 
+  array (
+    'aliases' => 
+    array (
+      'JWTAuth' => 'Tymon\\JWTAuth\\Facades\\JWTAuth',
+      'JWTFactory' => 'Tymon\\JWTAuth\\Facades\\JWTFactory',
+    ),
+    'providers' => 
+    array (
+      0 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
     ),
   ),
 );

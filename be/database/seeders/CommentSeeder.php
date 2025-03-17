@@ -3,35 +3,33 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Comment;
+use App\Models\User;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Faker\Factory as Faker;
 
 class CommentSeeder extends Seeder
 {
     public function run()
     {
-        $faker = Faker::create();
+        // Lấy danh sách user và product có sẵn
+        $users = User::pluck('id')->toArray();
+        $products = Product::pluck('id')->toArray();
 
-        // Lấy danh sách user_id thực tế từ bảng users
-        $userIds = DB::table('users')->pluck('id')->toArray();
-        $productIds = DB::table('products')->pluck('id')->toArray();
-
-        if (empty($userIds) || empty($productIds)) {
-            return; // Nếu không có user hoặc product, không chạy seeder
+        // Kiểm tra nếu không có user hoặc product thì không thêm comment
+        if (empty($users) || empty($products)) {
+            return;
         }
 
+        // Tạo 10 comment giả lập
         for ($i = 0; $i < 10; $i++) {
-            DB::table('comments')->insert([
-                'user_id' => $faker->randomElement($userIds),
-                'product_id' => $faker->randomElement($productIds),
-                'comment' => $faker->sentence(),
-                'file' => $faker->imageUrl(200, 200, 'technics'),
-                'star_rating' => $faker->numberBetween(1, 5),
-                'created_at' => now(),
-                'updated_at' => now()
+            Comment::create([
+                'user_id' => $users[array_rand($users)],
+                'product_id' => $products[array_rand($products)],
+                'comment' => fake()->sentence(),
+                'file' => null,
+                'star_rating' => rand(1, 5),
             ]);
         }
     }
-
 }

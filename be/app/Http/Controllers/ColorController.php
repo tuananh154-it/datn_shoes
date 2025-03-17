@@ -7,12 +7,25 @@ use Illuminate\Http\Request;
 
 class ColorController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $colors = Color::all();
+        $searchTerm = $request->input('search');
+        $status = $request->input('status');
+        
+        $query = Color::query(); 
+        
+        if ($searchTerm) {
+            $query->where('name', 'like', '%' . $searchTerm . '%');
+        }
+        
+      
+        if ($status) {
+            $query->where('status', $status); 
+        }
+        $colors = $query->orderBy('id', 'desc')->paginate(5);
+        
         return view('blocks.color.index', compact('colors'));
     }
-
     public function create()
     {
         return view('blocks.color.create');
@@ -21,12 +34,17 @@ class ColorController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string',
+            'name' => 'required|string|unique:colors,name',
+        ], [
+            'name.unique' => 'Tên màu này đã tồn tại, vui lòng chọn tên khác!',
         ]);
-
+    
         Color::create($validated);
+        
         return redirect()->route('colors.index')->with('Thành công', 'Màu đã được tạo thành công!');
     }
+    
+    
 
 
     public function edit($id)
