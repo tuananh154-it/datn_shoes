@@ -107,7 +107,7 @@ const Header = () => {
                 </div>
             </li>
             <li className="cart_icon">
-                <a href="cart.html">
+                <a href="/cart">
                     <i className="flaticon-shopping-bag"></i>
                     <span className="count text-white rounded-circle text-center">0 </span>
                 </a>
@@ -161,7 +161,7 @@ const Header = () => {
                     </div>
                 </li>
                 <li className="cart_icon">
-                    <a href="cart.html">
+                    <a href="/cart">
                         <i className="flaticon-shopping-bag"></i>
                         <span className="count text-white rounded-circle text-center">0 </span>
                     </a>
