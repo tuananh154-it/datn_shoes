@@ -75,4 +75,16 @@ class User extends Authenticatable implements JWTSubject  // Implement JWTSubjec
     {
         return $this->hasMany(Order::class);
     }
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);
+    }
+
+    /**
+     * Tạo hoặc lấy giỏ hàng hiện tại của user
+     */
+    public function getOrCreateCart()
+    {
+        return $this->cart()->firstOrCreate(['user_id' => $this->id]);
+    }
 }

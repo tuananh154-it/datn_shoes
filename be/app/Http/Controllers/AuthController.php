@@ -11,12 +11,28 @@ use App\Http\Controllers\Controller; // import đúng lớp Controller
 use App\Enums\RoleEnum;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\JsonResponse;
-
-
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     use AuthenticatesUsers;
+ // Đăng ký bên be
+    public function dangky(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+        ]);
+
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+
+        return redirect()->route('login')->with('success', 'đăng kí thành công em .');
+    }
     // Đăng ký
     public function register(Request $request)
     {
@@ -42,6 +58,32 @@ class AuthController extends Controller
 
         return response()->json(compact('user', 'token'), 201);
     }
+// Đăng nhập ben be
+
+public function dangnhap(Request $request)
+{
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required|string',
+    ]);
+
+    $credentials = $request->only('email', 'password');
+
+    if (Auth::attempt($credentials)) {
+        $request->session()->regenerate();
+
+        $user = Auth::user(); // Lấy thông tin người dùng
+
+        // Kiểm tra role của user
+        if ($user->role === 'admin') {
+            return redirect()->route('articles.index')->with('success', 'vào thành công em  .'); // Điều hướng đến trang admin
+        }
+
+        return redirect()->intended(route('login'))->with('success', 'chưa vào được đâu.'); // Điều hướng đến trang chủ mặc định
+    }
+
+    return back()->withErrors(['email' => 'Invalid credentials'])->onlyInput('email');
+}
 
     // Đăng nhập
     public function login(Request $request)
@@ -84,7 +126,7 @@ class AuthController extends Controller
     }
     public function showLoginForm()
     {
-        return view('auth.login'); // Hoặc trả về bất kỳ view nào bạn muốn
+        return view('auth.login');
     }
     public function showRegisterForm()
     {
