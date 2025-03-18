@@ -67,7 +67,7 @@ const Header = () => {
                         </ul>
                     </li>
                     <li className="nav-item dropdown mega-dropdown">
-                        <a className="nav-link text-uppercase  dropdown-toggle" href="javascript:void(0);">Other Pages</a>
+                        <a className="nav-link text-uppercase  dropdown-toggle" href="/contacts">Other Pages</a>
                         <span className="menu_arrow flaticon-down-arrow-1"></span>
                         <ul className="dropdown-menu mega-dropdown-menu">
                             <li className="w-100"><a href="earthyellow.html">Mega menu full screen</a></li>
