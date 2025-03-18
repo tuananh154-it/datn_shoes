@@ -27,7 +27,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
 });
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -51,11 +50,10 @@ Route::middleware(['auth'])->group(function () {
 
 // ->middleware(['role:admin|super admin'])
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware(['admin'])->group(function () {
     Route::get('/', function () {
         return view('master');
     });
-
     Route::resource('products', ProductController::class);
     Route::resource('product-details', ProductDetailController::class);
     Route::resource('colors', ColorController::class);
@@ -97,12 +95,14 @@ Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'
 
 
 // Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// vào thẳng trang login luôn
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('login', [AuthController::class, 'login']);
-// Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
-// Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'dangnhap']);
+Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
+Route::post('register', [AuthController::class, 'dangky']);
 
 // Route đăng xuất
 // Route::post('logout', [AuthController::class, 'logout'])->name('logout');
