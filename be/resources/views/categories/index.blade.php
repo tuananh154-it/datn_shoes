@@ -32,9 +32,9 @@
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                         </div>
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <a href="{{route("categories.index")}}" class="btn btn-success btn-sm">Quay lai danh sach</a>
-                        </div>
+                        </div> --}}
                     </div>
 
                 </form>
