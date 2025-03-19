@@ -1,32 +1,31 @@
 import { useEffect, useState } from "react";
 
-// import { getAllProduct } from "../axios/asiox";
 import { Product } from "../types/Product";
 import { Link } from "react-router-dom";
 
 import { Banner, getBanners } from "../services/banners";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
+// import { getAllProduct } from "../axios/asiox";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
-import { getAllProduct } from "../services/axios";
+import { getAllProduct } from "../services/product";
+// import { getAllProduct } from "../services/product";
 
 const HomePages = () => {
     const [product,setProduct]= useState<Product[]>([]);
 
     useEffect(()=>{
-        // getAllProduct().then(({data})=>{
-        //     setData(data)
-        // })
         getAllProduct().then(({data}) =>{
             // setProduct(response.data);
             console.log("data", data)
             setProduct(data.data)
         })
     },[])
-    // console.log("data",data)
+
+    console.log("product",product)
     useEffect(() => {
         // Nếu bạn đang sử dụng thư viện như Revolution Slider, khởi tạo slider ở đây nếu cần.
         const script = document.createElement('script');
@@ -350,12 +349,12 @@ const HomePages = () => {
                         <a href="product_list_detail.html" className="text-uppercase">View More<i className="flaticon-arrows-4"></i></a>
                     </p>
                 </div>
-                <div className="row">       
+                <div className="row">   
+                {product.map((product)=>(
                     <div className="col-lg-3 col-md-4 col-6 wow fadeInLeft animated" data-wow-duration="1300ms">                                   
-                      {product.map((product)=>(
                             <div className="featured_content">
                             <div className="featured_img_content position-relative">
-                                <img src={product.image} className="img-fluid" alt="shoes_product"/>
+                                <img src={product.image} className="img-product" alt="shoes_product"/>
                                 <div className="featured_btn vertical_middle">
                                     <a href="/cart" className="text-uppercase add_to_bag_btn rounded-circle d-block">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="21" viewBox="0 0 18 21">
@@ -389,10 +388,10 @@ const HomePages = () => {
                                 </div> 
                             </div>
                         </div>
-                        )
-                      )}
+                       
                     </div>
-                    
+                )
+            )}
                 </div>
             </div>
         </section>

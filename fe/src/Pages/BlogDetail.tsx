@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Article, getOneArticles } from '../services/articles';
 import toast from 'react-hot-toast';
-import Footer from '../Layout/Footer';
 
 const BlogDetail = () => {
     const { id } = useParams();

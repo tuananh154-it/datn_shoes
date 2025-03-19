@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Products } from "../types/Product";
 import { useParams } from "react-router-dom";
-import { getProductDetail } from "../services/axios";
+import { getProductDetail } from "../services/product";
 // import { getProductDetail } from "../axios/asiox";
 
 const ProductDetail = () => {
