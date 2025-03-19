@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Article, getOneArticles } from '../services/articles';
 import toast from 'react-hot-toast';
+import Footer from '../Layout/Footer';
 
 const BlogDetail = () => {
     const { id } = useParams();
-    const [article, setArticle] = useState<Article>();
+    const [article, setArticle] = useState<Article | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
@@ -18,7 +19,7 @@ const BlogDetail = () => {
             .catch(() => toast.error("Lỗi hiển thị"))
             .finally(() => setLoading(false));
     }, [id]);
-    if (!article?.id) return
+  
     return (
         <>
             <div className="menu_overlay"></div>
@@ -29,10 +30,10 @@ const BlogDetail = () => {
                             <ol className="breadcrumb">
                                 <li className="breadcrumb-item text-capitalize"><a href="earthyellow.html">Home</a> <i className="flaticon-arrows-4"></i></li>
                                 <li className="breadcrumb-item text-capitalize"><a href="grids_blog_list.html">Blog</a> <i className="flaticon-arrows-4"></i></li>
-                                <li className="breadcrumb-item active text-capitalize">{article.name}</li>
+                                <li className="breadcrumb-item active text-capitalize">{article?.name}</li>
                             </ol>
                         </nav>
-                        <h1 className="title_h1 font-weight-normal text-capitalize">{article.name}</h1>
+                        <h1 className="title_h1 font-weight-normal text-capitalize">{article?.name}</h1>
                     </div>
                 </section>
 
@@ -44,12 +45,12 @@ const BlogDetail = () => {
                                     {loading ? (
                                         <p>Đang tải bài viết...</p>
                                     ) : (
-                                        <div key={article.id} className="blog_content">
-                                        <img src={article.image} alt={article.name} className="img-fluid" />
+                                        <div className="blog_content">
+                                        <img src={article?.image} alt={article?.name} className="img-fluid" />
                                         <span className="article__date">
-                                            Ngày đăng | {article.created_at} <span className="diamond_shape"></span>
+                                            Ngày đăng | {article?.created_at} <span className="diamond_shape"></span>
                                         </span>
-                                        <p>{article.content.substring(0, 10000)}</p>
+                                        <p>{article?.content.substring(0, 10000)}</p>
                                         </div>
                                         
                                     )}
@@ -60,7 +61,7 @@ const BlogDetail = () => {
                                         <h4 className="title_h4 text-capitalize">Featured Posts</h4>
                                         <div className="featured_posts_content">
                                             <div className="featured_posts_img">
-                                                <img src="src/images/post1.png" alt="bloglist" className="img-fluid vertical_middle" />
+                                                <img src="../src/images/post1.png" alt="bloglist" className="img-fluid vertical_middle" />
                                             </div>
                                             <div className="featured_posts_text">
                                                 <a href="javascript:void(0);">
@@ -72,7 +73,7 @@ const BlogDetail = () => {
 
                                         <div className="featured_posts_content">
                                             <div className="featured_posts_img">
-                                                <img src="src/images/post2.png" alt="bloglist" className="img-fluid vertical_middle" />
+                                                <img src="../src/images/post2.png" alt="bloglist" className="img-fluid vertical_middle" />
                                             </div>
                                             <div className="featured_posts_text">
                                                 <a href="javascript:void(0);">
@@ -84,7 +85,7 @@ const BlogDetail = () => {
 
                                         <div className="featured_posts_content">
                                             <div className="featured_posts_img">
-                                                <img src="src/images/post3.png" alt="bloglist" className="img-fluid vertical_middle" />
+                                                <img src="../src/images/post3.png" alt="bloglist" className="img-fluid vertical_middle" />
                                             </div>
                                             <div className="featured_posts_text">
                                                 <a href="javascript:void(0);">
@@ -96,7 +97,7 @@ const BlogDetail = () => {
 
                                         <div className="featured_posts_content">
                                             <div className="featured_posts_img">
-                                                <img src="src/images/post4.png" alt="bloglist" className="img-fluid vertical_middle" />
+                                                <img src="../src/images/post4.png" alt="bloglist" className="img-fluid vertical_middle" />
                                             </div>
                                             <div className="featured_posts_text">
                                                 <a href="javascript:void(0);">
@@ -109,12 +110,12 @@ const BlogDetail = () => {
                                         <div className="blog_instagram">
                                             <h4 className="title_h4 text-capitalize">Instagram</h4>
                                             <ul>
-                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="src/images/blog_insta1.png" alt="blog_insta" /></a></li>
-                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="src/images/blog_insta2.png" alt="blog_insta" /></a></li>
-                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="src/images/blog_insta3.png" alt="blog_insta" /></a></li>
-                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="src/images/blog_insta4.png" alt="blog_insta" /></a></li>
-                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="src/images/blog_insta5.png" alt="blog_insta" /></a></li>
-                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="src/images/blog_insta6.png" alt="blog_insta" /></a></li>
+                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="../src/images/blog_insta1.png" alt="blog_insta" /></a></li>
+                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="../src/images/blog_insta2.png" alt="blog_insta" /></a></li>
+                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="../src/images/blog_insta3.png" alt="blog_insta" /></a></li>
+                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="../src/images/blog_insta4.png" alt="blog_insta" /></a></li>
+                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="../src/images/blog_insta5.png" alt="blog_insta" /></a></li>
+                                                <li><a href="javascript:void(0);"><img className="img-fluid" src="../src/images/blog_insta6.png" alt="blog_insta" /></a></li>
                                             </ul>
                                         </div>
                                     </div>

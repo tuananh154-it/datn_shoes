@@ -4,7 +4,7 @@ const Header = () => {
   <>
     <header className="shoes_header shoes_home_header">
     <div className="header_logo col_4 visible-lg d-none">
-        <a href="/"><img src="src/images/shoes_header_logo.png" className="img-fluid" alt="logo" /></a>
+        <a href="/"><img src="../src/images/shoes_header_logo.png" className="img-fluid" alt="logo" /></a>
     </div>
   
     <div className="col_6 visible-lg d-none">
