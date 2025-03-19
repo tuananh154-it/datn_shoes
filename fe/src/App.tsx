@@ -12,7 +12,8 @@ import ProductDetail from "./Pages/ProductDetail";
 import Blog from "./Pages/Blog";
 import Wishlist from "./Pages/Wishlist";
 import CheckOut from "./Pages/CheckOut";
-
+import Contact from "./Pages/Contact";
+import BlogDetail from "./Pages/BlogDetail";
 function App() {
     const router = [
         {path:"/", element:<Layout/>,children:[
@@ -20,6 +21,8 @@ function App() {
             {path:"/shop",element:<Shop/>},
             {path:"/cart",element:<Cart/>},
             {path:"/blog",element:<Blog/>},
+            {path:"/blog/:id",element:<BlogDetail/>},
+            {path:"/contacts",element:<Contact/>},
             {path:"/wishlist",element:<Wishlist/>},
             {path:"/product_detail/:id",element:<ProductDetail/>},
             {path:"/login",element:<Login/>},

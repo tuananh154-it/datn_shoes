@@ -1,10 +1,23 @@
         <!--header start-->
+        @if (session('success'))
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
         <header class="header white-bg">
             <div class="sidebar-toggle-box">
                 <i class="fa fa-bars"></i>
             </div>
           <!--logo start-->
-          <a href="index.html" class="logo">Food<span>Vibe</span></a>
+          <a href="index.html" class="logo">Foot<span>Vibe</span></a>
           <!--logo end-->
           <div class="nav notify-row" id="top_menu">
               <!--  notification start -->

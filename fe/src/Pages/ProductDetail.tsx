@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Products } from "../types/Product";
 import { useParams } from "react-router-dom";
-import { getProductDetail } from "../axios/asiox";
+import { getProductDetail } from "../services/axios";
+// import { getProductDetail } from "../axios/asiox";
 
 const ProductDetail = () => {
   const [quantity, setQuantity] = useState<number>(1);
