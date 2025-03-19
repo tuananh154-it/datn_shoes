@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\BannerController;
+
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ContactController;
@@ -15,11 +16,13 @@ use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\SizeController;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 */
+
 
 // Public routes
 Route::apiResource('articles', ArticleController::class);
