@@ -14,6 +14,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\SizeController;
+use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\VoucherController;
 
 
 
@@ -31,6 +35,19 @@ Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
 Route::apiResource('carts', CartController::class);
 
+
+// Trang Home
+Route::get('/home', [HomeController::class, 'index']);
+
+// Trang Danh Mục
+Route::get('/categories', [CategoryController::class, 'index']);
+
+// Trang Thương Hiệu
+Route::get('/brands', [BrandController::class, 'index']);
+
+// Trang Voucher
+Route::get('/vouchers', [VoucherController::class, 'index']);
+Route::get('/vouchers/{id}', [VoucherController::class, 'show']);
 // Auth routes
 // Routes protected by JWT Middleware
 Route::middleware(['jwt.auth'])->group(function () {
