@@ -45,6 +45,62 @@
   height: 40px;
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
-   
+}
+.main{
+  display: flex;
+  margin: auto;
+}
+.main-left{
+  width: 50%;
+  height: 700px;
+  /* background-color: aqua; */
 }
 
+.main-right{  
+  width: 50%;
+  margin-left: 30px;
+}
+.main-left .imageProduct{
+  height: 500px;
+  width: 100%;
+  /* background-color: beige; */
+  /* margin-top: 30px; */
+}
+.main-left .imageProduct img{
+  width: 100%;
+  height: 100%;
+}
+.main-left .imageBienthe{
+  width: 100%;
+  height: 150px;
+  margin-top: 20px;
+}
+.main-left .imageBienthe img{
+  width: 150px;
+  height: 100%;
+}
+.text-color{
+  color: red;
+}
+.font-bold{
+  font-weight: bold;
+}
+.original-price {
+  text-decoration: line-through;
+  color: #888;  /* Màu xám cho giá gốc */
+  margin-right: 10px;
+}
+
+.discount-price {
+  color: red; /* Màu đỏ cho giá khuyến mại */
+  font-weight: 300;
+}
+.qty_number{
+  display: flex;
+}
+.qty_number button{
+  border: 0.5px;
+}
+.product_description{
+  margin-top: 70px;
+}

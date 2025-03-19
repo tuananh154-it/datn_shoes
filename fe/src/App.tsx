@@ -21,7 +21,7 @@ function App() {
             {path:"/cart",element:<Cart/>},
             {path:"/blog",element:<Blog/>},
             {path:"/wishlist",element:<Wishlist/>},
-            {path:"/product_detail",element:<ProductDetail/>},
+            {path:"/product_detail/:id",element:<ProductDetail/>},
             {path:"/login",element:<Login/>},
             {path:"/register",element:<Register/>},
             {path:"/checkout",element:<CheckOut/>},
