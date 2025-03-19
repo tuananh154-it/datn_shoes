@@ -143,6 +143,7 @@ const ProductDetail = () => {
                             selectedDetail?.default_price || productId.price
                           )}
                         </p>
+
                         <p>Số lượng: {selectedDetail?.quantity}</p>
                         {/* Đánh giá */}
                         <div className="star">
