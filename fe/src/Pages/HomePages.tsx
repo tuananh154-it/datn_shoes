@@ -43,27 +43,27 @@ const HomePages = () => {
         <>
             <div className="menu_overlay"></div>
             <div className="banner nav">
-            <Swiper
+                <Swiper
                     modules={[Navigation, Pagination, Autoplay]}
-                    navigation
                     pagination={{ clickable: true }}
                     autoplay={{ delay:2000 }}
                     loop
                 >
                     {banners.map((banner) => (
-                        <SwiperSlide key={banner.id}>
-                                <a href={banner.link}> 
+                        <SwiperSlide key={banner.id} style={{ height : "600px"}}>
+                                 <a href={banner.link}> 
                                 <img
                                     src={banner.image_url}
                                     alt=""
                                     className="img-fluid"
                                 />
                                 </a>
+                               
                         </SwiperSlide>
                     ))}
                 </Swiper>
-                {/* <img src={image[currentImageIndex].src} alt={image[currentImageIndex].alt}/> */}
-                
+
+            
                 {/* <div className="tp-caption Restaurant-Cursive   tp-resizeme"
                     id="slide-3010-layer-3"
                     data-x="['left','left','left','left']" data-hoffset="['-75','0','0','0']"
