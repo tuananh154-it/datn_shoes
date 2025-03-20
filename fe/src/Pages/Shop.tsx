@@ -429,11 +429,11 @@ const Shop = () => {
                         <div className="short_by">
                             <form>
                                 <div className="htmlForm-group">
-                                    <label htmlFor="short_by" className="title_h5">Sort By :</label>
-                                    <select className="htmlForm-control" id="short_by" name="short_by"><option>Featured Proucts</option></select>
+                                    <label htmlFor="short_by" className="title_h5">Sắp xếp theo :</label>
+                                    <select className="px-4 py-2 border" id="short_by" name="short_by"><option>Sản phẩm nổi bật</option></select>
                                 </div>
                             </form>
-                        </div>
+                        </div>  
                         <div className="product_grid visible-lg d-none">
                             <ul>
                                 <li className="grid_2 grid-list" data-column="column2">

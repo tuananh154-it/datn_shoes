@@ -4,7 +4,7 @@ const Header = () => {
   <>
     <header className="shoes_header shoes_home_header">
     <div className="header_logo col_4 visible-lg d-none">
-        <a href="/"><img src="src/images/shoes_header_logo.png" className="img-fluid" alt="logo" /></a>
+        <a href="/"><img src="../src/images/shoes_header_logo.png" className="img-fluid" alt="logo" /></a>
     </div>
   
     <div className="col_6 visible-lg d-none">
@@ -67,7 +67,7 @@ const Header = () => {
                         </ul>
                     </li>
                     <li className="nav-item dropdown mega-dropdown">
-                        <a className="nav-link text-uppercase  dropdown-toggle" href="javascript:void(0);">Other Pages</a>
+                        <a className="nav-link text-uppercase  dropdown-toggle" href="/contacts">Other Pages</a>
                         <span className="menu_arrow flaticon-down-arrow-1"></span>
                         <ul className="dropdown-menu mega-dropdown-menu">
                             <li className="w-100"><a href="earthyellow.html">Mega menu full screen</a></li>
@@ -107,7 +107,7 @@ const Header = () => {
                 </div>
             </li>
             <li className="cart_icon">
-                <a href="cart.html">
+                <a href="/cart">
                     <i className="flaticon-shopping-bag"></i>
                     <span className="count text-white rounded-circle text-center">0 </span>
                 </a>
@@ -161,7 +161,7 @@ const Header = () => {
                     </div>
                 </li>
                 <li className="cart_icon">
-                    <a href="cart.html">
+                    <a href="/cart">
                         <i className="flaticon-shopping-bag"></i>
                         <span className="count text-white rounded-circle text-center">0 </span>
                     </a>
