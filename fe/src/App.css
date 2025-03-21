@@ -187,3 +187,43 @@
   cursor: pointer;
   margin-left: 5px;
 }
+.dangnhap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 420px;
+  /* background-color: aqua; */
+}
+.image-overlay {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.background-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  filter: blur(4px);
+}
+
+.overlay-text {
+  position: absolute;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  text-align: center;
+  z-index: 2;
+  padding: 20px;
+  border-radius: 10px;
+}
+.text{
+  color: red;
+}
