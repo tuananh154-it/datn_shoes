@@ -52,7 +52,7 @@
                     {{-- Phần trăm giảm giá --}}
                     <div class="form-group mb-3">
                         <label for="discount_percent">Phần trăm giảm giá</label>
-                        <input type="number" class="form-control @error('discount_percent') is-invalid @enderror" name="discount_percent" id="discount_percent" value="{{ old('discount_percent') }}">
+                        <input type="number" class="form-control @error('discount_percent') is-invalid @enderror" name="discount_percent" id="discount_percent" value="{{ old('discount_percent') }} " >
                         @error('discount_percent')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
