@@ -6,7 +6,7 @@
 
             <!-- Dashboard -->
             <li>
-                <a class="active" href="index.html">
+                <a class="active" href="{{route('dashboards.index')}}">
                     <i class="fa fa-dashboard"></i>
                     <span>Dashboard</span>
                 </a>

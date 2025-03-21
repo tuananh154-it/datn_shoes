@@ -91,7 +91,7 @@
                         <td>
                             {{-- <button class="btn btn-success btn-sm"><i class="fa fa-check"></i></button> --}}
                             {{-- <a class="btn btn-success btn-sm" href="{{ route('vouchers.show ', $voucher->id) }}"><i class="fa fa-check"></i></a> --}}
-                            <a class="btn btn-success btn-sm" href="{{route('vouchers.show',$voucher->id)}}"><i class="fa fa-check"></i></a>
+                            <a class="btn btn-primary btn-sm" href="{{route('vouchers.show',$voucher->id)}}"><i class="fa fa-eye"></i></a>
                             <a class="btn btn-success btn-sm" href="{{ route('vouchers.edit', $voucher->id) }}"><i class="fa fa-pencil"></i></a> 
                             <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Ban co chac chan muon xoa voucher?');">
                                 @csrf
