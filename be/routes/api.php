@@ -6,10 +6,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\BannerController;
+
 use App\Http\Controllers\Api\CartController;
 use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ContactController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\ProductDetailController;
 use App\Http\Controllers\SizeController;
@@ -19,11 +20,13 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\VoucherController;
 
 
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
 |--------------------------------------------------------------------------
 */
+
 
 // Public routes
 Route::apiResource('articles', ArticleController::class);
@@ -31,6 +34,7 @@ Route::apiResource('comments', CommentController::class);
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
 Route::apiResource('carts', CartController::class);
+Route::apiResource('products', ProductController::class);
 
 
 // Trang Home
@@ -57,7 +61,6 @@ Route::middleware(['jwt.auth'])->group(function () {
     });
 
     // Product-related routes
-    Route::apiResource('products', ProductController::class);
     Route::apiResource('colors', ColorController::class);
     Route::apiResource('sizes', SizeController::class);
     Route::apiResource('product-details', ProductDetailController::class);

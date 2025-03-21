@@ -1,3 +1,4 @@
+
 .arrival{
   margin-top: -20px;
 }
@@ -15,4 +16,174 @@
 .quaylai{
   margin-left: 10px;
   font-size: 30px;
+}
+.search{
+  display: flex;
+  /* text-align: center; */
+  margin-top: 30px;
+  margin-left: 50px;
+  color: black;
+}
+.rown{
+   margin-left: -50px;
+}
+.inputSearch{
+  width: 250px;
+  height: 40px;
+  background-color: transparent; 
+  border-width: 0.5px;
+  border-right: none;
+  /* margin-top: 40px; */
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  padding: 0 10px;
+}
+.iconSearch{
+  font-size: 25px;
+  padding: 5px;
+  background-color: rgb(247, 64, 64);
+  height: 40px;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.main{
+  display: flex;
+  margin: auto;
+}
+.main-left{
+  width: 50%;
+  height: 700px;
+  /* background-color: aqua; */
+}
+
+.main-right{  
+  width: 50%;
+  margin-left: 30px;
+}
+.main-left .imageProduct{
+  height: 500px;
+  width: 100%;
+  /* background-color: beige; */
+  /* margin-top: 30px; */
+}
+.main-left .imageProduct img{
+  width: 100%;
+  height: 100%;
+}
+.main-left .imageBienthe{
+  width: 100%;
+  height: 150px;
+  margin-top: 20px;
+}
+.main-left .imageBienthe img{
+  width: 150px;
+  height: 100%;
+}
+.text-color{
+  color: red;
+}
+.font-bold{
+  font-weight: bold;
+}
+.original-price {
+  text-decoration: line-through;
+  color: #888;  /* Màu xám cho giá gốc */
+  margin-right: 10px;
+}
+
+.discount-price {
+  color: red; /* Màu đỏ cho giá khuyến mại */
+  font-weight: 300;
+}
+.qty_number{
+  display: flex;
+}
+.qty_number button{
+  border: 0.5px;
+}
+.product_description{
+  margin-top: 70px;
+}
+.img-product{
+  width: 100%;
+  height: 80%;
+}
+.colors {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.color-option {
+  display: inline-block;
+  position: relative;
+}
+
+.color-option input {
+  display: none;
+}
+
+.color-option span {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border: 2px solid transparent;
+  border: 2px solid black;
+
+  cursor: pointer;
+}
+
+/* Khi chọn thì có border */
+.color-option input:checked + span {
+  border: 2px solid greenyellow;
+  position: relative;
+}
+
+/* Checkmark */
+.color-option input:checked + span::after {
+  content: '✔';
+  position: absolute;
+  top: 5px;
+  left: 8px;
+  font-size: 16px;
+  color: white;
+}
+/*search*/
+.search_icon {
+  position: relative;
+}
+
+.search_icon a {
+  cursor: pointer;
+}
+
+.search_form {
+  display: none;
+  position: absolute;
+  top: 40px;
+  right: 0;
+  background: white;
+  padding: 10px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  width: 250px;
+}
+
+/* Khi dropdown mở */
+.search_form.open {
+  display: block;
+}
+
+.search_form input {
+  width: calc(100% - 40px);
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.search_form button {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  margin-left: 5px;
 }

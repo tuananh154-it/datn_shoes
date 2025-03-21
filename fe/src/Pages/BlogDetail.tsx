@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Article, getOneArticles } from '../services/articles';
 import toast from 'react-hot-toast';
-import Footer from '../Layout/Footer';
-
+import DOMPurify from 'dompurify';
 const BlogDetail = () => {
     const { id } = useParams();
     const [article, setArticle] = useState<Article | null>(null);
@@ -50,7 +49,7 @@ const BlogDetail = () => {
                                         <span className="article__date">
                                             Ngày đăng | {article?.created_at} <span className="diamond_shape"></span>
                                         </span>
-                                        <p>{article?.content.substring(0, 10000)}</p>
+                                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article?.content || "") }} />
                                         </div>
                                         
                                     )}
