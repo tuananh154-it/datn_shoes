@@ -20,11 +20,11 @@
                 </div>
             @endif
 
-            <div class="">
+            {{-- <div class="">
                 <a href="{{ route('orders.create') }}" class="btn btn-success btn-sm">
                     <i class="fa fa-plus"></i> Thêm Đơn Hàng
                 </a>
-            </div>
+            </div> --}}
             <div class="mb-3">
                 <form action="{{ route('orders.index') }}" method="GET">
                     <div class="row">

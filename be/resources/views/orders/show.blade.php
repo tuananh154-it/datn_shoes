@@ -55,8 +55,8 @@
                         </div>
                         <div class="bg-white p-3 rounded shadow-sm">
                             <p><strong>Tổng Giá Trị Sản Phẩm:</strong> {{ number_format($total_product_value, 2) }} VND</p>
-                            <p><strong>Phí Vận Chuyển:</strong> {{ number_format($shipping_fee, 2) }} VND</p>
-                            <p><strong class="text-danger">Tổng Tiền:</strong> <strong>{{ number_format($total_price, 2) }} VND</strong></p>
+                            {{-- <p><strong>Phí Vận Chuyển:</strong> {{ number_format($shipping_fee, 2) }} VND</p> --}}
+                            {{-- <p><strong class="text-danger">Tổng Tiền:</strong> <strong>{{ number_format($total_price, 2) }} VND</strong></p> --}}
                         </div>
                     </div>
                 </div>
