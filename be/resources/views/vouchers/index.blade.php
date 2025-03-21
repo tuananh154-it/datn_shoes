@@ -77,7 +77,7 @@
                         <td>{{ $voucher->max_discount_amount }}</td>
                         <td>{{ $voucher->terms_and_conditions }}</td> --}}
                         {{-- <td><span class="badge badge-info label-mini">{{ $voucher->status }}</span></td> --}}
-                        <td>{{ $voucher->discount_percent }}</td>
+                        <td>{{ $voucher->discount_percent }} %</td>
                         <td>
                             @if ($voucher->status == 'active')
                                 <span class="badge badge-info">Active</span>
