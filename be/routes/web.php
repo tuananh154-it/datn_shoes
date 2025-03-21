@@ -52,7 +52,7 @@ Route::middleware(['auth'])->group(function () {
 
 Route::prefix('admin')->middleware(['admin'])->group(function () {
     Route::get('/', function () {
-        return view('master');
+        return view('dashboards.index');
     });
     Route::resource('products', ProductController::class);
     Route::resource('product-details', ProductDetailController::class);
@@ -72,7 +72,7 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
     // đơn hàng
     Route::resource('orders', OrderController::class);
     // Đảm bảo rằng route này đã được khai báo trong `routes/web.php`
-Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update_status');
+    Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update_status');
 
     //quan lý bài viết
     Route::resource('articles', ArticlesController::class);
@@ -89,6 +89,10 @@ Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'
      Route::resource('categories', CategoryController::class);
      //quan ly thuong hieu
      Route::resource('brands', BrandController::class);
+     //Dashboard 
+     Route::get('dashboards', [AdminController::class, 'index'])->name('dashboards.index');
+     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+
 });
 
 
