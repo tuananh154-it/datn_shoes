@@ -1,4 +1,17 @@
+import { registerForm, User } from "../services/register";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form"
+import toast from "react-hot-toast";
+
 const Register = () => {
+  const nav = useNavigate();
+  const {register,handleSubmit}=useForm<User>()
+   const onSubmit = (data:User)=>{
+     registerForm(data).then(()=>{
+       toast("Đã đăng kí thành công")
+       nav("/login");
+     })
+   }
   return (
     <>
       <div className="menu_overlay"></div>
@@ -26,19 +39,7 @@ const Register = () => {
             <div className="row">
               <div className="col-lg-6 border-right">
                 <div className="login_form">
-                  <form>
-                    <div className="form-group">
-                      <label htmlFor="fname" className="title_h5">
-                        Họ*
-                      </label>
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="fname"
-                        name="Firstname"
-                        required
-                      />
-                    </div>
+                  <form action="" onSubmit={handleSubmit(onSubmit)}>
                     <div className="form-group">
                       <label className="title_h5" htmlFor="lname">
                         Tên*
@@ -46,9 +47,9 @@ const Register = () => {
                       <input
                         type="text"
                         className="form-control"
-                        id="lname"
-                        name="Lastname"
+                        id="name"
                         required
+                        {...register("name")}
                       />
                     </div>
                     <div className="form-group">
@@ -59,8 +60,8 @@ const Register = () => {
                         type="email"
                         className="form-control"
                         id="email"
-                        name="Email"
                         required
+                        {...register("email")}
                       />
                     </div>
                     <div className="form-group">
@@ -71,8 +72,8 @@ const Register = () => {
                         type="password"
                         className="form-control"
                         id="password"
-                        name="Password"
                         required
+                        {...register("password")}
                       />
                     </div>
                     <div className="login_links ">
