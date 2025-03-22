@@ -89,6 +89,10 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
 
     // Dashboard
     Route::get('dashboards', [AdminController::class, 'index'])->name('dashboards.index');
+    Route::get('admin/orders', [AdminController::class, 'orders'])->name('dashboards.orders');
+    Route::get('admin/reviews', [AdminController::class, 'reviews'])->name('dashboards.reviews');
+    Route::get('admin/products', [AdminController::class, 'products'])->name('dashboards.products');
+    Route::get('admin/users', [AdminController::class, 'users'])->name('dashboards.users');
 });
 
 
