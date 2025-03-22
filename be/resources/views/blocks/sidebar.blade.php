@@ -8,7 +8,7 @@
             <li>
                 <a class="active" href="{{route('dashboards.index')}}">
                     <i class="fa fa-dashboard"></i>
-                    <span>Dashboard</span>
+                    <span>Thống kê </span>
                 </a>
             </li>
 

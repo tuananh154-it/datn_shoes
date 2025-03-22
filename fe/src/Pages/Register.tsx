@@ -10,7 +10,7 @@ const Register = () => {
      registerForm(data).then(()=>{
        toast("Đã đăng kí thành công")
        nav("/login");
-     })
+     }).catch((e)=>{toast.error("Error:"+e.message)})
    }
   return (
     <>

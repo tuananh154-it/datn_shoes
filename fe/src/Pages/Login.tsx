@@ -1,5 +1,19 @@
+import { useForm } from "react-hook-form"
+import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
+import { loginForm, UserLogin } from "../services/login";
 
 const Login = () => {
+    const nav = useNavigate();
+    const {register,handleSubmit}=useForm<UserLogin>()
+    const onSubmit = (data:UserLogin)=>{
+      loginForm(data).then(()=>{
+        toast.success("Đã đăng nhập thành công");
+         nav("/")
+         console.log("user",data)
+       
+      }).catch((e)=>{toast.error("Error:"+e.message)})
+    }
   return (
    <>
     <div className="menu_overlay"></div>
@@ -20,14 +34,14 @@ const Login = () => {
                     <div className="row">
                         <div className="col-lg-6 border-right">
                             <div className="login_form">
-                                <form>
+                                <form action="" onSubmit={handleSubmit(onSubmit)}>
                                     <div className="form-group">
                                         <label htmlFor="email" className="title_h5">Email</label>
-                                        <input type="email" className="form-control" id="email" name="Email"/>
+                                        <input type="email" className="form-control" id="email" {...register("email")}/>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="password" className="title_h5">Password</label>
-                                        <input type="password" className="form-control" id="password" name="Password"/>
+                                        <input type="password" className="form-control" id="password" {...register("password")}/>
                                     </div>
                                     <div className="login_links">
                                         <button type="submit" className="btn background-btn text-uppercase">Đăng nhập</button>
