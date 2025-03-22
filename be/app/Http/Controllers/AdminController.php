@@ -2,106 +2,102 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\OrderDetail;
-use App\Models\Product;
-use App\Models\ProductDetail;
-use App\Models\User;
-use App\Models\Voucher;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Order;
+use App\Models\Product;
+use App\Models\User;
+use App\Models\Comment;
+use Carbon\Carbon;
 
 class AdminController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $fromDate = $request->input('from_date');
-        $toDate = $request->input('to_date');
+        // Lấy tổng số đơn hàng, sản phẩm, thành viên và đánh giá
+        $totalOrders = Order::count();
+        $totalProducts = Product::count();
+        $totalUsers = User::count();
+        $totalReviews = Comment::count();
 
-        // Mặc định lấy toàn bộ dữ liệu
-        $queryOrders = Order::query();
-        $queryOrderDetails = OrderDetail::query();
-        $queryVouchers = Voucher::query();
-        $queryUsers = User::query();
+        // Lấy dữ liệu doanh thu theo tháng của năm hiện tại
+        $monthlyRevenue = Order::whereYear('created_at', Carbon::now()->year)
+            ->where('status', 'completed')
+            ->whereNotNull('created_at') // Tránh lỗi khi created_at bị null
+            ->selectRaw('SUM(total_price) as revenue, MONTH(created_at) as month')
+            ->groupBy('month')
+            ->pluck('revenue', 'month');
 
-        // Nếu có lọc ngày tháng, thì chỉ lấy dữ liệu trong khoảng thời gian đó
-        if ($fromDate && $toDate) {
-            $queryOrders->whereBetween('created_at', [$fromDate, $toDate]);
-            $queryOrderDetails->whereHas('order', function ($q) use ($fromDate, $toDate) {
-                $q->whereBetween('created_at', [$fromDate, $toDate]);
-            });
-            $queryVouchers->whereBetween('created_at', [$fromDate, $toDate]);
-            $queryUsers->whereBetween('created_at', [$fromDate, $toDate]);
-        }
-
-        // Thống kê sản phẩm (lọc theo ngày nếu có)
-        if ($fromDate && $toDate) {
-            $totalProducts = Product::whereBetween('created_at', [$fromDate, $toDate])->count();
-            $totalStock = ProductDetail::whereHas('product', function ($query) use ($fromDate, $toDate) {
-                $query->whereBetween('created_at', [$fromDate, $toDate]);
-            })->sum('quantity');
-        } else {
-            $totalProducts = Product::count();
-            $totalStock = ProductDetail::sum('quantity');
-        }
-
-        $totalSold = $queryOrderDetails->sum('quantity');
-        $totalRemaining = max($totalStock - $totalSold, 0); // Tránh số âm
-
-        // Thống kê đơn hàng (lọc theo ngày nếu có)
-        $totalOrders = $queryOrders->count();
-        $revenue = $queryOrders->where('status', 'completed')->sum('total_price');
-
-        if ($fromDate && $toDate) {
-            $revenue = (clone $queryOrders)->where('status', 'completed')->sum('total_price');
-        }
-
-        // Thống kê đơn hàng & doanh thu trong ngày
-        $ordersToday = Order::whereDate('created_at', today())->count();
-        $revenueToday = Order::whereDate('created_at', today())->sum('total_price');
-
-        // Thống kê voucher (lọc theo ngày nếu có)
-        if ($fromDate && $toDate) {
-            $totalVouchers = $queryVouchers->count();
-            $activeVouchers = (clone $queryVouchers)->where('status', 'active')->count();
-            $inactiveVouchers = (clone $queryVouchers)->where('status', 'inactive')->count();
-        } else {
-            $totalVouchers = Voucher::count();
-            $activeVouchers = Voucher::where('status', 'active')->count();
-            $inactiveVouchers = Voucher::where('status', 'inactive')->count();
-        }
-
-        // Thống kê người dùng (lọc theo ngày nếu có)
-        if ($fromDate && $toDate) {
-            $totalUsers = $queryUsers->count();
-            $totalSuperAdmin = (clone $queryUsers)->where('role', 'superadmin')->count();
-            $totalAdmin = (clone $queryUsers)->where('role', 'admin')->count();
-            $totalCustomers = (clone $queryUsers)->where('role', 'user')->count();
-        } else {
-            $totalUsers = User::count();
-            $totalSuperAdmin = User::where('role', 'superadmin')->count();
-            $totalAdmin = User::where('role', 'admin')->count();
-            $totalCustomers = User::where('role', 'user')->count();
-        }
+        // Lấy dữ liệu trạng thái đơn hàng của năm hiện tại
+        $orderStatus = Order::whereYear('created_at', Carbon::now()->year)
+            ->whereNotNull('created_at')
+            ->selectRaw('COUNT(id) as count, status')
+            ->groupBy('status')
+            ->pluck('count', 'status');
 
         return view('dashboards.index', compact(
-            'totalProducts',
-            'totalStock',
-            'totalSold',
-            'totalRemaining',
-            'totalOrders',
-            'revenue',
-            'ordersToday',
-            'revenueToday',
-            'totalVouchers',
-            'activeVouchers',
-            'inactiveVouchers',
-            'totalUsers',
-            'totalSuperAdmin',
-            'totalAdmin',
-            'totalCustomers',
-            'fromDate',
-            'toDate'
+            'totalOrders', 'totalProducts', 'totalUsers', 'totalReviews', 'monthlyRevenue', 'orderStatus'
         ));
+    }
+
+    public function filterStatistics(Request $request)
+    {
+        $year = $request->input('year');
+        $month = $request->input('month', null); // Mặc định không lọc theo tháng
+
+        if (!$month) {
+            // Nếu chỉ lọc theo năm, lấy doanh thu cả 12 tháng
+            $monthlyRevenue = Order::whereYear('created_at', $year)
+                ->where('status', 'completed')
+                ->whereNotNull('created_at')
+                ->selectRaw('SUM(total_price) as revenue, MONTH(created_at) as month')
+                ->groupBy('month')
+                ->pluck('revenue', 'month');
+        } else {
+            // Nếu lọc theo cả tháng và năm, chỉ lấy doanh thu của tháng đó
+            $monthlyRevenue = Order::whereYear('created_at', $year)
+                ->whereMonth('created_at', $month)
+                ->where('status', 'completed')
+                ->whereNotNull('created_at')
+                ->sum('total_price'); // Trả về tổng doanh thu của tháng đó
+        }
+
+        // Lấy số đơn hàng theo trạng thái
+        $orderStatus = Order::whereYear('created_at', $year)
+            ->when($month, function ($query) use ($month) {
+                return $query->whereMonth('created_at', $month);
+            })
+            ->whereNotNull('created_at')
+            ->selectRaw('COUNT(id) as count, status')
+            ->groupBy('status')
+            ->pluck('count', 'status');
+
+        return response()->json([
+            'monthlyRevenue' => $monthlyRevenue,
+            'orderStatus' => $orderStatus
+        ]);
+    }
+
+    public function orders()
+    {
+        $orders = Order::latest()->paginate(10);
+        return view('dashboards.orders', compact('orders'));
+    }
+
+    public function reviews()
+    {
+        $reviews = Comment::latest()->paginate(10);
+        return view('dashboards.reviews', compact('reviews'));
+    }
+
+    public function products()
+    {
+        $products = Product::latest()->paginate(10);
+        return view('dashboards.products', compact('products'));
+    }
+
+    public function users()
+    {
+        $users = User::latest()->get();
+        return view('dashboards.users', compact('users'));
     }
 }
