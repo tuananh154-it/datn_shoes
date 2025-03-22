@@ -39,7 +39,7 @@
                    
                     <!-- ten danh muc-->
                     <div class="form-group">
-                        <label for="name">Tên thương hiệu</label>
+                        <label for="name">Tên danh mục </label>
                         <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" value="{{ old('name') }}">
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
