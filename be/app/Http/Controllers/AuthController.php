@@ -76,7 +76,7 @@ public function dangnhap(Request $request)
 
         // Kiểm tra role của user
         if ($user->role === 'admin') {
-            return redirect()->route('articles.index')->with('success', 'vào thành công em  .'); // Điều hướng đến trang admin
+            return redirect()->route('dashboards.index')->with('success', 'vào thành công em  .'); // Điều hướng đến trang admin
         }
 
         return redirect()->intended(route('login'))->with('success', 'chưa vào được đâu.'); // Điều hướng đến trang chủ mặc định
