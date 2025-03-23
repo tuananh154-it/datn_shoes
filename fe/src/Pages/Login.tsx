@@ -2,16 +2,23 @@ import { useForm } from "react-hook-form"
 import toast from "react-hot-toast"
 import { useNavigate } from "react-router-dom"
 import { loginForm, UserLogin } from "../services/login";
+import { useDispatch } from "react-redux";
+import { setUserDetail  } from "../store/useSlice";
 
 const Login = () => {
     const nav = useNavigate();
+   
     const {register,handleSubmit}=useForm<UserLogin>()
+    const dispatch = useDispatch()
     const onSubmit = (data:UserLogin)=>{
-      loginForm(data).then(()=>{
+      loginForm(data).then(({data})=>{
         toast.success("Đã đăng nhập thành công");
+        // console.log("usergshddfmdf",data)
+        localStorage.setItem("user", JSON.stringify(data.data))
+        localStorage.setItem("token",data.token)
+        dispatch(setUserDetail(data.user));
+        // console.log("Dispatched user:", data.data);
          nav("/")
-         console.log("user",data)
-       
       }).catch((e)=>{toast.error("Error:"+e.message)})
     }
   return (
