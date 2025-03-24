@@ -1,3 +1,4 @@
+import MegaMenu from "./MegaMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useState } from "react";
@@ -35,93 +36,7 @@ const Header = () => {
                     Home{" "}
                   </a>
                 </li>
-                <li className="nav-item dropdown mega-dropdown">
-                  <a
-                    className="nav-link text-uppercase dropdown-toggle"
-                    href="/shop"
-                  >
-                    Shop
-                  </a>
-                  <span className="menu_arrow flaticon-down-arrow-1"></span>
-                  <ul className="dropdown-menu megamenu_full_screen">
-                    <li className="w-100 text-capitalize">
-                      <div className="container">
-                        <div className="row">
-                          <div className="col-lg-4">
-                            <ul>
-                              <li className="title_h5 w-100">products</li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">Men</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">Women</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">Accessories</a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div className="col-lg-4">
-                            <ul>
-                              <li className="title_h5 w-100">Category-1</li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">Dresses</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">Skirts</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">shirts</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">jeans</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">sweaters</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">sweatshirts</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">pants short</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">cords</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">
-                                  tracks & joggers
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div className="col-lg-4">
-                            <ul>
-                              <li className="title_h5 w-100">category-2</li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">winter wear</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">
-                                  summer specials
-                                </a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">inner wears</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">tops</a>
-                              </li>
-                              <li className="w-100">
-                                <a href="javascript:void(0);">jackets</a>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
+                <MegaMenu/>
                 <li className="nav-item dropdown mega-dropdown">
                   <a className="nav-link text-uppercase" href="/blog">
                     Blog
@@ -264,5 +179,4 @@ const Header = () => {
     </>
   );
 };
-
 export default Header;
