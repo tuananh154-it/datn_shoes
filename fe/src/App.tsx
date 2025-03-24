@@ -14,7 +14,11 @@ import Wishlist from "./Pages/Wishlist";
 import CheckOut from "./Pages/CheckOut";
 import Contact from "./Pages/Contact";
 import BlogDetail from "./Pages/BlogDetail";
+import { Toaster } from "react-hot-toast";
+
+
 function App() {
+
     const router = [
         {path:"/", element:<Layout/>,children:[
             {path:"/",element:<HomePages/>},
@@ -35,6 +39,7 @@ function App() {
       return (
        <>
          <div>{routerLig}</div>
+         <Toaster/>
        </>
       )
 }

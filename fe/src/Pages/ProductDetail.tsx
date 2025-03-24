@@ -685,7 +685,9 @@ const ProductDetail = () => {
               </div>
             </div>
           ) : (
-            <p>Không có biến thể sản phẩm.</p>
+           <div className="container">
+             <p>Đang tải...</p>
+           </div>
           )}
         </section>
       </div>

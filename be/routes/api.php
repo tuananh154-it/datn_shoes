@@ -18,6 +18,7 @@ use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\VoucherController;
+use App\Http\Controllers\UserController;
 
 
 
@@ -66,3 +67,16 @@ Route::middleware(['jwt.auth'])->group(function () {
     Route::apiResource('product-details', ProductDetailController::class);
 });
 
+
+Route::get('/users', [UserController::class, 'index'])->name('api.users.index');
+
+Route::post('/users', [UserController::class, 'store'])->name('api.users.store');
+
+// Route để chỉnh sửa thông tin người dùng (API)
+Route::put('/users/{user}', [UserController::class, 'update'])->name('api.users.update');
+
+// Route để xóa người dùng (API)
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('api.users.destroy');
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');

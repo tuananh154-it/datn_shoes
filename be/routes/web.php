@@ -23,6 +23,7 @@ use App\Http\Controllers\VoucherController;
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
+
 Route::middleware(['auth'])->group(function () {
     Route::get('/user/dashboard', [UserController::class, 'index'])->name('user.dashboard');
 });
@@ -38,22 +39,11 @@ Route::middleware(['auth'])->group(function () {
 |
 */
 
-// Route::get('/addresses', [AddressController::class, 'showAddresses']);
-
-// Route::get('/', function () {
-//     return view('master');
-// });
-// Route::resource('products', ProductController::class);
-// Route::resource('product-details', ProductDetailController::class);
-// Route::resource('colors', ColorController::class);
-// Route::resource('sizes', SizeController::class);
-
-// ->middleware(['role:admin|super admin'])
-
 Route::prefix('admin')->middleware(['admin'])->group(function () {
     Route::get('/', function () {
-        return view('master');
+        return view('dashboards.index');
     });
+
     Route::resource('products', ProductController::class);
     Route::resource('product-details', ProductDetailController::class);
     Route::resource('colors', ColorController::class);
@@ -61,41 +51,52 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
 
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);
-    // Route::get('products/{product}/details/create', [ProductController::class, 'createDetail'])->name('products.details.create');
-    // Route::post('products/{product}/details', [ProductController::class, 'storeDetail'])->name('products.details.store');
+
+    // Product Details
     Route::get('products/{productId}/details/create', [ProductDetailController::class, 'create'])->name('product-details.create');
     Route::post('products/{productId}/details', [ProductDetailController::class, 'store'])->name('product-details.store');
     Route::get('product-details/{id}/edit', [ProductDetailController::class, 'edit'])->name('product-details.edit');
     Route::put('product-details/{id}', [ProductDetailController::class, 'update'])->name('product-details.update');
     Route::delete('product-details/{id}', [ProductDetailController::class, 'destroy'])->name('product-details.destroy');
-    Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('ckeditor.upload');
-    // đơn hàng
-    Route::resource('orders', OrderController::class);
-    // Đảm bảo rằng route này đã được khai báo trong `routes/web.php`
-Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update_status');
 
-    //quan lý bài viết
+    // CKEditor upload
+    Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('ckeditor.upload');
+
+    // Orders
+    Route::resource('orders', OrderController::class);
+    Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update_status');
+
+    // Articles
     Route::resource('articles', ArticlesController::class);
-    //quan ly comment
+
+    // Comments
     Route::resource('comments', CommentController::class);
-    //lien he
+
+    // Contacts
     Route::resource('contacts', ContactController::class);
 
-    //banner
+    // Banners
     Route::resource('banners', BannerController::class);
-     //quan ly voucher
-     Route::resource('vouchers', VoucherController::class);
-     //quan ly danh muc
-     Route::resource('categories', CategoryController::class);
-     //quan ly thuong hieu
-     Route::resource('brands', BrandController::class);
+
+    // Vouchers
+    Route::resource('vouchers', VoucherController::class);
+
+    // Categories
+    Route::resource('categories', CategoryController::class);
+
+    // Brands
+    Route::resource('brands', BrandController::class);
+
+    // Dashboard
+    Route::get('dashboards', [AdminController::class, 'index'])->name('dashboards.index');
+    Route::get('admin/orders', [AdminController::class, 'orders'])->name('dashboards.orders');
+    Route::get('admin/reviews', [AdminController::class, 'reviews'])->name('dashboards.reviews');
+    Route::get('admin/products', [AdminController::class, 'products'])->name('dashboards.products');
+    Route::get('admin/users', [AdminController::class, 'users'])->name('dashboards.users');
 });
 
 
-
-
-// Auth::routes();
-// vào thẳng trang login luôn
+// Auth Routes
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -103,11 +104,9 @@ Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'dangnhap']);
 Route::get('register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('register', [AuthController::class, 'dangky']);
-
-// Route đăng xuất
-// Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-// Route::get('register', [AuthController::class, 'showRegisterForm']);
+
+// Role-based Routes
 Route::middleware(['role:admin'])->get('/admin-dashboard', function () {
     return response()->json(['message' => 'Welcome Admin']);
 });
@@ -116,13 +115,30 @@ Route::middleware(['role:super admin'])->group(function () {
     Route::get('/super-admin-dashboard', function () {
         return response()->json(['message' => 'Welcome Super Admin']);
     });
-    // Tạo các route cho Users, Profiles và Roles
+
+    // Routes for Users
     Route::resource('users', UserController::class);
 });
 
-// Routes cho Profiles
+// Routes for Profiles
 Route::resource('profiles', ProfileController::class);
 
-// Routes cho Roles
-// Route::resource('roles', RoleController::class);
+// Routes for Roles
+Route::resource('roles', RoleController::class);
+// Route cho trang danh sách người dùng
+Route::get('/users', [UserController::class, 'index'])->name('users.index');
 
+// Route cho form tạo người dùng mới
+Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+
+// Route để tạo người dùng mới
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
+
+// Route cho form chỉnh sửa người dùng
+Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
+
+// Route để cập nhật thông tin người dùng
+Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+
+// Route để xóa người dùng
+Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
