@@ -1,0 +1,20 @@
+/* Ẩn menu mặc định */
+.dropdown-menu.megamenu_full_screen {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+  }
+  
+  /* Hiển thị menu khi hover vào phần tử cha */
+  .mega-dropdown:hover .dropdown-menu.megamenu_full_screen {
+    display: block !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  /* Đảm bảo menu con không bị mất */
+  .dropdown-menu.megamenu_full_screen li {
+    display: block !important;
+  }
+  
