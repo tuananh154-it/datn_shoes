@@ -10,7 +10,7 @@ const MegaMenu = () => {
             onMouseLeave={() => setIsOpen(false)}
         >
             <a className="nav-link text-uppercase dropdown-toggle hover:text-blue-500" href="/shop">
-                Sản Phẩm
+                Shop
             </a>
             <span className="menu_arrow flaticon-down-arrow-1"></span>
             <ul className={`dropdown-menu megamenu_full_screen ${isOpen ? "block" : "hidden"}`}>
