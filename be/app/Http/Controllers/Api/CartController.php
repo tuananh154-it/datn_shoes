@@ -14,14 +14,12 @@ class CartController extends Controller
     // Lấy giỏ hàng của user
     public function index(Request $request)
     {
-        $user = $request->user();
-        if (!$user) {
-            return response()->json(['error' => 'Không tồn tại người dùng'], 401);
-        }
+        $user = $request->user(); // Middleware auth đảm bảo user luôn hợp lệ
 
+        // Lấy giỏ hàng của người dùng cùng với các item và sản phẩm liên quan
         $cart = Cart::where('user_id', $user->id)->with('items.productDetail.product')->first();
 
-        if (!$cart || !$cart->items->count()) {
+        if (!$cart || $cart->items->isEmpty()) {
             return response()->json(['message' => 'Giỏ hàng trống'], 200);
         }
 
@@ -29,17 +27,19 @@ class CartController extends Controller
             'cart' => $cart->items->map(function ($item) {
                 return [
                     'id_cart_item' => $item->id,
-                    'product_detail_id' => $item->productDetail->id,
+                    'product_detail_id' => $item->productDetail->id ?? null, // Kiểm tra nếu null
                     'product_name' => $item->productDetail->product->name ?? 'N/A',
-                    'color' => $item->productDetail->color,
-                    'size' => $item->productDetail->size,
+                    'color' => $item->productDetail->color ?? 'N/A',
+                    'size' => $item->productDetail->size ?? 'N/A',
                     'quantity' => $item->quantity,
                     'price' => $item->price,
-                    'image' => $item->productDetail->image
+                    'image' => $item->productDetail->image ?? null,
                 ];
-            })
+            }),
+            'total_price' => $cart->total_price, // Thêm tổng tiền của giỏ hàng
         ]);
     }
+
 
     // Thêm sản phẩm vào giỏ hàng
     public function addToCart(Request $request)

@@ -90,33 +90,18 @@ public function dangnhap(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
-        if ($this->attemptLogin($request)) {
-            if ($request->hasSession()) {
-                $request->session()->put('auth.password_confirmed_at', time());
-            }
-
-            if (!$request->wantsJson()) {
-                $request->session()->regenerate();
-
-                $this->clearLoginAttempts($request);
-            }
-
-            if ($response = $this->authenticated($request, $this->guard()->user())) {
-                return $response;
-            }
-
-
-            return $request->wantsJson()
-                ? new JsonResponse(['token' => JWTAuth::attempt($credentials)])
-                : redirect()->intended($this->redirectPath());
+        if (!$token = Auth::guard('api')->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
-        $this->incrementLoginAttempts($request);
+        if ($request->hasSession()) {
+            $request->session()->put('auth.password_confirmed_at', time());
+        }
 
-        return $this->sendFailedLoginResponse($request);
+        return response()->json([
+            'token' => $token,
+            'user' => Auth::guard('api')->user()
+        ]);
     }
 
     // Thông tin người dùng
