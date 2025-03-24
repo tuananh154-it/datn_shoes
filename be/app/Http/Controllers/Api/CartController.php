@@ -11,34 +11,38 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    // Lấy giỏ hàng của user
     public function index(Request $request)
-    {
-        $user = $request->user(); // Middleware auth đảm bảo user luôn hợp lệ
+{
+    $user = $request->user();
 
-        // Lấy giỏ hàng của người dùng cùng với các item và sản phẩm liên quan
-        $cart = Cart::where('user_id', $user->id)->with('items.productDetail.product')->first();
-
-        if (!$cart || $cart->items->isEmpty()) {
-            return response()->json(['message' => 'Giỏ hàng trống'], 200);
-        }
-
-        return response()->json([
-            'cart' => $cart->items->map(function ($item) {
-                return [
-                    'id_cart_item' => $item->id,
-                    'product_detail_id' => $item->productDetail->id ?? null, // Kiểm tra nếu null
-                    'product_name' => $item->productDetail->product->name ?? 'N/A',
-                    'color' => $item->productDetail->color ?? 'N/A',
-                    'size' => $item->productDetail->size ?? 'N/A',
-                    'quantity' => $item->quantity,
-                    'price' => $item->price,
-                    'image' => $item->productDetail->image ?? null,
-                ];
-            }),
-            'total_price' => $cart->total_price, // Thêm tổng tiền của giỏ hàng
-        ]);
+    if (!$user) {
+        return response()->json(['error' => 'User not authenticated'], 401);
     }
+
+    // Lấy giỏ hàng của user cùng với các sản phẩm trong giỏ hàng
+    $cart = Cart::where('user_id', $user->id)->with('items.productDetail.product')->first();
+
+    if (!$cart || $cart->items->isEmpty()) {
+        return response()->json(['message' => 'Giỏ hàng trống'], 200);
+    }
+
+    return response()->json([
+        'cart' => $cart->items->map(function ($item) {
+            return [
+                'id_cart_item' => $item->id,
+                'product_name' => $item->productDetail->product->name ?? 'N/A',
+                'color' => $item->productDetail->color->name ?? 'N/A',
+                'size' => $item->productDetail->size->name ?? 'N/A',
+                'quantity' => $item->quantity,
+                'default_price' => $item->productDetail->default_price, // Giá gốc
+                'discount_price' => $item->productDetail->discount_price ?? $item->productDetail->default_price, // Giá khuyến mãi (nếu có)
+                'final_price' => ($item->productDetail->discount_price ?? $item->productDetail->default_price) *$item->quantity, // Giá thực tế áp dụng
+                'image' => $item->productDetail->image ?? null,
+            ];
+        }),
+        'total_price' => $cart->items->sum(fn($item) => $item->quantity * ($item->productDetail->discount_price ?? $item->productDetail->default_price)),
+    ]);
+}
 
 
     // Thêm sản phẩm vào giỏ hàng
@@ -49,20 +53,36 @@ class CartController extends Controller
             return response()->json(['error' => 'User not authenticated'], 401);
         }
 
-        $productDetailId = $request->input('product_detail_id');
+        $productDetailId = $request->input('product_id');
         $quantity = $request->input('quantity', 1);
 
+        if (!$productDetailId) {
+            return response()->json(['message' => 'Thiếu product_id'], 400);
+        }
+
         $productDetail = ProductDetail::find($productDetailId);
-        if (!$productDetail || $productDetail->quantity < $quantity) {
-            return response()->json(['message' => 'Sản phẩm không đủ số lượng'], 400);
+        if (!$productDetail) {
+            return response()->json(['message' => 'Sản phẩm không tồn tại'], 400);
+        }
+
+        if ($productDetail->quantity < $quantity) {
+            return response()->json([
+                'message' => 'Sản phẩm không đủ số lượng',
+                'product_quantity' => $productDetail->quantity,
+                'requested_quantity' => $quantity
+            ], 400);
         }
 
         $cart = Cart::firstOrCreate(['user_id' => $user->id]);
+
         $cartItem = CartItem::where('cart_id', $cart->id)
                             ->where('product_detail_id', $productDetailId)
                             ->first();
 
         if ($cartItem) {
+            if ($productDetail->quantity < ($cartItem->quantity + $quantity)) {
+                return response()->json(['message' => 'Sản phẩm không đủ số lượng'], 400);
+            }
             $cartItem->increment('quantity', $quantity);
         } else {
             CartItem::create([
@@ -85,12 +105,14 @@ class CartController extends Controller
         }
 
         $newQuantity = $request->input('quantity');
+        error_log('Giá trị nhận được: ' . json_encode($newQuantity)); // Ghi log để kiểm tra
+
         if ($newQuantity <= 0) {
-            return response()->json(['message' => 'Số lượng không hợp lệ'], 400);
+            return response()->json(['message' => 'Số lượng không hợp lệ', 'debug' => $newQuantity], 400);
         }
 
         $productDetail = $cartItem->productDetail;
-        if ($productDetail->quantity < $newQuantity) {
+        if (!$productDetail || $productDetail->quantity < $newQuantity) {
             return response()->json(['message' => 'Sản phẩm không đủ hàng'], 400);
         }
 
@@ -110,4 +132,36 @@ class CartController extends Controller
         $cartItem->delete();
         return response()->json(['message' => 'Xóa sản phẩm thành công'], 200);
     }
+    public function syncCart(Request $request)
+{
+    $user = $request->user();
+    if (!$user) {
+        return response()->json(['error' => 'User not authenticated'], 401);
+    }
+
+    $cartItems = $request->input('cart_items'); // Nhận danh sách sản phẩm từ frontend
+
+    if (!$cartItems || !is_array($cartItems)) {
+        return response()->json(['message' => 'Dữ liệu giỏ hàng không hợp lệ'], 400);
+    }
+
+    // Lấy giỏ hàng hiện tại của user
+    $cart = Cart::firstOrCreate(['user_id' => $user->id]);
+
+    // Xóa giỏ hàng cũ để đồng bộ dữ liệu mới
+    CartItem::where('cart_id', $cart->id)->delete();
+
+    // Thêm sản phẩm mới từ request vào database
+    foreach ($cartItems as $item) {
+        CartItem::create([
+            'cart_id' => $cart->id,
+            'product_detail_id' => $item['product_detail_id'],
+            'quantity' => $item['quantity'],
+            'price' => $item['price'],
+        ]);
+    }
+
+    return response()->json(['message' => 'Giỏ hàng đã được đồng bộ'], 200);
+}
+
 }
