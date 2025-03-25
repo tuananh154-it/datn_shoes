@@ -132,6 +132,7 @@ class CartController extends Controller
         $cartItem->delete();
         return response()->json(['message' => 'Xóa sản phẩm thành công'], 200);
     }
+    //đồng bộ giỏ hàng của fe vs be
     public function syncCart(Request $request)
 {
     $user = $request->user();
