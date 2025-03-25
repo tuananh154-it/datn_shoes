@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { Products } from "../types/Product";
 import { useParams } from "react-router-dom";
 import { getProductDetail } from "../services/product";
+import { useCart } from "../context/CartContext";
 // import { getProductDetail } from "../axios/asiox";
 
 const ProductDetail = () => {
+  const { addToCart } = useCart();
+
   const [quantity, setQuantity] = useState<number>(1);
   const handleIncrease = () => {
     setQuantity(quantity + 1);
@@ -78,199 +81,200 @@ const ProductDetail = () => {
           </div>
         </section>
         <section className="padding-top-text-60 padding-bottom-60 product_detail_section">
-        {productId ? (
-  <div className="container">
-    <div className="main">
-      {/* Phần bên trái với ảnh chính */}
-      <div className="main-left" data-wow-duration="1300ms">
-        <div className="imageProduct">
-          <img
-            src={selectedDetail?.image || productId.image}
-            alt="Product"
-          />
-        </div>
-        <div className="imageBienthe">
-          <img
-            src={productId.image}
-            alt="Product main"
-            style={{ cursor: "pointer", marginRight: "10px" }}
-            onClick={() => handleVariantClick(null)} // Xử lý khi click vào ảnh chính
-          />
-          {/* Lặp qua chi tiết sản phẩm để hiển thị ảnh các variant */}
-          {productId.details.map((detail, index) => (
-            <img
-              key={index}
-              src={detail.image}
-              alt={`Variant ${index}`}
-              onClick={() => handleVariantClick(detail)} // Xử lý khi click vào variant
-              style={{ cursor: "pointer", marginRight: "10px" }}
-            />
-          ))}
-        </div>
-      </div>
-                  <div className="main-right" data-wow-duration="1300ms">
-                    <div className="product_content">
-                      <div className="product_title">
-                        {/* Tên sản phẩm */}
-                        <p className="product_price title_h4">
-                          {selectedDetail?.name || productId.name}
-                        </p>
+          {productId ? (
+            <div className="container">
+              <div className="main">
+                {/* Phần bên trái với ảnh chính */}
+                <div className="main-left" data-wow-duration="1300ms">
+                  <div className="imageProduct">
+                    <img
+                      src={selectedDetail?.image || productId.image}
+                      alt="Product"
+                    />
+                  </div>
+                  <div className="imageBienthe">
+                    <img
+                      src={productId.image}
+                      alt="Product main"
+                      style={{ cursor: "pointer", marginRight: "10px" }}
+                      onClick={() => handleVariantClick(null)} // Xử lý khi click vào ảnh chính
+                    />
+                    {/* Lặp qua chi tiết sản phẩm để hiển thị ảnh các variant */}
+                    {productId.details.map((detail, index) => (
+                      <img
+                        key={index}
+                        src={detail.image}
+                        alt={`Variant ${index}`}
+                        onClick={() => handleVariantClick(detail)} // Xử lý khi click vào variant
+                        style={{ cursor: "pointer", marginRight: "10px" }}
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div className="main-right" data-wow-duration="1300ms">
+                  <div className="product_content">
+                    <div className="product_title">
+                      {/* Tên sản phẩm */}
+                      <p className="product_price title_h4">
+                        {selectedDetail?.name || productId.name}
+                      </p>
 
-                        {/* Thương hiệu */}
-                        <p className="sku_text">
-                          Thương hiệu:{" "}
-                          <a className="font-bold">{productId.brand}</a>
-                        </p>
+                      {/* Thương hiệu */}
+                      <p className="sku_text">
+                        Thương hiệu:{" "}
+                        <a className="font-bold">{productId.brand}</a>
+                      </p>
 
-                        {/* Giá sản phẩm */}
-                        {/* <p className="text-color title_h4">
+                      {/* Giá sản phẩm */}
+                      {/* <p className="text-color title_h4">
                           {selectedDetail?.discount_price ||
                             selectedDetail?.price ||
                             productId.price}
                         </p> */}
-                        <p className="text-color title_h4">
-                          {selectedDetail?.discount_price ? (
-                            <>
-                              <span className="original-price">
-                                {selectedDetail?.default_price}
-                              </span>{" "}
-                              {/* Giá gốc */}
-                              <span className="discount-price">
-                                {selectedDetail?.discount_price}
-                              </span>{" "}
-                              {/* Giá khuyến mại */}
-                            </>
-                          ) : (
-                            selectedDetail?.default_price || productId.price
-                          )}
-                        </p>
+                      <p className="text-color title_h4">
+                        {selectedDetail?.discount_price ? (
+                          <>
+                            <span className="original-price">
+                              {selectedDetail?.default_price}
+                            </span>{" "}
+                            {/* Giá gốc */}
+                            <span className="discount-price">
+                              {selectedDetail?.discount_price}
+                            </span>{" "}
+                            {/* Giá khuyến mại */}
+                          </>
+                        ) : (
+                          selectedDetail?.default_price || productId.price
+                        )}
+                      </p>
 
-                        <p>Số lượng: {selectedDetail?.quantity}</p>
-                        {/* Đánh giá */}
-                        <div className="star">
-                          <img
-                            src="../public/src/images/star.png"
-                            className="img-fluid"
-                            alt="star"
-                          />
-                          (1 Review)
+                      <p>Số lượng: {selectedDetail?.quantity}</p>
+                      {/* Đánh giá */}
+                      <div className="star">
+                        <img
+                          src="../public/src/images/star.png"
+                          className="img-fluid"
+                          alt="star"
+                        />
+                        (1 Review)
+                      </div>
+                    </div>
+
+                    <form>
+                      <div className="product_variant">
+                        <div className="form-group color_box">
+                          <label className="title_h5 text-capitalize">
+                            Color
+                          </label>
+
+                          {/* Màu sắc */}
+                          {productId.details.map((detail, index) => (
+                            <div
+                              key={index}
+                              className="radio text-uppercase text-center"
+                            >
+                              <input
+                                type="radio"
+                                name="color11"
+                                id={`color${index + 1}`}
+                                checked={selectedDetail?.id === detail.id}
+                                onChange={() => handleVariantClick(detail)}
+                              />
+                              <label
+                                htmlFor={`color${index + 1}`}
+                                className={`color${index + 1}`}
+                                style={{
+                                  backgroundColor: getColorFromText(
+                                    detail.color
+                                  ),
+                                }}
+                              ></label>
+                            </div>
+                          ))}
+                        </div>
+
+                        <div className="form-group size_box">
+                          <label className="title_h5 text-capitalize">
+                            Kích thước
+                          </label>
+                          <select className="form-control">
+                            <option>
+                              {selectedDetail?.size ||
+                                productId.details[0]?.size}
+                            </option>
+                          </select>
+                        </div>
+
+                        <div className="form-group quantity_box">
+                          <label className="title_h5 text-capitalize">
+                            Số lượng
+                          </label>
+                          <div className="qty_number">
+                            <button
+                              type="button"
+                              onClick={handleDecrease}
+                              style={{
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              -
+                            </button>
+
+                            <input type="text" value={quantity} />
+                            <button
+                              type="button"
+                              onClick={handleIncrease}
+                              style={{
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              +
+                            </button>
+                          </div>
                         </div>
                       </div>
 
-                      <form>
-                        <div className="product_variant">
-                          <div className="form-group color_box">
-                            <label className="title_h5 text-capitalize">
-                              Color
-                            </label>
-
-                            {/* Màu sắc */}
-                            {productId.details.map((detail, index) => (
-                              <div
-                                key={index}
-                                className="radio text-uppercase text-center"
-                              >
-                                <input
-                                  type="radio"
-                                  name="color11"
-                                  id={`color${index + 1}`}
-                                  checked={selectedDetail?.id === detail.id}
-                                  onChange={() => handleVariantClick(detail)}
-                                />
-                                <label
-                                  htmlFor={`color${index + 1}`}
-                                  className={`color${index + 1}`}
-                                  style={{
-                                    backgroundColor: getColorFromText(
-                                      detail.color
-                                    ),
-                                  }}
-                                ></label>
-                              </div>
-                            ))}
-                          </div>
-
-                          <div className="form-group size_box">
-                            <label className="title_h5 text-capitalize">
-                              Kích thước
-                            </label>
-                            <select className="form-control">
-                              <option>
-                                {selectedDetail?.size ||
-                                  productId.details[0]?.size}
-                              </option>
-                            </select>
-                          </div>
-
-                          <div className="form-group quantity_box">
-                            <label className="title_h5 text-capitalize">
-                              Số lượng
-                            </label>
-                            <div className="qty_number">
-                              <button
-                                type="button"
-                                onClick={handleDecrease}
-                                style={{
-                                  padding: "5px 10px",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                -
-                              </button>
-
-                              <input type="text" value={quantity} />
-                              <button
-                                type="button"
-                                onClick={handleIncrease}
-                                style={{
-                                  padding: "5px 10px",
-                                  cursor: "pointer",
-                                }}
-                              >
-                                +
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="product_btns">
-                          <a
-                            href="/wishlist"
-                            className="wishlist_btn border-btn text-uppercase"
-                          >
-                            add to wishlist
-                          </a>
-                          <a
+                      <div className="product_btns">
+                        <a
+                          href="/wishlist"
+                          className="wishlist_btn border-btn text-uppercase"
+                        >
+                          add to wishlist
+                        </a>
+                        <a
                             href="/cart"
                             className="background-btn text-uppercase cart_btn"
                           >
                             add to bag
                           </a>
-                          <div className="product_share">
-                            <p>Share the love</p>
-                            <ul className="social_icons">
-                              <li className="text-center">
-                                <a href="javascript:void(0);">
-                                  <i className="flaticon-facebook vertical_middle"></i>
-                                </a>
-                              </li>
-                              <li className="text-center">
-                                <a href="javascript:void(0);">
-                                  <i className="flaticon-pinterest vertical_middle"></i>
-                                </a>
-                              </li>
-                              <li className="text-center">
-                                <a href="javascript:void(0);">
-                                  <i className="flaticon-instagram-logo vertical_middle"></i>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
+                        
+                        <div className="product_share">
+                          <p>Share the love</p>
+                          <ul className="social_icons">
+                            <li className="text-center">
+                              <a href="javascript:void(0);">
+                                <i className="flaticon-facebook vertical_middle"></i>
+                              </a>
+                            </li>
+                            <li className="text-center">
+                              <a href="javascript:void(0);">
+                                <i className="flaticon-pinterest vertical_middle"></i>
+                              </a>
+                            </li>
+                            <li className="text-center">
+                              <a href="javascript:void(0);">
+                                <i className="flaticon-instagram-logo vertical_middle"></i>
+                              </a>
+                            </li>
+                          </ul>
                         </div>
-                      </form>
-                    </div>
+                      </div>
+                    </form>
                   </div>
                 </div>
+              </div>
               <div className="product_description padding-top-60">
                 <div className="row">
                   <div
@@ -635,7 +639,7 @@ const ProductDetail = () => {
                         />
                         <div className="featured_btn vertical_middle">
                           <a
-                            href="cart.html"
+                            href="/cart"
                             className="text-uppercase background-btn add_to_bag_btn"
                           >
                             Add To Bag
@@ -685,9 +689,9 @@ const ProductDetail = () => {
               </div>
             </div>
           ) : (
-           <div className="container">
-             <p>Đang tải...</p>
-           </div>
+            <div className="container">
+              <p>Đang tải...</p>
+            </div>
           )}
         </section>
       </div>
@@ -853,7 +857,7 @@ const ProductDetail = () => {
                           add to bag
                         </button>
                         <a
-                          href="cart.html"
+                          href="/cart"
                           className="background-btn text-uppercase cart_btn"
                         >
                           add to bag
