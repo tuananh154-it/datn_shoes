@@ -35,7 +35,7 @@ const Cart = () => {
           </div>
         </section>
 
-        <section className="cart_section login_section padding-top-60 padding-bottom-60 check_out">
+        <section className="wishlist_section login_section padding-top-60 padding-bottom-60 check_out">
           <div className="container">
             <div className="login_form">
               {cart.length === 0 ? (
@@ -46,30 +46,25 @@ const Cart = () => {
                     <div className="table">
                       <div className="thead">
                         <div className="tr">
-                        <div className="th border-bottom border-top">
+                       
+                          <div className="th title_h5 border-bottom border-top">Sản phẩm</div>
+                          <div className="th title_h5 border-bottom border-top">Giá</div>
+                          <div className="th title_h5 border-bottom border-top">Số lượng</div>
+                          <div className="th title_h5 border-bottom border-top">Tổng</div>
+                          <div className="th title_h5 border-bottom border-top">
                             <input
                               type="checkbox"
                               onChange={(e) => selectAllItems(e.target.checked)}
                               checked={selectedItems.length === cart.length && cart.length > 0}
                             />
                           </div>
-                          <div className="th title_h5 border-bottom border-top">Sản phẩm</div>
-                          <div className="th title_h5 border-bottom border-top">Giá</div>
-                          <div className="th title_h5 border-bottom border-top">Số lượng</div>
-                          <div className="th title_h5 border-bottom border-top">Tổng</div>
-                          <div className="th border-bottom border-top"></div>
+                           <div className="th border-bottom border-top"></div>
                         </div>
                       </div>
                       <div className="tbody">
                         {cart.map((item) => (
                           <div className="tr" key={item.id_cart_item}>
-                            <div className="td border-bottom">
-                              <input
-                                type="checkbox"
-                                checked={selectedItems.includes(item.id_cart_item)}
-                                onChange={() => toggleSelectItem(item.id_cart_item)}
-                              />
-                            </div>
+                           
                             <div className="td border-bottom" data-title="Product">
                               <div className="product_img d-table-cell">
                                 <img
@@ -89,7 +84,7 @@ const Cart = () => {
                               </div>
                             </div>
                             <div className="td border-bottom" data-title="Price">
-                              {item.price.toLocaleString()} VNĐ
+                              {item.discount_price.toLocaleString()} VNĐ
                             </div>
                             <div className="td border-bottom" data-title="Quantity">
                               <div className="form-group quantity_box">
@@ -112,7 +107,14 @@ const Cart = () => {
                               </div>
                             </div>
                             <div className="td border-bottom" data-title="Total">
-                              {(item.price * item.quantity).toLocaleString()} VNĐ
+                              {(item.discount_price * item.quantity).toLocaleString()} VNĐ
+                            </div>
+                            <div className="td border-bottom">
+                              <input
+                                type="checkbox"
+                                checked={selectedItems.includes(item.id_cart_item)}
+                                onChange={() => toggleSelectItem(item.id_cart_item)}
+                              />
                             </div>
                             <div className="td remove_cart border-bottom" data-title="Remove">
                               <a href="javascript:void(0);" onClick={() => removeCartItem(item.id_cart_item)}>
@@ -131,10 +133,7 @@ const Cart = () => {
                   </div>
 
                   <div className="cart_btns text-right">
-                    <button type="submit" className="border-btn text-uppercase">
-                      Cập nhật giỏ hàng
-                    </button>
-                    <a href="/products" className="text-uppercase border-btn">
+                    <a href="/shop" className="text-uppercase border-btn">
                       Tiếp tục mua sắm
                     </a>
                     <a href="/checkout" className="text-uppercase background-btn">

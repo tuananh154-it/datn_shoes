@@ -21,7 +21,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   // Tính tổng tiền chỉ của sản phẩm đã chọn
   const totalPrice = cart
     .filter((item) => selectedItems.includes(item.id_cart_item)) // Chỉ tính sản phẩm được chọn
-    .reduce((total, item) => total + item.quantity * item.price, 0);
+    .reduce((total, item) => total + item.quantity * item.discount_price, 0);
 
   // Lấy dữ liệu giỏ hàng từ API
   const fetchCartData = async () => {

@@ -7,26 +7,27 @@ export interface CartItem {
     color: string;
     size: string;
     quantity: number;
-    price: number;
+    discount_price: number;
     image: string;
   }
   export const fetchCart = async (): Promise<CartItem[]> => {
     try {
-      const response = await api.get("/api/cart", { withCredentials: true });
+      const response = await api.get("/cart",);
       return response.data.cart || [];
     } catch (error) {
       console.error("Lỗi khi lấy giỏ hàng:", error);
       throw error;
     }
   };
-  
+
+
   // API: Thêm sản phẩm vào giỏ hàng
   export const addToCart = async (productDetailId: number, quantity: number): Promise<void> => {
     try {
       await api.post(
-        "/api/cart/add",
+        "/cart/add",
         { product_detail_id: productDetailId, quantity },
-        { withCredentials: true }
+        // { withCredentials: true }
       );
     } catch (error) {
       console.error("Lỗi khi thêm vào giỏ hàng:", error);
@@ -38,9 +39,9 @@ export interface CartItem {
   export const updateCartItem = async (cartItemId: number, quantity: number): Promise<void> => {
     try {
       await api.put(
-        `/api/cart/update/${cartItemId}`,
+        `/cart/update/${cartItemId}`,
         { quantity },
-        { withCredentials: true }
+        // { withCredentials: true }
       );
     } catch (error) {
       console.error("Lỗi khi cập nhật giỏ hàng:", error);
@@ -51,9 +52,18 @@ export interface CartItem {
   // API: Xóa sản phẩm khỏi giỏ hàng
   export const removeCartItem = async (cartItemId: number): Promise<void> => {
     try {
-      await api.delete(`/api/cart/remove/${cartItemId}`, { withCredentials: true });
+      await api.delete(`/cart/remove/${cartItemId}`,);
     } catch (error) {
       console.error("Lỗi khi xóa sản phẩm:", error);
       throw error;
     }
   };
+  export const syncCart = async (cartItems: CartItem[]): Promise<boolean> => {
+    try {
+        await api.post("/cart/sync", { cart: cartItems });
+        return true;
+    } catch (error) {
+        console.error("Lỗi khi đồng bộ giỏ hàng:", error);
+        return false;
+    }
+};
