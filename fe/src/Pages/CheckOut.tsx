@@ -1,339 +1,191 @@
-import React from 'react'
+import { useEffect, useState } from "react";
 
-const CheckOut = () => {
-  return (
-  <>
-  <div className="menu_overlay"></div>
-{/* END Header */}
-<div className="main_section">
-  {/* START Breadcrumb */}
-  <section className="breadcrumb_section nav">
-    <div className="container">
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item text-capitalize">
-            <a href="earthyellow.html">Home</a>
-            <i className="flaticon-arrows-4"></i>
-          </li>
-          <li className="breadcrumb-item active text-capitalize">Checkout</li>
-        </ol>
-      </nav>
-      <h1 className="title_h1 font-weight-normal text-capitalize">Checkout</h1>
-    </div>
-  </section>
-  {/* END Breadcrumb */}
-  {/* START Checkout Section */}
-  <section className="login_section checkout_section padding-top-60 padding-bottom-60">
-    <div className="container">
-      <div className="login_form">
-        <form>
-          <div className="row">
-            <div className="col-lg-6">
-              <div className="head_title">
-                <h4 className="title_h4">Your Order</h4>
-              </div>
-              <div className="cart_table">
-                <div className="table">
-                  <div className="thead">
-                    <div className="tr">
-                      <div className="th title_h5 border-bottom border-top">Product</div>
-                      <div className="th title_h5 border-bottom border-top text-right">Price</div>
-                    </div>
-                  </div>
-                  <div className="tbody">
-                    <div className="tr">
-                      <div className="td border-bottom" data-title="Product">
-                        <div className="product_img d-table-cell">
-                          <img
-                            src="src/images/blue_jacket_img.png"
-                            className="img-fluid vertical_middle"
-                            alt="Blue Jacket"
-                          />
-                        </div>
-                        <div className="product_details d-table-cell">
-                          <div className="product_title">
-                            <a href="product_detail.html">
-                              <h5 className="title_h5">Blue Jacket</h5>
-                            </a>
-                          </div>
-                          <div className="product_variant">
-                            <p>Color: Blue</p>
-                            <p>Size: XL</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="td border-bottom text-right" data-title="Price">
-                        $59.95
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="cart_subtotal">
-                <div className="subtotal_text">Subtotal</div>
-                <div className="subtotal_price title_h4 text-right">$59.95</div>
-              </div>
-              <div className="head_title">
-                <h4 className="title_h4">Billing Details</h4>
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label className="title_h5">First Name*</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="fname"
-                      name="Firstname"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label className="title_h5">Last Name*</label>
-                    <input type="text" className="form-control" name="Lastname" required />
-                  </div>
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="title_h5">Company</label>
-                <input type="text" className="form-control" name="Company name" />
-              </div>
-              <div className="form-group">
-                <label className="title_h5">Country*</label>
-                <select className="form-control" id="country" name="country">
-                  <option>- Select -</option>
-                  <option>India</option>
-                  <option>USA</option>
-                  <option>UAE</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="title_h5">Address Line 1*</label>
-                <input type="text" className="form-control" name="address" required />
-              </div>
-              <div className="form-group">
-                <label className="title_h5">Address Line 2</label>
-                <input type="text" className="form-control" name="address" />
-              </div>
-              <div className="row">
-                <div className="col-sm-12 col-md-6">
-                  <div className="form-group">
-                    <label className="title_h5">City*</label>
-                    <input type="text" className="form-control" name="City" />
-                  </div>
-                </div>
-                <div className="col-sm-12 col-md-6">
-                  <div className="form-group">
-                    <label className="title_h5">Postal/Zip code*</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="Postal"
-                      onKeyPress={(e) => e.charCode >= 48 && e.charCode <= 57}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="email_one" className="title_h5">
-                  Email*
-                </label>
-                <input
-                  type="email"
-                  className="form-control"
-                  id="email_one"
-                  name="Email"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="phone" className="title_h5">
-                  Phone*
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="phone"
-                  name="Phone"
-                  required
-                  onKeyPress={(e) => e.charCode >= 48 && e.charCode <= 57}
-                  maxLength={10}
-                />
-              </div>
-              <div className="form-group">
-                <div className="check_box">
-                  <input type="checkbox" name="box1" id="box1" />
-                  <label htmlFor="box1">Ship To A Different Address?</label>
-                </div>
-                <div className="border-bottom"></div>
-                <div className="check_box">
-                  <input type="checkbox" name="box2" id="box2" />
-                  <label htmlFor="box2">Create An Account</label>
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="title_h5" htmlFor="notes">
-                  Order Notes
-                </label>
-                <textarea className="form-control" id="notes" name="Notes"></textarea>
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div className="head_title">
-                <h4 className="title_h4">Already a Member?</h4>
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label htmlFor="email" className="title_h5">
-                      Email*
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      name="Email"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label htmlFor="password" className="title_h5">
-                      Password*
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="password"
-                      name="Password"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-sm-12 border-bottom">
-                  <div className="login_links checkbox_links">
-                    <a className="btn-link forgot_text" href="reset_password.html">
-                      <span className="border-bottom">Forgot Password?</span>
-                    </a>
-                    <button
-                      type="submit"
-                      className="btn float-sm-right background-btn text-uppercase"
-                    >
-                      login
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="head_title">
-                <h4 className="title_h4">Have a coupon? Enter Code below!</h4>
-              </div>
-              <div className="form-group">
-                <label htmlFor="ccode" className="title_h5">
-                  Coupon Code
-                </label>
-                <input
-                  type="text"
-                  className="form-control float-left"
-                  id="ccode"
-                  name="coupon code"
-                />
-                <button type="submit" className="btn background-btn text-uppercase float-left">
-                  APPLY
-                </button>
-              </div>
-              <div className="head_title d-inline-block padding-top-text-60">
-                <h4 className="title_h4">Payment Details</h4>
-              </div>
-              <div className="radiobtn_section">
-                <div className="radio_btn d-inline-block">
-                  <input type="radio" name="box3" id="box3" defaultChecked />
-                  <label htmlFor="box3">Credit/Debit Card</label>
-                </div>
-                <div className="radio_btn d-inline-block">
-                  <input type="radio" name="box3" id="box4" />
-                  <label htmlFor="box4">PayPal</label>
-                </div>
-                <div className="radio_btn d-inline-block">
-                  <input type="radio" name="box3" id="box5" />
-                  <label htmlFor="box5">Cash on Delivery</label>
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="card_name" className="title_h5">
-                  Name On Card*
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="card_name"
-                  name="Card name"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="card_no" className="title_h5">
-                  Card Number*
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="card_no"
-                  name="Card no"
-                  required
-                />
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label htmlFor="Edate" className="title_h5">
-                      Expiry Date*
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="Edate"
-                      name="Expiry date"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label htmlFor="cvv" className="title_h5">
-                      CVV*
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="cvv"
-                      name="CVV"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn background-btn text-uppercase full-width"
-                >
-                  Place Order
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
-  {/* END Checkout Section */}
-</div>
-
-  </>
-  )
+interface Address {
+  _id: string;
+  name: string;
+  slug: string;
+  type: string;
+  name_with_type: string;
+  code: number;
 }
+const CheckOut = () => {
+  const [provinces, setProvinces] = useState<Address[]>([]);
+  const [districts, setDistricts] = useState<Address[]>([]);
+  const [wards, setWards] = useState<Address[]>([]);
+  const [selectedProvince, setSelectedProvince] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+  useEffect(() => {
+    fetch("https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1")
+      .then((response) => response.json())
+      .then((data) => {
+        setProvinces(data.data.data);
+      })
+      .catch((error) => console.error("error", error));
+  }, []);
+  useEffect(() => {
+    if (selectedProvince) {
+      fetch(
+        `https://vn-public-apis.fpo.vn/districts/getByProvince?provinceCode=${selectedProvince}&limit=-1`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setDistricts(data.data.data);
+          setWards([]); // Reset danh sách xã/phường khi đổi tỉnh
+        })
+        .catch((error) => console.error("error", error));
+    }
+  }, [selectedProvince]);
+  useEffect(() => {
+    if (selectedDistrict) {
+      fetch(
+        `https://vn-public-apis.fpo.vn/wards/getByDistrict?districtCode=${selectedDistrict}&limit=-1`
+      )
+        .then((response) => response.json())
+        .then((data) => {
+          setWards(data.data.data);
+        })
+        .catch((error) => console.error("error", error));
+    }
+  }, [selectedDistrict]);
+  return (
+    <>
+      <div className="menu_overlay"></div>
+      {/* END Header */}
+      <div className="main_section">
+        {/* START Breadcrumb */}
+        <section className="breadcrumb_section nav">
+          <div className="container">
+            <nav aria-label="breadcrumb">
+              <ol className="breadcrumb">
+                <li className="breadcrumb-item text-capitalize">
+                  <a href="earthyellow.html">Trang chủ</a>
+                  <i className="flaticon-arrows-4"></i>
+                </li>
+                <li className="breadcrumb-item active text-capitalize">
+                  Thanh toán
+                </li>
+              </ol>
+            </nav>
+            <h1 className="title_h1 font-weight-normal text-capitalize">
+              Thanh toán
+            </h1>
+          </div>
+        </section>
+        {/* END Breadcrumb */}
+        {/* START Checkout Section */}
+      </div>
+      <div className="containercheckout">
+        <div className="left">
+          <h2>Thanh toán & Vận chuyển</h2>
+          <form>
+            <label>Họ và tên *</label>
+            <input type="text" placeholder="Họ và tên" required />
 
-export default CheckOut
+            <label>Số điện thoại *</label>
+            <input type="text" placeholder="Số điện thoại của bạn" required />
+
+            <label>Địa chỉ email (tùy chọn)</label>
+            <input type="email" placeholder="Email của bạn" />
+
+            <label>Tỉnh/Thành phố *</label>
+            <select onChange={(e) => setSelectedProvince(e.target.value)}>
+              <option value="">Chọn tỉnh/thành phố</option>
+              {provinces.map((province) => (
+                <option key={province.code} value={province.code}>
+                  {province.name}
+                </option>
+              ))}
+            </select>
+
+            <label>Quận/Huyện *</label>
+            <select
+              onChange={(e) => setSelectedDistrict(e.target.value)}
+              disabled={!selectedProvince}
+            >
+              <option value="">Chọn quận/huyện</option>
+              {districts.map((district) => (
+                <option key={district.code} value={district.code}>
+                  {district.name}
+                </option>
+              ))}
+            </select>
+
+            <label>Xã/Phường *</label>
+            <select disabled={!selectedDistrict}>
+              <option value="">Chọn xã/phường</option>
+              {wards.map((ward) => (
+                <option key={ward.code} value={ward.code}>
+                  {ward.name}
+                </option>
+              ))}
+            </select>
+
+            <label>Địa chỉ *</label>
+            <input type="text" placeholder="Ví dụ: Số 20, ngõ 90" required />
+          </form>
+        </div>
+        <div className="right">
+          <h2>Đơn hàng của bạn</h2>
+          <div className="order-summary">
+            <div className="product">
+              <img
+                src="http://127.0.0.1:8000/storage/product_images/w6KYWJdg7hmcKas0wpiIZyq0OCcmPvgXolmRsyKp.jpg"
+                alt="Giày Sneaker"
+                className="product-image"
+              />
+              <div className="product-details">
+                <p className="product-name">
+                  Adidas Samba OG Trắng Kẻ Đen Mũi Da Lộn REP 1:1 - Trắng đen,
+                  42
+                </p>
+                <p className="product-quantity">x3</p>
+                <p className="product-price">1.500.000đ</p>
+              </div>
+            </div>
+            <hr />
+            <div className="price-details">
+              <p>
+                Tổng: <span>1.500.000đ</span>
+              </p>
+              <p>
+                Phí ship: <span>30.000đ</span>
+              </p>
+              <p className="total">
+                Tổng cộng: <strong>1.530.000đ</strong>
+              </p>
+            </div>
+            <div className="payment-method">
+              <label className="payment-option">
+                <input
+                  type="radio"
+                  name="payment"
+                  defaultChecked
+                  className="payment-checkbox square"
+                />
+                <span>Trả tiền mặt khi nhận hàng</span>
+                <p className="payment-description">
+                  Bạn đặt hàng và thanh toán sau khi nhận hàng.
+                </p>
+              </label>
+              <hr className="payment-divider" />
+              <label className="payment-option">
+                <input
+                  type="radio"
+                  name="payment"
+                  className="payment-checkbox square"
+                />
+                <span>Chuyển khoản ngân hàng</span>
+                <p className="payment-description">
+                  Thanh toán qua ngân hàng trước khi giao hàng.
+                </p>
+              </label>
+            </div>
+            <button className="order-button">ĐẶT HÀNG</button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default CheckOut;
