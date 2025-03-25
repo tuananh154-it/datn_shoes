@@ -15,6 +15,7 @@ import CheckOut from "./Pages/CheckOut";
 import Contact from "./Pages/Contact";
 import BlogDetail from "./Pages/BlogDetail";
 import { Toaster } from "react-hot-toast";
+import MyAccount from "./Pages/MyAccout";
 
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
             {path:"/shop",element:<Shop/>},
             {path:"/cart",element:<Cart/>},
             {path:"/blog",element:<Blog/>},
+            {path:"/myaccout",element:<MyAccount/>},
             {path:"/blog/:id",element:<BlogDetail/>},
             {path:"/contacts",element:<Contact/>},
             {path:"/wishlist",element:<Wishlist/>},
