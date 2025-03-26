@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductDetail;
 use Illuminate\Http\Request;
@@ -66,13 +67,17 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::where('status', 'active')
-            ->with([
-                'category',
-                'brand',
-                'productdetails' => function ($query) {
-                    $query->where('status', 'active')->with(['size', 'color']);
-                }
-            ])->where('id', $id)->first();
+        ->with([
+            'category',
+            'brand',
+            'productdetails' => function ($query) {
+                $query->where('status', 'active')->with(['size', 'color']);
+            }
+        ])
+        ->where('id', $id)
+        ->orderBy('created_at', 'desc') // Sắp xếp theo ngày tạo giảm dần
+        ->paginate(3); 
+          
     
         if (!$product) {
             return response()->json([
@@ -81,7 +86,6 @@ class ProductController extends Controller
                 'data' => null
             ], 404);
         }
-    
         return response()->json([
             'success' => true,
             'message' => 'Chi tiết sản phẩm',
