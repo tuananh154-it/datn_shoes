@@ -86,39 +86,52 @@ public function dangnhap(Request $request)
 }
 
     // Đăng nhập
-    public function login(Request $request)
+    // public function login(Request $request)
+    // {
+    //     $credentials = $request->only('email', 'password');
+
+    //     if ($this->attemptLogin($request)) {
+    //         if ($request->hasSession()) {
+    //             $request->session()->put('auth.password_confirmed_at', time());
+    //         }
+
+    //         if (!$request->wantsJson()) {
+    //             $request->session()->regenerate();
+
+    //             $this->clearLoginAttempts($request);
+    //         }
+
+    //         if ($response = $this->authenticated($request, $this->guard()->user())) {
+    //             return $response;
+    //         }
+
+
+    //         return $request->wantsJson()
+    //             ? new JsonResponse(['token' => JWTAuth::attempt($credentials)])
+    //             : redirect()->intended($this->redirectPath());
+    //     }
+
+    //     // If the login attempt was unsuccessful we will increment the number of attempts
+    //     // to login and redirect the user back to the login form. Of course, when this
+    //     // user surpasses their maximum number of attempts they will get locked out.
+    //     $this->incrementLoginAttempts($request);
+
+    //     return $this->sendFailedLoginResponse($request);
+    // }
+public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
-        if ($this->attemptLogin($request)) {
-            if ($request->hasSession()) {
-                $request->session()->put('auth.password_confirmed_at', time());
-            }
 
-            if (!$request->wantsJson()) {
-                $request->session()->regenerate();
-
-                $this->clearLoginAttempts($request);
-            }
-
-            if ($response = $this->authenticated($request, $this->guard()->user())) {
-                return $response;
-            }
-
-
-            return $request->wantsJson()
-                ? new JsonResponse(['token' => JWTAuth::attempt($credentials)])
-                : redirect()->intended($this->redirectPath());
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
-
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
-        $this->incrementLoginAttempts($request);
-
-        return $this->sendFailedLoginResponse($request);
+        return response()->json([
+            'message' => 'Đăng nhập thành công!',
+            'token' => $token,
+            'user' => Auth::user(),
+        ]);
     }
-
     // Thông tin người dùng
     public function user(Request $request)
     {

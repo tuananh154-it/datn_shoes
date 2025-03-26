@@ -346,7 +346,7 @@ const HomePages = () => {
                 <div className="shoes_featured_title">
                     <h3 className="title_h3 text-uppercase">Best Sellers</h3>
                     <p className="shoes_featured_title_link mb-0">
-                        <a href="product_list_detail.html" className="text-uppercase">View More<i className="flaticon-arrows-4"></i></a>
+                        <a href="/shop" className="text-uppercase">View More<i className="flaticon-arrows-4"></i></a>
                     </p>
                 </div>
                 <div className="row">   
