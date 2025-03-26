@@ -1,3 +1,4 @@
+
 /* Ẩn menu mặc định */
 .dropdown-menu.megamenu_full_screen {
     display: none !important;
@@ -17,4 +18,453 @@
   .dropdown-menu.megamenu_full_screen li {
     display: block !important;
   }
-  
+ 
+/* style.css */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 20px;
+}
+
+.sidebar {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+
+.icon {
+  width: 32px;
+  height: 32px;
+}
+
+.profile-name {
+  font-size: 18px;
+  font-weight: bold;
+}
+.profile-name:hover{
+  color: #28a745;
+}
+.profile-email {
+  color: gray;
+  font-size: 14px;
+}
+.profile-email:hover{
+  color: #28a745;
+}
+
+.nav-menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-menu button {
+  background: none;
+  border: none;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+}
+
+.nav-menu button:hover,
+.nav-menu .active {
+  background: #28a745;
+  color: white;
+  border-radius: 5px;
+}
+
+.content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 25px;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.btn-save {
+  background: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.btn-save:hover {
+  background: #28a745;
+}
+/* Orders Tab */
+
+.order-list {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.order-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.order-id {
+  font-weight: bold;
+}
+
+.order-date {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.order-status-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.order-status {
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.delivered {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+.processing {
+  background-color: #bfdbfe;
+  color: #1e40af;
+}
+
+.pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.order-details {
+  margin-left: 16px;
+  color: #1d4ed8;
+  font-size: 14px;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.order-details:hover {
+  text-decoration: underline;
+}
+
+.order-content {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+}
+
+.order-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.order-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.item-name {
+  font-weight: 500;
+}
+
+.item-quantity {
+  color: #6b7280;
+  margin-left: 8px;
+}
+
+.item-price {
+  font-weight: bold;
+}
+
+.order-total {
+  border-top: 1px solid #e5e7eb;
+  margin-top: 16px;
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.order-empty {
+  text-align: center;
+  padding: 48px 0;
+}
+
+.order-empty-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  color: #d1d5db;
+}
+
+.order-empty-title {
+  font-size: 20px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.order-empty-text {
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+.order-empty-link {
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.order-empty-link:hover {
+  text-decoration: underline;
+}
+/* Tiêu đề */
+.address-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+}
+
+/* Lưới chứa địa chỉ */
+.address-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .address-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Thẻ địa chỉ */
+.address-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+/* Nút chỉnh sửa/xóa */
+.address-actions {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.address-actions button {
+  margin-left: 8px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+.edit-btn {
+  color: #6b7280;
+}
+
+.edit-btn:hover {
+  color: #1d4ed8;
+}
+
+.delete-btn {
+  color: #ef4444;
+}
+
+.delete-btn:hover {
+  color: #b91c1c;
+}
+
+/* Địa chỉ mặc định */
+.address-heading {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.address-details {
+  color: #374151;
+  line-height: 1.5;
+}
+
+/* Thêm địa chỉ mới */
+.address-add-card {
+  border: 2px dashed #d1d5db;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-address-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.add-address-btn span {
+  font-size: 24px;
+  margin-right: 8px;
+}
+
+.add-address-btn:hover {
+  text-decoration: underline;
+}
+
+.payment-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.payment-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  position: relative;
+}
+
+.payment-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn {
+  color: gray;
+  cursor: pointer;
+}
+
+.delete-btn {
+  color: red;
+  cursor: pointer;
+}
+
+.payment-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.card-details {
+  color: #555;
+}
+
+.add-payment-card {
+  border: 2px dashed #bbb;
+  border-radius: 8px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.add-payment-btn {
+  background: none;
+  border: none;
+  color: #007bff;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+.add-payment-btn:hover{
+  text-decoration: underline;
+}
+
+.plus-icon {
+  font-size: 24px;
+  margin-right: 5px;
+}
+
+.card-logo {
+  width: 40px;
+  height: 20px;
+  background-color: blue;
+  border-radius: 4px;
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.card-expiry {
+  font-size: 14px;
+  color: gray;
+}
