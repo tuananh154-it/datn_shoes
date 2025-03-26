@@ -19,7 +19,8 @@ class OrderFactory extends Factory
             'status' => fake()->randomElement(['pending', 'completed', 'cancelled']), // Trạng thái đơn hàng
             'deliver_fee' => fake()->randomFloat(2, 10, 50), // Phí giao hàng ngẫu nhiên
             'customer_id' => Customer::inRandomOrder()->first()?->id, // Chọn ngẫu nhiên khách hàng
-            'total_amount' => fake()->randomFloat(2, 100, 1000), // Tổng số tiền từ 100 đến 1000
+            
+
             'address' => fake()->address(),
             'phone_number' => fake()->phoneNumber(),
             'email' => fake()->email(),

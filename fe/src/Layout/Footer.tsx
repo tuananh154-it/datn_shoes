@@ -7,7 +7,7 @@ const Footer = () => {
             <div className="row">
                 <div className="col-lg-3 col-sm-6  wow fadeInUp ">
                     <div className="column">
-                        <a href="shoes.html"><img src="src/images/shoes_footer_logo.png" alt="logo" className="img-fluid footer_logo"/></a>
+                        <a href="shoes.html"><img src="../src/images/shoes_footer_logo.png" alt="logo" className="img-fluid footer_logo"/></a>
                         <p>There are many variations of passages of Lorem Ipsum has been the industry stand ard dummy text ever since...</p>
                     </div>
                 </div>
@@ -57,7 +57,7 @@ const Footer = () => {
                 </div>
                 <div className="col-sm-12 col-md-4  wow fadeInUp align-self-center">
                     <ul className="text-md-right payment_content mt-0">
-                        <li><img src="src/images/shoes_payments.png" alt="payments" className="img-fluid" /></li>
+                        <li><img src="../src/images/shoes_payments.png" alt="payments" className="img-fluid" /></li>
                     </ul>                            
                 </div>
             </div>

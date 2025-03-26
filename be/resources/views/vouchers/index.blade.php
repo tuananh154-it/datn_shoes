@@ -34,9 +34,9 @@
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                         </div>
-                        <div class="col-md-2">
+                        {{-- <div class="col-md-2">
                             <a href="{{route("vouchers.index")}}" class="btn btn-success btn-sm">Quay lai danh sach</a>
-                        </div>
+                        </div> --}}
                     </div>
 
                 </form>
@@ -77,7 +77,7 @@
                         <td>{{ $voucher->max_discount_amount }}</td>
                         <td>{{ $voucher->terms_and_conditions }}</td> --}}
                         {{-- <td><span class="badge badge-info label-mini">{{ $voucher->status }}</span></td> --}}
-                        <td>{{ $voucher->discount_percent }}</td>
+                        <td>{{ $voucher->discount_percent }} %</td>
                         <td>
                             @if ($voucher->status == 'active')
                                 <span class="badge badge-info">Active</span>
@@ -91,7 +91,7 @@
                         <td>
                             {{-- <button class="btn btn-success btn-sm"><i class="fa fa-check"></i></button> --}}
                             {{-- <a class="btn btn-success btn-sm" href="{{ route('vouchers.show ', $voucher->id) }}"><i class="fa fa-check"></i></a> --}}
-                            <a class="btn btn-success btn-sm" href="{{route('vouchers.show',$voucher->id)}}"><i class="fa fa-check"></i></a>
+                            <a class="btn btn-primary btn-sm" href="{{route('vouchers.show',$voucher->id)}}"><i class="fa fa-eye"></i></a>
                             <a class="btn btn-success btn-sm" href="{{ route('vouchers.edit', $voucher->id) }}"><i class="fa fa-pencil"></i></a> 
                             <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Ban co chac chan muon xoa voucher?');">
                                 @csrf

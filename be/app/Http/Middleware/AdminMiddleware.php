@@ -10,10 +10,10 @@ class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        if (Auth::check() && in_array(Auth::user()->role, ['admin', 'superadmin'])) {
             return $next($request);
         }
 
-        return redirect('/');
+        return redirect('/login')->with('error', 'Bạn không có quyền truy cập vào trang admin.');
     }
 }

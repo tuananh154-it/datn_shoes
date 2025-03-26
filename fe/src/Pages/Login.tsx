@@ -1,5 +1,26 @@
+import { useForm } from "react-hook-form"
+import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom"
+import { loginForm, UserLogin } from "../services/login";
+import { useDispatch } from "react-redux";
+import { setUserDetail  } from "../store/useSlice";
 
 const Login = () => {
+    const nav = useNavigate();
+   
+    const {register,handleSubmit}=useForm<UserLogin>()
+    const dispatch = useDispatch()
+    const onSubmit = (data:UserLogin)=>{
+      loginForm(data).then(({data})=>{
+        toast.success("Đã đăng nhập thành công");
+        // console.log("usergshddfmdf",data)
+        localStorage.setItem("user", JSON.stringify(data.data))
+        localStorage.setItem("token",data.token)
+        dispatch(setUserDetail(data.user));
+        // console.log("Dispatched user:", data.data);
+         nav("/")
+      }).catch((e)=>{toast.error("Error:"+e.message)})
+    }
   return (
    <>
     <div className="menu_overlay"></div>
@@ -20,18 +41,18 @@ const Login = () => {
                     <div className="row">
                         <div className="col-lg-6 border-right">
                             <div className="login_form">
-                                <form>
+                                <form action="" onSubmit={handleSubmit(onSubmit)}>
                                     <div className="form-group">
                                         <label htmlFor="email" className="title_h5">Email</label>
-                                        <input type="email" className="form-control" id="email" name="Email"/>
+                                        <input type="email" className="form-control" id="email" {...register("email")}/>
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="password" className="title_h5">Password</label>
-                                        <input type="password" className="form-control" id="password" name="Password"/>
+                                        <input type="password" className="form-control" id="password" {...register("password")}/>
                                     </div>
                                     <div className="login_links">
                                         <button type="submit" className="btn background-btn text-uppercase">Đăng nhập</button>
-                                        <p>or</p>
+                                        <p className="">or</p>
                                         <a className="btn-link return_text" href="/shop">Quay lại cửa hàng</a>
                                         <a className="btn-link text-right forgot_text" href="/quenmatkhau"><u>Quên mật khẩu?</u></a>
                                     </div>
