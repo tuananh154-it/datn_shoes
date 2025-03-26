@@ -1,19 +1,23 @@
 import MegaMenu from "./MegaMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { useState } from "react";
+import { useState} from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../store/useSlice";
-// import { RootState } from './store/store';
+import { useCart } from "../context/CartContext";
+
+
 const Header = () => {
   const dispatch = useDispatch();
   const [menuDisplay, setMenuDisplay] = useState(false);
   const userId = useSelector((state: RootState) => state.user.user);
-  //   console.log("iduser", userId);
+  const { totalItems } = useCart();
+
   const handleLogout = () => {
     dispatch(logout());
     window.location.href = "/login";
   };
+
   return (
     <>
       <header className="shoes_header shoes_home_header">
@@ -33,7 +37,7 @@ const Header = () => {
               <ul className="navbar-nav">
                 <li className="nav-item active">
                   <a className="nav-link text-uppercase" href="/">
-                    Home{" "}
+                    Home
                   </a>
                 </li>
                 <MegaMenu/>
@@ -41,17 +45,6 @@ const Header = () => {
                   <a className="nav-link text-uppercase" href="/blog">
                     Blog
                   </a>
-                  <span className="menu_arrow flaticon-down-arrow-1"></span>
-                  <ul className="dropdown-menu mega-dropdown-menu">
-                    <li className="w-100">
-                      <a href="grid_blog_list_with_sidebar.html">
-                        1 grid blog list with sidebar{" "}
-                      </a>
-                    </li>
-                    <li className="w-100">
-                      <a href="grids_blog_list.html">2 grids blog list</a>
-                    </li>
-                  </ul>
                 </li>
                 <li className="nav-item dropdown mega-dropdown">
                   <a
@@ -60,45 +53,6 @@ const Header = () => {
                   >
                     Other Pages
                   </a>
-                  <span className="menu_arrow flaticon-down-arrow-1"></span>
-                  <ul className="dropdown-menu mega-dropdown-menu">
-                    <li className="w-100">
-                      <a href="earthyellow.html">Mega menu full screen</a>
-                    </li>
-                    <li className="w-100">
-                      <a href="categories_menu.html">Categories menu</a>
-                    </li>
-                    <li className="w-100">
-                      <a href="menu_with_sale_section.html">
-                        Menu with sale section
-                      </a>
-                    </li>
-                    <li className="w-100">
-                      <a href="collection_list.html">Collection list</a>
-                    </li>
-                    <li className="w-100">
-                      <a href="product_list_with_filter.html">
-                        Product list with filter
-                      </a>
-                    </li>
-                    <li className="w-100">
-                      <a href="product_list_with_sidebar.html">
-                        Product list with sidebar
-                      </a>
-                    </li>
-                    <li className="w-100">
-                      <a href="lookbook.html">Lookbook</a>
-                    </li>
-                    <li className="w-100">
-                      <a href="coming_soon.html">Coming soon page</a>
-                    </li>
-                    <li className="w-100">
-                      <a href="my_account.html">My account</a>
-                    </li>
-                    <li className="w-100">
-                      <a href="404.html">404 page</a>
-                    </li>
-                  </ul>
                 </li>
                 <li className="nav-item">
                   <a
@@ -131,13 +85,10 @@ const Header = () => {
               {userId?.id && menuDisplay && (
                 <div className="dropdownUser p-4">
                   <nav>
-                  {
-                      userId?.role === "admin" && (
-                              <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={()=>setMenuDisplay(preve => !preve)}>Admin</Link>
-                            )
-                          }
-                    <p className="p-2">Trang cá nhân</p>
-                    Link
+                    {userId?.role === "admin" && (
+                      <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={()=>setMenuDisplay(prev => !prev)}>Admin</Link>
+                    )}
+                    <Link to="/myaccout" className="p-2">Trang cá nhân</Link>
                     <p>Đơn hàng</p>
                     <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                   </nav>
@@ -153,24 +104,12 @@ const Header = () => {
               <a href="javascript:void(0);">
                 <i className="flaticon-magnifying-glass"></i>
               </a>
-              <div className="search_form">
-                <form>
-                  <input
-                    type="text"
-                    placeholder="search"
-                    className="text-capitalize"
-                  />
-                  <button type="submit" className="vertical_middle">
-                    <i className="flaticon-magnifying-glass"></i>
-                  </button>
-                </form>
-              </div>
             </li>
             <li className="cart_icon">
               <a href="/cart">
                 <i className="flaticon-shopping-bag"></i>
                 <span className="count text-white rounded-circle text-center">
-                  0{" "}
+                  {totalItems}
                 </span>
               </a>
             </li>
@@ -180,4 +119,5 @@ const Header = () => {
     </>
   );
 };
+
 export default Header;
