@@ -221,7 +221,7 @@ const Shop = () => {
                           Sắp xếp theo :
                         </label>
                         <select
-                          className="px-4 py-2 border"
+                          className="sanphamnoibat"
                           id="short_by"
                           name="short_by"
                         >
@@ -291,7 +291,7 @@ const Shop = () => {
                         <label htmlFor="show" className="title_h5">
                           Tổng :
                         </label>
-                        <select className="px-2 py-1" id="show" name="show">
+                        <select className="show" id="show" name="show">
                           <option>24</option>
                         </select>
                       </div>
