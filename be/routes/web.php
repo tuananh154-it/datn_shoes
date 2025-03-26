@@ -88,11 +88,20 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
     Route::resource('brands', BrandController::class);
 
     // Dashboard
+
     Route::get('dashboards', [AdminController::class, 'index'])->name('dashboards.index');
+    //tim kiem (lọc )
+    Route::get('/admin/dashboard/filter', [AdminController::class, 'filterRevenue']);
+
     Route::get('admin/orders', [AdminController::class, 'orders'])->name('dashboards.orders');
     Route::get('admin/reviews', [AdminController::class, 'reviews'])->name('dashboards.reviews');
     Route::get('admin/products', [AdminController::class, 'products'])->name('dashboards.products');
+    //thong ke tai khoan 
     Route::get('admin/users', [AdminController::class, 'users'])->name('dashboards.users');
+    Route::get('/admin/account-stats-data', [AdminController::class, 'getAccountStatsData'])->name('admin.accountStatsData');
+    
+
+    
 });
 
 

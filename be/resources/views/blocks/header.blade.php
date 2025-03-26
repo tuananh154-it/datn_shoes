@@ -17,7 +17,7 @@
                 <i class="fa fa-bars"></i>
             </div>
           <!--logo start-->
-          <a href="index.html" class="logo">Foot<span>Vibe</span></a>
+          <a href="{{route('dashboards.index')}}" class="logo">Foot<span>Vibe</span></a>
           <!--logo end-->
           <div class="nav notify-row" id="top_menu">
               <!--  notification start -->
