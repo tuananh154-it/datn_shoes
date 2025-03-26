@@ -39,14 +39,18 @@ const Cart = () => {
           <div className="container">
             <div className="login_form">
               {cart.length === 0 ? (
-                <p className="text-center">Giỏ hàng trống</p>
+                <div className="text-center">
+                  <p>Giỏ hàng trống</p>
+                  <a href="/shop" className="background-btn text-uppercase">
+                    Quay lại mua sắm
+                  </a>
+                </div>
               ) : (
                 <form>
                   <div className="cart_table">
                     <div className="table">
                       <div className="thead">
                         <div className="tr">
-                       
                           <div className="th title_h5 border-bottom border-top">Sản phẩm</div>
                           <div className="th title_h5 border-bottom border-top">Giá</div>
                           <div className="th title_h5 border-bottom border-top">Số lượng</div>
@@ -58,13 +62,12 @@ const Cart = () => {
                               checked={selectedItems.length === cart.length && cart.length > 0}
                             />
                           </div>
-                           <div className="th border-bottom border-top"></div>
+                          <div className="th border-bottom border-top"></div>
                         </div>
                       </div>
                       <div className="tbody">
                         {cart.map((item) => (
                           <div className="tr" key={item.id_cart_item}>
-                           
                             <div className="td border-bottom" data-title="Product">
                               <div className="product_img d-table-cell">
                                 <img
