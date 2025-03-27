@@ -21,6 +21,23 @@ return new class extends Migration
         //     $table->timestamps();
         // });
 
+        // Schema::create('users', function (Blueprint $table) {
+        //     $table->id();
+        //     $table->string('name');
+        //     $table->string('email')->unique();
+        //     $table->timestamp('email_verified_at')->nullable();
+        //     $table->string('password');
+        //     $table->string('gender')->nullable();
+        //     $table->date('date_of_birth')->nullable();
+        //     $table->string('address')->nullable();
+        //     $table->string('phone_number')->nullable();
+        //     $table->rememberToken();
+        //     $table->string('phone_number')->nullable();
+        //     $table->text('address')->nullable();
+        //     $table->date('dob')->nullable();
+        //     $table->enum('gender', ['male', 'female', 'other'])->nullable();  // Thêm giới tính
+        //     $table->timestamps();
+        // });
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
@@ -34,7 +51,6 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-
 
 
     }
