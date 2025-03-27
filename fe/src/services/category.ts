@@ -4,6 +4,6 @@ export const getAllCategory = ()=>{
     return api.get('/categories')
 }
 export interface Category{
-    id:string,
+    id:number,
     name:string
 }
