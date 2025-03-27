@@ -78,3 +78,5 @@ Route::put('/users/{user}', [UserController::class, 'update'])->name('api.users.
 // Route để xóa người dùng (API)
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('api.users.destroy');
 Route::post('register', [AuthController::class, 'register']);
+
+Route::post('login', [AuthController::class, 'login']);

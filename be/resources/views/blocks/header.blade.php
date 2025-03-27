@@ -155,16 +155,26 @@
                   <li class="dropdown">
                       <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                           <img alt="" src="img/avatar1_small.jpg">
-                          <span class="username">Jhon Doue</span>
+                          <span class="username">{{ Auth::user()->name }}</span>
                           <b class="caret"></b>
                       </a>
                       <ul class="dropdown-menu extended logout dropdown-menu-right">
-                          <div class="log-arrow-up"></div>
-                          <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
-                          <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
-                          <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
-                          <li><a href="login.html"><i class="fa fa-key"></i> Log Out</a></li>
-                      </ul>
+                        <div class="log-arrow-up"></div>
+                        <li><a href="#"><i class="fa fa-suitcase"></i>Profile</a></li>
+                        <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+                        <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
+
+                        <!-- Form đăng xuất -->
+                        <li>
+                            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                                @csrf
+                                <button type="submit" style="background: none; border: none; color: inherit; padding: 0;">
+                                    <i class="fa fa-key"></i> Log Out
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+
                   </li>
                   <li class="sb-toggle-right">
                       <i class="fa  fa-align-right"></i>

@@ -15,4 +15,10 @@ class ModelHasPermission extends Model
         'model_id',
         'permission_id'
     ];
+
+    // Quan hệ với bảng permissions
+    public function permission()
+    {
+        return $this->belongsTo(\App\Models\Permission::class, 'permission_id');
+    }
 }

@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     use AuthenticatesUsers;
- // Đăng ký bên be
+    // Đăng ký bên be
     public function dangky(Request $request)
     {
         $request->validate([
@@ -39,7 +39,11 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:8|confirmed',
+            'gender' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
+            'address' => 'nullable|string|max:255',
+            'phone_number' => 'nullable|string|max:20',
         ]);
 
         if ($validator->fails()) {
@@ -47,10 +51,15 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'name'          => $request->name,
+            'email'         => $request->email,
+            'password'      => Hash::make($request->password),
+            'gender'        => $request->gender,
+            'date_of_birth' => $request->date_of_birth,
+            'address'       => $request->address,
+            'phone_number'  => $request->phone_number,
         ]);
+
 
         $user->syncRoles(RoleEnum::USER);
 
@@ -58,32 +67,32 @@ class AuthController extends Controller
 
         return response()->json(compact('user', 'token'), 201);
     }
-// Đăng nhập ben be
+    // Đăng nhập ben be
 
-public function dangnhap(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string',
-    ]);
+    public function dangnhap(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-    $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password');
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-        $user = Auth::user(); // Lấy thông tin người dùng
+            $user = Auth::user(); 
 
-        // Kiểm tra role của user
-        if ($user->role === 'admin') {
-            return redirect()->route('articles.index')->with('success', 'vào thành công em  .'); // Điều hướng đến trang admin
+            if (in_array($user->role, ['admin', 'superadmin'])) {
+                return redirect()->route('articles.index')->with('success', 'Vào thành công!');
+            }
+
+            return redirect()->intended(route('login'))->with('error', 'Bạn không có quyền truy cập!');
         }
 
-        return redirect()->intended(route('login'))->with('success', 'chưa vào được đâu.'); // Điều hướng đến trang chủ mặc định
+        return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác'])->onlyInput('email');
     }
 
-    return back()->withErrors(['email' => 'Invalid credentials'])->onlyInput('email');
-}
 
     // Đăng nhập
     public function login(Request $request)
@@ -104,6 +113,10 @@ public function dangnhap(Request $request)
             if ($response = $this->authenticated($request, $this->guard()->user())) {
                 return $response;
             }
+            if ($request->expectsJson()) {
+                return response()->json(['token' => JWTAuth::attempt($credentials)]);
+            }
+
 
 
             return $request->wantsJson()

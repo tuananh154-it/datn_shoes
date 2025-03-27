@@ -52,8 +52,13 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'gender' => ['required', 'in:male,female,other'], // Kiểm tra giá trị gender
+            'date_of_birth' => ['required', 'date'], // Kiểm tra định dạng ngày sinh
+            'address' => ['required', 'string', 'max:255'], // Kiểm tra địa chỉ
+            'phone_number' => ['required', 'string', 'max:15'], // Kiểm tra số điện thoại
         ]);
     }
+
 
     /**
      * Create a new user instance after a valid registration.
@@ -67,6 +72,10 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
+            'gender' => $data['gender'], // Thêm trường gender
+            'date_of_birth' => $data['date_of_birth'], // Thêm trường date_of_birth
+            'address' => $data['address'], // Thêm trường address
+            'phone_number' => $data['phone_number'], // Thêm trường phone_number
         ]);
     }
 }
