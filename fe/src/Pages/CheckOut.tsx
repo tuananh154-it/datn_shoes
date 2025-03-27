@@ -74,8 +74,8 @@ const CheckOut = () => {
         {/* END Breadcrumb */}
         {/* START Checkout Section */}
       </div>
-      <div className="containercheckout">
-        <div className="left">
+      <div className="checkout-container">
+        <div className="checkout-left">
           <h2>Thanh toán & Vận chuyển</h2>
           <form>
             <label>Họ và tên *</label>
@@ -124,7 +124,7 @@ const CheckOut = () => {
             <input type="text" placeholder="Ví dụ: Số 20, ngõ 90" required />
           </form>
         </div>
-        <div className="right">
+        <div className="checkout-right">
           <h2>Đơn hàng của bạn</h2>
           <div className="order-summary">
             <div className="product">

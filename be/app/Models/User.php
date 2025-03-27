@@ -23,9 +23,12 @@ class User extends Authenticatable implements JWTSubject  // Implement JWTSubjec
         'name',
         'email',
         'password',
+        'gender',           // Thêm trường gender
+        'date_of_birth',    // Thêm trường date_of_birth
+        'address',          // Thêm trường address
+        'phone_number',
+        'role',    // Thêm trường phone_number
     ];
-
-    // protected $guard_name = '*';
 
     /**
      * The attributes that should be hidden for serialization.
@@ -45,11 +48,39 @@ class User extends Authenticatable implements JWTSubject  // Implement JWTSubjec
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'date_of_birth' => 'date',  // Cast date_of_birth thành đối tượng Carbon
     ];
 
+    /**
+     * Quan hệ 1-1 với Profile
+     */
     public function profile()
     {
         return $this->hasOne(Profile::class);  // Quan hệ 1-1 với Profile
+    }
+
+    /**
+     * Quan hệ 1-n với Orders
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);  // Quan hệ 1-n với Orders
+    }
+
+    /**
+     * Quan hệ 1-1 với Cart
+     */
+    public function cart()
+    {
+        return $this->hasOne(Cart::class);  // Quan hệ 1-1 với Cart
+    }
+
+    /**
+     * Tạo hoặc lấy giỏ hàng hiện tại của user
+     */
+    public function getOrCreateCart()
+    {
+        return $this->cart()->firstOrCreate(['user_id' => $this->id]);
     }
 
     /**
@@ -69,22 +100,16 @@ class User extends Authenticatable implements JWTSubject  // Implement JWTSubjec
      */
     public function getJWTCustomClaims()
     {
-        return [];  // Trả về mảng rỗng nếu không cần custom claims
-    }
-    public function orders()
-    {
-        return $this->hasMany(Order::class);
-    }
-    public function cart()
-    {
-        return $this->hasOne(Cart::class);
+        return [
+            'role' => $this->roles->pluck('name'), // Trả về các vai trò của người dùng dưới dạng mảng
+            'profile' => $this->profile,           // Trả về thông tin profile nếu cần
+        ];
     }
 
-    /**
-     * Tạo hoặc lấy giỏ hàng hiện tại của user
-     */
-    public function getOrCreateCart()
-    {
-        return $this->cart()->firstOrCreate(['user_id' => $this->id]);
-    }
+    // Các phương thức khác như roles() có thể được sử dụng nếu cần
+    // public function roles()
+    // {
+    //     return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id');
+    // }
+
 }

@@ -90,19 +90,65 @@
             <form method="POST" action="{{ route('register') }}">
                 @csrf
                 <h2 class="form-register-heading">Create an Account</h2>
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
 
-                <!-- Name Field -->
-                <input type="text" class="form-control" name="name" placeholder="Name" required autofocus>
+                    <!-- Name -->
+                    <div>
+                        <label for="name">Name</label>
+                        <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
+                    </div>
 
-                <!-- Email Field -->
-                <input type="email" class="form-control" name="email" placeholder="Email" required>
+                    <!-- Email Address -->
+                    <div>
+                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+                    </div>
 
-                <!-- Password Field -->
-                <input type="password" class="form-control" name="password" placeholder="Password" required>
+                    <!-- Password -->
+                    <div>
+                        <label for="password">Password</label>
+                        <input id="password" type="password" name="password" required>
+                    </div>
 
-                <!-- Confirm Password Field -->
-                <input type="password" class="form-control" name="password_confirmation" placeholder="Confirm Password" required>
+                    <!-- Confirm Password -->
+                    <div>
+                        <label for="password_confirmation">Confirm Password</label>
+                        <input id="password_confirmation" type="password" name="password_confirmation" required>
+                    </div>
 
+                    <!-- Gender -->
+                    <div>
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                            <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div>
+                        <label for="date_of_birth">Date of Birth</label>
+                        <input id="date_of_birth" type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" required>
+                    </div>
+
+                    <!-- Address -->
+                    <div>
+                        <label for="address">Address</label>
+                        <input id="address" type="text" name="address" value="{{ old('address') }}" required>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div>
+                        <label for="phone_number">Phone Number</label>
+                        <input id="phone_number" type="text" name="phone_number" value="{{ old('phone_number') }}" required>
+                    </div>
+
+                    <div>
+                        <button type="submit">Register</button>
+                    </div>
+                </form>
                 <!-- Register Button -->
                 <button class="btn btn-register" type="submit">Register</button>
 

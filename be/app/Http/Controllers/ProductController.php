@@ -81,21 +81,22 @@ class ProductController extends Controller
     ]);
 
     // Lưu sản phẩm chính
-    $product = new Product();
-    $product->name = $request->name;
-    $product->category_id = $request->category_id;
-    $product->brand_id = $request->brand_id;
-    $product->price = $request->price;
-    $product->description = $request->description;
-    $product->status = $request->status;
+   // Xử lý ảnh sản phẩm chính
+   $imagePath = null;
+   if ($request->hasFile('image')) {
+       $imagePath = $request->file('image')->store('product_images', 'public');
+   }
 
-    // Xử lý ảnh sản phẩm chính
-    if ($request->hasFile('image')) {
-        $imagePath = $request->file('image')->store('product_images', 'public');
-        $product->image = $imagePath;
-    }
-
-    $product->save();
+   // Tạo sản phẩm mới
+   $product = Product::create([
+       'name' => $request->name,
+       'category_id' => $request->category_id,
+       'brand_id' => $request->brand_id,
+       'price' => round($request->price, 2),
+       'description' => $request->description,
+       'status' => $request->status,
+       'image' => $imagePath,
+   ]);
 
     // Nếu là sản phẩm có biến thể
     if ($request->type == 'variant') {
@@ -104,22 +105,22 @@ class ProductController extends Controller
             $sizeId = explode('-', $variantKey)[1];
 
             // Xử lý ảnh biến thể
-            $imagePath = null;
-            if ($request->hasFile("variant[{$colorId}-{$sizeId}][image]")) {
-                $image = $request->file("variant[{$colorId}-{$sizeId}][image]");
-                // Lưu ảnh vào thư mục variant_images trong public disk
-                $imagePath = $image->store('variant_images', 'public');
+            $imagePaths = [];
+            if ($request->hasFile("variant_images.{$colorId}-{$sizeId}")) {
+                foreach ($request->file("variant_images.{$colorId}-{$sizeId}") as $image) {
+                    $imagePaths[] = $image->store('variant_images', 'public');
+                }
             }
-
-            // Lưu thông tin biến thể sản phẩm
+            
+            // Lưu thông tin biến thể
             ProductDetail::create([
                 'product_id' => $product->id,
                 'color_id' => $colorId,
                 'size_id' => $sizeId,
                 'quantity' => $variantData['quantity'],
                 'default_price' => $variantData['default_price'],
-                'discount_price' => $variantData['discount_price'] ?? null, // Nếu không có giá giảm giá thì để null
-                'image' => $imagePath,  // Lưu đường dẫn ảnh cho biến thể
+                'discount_price' => $variantData['discount_price'] ?? null,
+                'image' => json_encode($imagePaths), // Lưu danh sách ảnh dưới dạng JSON
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
