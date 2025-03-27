@@ -6,3 +6,6 @@ export const getAllProduct = ()  =>{
 export const getProductDetail = (id:string)  =>{
     return api.get(`/products/${id}`) 
 }
+export const getLatesProducts= ()=>{
+    return api.get('/latest-products')
+}
