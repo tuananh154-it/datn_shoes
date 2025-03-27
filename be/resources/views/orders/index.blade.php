@@ -20,16 +20,11 @@
                 </div>
             @endif
 
-            {{-- <div class="">
-                <a href="{{ route('orders.create') }}" class="btn btn-success btn-sm">
-                    <i class="fa fa-plus"></i> Thêm Đơn Hàng
-                </a>
-            </div> --}}
             <div class="mb-3">
                 <form action="{{ route('orders.index') }}" method="GET">
                     <div class="row">
                         <div class="col-md-3">
-                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm Tên Khách Hàng" value="{{ request()->search }}">
+                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm Tên Người Dùng" value="{{ request()->search }}">
                         </div>
                         <div class="col-md-3">
                             <select name="status" class="form-control">
@@ -53,7 +48,7 @@
                 <thead>
                     <tr>
                         <th>Mã Đơn</th>
-                        <th>Khách Hàng</th>
+                        <th>Người Dùng</th>
                         <th>Ngày Đặt</th>
                         <th>Hình Thức Thanh Toán</th>
                         <th>Tổng Tiền</th>
@@ -65,7 +60,7 @@
                     @foreach ($orders as $order)
                         <tr>
                             <td>{{ $order->id }}</td>
-                            <td>{{ $order->customer->name }}</td>
+                            <td>{{ $order->user->name }}</td>
                             <td>{{ $order->created_at ? $order->created_at->format('d/m/Y') : 'N/A' }}</td>
                             <td>
                                 @switch($order->payment_method)
@@ -77,7 +72,6 @@
                             </td>
                             <td>{{ number_format($order->total_price, 2) }} VND</td>
                             <td>
-                                <!-- Thay đổi trạng thái đơn hàng -->
                                 <form action="{{ route('orders.update_status', $order->id) }}" method="POST" style="display: inline;">
                                     @csrf
                                     @method('PUT')
@@ -93,7 +87,6 @@
                                 </form>
                             </td>
                             <td>
-                                <!-- Nút Xem Chi Tiết -->
                                 <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm">
                                     <i class="fa fa-eye"></i> Xem chi tiết
                                 </a>
