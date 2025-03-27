@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 class AuthController extends Controller
 {
     use AuthenticatesUsers;
- // Đăng ký bên be
+    // Đăng ký bên be
     public function dangky(Request $request)
     {
         $request->validate([
@@ -58,32 +58,32 @@ class AuthController extends Controller
 
         return response()->json(compact('user', 'token'), 201);
     }
-// Đăng nhập ben be
+    // Đăng nhập ben be
 
-public function dangnhap(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required|string',
-    ]);
+    public function dangnhap(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ]);
 
-    $credentials = $request->only('email', 'password');
+        $credentials = $request->only('email', 'password');
 
-    if (Auth::attempt($credentials)) {
-        $request->session()->regenerate();
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
 
-        $user = Auth::user(); // Lấy thông tin người dùng
+            $user = Auth::user(); // Lấy thông tin người dùng
 
-        // Kiểm tra role của user
-        if ($user->role === 'admin') {
-            return redirect()->route('dashboards.index')->with('success', 'vào thành công em  .'); // Điều hướng đến trang admin
+            // Kiểm tra role của user
+            // if ($user->role === 'admin') {
+            //     return redirect()->route('dashboards.index')->with('success', 'vào thành công em  .'); // Điều hướng đến trang admin
+            // }
+
+            // return redirect()->intended(route('login'))->with('success', 'chưa vào được đâu.'); // Điều hướng đến trang chủ mặc định
         }
 
-        return redirect()->intended(route('login'))->with('success', 'chưa vào được đâu.'); // Điều hướng đến trang chủ mặc định
+        return back()->withErrors(['email' => 'Invalid credentials'])->onlyInput('email');
     }
-
-    return back()->withErrors(['email' => 'Invalid credentials'])->onlyInput('email');
-}
 
     // Đăng nhập
     // public function login(Request $request)
@@ -118,7 +118,7 @@ public function dangnhap(Request $request)
 
     //     return $this->sendFailedLoginResponse($request);
     // }
-public function login(Request $request)
+    public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
 
