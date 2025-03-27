@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useCart } from "../context/CartContext";
+import { Link } from "react-router-dom";
 
 const Cart = () => {
   const {
@@ -41,9 +42,12 @@ const Cart = () => {
               {cart.length === 0 ? (
                 <div className="text-center">
                   <p>Giỏ hàng trống</p>
-                  <a href="/shop" className="background-btn text-uppercase">
+                  {/* <a href="/shop" className="background-btn text-uppercase">
                     Quay lại mua sắm
-                  </a>
+                  </a> */}
+                  <Link to="/shop" className="back-shop">
+                  Tiếp tục quay lại mua sắm
+                  </Link>
                 </div>
               ) : (
                 <form>
@@ -123,9 +127,6 @@ const Cart = () => {
                               <a href="javascript:void(0);" onClick={() => removeCartItem(item.id_cart_item)}>
                                 <i className="flaticon-close"></i>
                               </a>
-                              {/* <button onClick={() => removeCartItem(item.id_cart_item)}>
-                              <i className="flaticon-close"></i>
-                              </button> */}
                             </div>
                           </div>
                         ))}
@@ -139,12 +140,18 @@ const Cart = () => {
                   </div>
 
                   <div className="cart_btns text-right">
-                    <a href="/shop" className="text-uppercase border-btn">
+                    {/* <a href="/shop" className="text-uppercase border-btn">
                       Tiếp tục mua sắm
-                    </a>
-                    <a href="/checkout" className="text-uppercase background-btn">
+                    </a> */}
+                    <Link to="/shop" className="text-uppercase border-btn" >
+                    Tiếp tục mua sắm
+                    </Link>
+                    {/* <a href="/checkout" className="text-uppercase background-btn">
                       Thanh toán
-                    </a>
+                    </a> */}
+                    <Link to="/checkout" className="text-uppercase background-btn">
+                    Thanh toán
+                    </Link>
                   </div>
 
                   <div className="form-group cart_notes">

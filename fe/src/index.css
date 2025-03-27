@@ -468,3 +468,12 @@
   font-size: 14px;
   color: gray;
 }
+.back-shop {
+  font-size: 18px;
+  color: #28a745;
+  text-decoration: none;
+}
+.back-shop:hover{
+  text-decoration:underline;
+  color:#b91c1c;
+}

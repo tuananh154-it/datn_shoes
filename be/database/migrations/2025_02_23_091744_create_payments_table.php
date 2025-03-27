@@ -14,13 +14,16 @@ return new class extends Migration
     Schema::create('payments', function (Blueprint $table) {
         $table->id();
         $table->foreignId('order_id')->constrained('orders');
+        $table->foreignId('user_id')->constrained('users'); 
+        $table->string('note')->nullable(); 
         $table->dateTime('payment_date');
-        $table->string('payment_method');
+        $table->enum('payment_method', ['COD', 'VnPAY', 'zaloPay']);
         $table->decimal('amount', 15, 2);
         $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
         $table->timestamps();
         $table->softDeletes();
     });
+    
 }
 
     /**

@@ -3,6 +3,7 @@ import { Products } from "../types/Product";
 import { useParams } from "react-router-dom";
 import { getProductDetail } from "../services/product";
 import { useCart } from "../context/CartContext";
+import toast from "react-hot-toast";
 // import { getProductDetail } from "../axios/asiox";
 
 const ProductDetail = () => {
@@ -32,6 +33,7 @@ const ProductDetail = () => {
     });
   }, [id]);
   console.log("data", productId);
+
   const handleVariantClick = (detail: any) => {
     if (detail) {
       // Nếu có variant, chọn variant đó
@@ -259,6 +261,11 @@ const ProductDetail = () => {
                               return;
                             }
                             addToCart(Number(selectedDetail.id), quantity);
+                            toast.success("Thêm vào giỏ hàng thành công");
+                            console.log("Dữ liệu gửi lên API:", JSON.stringify({ 
+                              product_detail_id: selectedDetail.id, 
+                              quantity 
+                            }));
                           }}
                         >
                           Add to cart
