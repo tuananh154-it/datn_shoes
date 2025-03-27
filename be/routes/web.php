@@ -39,17 +39,17 @@ Route::middleware(['auth'])->group(function () {
 |
 */
 
-Route::prefix('admin')->middleware(['admin'])->group(function () {
+Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboards.index');
     });
 
-    Route::resource('products', ProductController::class);
+    Route::resource('products', ProductController::class)->middleware('permission:show-products');
     Route::resource('product-details', ProductDetailController::class);
-    Route::resource('colors', ColorController::class);
-    Route::resource('sizes', SizeController::class);
+    Route::resource('colors', ColorController::class)->middleware('permission:show-colors');
+    Route::resource('sizes', SizeController::class)->middleware('permission:show-sizes');
 
-    Route::resource('users', UserController::class);
+    Route::resource('users', UserController::class)->middleware('permission:show-users');
     Route::resource('roles', RoleController::class);
 
     // Product Details
@@ -61,38 +61,41 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
 
     // CKEditor upload
     Route::post('ckeditor/upload', [CKEditorController::class, 'upload'])->name('ckeditor.upload');
-
     // Orders
     Route::resource('orders', OrderController::class);
     Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update_status');
-
     // Articles
-    Route::resource('articles', ArticlesController::class);
-
+    Route::resource('articles', ArticlesController::class)->middleware('permission:show-articles');
     // Comments
-    Route::resource('comments', CommentController::class);
-
+    Route::resource('comments', CommentController::class)->middleware('permission:show-comments');
     // Contacts
-    Route::resource('contacts', ContactController::class);
-
+    Route::resource('contacts', ContactController::class)->middleware('permission:show-contacts');
     // Banners
-    Route::resource('banners', BannerController::class);
-
+    Route::resource('banners', BannerController::class)->middleware('permission:show-banners');
     // Vouchers
-    Route::resource('vouchers', VoucherController::class);
-
+    Route::resource('vouchers', VoucherController::class)->middleware('permission:show-vouchers');
     // Categories
-    Route::resource('categories', CategoryController::class);
-
+    Route::resource('categories', CategoryController::class)->middleware('permission:show-categories');
     // Brands
-    Route::resource('brands', BrandController::class);
-
+    Route::resource('brands', BrandController::class)->middleware('permission:show-brands');
     // Dashboard
+
     Route::get('dashboards', [AdminController::class, 'index'])->name('dashboards.index');
+    //tim kiem (lọc )
+    Route::get('/admin/dashboard/filter', [AdminController::class, 'filterRevenue']);
+
     Route::get('admin/orders', [AdminController::class, 'orders'])->name('dashboards.orders');
     Route::get('admin/reviews', [AdminController::class, 'reviews'])->name('dashboards.reviews');
     Route::get('admin/products', [AdminController::class, 'products'])->name('dashboards.products');
+    //thong ke tai khoan
     Route::get('admin/users', [AdminController::class, 'users'])->name('dashboards.users');
+    Route::get('/admin/account-stats-data', [AdminController::class, 'getAccountStatsData'])->name('admin.accountStatsData');
+
+
+
+    // =======
+    Route::get('dashboards', [AdminController::class, 'index'])->name('dashboards.index')->middleware('permission:show-dashboards');
+    // >>>>>>> tuan-anh2
 });
 
 
@@ -111,14 +114,14 @@ Route::middleware(['role:admin'])->get('/admin-dashboard', function () {
     return response()->json(['message' => 'Welcome Admin']);
 });
 
-Route::middleware(['role:super admin'])->group(function () {
-    Route::get('/super-admin-dashboard', function () {
-        return response()->json(['message' => 'Welcome Super Admin']);
-    });
+// Route::middleware(['role:superadmin'])->group(function () {
+//     Route::get('/super-admin-dashboard', function () {
+//         return response()->json(['message' => 'Welcome Super Admin']);
+//     });
 
-    // Routes for Users
-    Route::resource('users', UserController::class);
-});
+//     // Routes for Users
+//     Route::resource('users', UserController::class);
+// });
 
 // Routes for Profiles
 Route::resource('profiles', ProfileController::class);
@@ -126,19 +129,3 @@ Route::resource('profiles', ProfileController::class);
 // Routes for Roles
 Route::resource('roles', RoleController::class);
 // Route cho trang danh sách người dùng
-Route::get('/users', [UserController::class, 'index'])->name('users.index');
-
-// Route cho form tạo người dùng mới
-Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-
-// Route để tạo người dùng mới
-Route::post('/users', [UserController::class, 'store'])->name('users.store');
-
-// Route cho form chỉnh sửa người dùng
-Route::get('/users/{user}/edit', [UserController::class, 'edit'])->name('users.edit');
-
-// Route để cập nhật thông tin người dùng
-Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
-
-// Route để xóa người dùng
-Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');

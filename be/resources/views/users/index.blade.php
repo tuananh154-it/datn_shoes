@@ -1,171 +1,101 @@
-@extends('layouts.app')
+
+@extends('master')
 
 @section('content')
 <style>
-    .row {
-    padding-top: 60px;
-}
 
-.container {
-    width: 100%;
-    max-width: 1200px; /* Chiều rộng tối đa */
-    margin: 0 auto;
-    padding: 30px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-/* Table styling */
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-    background-color: white;
-    border-radius: 8px;
-    overflow: hidden;
-}
-
-table th, table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-table th {
-    background-color: #f1f1f1;
-    font-weight: bold;
-    color: #333;
-}
-
-table tr:hover {
-    background-color: #f9f9f9;
-}
-
-/* Button styles */
-.btn {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 1em;
-    text-align: center;
-    border-radius: 5px;
-    text-decoration: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-primary {
-    background-color: #007bff;
-    color: white;
-    border: none;
-}
-
-.btn-primary:hover {
-    background-color: #0056b3;
-}
-
-.btn-warning {
-    background-color: #ffc107;
-    color: white;
-    border: none;
-}
-
-.btn-warning:hover {
-    background-color: #e0a800;
-}
-
-.btn-danger {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-}
-.btn-success {
-    background-color: #28a745;
-    color: white;
-    border: none;
-}
-
-.btn-danger:hover {
-    background-color: #c82333;
-}
-
-/* Form button (Delete) */
-form button {
-    padding: 8px 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-}
-
-form button:hover {
-    opacity: 0.9;
-}
-
-/* Success message */
-.alert-success {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #d4edda;
-    color: #155724;
-    border-radius: 5px;
-    text-align: center;
-}
-
+    .row{
+        padding-top: 60px;
+    }
 </style>
+<div class="row">
+    <div class="col-lg-12">
+        <section class="card">
+            <header class="card-header">
+                Bảng sản người dùng
+            </header>
 
-<div class="container">
-    <h1>Quản lý Người Dùng</h1>
+            @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-    <!-- Display success message -->
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+            <div class="">
+                <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
 
-    <!-- Button to create new user -->
-    <div class="mb-3">
-        <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
-            <i class="fa fa-plus"></i> Thêm người dùng
-        </a>
+                    <i class="fa fa-plus"></i> Thêm sản người dùng
+                </a>
+            </div>
+            <div class="mb-3">
+                <div class="mb-3">
+                    <form action="{{ route('users.index') }}" method="GET">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <input type="text" name="email_search" class="form-control" placeholder="Tìm kiếm theo email" value="{{ request()->email_search }}">
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" name="name_search" class="form-control" placeholder="Tìm kiếm theo tên người dùng" value="{{ request()->name_search }}">
+                            </div>
+                            <div class="col-md-3">
+                                <select name="role_search" class="form-control">
+                                    <option value="">Chọn vai trò</option>
+                                    <option value="superadmin" {{ request()->role_search == 'superadmin' ? 'selected' : '' }}>Superadmin</option>
+                                    <option value="admin" {{ request()->role_search == 'admin' ? 'selected' : '' }}>Admin</option>
+                                    <option value="user" {{ request()->role_search == 'user' ? 'selected' : '' }}>Người dùng</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+
+
+
+            <table class="table table-striped table-advance table-hover">
+
+                <thead>
+                    <tr>
+                        <th><i class=""></i> Tên</th>
+                        <th><i class=""></i> Email</th>
+                        <th><i class=""></i> Vai trò</th>
+                        <th><i class=""></i> Hành động</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                        @foreach ($users as $user)
+                        <tr>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->roles->first()?->name }}</td>
+                            <td>
+                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash-o"></i> Xóa
+                                    </button>
+                                </form>
+                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">
+                                    <i class="fa fa-pencil"></i> Sửa
+                                </a>
+                            </td>
+                        </tr>
+                    @endforeach
+
+                </tbody>
+            </table>
+
+            </div>
+        </section>
     </div>
-
-    <!-- Users table -->
-    <table>
-        <thead>
-            <tr>
-                <th><i class=""></i> Tên</th>
-                <th><i class=""></i> Email</th>
-                <th><i class=""></i> Vai trò</th>
-                <th><i class=""></i> Hành động</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($users as $user)
-                <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->roles->first()?->name }}</td>
-                    <td>
-                        <!-- Edit Button -->
-                        <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">
-                            <i class="fa fa-pencil"></i> Sửa
-                        </a>
-
-                        <!-- Delete Form -->
-                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger btn-sm">
-                                <i class="fa fa-trash-o"></i> Xóa
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
 </div>
 
 @endsection

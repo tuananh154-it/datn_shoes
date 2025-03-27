@@ -17,10 +17,6 @@ return new class extends Migration
         $table->string('password');
         $table->string('phone_number');
         $table->foreignId('reset_request_id')->nullable()->constrained('password_reset_requests');
-        // $table->foreignId('reset_request_id')->nullable()->constrained('password_reset_request')->onDelete('cascade');
-
-        // $table->foreignId('reset_request_id')->nullable()->constrained('password_reset_requests')->onDelete('cascade');
-
         $table->string('email');
         $table->text('address');
         $table->enum('status', ['active', 'inactive'])->default('active');

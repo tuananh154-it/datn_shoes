@@ -2,54 +2,85 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Category, getAllCategory } from "../services/category";
 import { Brand, getBrand } from "../services/brand";
+import { Product } from "../types/Product";
+import { getAllProduct } from "../services/product";
 
-interface Color {
-  id: number;
-  name: string;
-}
-const colorMap: Record<string, string> = {
-    "màu vàng": "yellow",
-    "màu xanh": "blue",
-    "màu đỏ": "red",
-    "màu tím": "purple",
-    "màu cam": "orange",
-    "màu hồng": "pink",
-    "màu đen": "black",
-    "màu trắng":"white"
-  };
 const Shop = () => {
-  const [category, setCategory] = useState<Category[]>([]);
-  const [brand, setbrand] = useState<Brand[]>([]);
+
+  const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [sortBy, setSortBy] = useState<"asc" | "dsc" | "">("");
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
+
   useEffect(() => {
-    getAllCategory().then(({ data }) => {
-      // console.log("category",data)
-      setCategory(data);
-    });
+    setLoading(true);
+    getAllProduct()
+      .then(({ data }) => {
+        setProducts(data.data);
+        setFilteredProducts(data.data);
+      })
+      .finally(() => setLoading(false));
   }, []);
+
   useEffect(() => {
-    getBrand().then(({ data }) => {
-      console.log("brand", data);
-      setbrand(data);
-    });
+    let updatedProducts = [...products];
+
+    if (selectedCategories.length) {
+      updatedProducts = updatedProducts.filter((product) =>
+        selectedCategories.includes(product.category)
+      );
+    }
+
+    if (selectedBrands.length) {
+      updatedProducts = updatedProducts.filter((product) =>
+        selectedBrands.includes(product.brand)
+      );
+    }
+
+    if (sortBy) {
+      updatedProducts.sort((a, b) => {
+        const priceA =
+          typeof a.price === "string"
+            ? Number(a.price.replace(" VND", ""))
+            : a.price;
+        const priceB =
+          typeof b.price === "string"
+            ? Number(b.price.replace(" VND", ""))
+            : b.price;
+        return sortBy === "asc" ? priceA - priceB : priceB - priceA;
+      });
+    }
+
+    setFilteredProducts(updatedProducts);
+  }, [sortBy, selectedCategories, selectedBrands, products]);
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category)
+        ? prev.filter((c) => c !== category)
+        : [...prev, category]
+    );
+  };
+
+  const handleBrandChange = (brand: string) => {
+    setSelectedBrands((prev) =>
+      prev.includes(brand) ? prev.filter((b) => b !== brand) : [...prev, brand]
+    );
+  };
+
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
+
+  useEffect(() => {
+    getAllCategory().then(({ data }) => setCategories(data));
+    getBrand().then(({ data }) => setBrands(data));
   }, []);
-  const [colors, setColors] = useState<Color[]>([]);
+  // const [colors, setColors] = useState<Color[]>([]);
 
   // Giả lập API call
-  useEffect(() => {
-    const fetchColors = async () => {
-      const apiData = {
-        colors: [
-          { id: 1, name: "màu đen" },
-          { id: 2, name: "màu xanh" },
-          { id: 3, name: "màu đỏ" },
-          { id: 4, name: "màu trắng" },
-        ],
-      };
-      setColors(apiData.colors);
-    };
 
-    fetchColors();
-  }, []);
   return (
     <>
       <div className="menu_overlay"></div>
@@ -95,17 +126,37 @@ const Shop = () => {
                           <ul>
                             <li>
                               <div className="flex items-center gap-3">
-                                <input type="radio" name="sortBy" />
-                                <label className="px-2">
-                                  Giá - Từ bé đến lớn
+                                <label
+                                  style={{
+                                    fontSize: "16px",
+                                    fontFamily: "Arial, sans-serif",
+                                  }}
+                                >
+                                  <input
+                                    type="radio"
+                                    name="sortBy"
+                                    value="asc"
+                                    checked={sortBy === "asc"}
+                                    onChange={() => setSortBy("asc")}
+                                  />{" "}
+                                  Giá - Giá từ bé đến lớn
                                 </label>
                               </div>
-                            </li>
-                            <li>
                               <div className="flex items-center gap-3">
-                                <input type="radio" name="sortBy" />
-                                <label className="px-2">
-                                  Giá - Từ lớn đến bé
+                                <label
+                                  style={{
+                                    fontSize: "16px",
+                                    fontFamily: "Arial, sans-serif",
+                                  }}
+                                >
+                                  <input
+                                    type="radio"
+                                    name="sortBy"
+                                    value="dsc"
+                                    checked={sortBy === "dsc"}
+                                    onChange={() => setSortBy("dsc")}
+                                  />{" "}
+                                  Giá - Giá từ lớn đến bé
                                 </label>
                               </div>
                             </li>
@@ -121,15 +172,27 @@ const Shop = () => {
                       </div>
                       <div className="layer-filter">
                         <ul>
-                          {category.map((category) => (
-                            <li>
-                              <div className="">
-                                <input type="checkbox" name={"category"} />
-                                <label className="px-2" htmlFor={category.name}>
-                                  {category.name}
-                                </label>
-                              </div>
-                            </li>
+                          {categories.map((category) => (
+                            <div className="checkbox">
+                              <label
+                                key={category.id}
+                                style={{
+                                  fontSize: "16px",
+                                  fontFamily: "Arial, sans-serif",
+                                }}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={selectedCategories.includes(
+                                    category.name
+                                  )}
+                                  onChange={() =>
+                                    handleCategoryChange(category.name)
+                                  }
+                                />{" "}
+                                {category.name}
+                              </label>
+                            </div>
                           ))}
                         </ul>
                       </div>
@@ -142,52 +205,25 @@ const Shop = () => {
                       </div>
                       <div className="layer-filter">
                         <ul>
-                          {brand.map((brand) => (
-                            <li>
-                              <div className="">
-                                <input type="checkbox" name={"category"} />
-                                <label className="px-2" htmlFor={brand.name}>
-                                  {brand.name}
-                                </label>
-                              </div>
-                            </li>
+                          {brands.map((brand) => (
+                            <div className="checkbox">
+                              <label
+                                key={brand.id}
+                                style={{
+                                  fontSize: "16px",
+                                  fontFamily: "Arial, sans-serif",
+                                }}
+                              >
+                                <input
+                                  type="checkbox"
+                                  checked={selectedBrands.includes(brand.name)}
+                                  onChange={() => handleBrandChange(brand.name)}
+                                />{" "}
+                                {brand.name}
+                              </label>
+                            </div>
                           ))}
                         </ul>
-                      </div>
-                    </div>
-                    {/* //size// */}
-                    <div className="category_list">
-                      <div className="category_list_title">
-                        <h5 className="title_h5">Size</h5>
-                        <span className="category_close_icon flaticon-down-arrow float-right"></span>
-                      </div>
-                      <div className="layer-filter">
-                        <ul>
-                          {brand.map((brand) => (
-                            <li>
-                              <div className="">
-                                <input type="checkbox" name={"category"} />
-                                <label className="px-2" htmlFor={brand.name}>
-                                  {brand.name}
-                                </label>
-                              </div>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                    {/* //color// */}
-                    <div className="category_list color_box">
-                      <div className="category_list_title">
-                        <h5 className="title_h5">Color</h5>
-                      </div>
-                      <div className="colors py-4 px-2">
-                        {colors.map((color) => (
-                          <label key={color.id} className="color-option">
-                            <input type="checkbox" />
-                            <span style={{ backgroundColor: colorMap[color.name] || "gray" }}></span>
-                          </label>
-                        ))}
                       </div>
                     </div>
                   </div>
@@ -221,7 +257,7 @@ const Shop = () => {
                           Sắp xếp theo :
                         </label>
                         <select
-                          className="px-4 py-2 border"
+                          className="sanphamnoibat"
                           id="short_by"
                           name="short_by"
                         >
@@ -291,1435 +327,73 @@ const Shop = () => {
                         <label htmlFor="show" className="title_h5">
                           Tổng :
                         </label>
-                        <select className="px-2 py-1" id="show" name="show">
-                          <option>24</option>
+                        <select className="show" id="show" name="show">
+                          <option>{products.length}</option>
                         </select>
                       </div>
                     </form>
                   </div>
                 </div>
-                <ul className=" category-products  wow fadeIn row">
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product1.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
+                <div>
+                  {loading ? (
+                    <p>Đang tải...</p>
+                  ) : filteredProducts.length === 0 ? (
+                    <p className="text-center text-gray-500">
+                      Không có sản phẩm nào
+                    </p>
+                  ) : (
+                    <ul className="category-products wow fadeIn row">
+                      {filteredProducts.map((product) => (
+                        <li
+                          className="col-lg-3 col-md-4 col-6 column3 product wow fadeInLeft animated"
+                          data-wow-duration="1300ms"
+                          key={product.id}
                         >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$59.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio1" />
-                            <label htmlFor="radio1">xs</label>
+                          <div className="featured_content">
+                            <div className="featured_img_content">
+                              <img
+                                src={product.image}
+                                alt="f_product"
+                                className="img-fluid11"
+                              />
+                              <div className="featured_btn vertical_middle">
+                                <Link
+                                  to="/cart"
+                                  className="text-uppercase background-btn add_to_bag_btn"
+                                >
+                                  Thêm vào giỏ hàng
+                                </Link>
+                                <Link
+                                  to={`/product_detail/${product.id}`}
+                                  className="text-uppercase border-btn popup_btn"
+                                  data-modal="#modalone"
+                                >
+                                  Xem chi tiết
+                                </Link>
+                              </div>
+                              <a
+                                href="javascript:void(0);"
+                                className="heart rounded-circle text-center"
+                              >
+                                <i className="flaticon-heart vertical_middle"></i>
+                              </a>
+                            </div>
+                            <div className="featured_detail_content">
+                              <a href="product_list_detail.html">
+                                <p className="featured_title text-capitalize text-center">
+                                  {product.name}
+                                </p>
+                              </a>
+                              <p className="featured_price title_h5 text-center">
+                                <span>{product.price} VND</span>
+                              </p>
+                            </div>
                           </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio2" />
-                            <label htmlFor="radio2">s</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio3" />
-                            <label htmlFor="radio3">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio4" />
-                            <label htmlFor="radio4">l</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio5" />
-                            <label htmlFor="radio5">xl</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.2s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product2.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Premium Party Suit
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$79.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio6" />
-                            <label htmlFor="radio6">s</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio7" />
-                            <label htmlFor="radio7">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio8" />
-                            <label htmlFor="radio8">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.4s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product3.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  new-label ">
-                          new<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Party Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$99.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio9" />
-                            <label htmlFor="radio9">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product5.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  new-label ">
-                          new<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Man T-Shirt
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$19.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio11" />
-                            <label htmlFor="radio11">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio12" />
-                            <label htmlFor="radio12">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.2s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product6.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <span className="text-uppercase background-btn sold_out_btn">
-                            Sold Out
-                          </span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Flower Floral Dupioni Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$79.95</span>
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.4s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product7.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <ul className="product-date">
-                          <li className="day background-btn">
-                            <span className="no">12</span>
-                            <span className="text text-capitalize">days</span>
-                          </li>
-                        </ul>
-                        <div className="featured_btn vertical_middle">
-                          {/* <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">Add To Bag</a>  */}
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  sale-label ">
-                          sale<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Check Shirt
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span className="compare_price">$39.95</span>
-                          <span>$29.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio13" />
-                            <label htmlFor="radio13">m</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product4.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <ul className="product-date">
-                          <li className="day background-btn">
-                            <span className="no">12</span>
-                            <span className="text text-capitalize">days</span>
-                          </li>
-                          <li className="hours background-btn">
-                            <span className="no">07</span>
-                            <span className="text text-capitalize">Hrs</span>
-                          </li>
-                          <li className="min background-btn">
-                            <span className="no">30</span>
-                            <span className="text text-capitalize">Mins</span>
-                          </li>
-                          <li className="second background-btn">
-                            <span className="no">15</span>
-                            <span className="text text-capitalize">Secs</span>
-                          </li>
-                        </ul>
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase sale-label ">
-                          sale<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Jeans Pant
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span className="compare_price">$59.95</span>
-                          <span>$39.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio14" />
-                            <label htmlFor="radio14">M</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.2s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product8.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail;"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Black Dotted Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$29.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio15" />
-                            <label htmlFor="radio15">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.4s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product1.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$59.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio16" />
-                            <label htmlFor="radio16">xs</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio17" />
-                            <label htmlFor="radio17">s</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio18" />
-                            <label htmlFor="radio18">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio19" />
-                            <label htmlFor="radio19">l</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio20" />
-                            <label htmlFor="radio20">xl</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product5.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <a
-                            href="cart.html"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            Add To Bag
-                          </a>
-                          <a
-                            href="javascript:void(0);"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  new-label ">
-                          new<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Man T-Shirt
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$19.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio21" />
-                            <label htmlFor="radio21">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio22" />
-                            <label htmlFor="radio22">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.2s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product3.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  new-label ">
-                          new<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Party Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$99.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio23" />
-                            <label htmlFor="radio23">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.4s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product7.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <ul className="product-date">
-                          <li className="day background-btn">
-                            <span className="no">12</span>
-                            <span className="text text-capitalize">days</span>
-                          </li>
-                        </ul>
-                        <div className="featured_btn vertical_middle">
-                          <a
-                            href="cart.html"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            Add To Bag
-                          </a>
-                          <a
-                            href="javascript:void(0);"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  sale-label ">
-                          sale<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Check Shirt
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span className="compare_price">$39.95</span>
-                          <span>$29.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio24" />
-                            <label htmlFor="radio24">m</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product1.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$59.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio25" />
-                            <label htmlFor="radio25">xs</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio26" />
-                            <label htmlFor="radio26">s</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio27" />
-                            <label htmlFor="radio27">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio28" />
-                            <label htmlFor="radio28">l</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio29" />
-                            <label htmlFor="radio29">xl</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.2s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product2.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Premium Party Suit
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$79.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio30" />
-                            <label htmlFor="radio30">s</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio31" />
-                            <label htmlFor="radio31">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio32" />
-                            <label htmlFor="radio32">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.4s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product3.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  new-label ">
-                          new<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Party Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$99.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio33" />
-                            <label htmlFor="radio33">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product5.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  new-label ">
-                          new<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Man T-Shirt
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$19.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio34" />
-                            <label htmlFor="radio34">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio35" />
-                            <label htmlFor="radio35">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.2s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product6.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <span className="text-uppercase background-btn sold_out_btn">
-                            Sold Out
-                          </span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Flower Floral Dupioni Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$79.95</span>
-                        </p>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.4s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product7.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <ul className="product-date">
-                          <li className="day background-btn">
-                            <span className="no">12</span>
-                            <span className="text text-capitalize">days</span>
-                          </li>
-                        </ul>
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  sale-label ">
-                          sale<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Check Shirt
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span className="compare_price">$39.95</span>
-                          <span>$29.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio36" />
-                            <label htmlFor="radio36">m</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product4.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <ul className="product-date">
-                          <li className="day background-btn">
-                            <span className="no">12</span>
-                            <span className="text text-capitalize">days</span>
-                          </li>
-                        </ul>
-                        <div className="featured_btn vertical_middle">
-                          <a
-                            href="cart.html"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            Add To Bag
-                          </a>
-                          <a
-                            href="javascript:void(0);"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase sale-label ">
-                          sale<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Jeans Pant
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span className="compare_price">$59.95</span>
-                          <span>$39.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio10" />
-                            <label htmlFor="radio10">M</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.2s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product8.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Black Dotted Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$29.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio37" />
-                            <label htmlFor="radio37">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInLeft animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.4s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product1.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$59.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio38" />
-                            <label htmlFor="radio38">xs</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio39" />
-                            <label htmlFor="radio39">s</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio40" />
-                            <label htmlFor="radio40">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio41" />
-                            <label htmlFor="radio41">l</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio42" />
-                            <label htmlFor="radio42">xl</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product5.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  new-label ">
-                          new<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Man T-Shirt
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$19.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio43" />
-                            <label htmlFor="radio43">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio44" />
-                            <label htmlFor="radio44">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.2s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product3.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  new-label ">
-                          new<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Party Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$99.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio46" />
-                            <label htmlFor="radio46">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li
-                    className="col-lg-3 col-md-4 col-6 column3 product product  wow fadeInRight animated"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.4s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product7.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <ul className="product-date">
-                          <li className="day background-btn">
-                            <span className="no">12</span>
-                            <span className="text text-capitalize">days</span>
-                          </li>
-                        </ul>
-                        <div className="featured_btn vertical_middle">
-                          <Link
-                            to="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            {" "}
-                            Add to bag
-                          </Link>
-                          <a
-                            href="/product_detail"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  sale-label ">
-                          sale<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Check Shirt
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span className="compare_price">$39.95</span>
-                          <span>$29.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" name="size" id="radio47" />
-                            <label htmlFor="radio47">m</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                </ul>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
                 <div className="align-self-center">
                   <ul className="pagination text-center justify-content-center">
                     <li className="page-item">

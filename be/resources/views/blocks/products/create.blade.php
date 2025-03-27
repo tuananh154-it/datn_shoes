@@ -126,7 +126,7 @@
                 document.getElementById('generateVariants').addEventListener('click', function () {
                     let selectedColors = [...document.querySelectorAll('input[name="selected_colors[]"]:checked')].map(e => e.value);
                     let selectedSizes = [...document.querySelectorAll('input[name="selected_sizes[]"]:checked')].map(e => e.value);
-                    
+
                     if (selectedColors.length === 0 || selectedSizes.length === 0) {
                         alert('Vui lòng chọn cả màu sắc và kích thước.');
                         return;
@@ -150,7 +150,8 @@
                                     <label>Giá giảm:</label>
                                     <input type="number" name="variant[${color}-${size}][discount_price]" class="form-control" placeholder="Giá giảm">
                                     <label>Ảnh biến thể:</label>
-                                    <input type="file" name="variant[${color}-${size}][image]" class="form-control">
+                                    <input type="file" name="variant_images[${color}-${size}][]" class="form-control" multiple>
+
 
                                     <button type="button" class="btn btn-danger" onclick="removeVariant('${variantId}')">Xóa</button>
                                 </div>
@@ -169,6 +170,26 @@
                     document.getElementById(id).remove();
                 }
             </script>
+{{-- ======= --}}
+
+
+
+            ClassicEditor
+                .create(document.querySelector('#description'), {
+                    ckfinder: {
+                        uploadUrl: '{{ route('ckeditor.upload') }}',
+                    },
+                    debug: 'all',
+                    toolbar: [
+                        'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
+                    ]
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+
+                    </script>
+{{-- >>>>>>> tuan-anh2 --}}
         </div>
     </div>
 @endsection
