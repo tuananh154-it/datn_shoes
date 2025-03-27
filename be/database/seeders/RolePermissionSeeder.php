@@ -19,7 +19,6 @@ class RolePermissionSeeder extends Seeder
         $adminRole->givePermissionTo('edit_posts');
         $adminRole->givePermissionTo('delete_posts');
 
-        // Nếu bạn muốn tạo thêm vai trò khác:
         $editorRole = Role::firstOrCreate(['name' => 'editor']);
         $editorRole->givePermissionTo('edit_posts');
     }
