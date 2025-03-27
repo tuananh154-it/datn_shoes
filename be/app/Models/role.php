@@ -2,22 +2,16 @@
 
 namespace App\Models;
 
-use Spatie\Permission\Models\Role as SpatieRole;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Role as ModelsRole;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
-class Role extends SpatieRole
+class Role extends ModelsRole
 {
-    
-    protected $table = 'roles'; // Đảm bảo đúng tên bảng
+    use HasFactory;
 
-    public $timestamps = false; // Tắt timestamps nếu bảng roles không có created_at và updated_at
-
-    /**
-     * Quan hệ nhiều-nhiều với User
-     * Một role có thể thuộc nhiều user
-     */
-    public function users(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'model_has_roles', 'role_id', 'model_id');
-    }
+    protected $fillable = [
+        'name',
+    ];
 }
