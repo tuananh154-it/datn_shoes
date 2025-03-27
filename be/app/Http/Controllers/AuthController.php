@@ -82,7 +82,7 @@ class AuthController extends Controller
             $user = Auth::user();
             // Check user role and redirect accordingly
             if (in_array($user->role, ['admin', 'superadmin'])) {
-                return redirect()->route('articles.index')->with('success', 'Vào thành công!');
+                return redirect()->route('dashboards.index')->with('success', 'Vào thành công!');
             }
 
             return redirect()->intended(route('login'))->with('error', 'Bạn không có quyền truy cập!');
