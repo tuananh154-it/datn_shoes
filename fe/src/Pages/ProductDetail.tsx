@@ -28,7 +28,7 @@ const ProductDetail = () => {
     getProductDetail(id).then(({ data }) => {
       console.log("data", data);
       setProductId(data.data);
-      //   setSelectedDetail(data.data.details[0]);
+        // setSelectedDetail(data.data.details[0]);
     });
   }, [id]);
   console.log("data", productId);
@@ -243,13 +243,26 @@ const ProductDetail = () => {
                         >
                           add to wishlist
                         </a>
-                        <a
+                        {/* <a
                             href="/cart"
                             className="background-btn text-uppercase cart_btn"
                           >
                             add to bag
                           </a>
-                        
+                         */}
+                        <button
+                          type="button"
+                          className="background-btn text-uppercase cart_btn"
+                          onClick={() => {
+                            if (!selectedDetail) {
+                              alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
+                              return;
+                            }
+                            addToCart(Number(selectedDetail.id), quantity);
+                          }}
+                        >
+                          Add to cart
+                        </button>
                         <div className="product_share">
                           <p>Share the love</p>
                           <ul className="social_icons">

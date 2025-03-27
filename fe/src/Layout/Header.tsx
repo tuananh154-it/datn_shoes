@@ -36,32 +36,32 @@ const Header = () => {
             <div className="navbar-collapse collapse" id="collapseNavbar">
               <ul className="navbar-nav">
                 <li className="nav-item active">
-                  <a className="nav-link text-uppercase" href="/">
-                    Home
-                  </a>
+                  <Link to="/" className="nav-link text-uppercase">
+                  Trang chủ
+                  </Link>
                 </li>
                 <MegaMenu/>
                 <li className="nav-item dropdown mega-dropdown">
-                  <a className="nav-link text-uppercase" href="/blog">
+                  {/* <a className="nav-link text-uppercase" href="/blog">
                     Blog
-                  </a>
+                  </a> */}
+                  <Link to="/blog" className="nav-link text-uppercase"  >
+                  Bài viết
+                  </Link>
                 </li>
                 <li className="nav-item dropdown mega-dropdown">
-                  <a
-                    className="nav-link text-uppercase  dropdown-toggle"
-                    href="/contacts"
-                  >
-                    Other Pages
-                  </a>
+                  <Link to="/contacts" className="nav-link text-uppercase  dropdown-toggle" >
+                  Liên Hẹ
+                  </Link>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <a
                     className="nav-link text-uppercase"
                     href="javascript:void(0);"
                   >
                     sale
                   </a>
-                </li>
+                </li> */}
               </ul>
             </div>
           </nav>
@@ -96,22 +96,22 @@ const Header = () => {
               )}
             </li>
             <li className="wishlist_icon">
-              <a href="/wishlist">
-                <i className="flaticon-heart"></i>
-              </a>
+              <Link to="/wishlist">
+              <i className="flaticon-heart"></i>
+              </Link>
             </li>
             <li className="search_icon">
-              <a href="javascript:void(0);">
-                <i className="flaticon-magnifying-glass"></i>
-              </a>
+              <Link to="/search">
+              <i className="flaticon-magnifying-glass"></i>
+              </Link>
             </li>
             <li className="cart_icon">
-              <a href="/cart">
-                <i className="flaticon-shopping-bag"></i>
+              <Link to="/cart">
+              <i className="flaticon-shopping-bag"></i>
                 <span className="count text-white rounded-circle text-center">
                   {totalItems}
                 </span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

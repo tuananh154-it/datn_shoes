@@ -123,6 +123,9 @@ const Cart = () => {
                               <a href="javascript:void(0);" onClick={() => removeCartItem(item.id_cart_item)}>
                                 <i className="flaticon-close"></i>
                               </a>
+                              {/* <button onClick={() => removeCartItem(item.id_cart_item)}>
+                              <i className="flaticon-close"></i>
+                              </button> */}
                             </div>
                           </div>
                         ))}
