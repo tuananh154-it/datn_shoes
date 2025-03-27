@@ -69,15 +69,33 @@
                             </thead>
                             <tbody>
                                 @foreach($product->productDetails as $detail)
+                                {{-- @dd($detail); --}}
                                     <tr>
                                         <td>{{ $detail->id }}</td>
-                                        <td>
+                                    
+                                        {{-- <td>
                                             @if($detail->image)
                                                 <img src="{{ asset('storage/' . $detail->image) }}" alt="Ảnh sản phẩm" style="width: 80px; height: auto;">
                                             @else
                                                 <span>Không có ảnh</span>
                                             @endif
+                                        </td> --}}
+                                        <td>
+                                            @if($detail->image)
+                                                @php
+                                                    $images = json_decode($detail->image, true);
+                                                    $firstImage = is_array($images) && count($images) > 0 ? $images[0] : null;
+                                                @endphp
+                                                @if($firstImage)
+                                                    <img src="{{ asset('storage/' . $firstImage) }}" alt="Ảnh sản phẩm" style="width: 80px; height: auto;">
+                                                @else
+                                                    <span>Không có ảnh</span>
+                                                @endif
+                                            @else
+                                                <span>Không có ảnh</span>
+                                            @endif
                                         </td>
+                                        
                                         <td>{{ $detail->size->name }}</td>
                                         <td>{{ $detail->color->name }}</td>
                                         <td>{{ $detail->quantity }}</td>

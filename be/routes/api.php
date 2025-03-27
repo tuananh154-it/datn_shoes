@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -32,6 +33,7 @@ use App\Http\Controllers\UserController;
 // Public routes
 Route::apiResource('articles', ArticleController::class);
 Route::apiResource('comments', CommentController::class);
+Route::apiResource('payments', PaymentController::class);
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
 Route::middleware('auth:api')->group(function () {
@@ -44,6 +46,8 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/cart/sync', [CartController::class, 'syncCart']);
 });
 Route::apiResource('products', ProductController::class);
+Route::get('/latest-products', [ProductController::class, 'latestProducts']);
+
 
 
 // Trang Home

@@ -24,7 +24,8 @@ return new class extends Migration
                 'cancelled'
             ]);
             $table->decimal('deliver_fee', 15, 2);
-            $table->foreignId('customer_id')->constrained('customers');
+            // $table->foreignId('customer_id')->constrained('customers');
+            $table->foreignId('user_id')->constrained('users');
             $table->enum('payment_status', ['paid', 'unpaid', 'pending', 'failed'])->default('unpaid');
             $table->enum('payment_method', ['credit_card', 'cash_on_delivery', 'paypal']);
             $table->string('address');

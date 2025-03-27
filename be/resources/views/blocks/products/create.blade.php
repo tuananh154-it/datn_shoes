@@ -150,7 +150,8 @@
                                     <label>Giá giảm:</label>
                                     <input type="number" name="variant[${color}-${size}][discount_price]" class="form-control" placeholder="Giá giảm">
                                     <label>Ảnh biến thể:</label>
-                                    <input type="file" name="variant[${color}-${size}][image]" class="form-control">
+                                    <input type="file" name="variant_images[${color}-${size}][]" class="form-control" multiple>
+
 
                                     <button type="button" class="btn btn-danger" onclick="removeVariant('${variantId}')">Xóa</button>
                                 </div>
