@@ -46,12 +46,116 @@
             return view('dashboards.index');
         });
 
-        Route::resource('products', ProductController::class)->middleware('permission:show-products');
-        Route::resource('product-details', ProductDetailController::class);
-        Route::resource('colors', ColorController::class)->middleware('permission:show-colors');
-        Route::resource('sizes', SizeController::class)->middleware('permission:show-sizes');
+        // Route::resource('products', ProductController::class)->middleware('permission:show-products');
+        // ----------------------------------------
+        Route::resource('products', ProductController::class)
+            ->middleware('permission:show-products');
 
-        Route::resource('users', UserController::class)->middleware('permission:show-users');
+        // Hoặc tách riêng create/store nếu bạn muốn gắn middleware khác
+        Route::get('products/create', [ProductController::class, 'create'])
+            ->name('products.create')
+            ->middleware('permission:create-product');
+        Route::post('products', [ProductController::class, 'store'])
+            ->name('products.store')
+            ->middleware('permission:create-product');
+        // -----------------------------------------------------
+        // ------------------------------------------------
+        Route::resource('product-details', ProductDetailController::class);
+        // Route::resource('colors', ColorController::class)->middleware('permission:show-colors');
+        // color-done-----------------------
+        // Colors
+        Route::get('colors', [ColorController::class, 'index'])
+            ->name('colors.index')
+            ->middleware('permission:show-colors');
+
+        Route::get('colors/create', [ColorController::class, 'create'])
+            ->name('colors.create')
+            ->middleware('permission:create-colors');
+
+        Route::post('colors', [ColorController::class, 'store'])
+            ->name('colors.store')
+            ->middleware('permission:create-colors');
+
+        Route::get('colors/{color}', [ColorController::class, 'show'])
+            ->name('colors.show')
+            ->middleware('permission:show-colors');
+
+        Route::get('colors/{color}/edit', [ColorController::class, 'edit'])
+            ->name('colors.edit')
+            ->middleware('permission:edit-colors');
+
+        Route::put('colors/{color}', [ColorController::class, 'update'])
+            ->name('colors.update')
+            ->middleware('permission:edit-colors');
+
+        Route::delete('colors/{color}', [ColorController::class, 'destroy'])
+            ->name('colors.destroy')
+            ->middleware('permission:delete-colors');
+
+        // -----------done--------------
+        // Route::resource('sizes', SizeController::class)->middleware('permission:show-sizes');
+        // ------------size----------------/
+        // Sizes
+        Route::get('sizes', [SizeController::class, 'index'])
+            ->name('sizes.index')
+            ->middleware('permission:show-sizes');
+
+        Route::get('sizes/create', [SizeController::class, 'create'])
+            ->name('sizes.create')
+            ->middleware('permission:create-sizes');
+
+        Route::post('sizes', [SizeController::class, 'store'])
+            ->name('sizes.store')
+            ->middleware('permission:create-sizes');
+
+        Route::get('sizes/{size}', [SizeController::class, 'show'])
+            ->name('sizes.show')
+            ->middleware('permission:show-sizes');
+
+        Route::get('sizes/{size}/edit', [SizeController::class, 'edit'])
+            ->name('sizes.edit')
+            ->middleware('permission:edit-sizes');
+
+        Route::put('sizes/{size}', [SizeController::class, 'update'])
+            ->name('sizes.update')
+            ->middleware('permission:edit-sizes');
+
+        Route::delete('sizes/{size}', [SizeController::class, 'destroy'])
+            ->name('sizes.destroy')
+            ->middleware('permission:delete-sizes');
+        // --------------------done-size-------------
+
+        // Route::resource('users', UserController::class)->middleware('permission:show-users');
+        // -usersssssssssssssssss
+        // Quản lý người dùng
+        Route::get('users', [UserController::class, 'index'])
+            ->name('users.index')
+            ->middleware('permission:show-users');
+
+        Route::get('users/create', [UserController::class, 'create'])
+            ->name('users.create')
+            ->middleware('permission:create-users');
+
+        Route::post('users', [UserController::class, 'store'])
+            ->name('users.store')
+            ->middleware('permission:create-users');
+
+        Route::get('users/{user}', [UserController::class, 'show'])
+            ->name('users.show')
+            ->middleware('permission:show-users');
+
+        Route::get('users/{user}/edit', [UserController::class, 'edit'])
+            ->name('users.edit')
+            ->middleware('permission:edit-users');
+
+        Route::put('users/{user}', [UserController::class, 'update'])
+            ->name('users.update')
+            ->middleware('permission:edit-users');
+
+        Route::delete('users/{user}', [UserController::class, 'destroy'])
+            ->name('users.destroy')
+            ->middleware('permission:delete-users');
+        // ---------------------done--------------
         Route::resource('roles', RoleController::class);
 
         // Product Details
@@ -67,7 +171,38 @@
         Route::resource('orders', OrderController::class);
         Route::put('/orders/{id}/update-status', [OrderController::class, 'updateStatus'])->name('orders.update_status');
         // Articles
-        Route::resource('articles', ArticlesController::class)->middleware('permission:show-articles');
+        // Route::resource('articles', ArticlesController::class)->middleware('permission:show-articles');
+        // ------------articles----------------
+        // Articles
+        Route::get('articles', [ArticlesController::class, 'index'])
+            ->name('articles.index')
+            ->middleware('permission:show-articles');
+
+        Route::get('articles/create', [ArticlesController::class, 'create'])
+            ->name('articles.create')
+            ->middleware('permission:create-articles');
+
+        Route::post('articles', [ArticlesController::class, 'store'])
+            ->name('articles.store')
+            ->middleware('permission:create-articles');
+
+        Route::get('articles/{article}', [ArticlesController::class, 'show'])
+            ->name('articles.show')
+            ->middleware('permission:show-articles');
+
+        Route::get('articles/{article}/edit', [ArticlesController::class, 'edit'])
+            ->name('articles.edit')
+            ->middleware('permission:edit-articles');
+
+        Route::put('articles/{article}', [ArticlesController::class, 'update'])
+            ->name('articles.update')
+            ->middleware('permission:edit-articles');
+
+        Route::delete('articles/{article}', [ArticlesController::class, 'destroy'])
+            ->name('articles.destroy')
+            ->middleware('permission:delete-articles');
+        // ----------------done-----------------
+
         // Comments
         Route::resource('comments', CommentController::class)->middleware('permission:show-comments');
         // Contacts
@@ -75,9 +210,70 @@
         // Banners
         Route::resource('banners', BannerController::class)->middleware('permission:show-banners');
         // Vouchers
-        Route::resource('vouchers', VoucherController::class)->middleware('permission:show-vouchers');
+        // Route::resource('vouchers', VoucherController::class)->middleware('permission:show-vouchers');
+        // vouchers------------
+        // Vouchers
+        Route::get('vouchers', [VoucherController::class, 'index'])
+            ->name('vouchers.index')
+            ->middleware('permission:show-vouchers');
+
+        Route::get('vouchers/create', [VoucherController::class, 'create'])
+            ->name('vouchers.create')
+            ->middleware('permission:create-vouchers');
+
+        Route::post('vouchers', [VoucherController::class, 'store'])
+            ->name('vouchers.store')
+            ->middleware('permission:create-vouchers');
+
+        Route::get('vouchers/{voucher}', [VoucherController::class, 'show'])
+            ->name('vouchers.show')
+            ->middleware('permission:show-vouchers');
+
+        Route::get('vouchers/{voucher}/edit', [VoucherController::class, 'edit'])
+            ->name('vouchers.edit')
+            ->middleware('permission:edit-vouchers');
+
+        Route::put('vouchers/{voucher}', [VoucherController::class, 'update'])
+            ->name('vouchers.update')
+            ->middleware('permission:edit-vouchers');
+
+        Route::delete('vouchers/{voucher}', [VoucherController::class, 'destroy'])
+            ->name('vouchers.destroy')
+            ->middleware('permission:delete-vouchers');
+
+        // -------------done------------------
         // Categories
-        Route::resource('categories', CategoryController::class)->middleware('permission:show-categories');
+        // Route::resource('categories', CategoryController::class)->middleware('permission:show-categories');
+        // -----------------categories--------------------
+        // Categories
+        Route::get('categories', [CategoryController::class, 'index'])
+            ->name('categories.index')
+            ->middleware('permission:show-categories');
+
+        Route::get('categories/create', [CategoryController::class, 'create'])
+            ->name('categories.create')
+            ->middleware('permission:create-categories');
+
+        Route::post('categories', [CategoryController::class, 'store'])
+            ->name('categories.store')
+            ->middleware('permission:create-categories');
+
+        Route::get('categories/{category}', [CategoryController::class, 'show'])
+            ->name('categories.show')
+            ->middleware('permission:show-categories');
+
+        Route::get('categories/{category}/edit', [CategoryController::class, 'edit'])
+            ->name('categories.edit')
+            ->middleware('permission:edit-categories');
+
+        Route::put('categories/{category}', [CategoryController::class, 'update'])
+            ->name('categories.update')
+            ->middleware('permission:edit-categories');
+
+        Route::delete('categories/{category}', [CategoryController::class, 'destroy'])
+            ->name('categories.destroy')
+            ->middleware('permission:delete-categories');
+        // --------------------done--------------------
         // Brands
         Route::resource('brands', BrandController::class)->middleware('permission:show-brands');
         // Dashboard

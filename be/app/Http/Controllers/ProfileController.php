@@ -20,6 +20,11 @@ class ProfileController extends Controller
     {
         return view('profiles.show', compact('user'));
     }
+    public function index()
+    {
+        $users = User::all(); // Lấy tất cả các tài khoản
+        return view('profiles.index', compact('users'));
+    }
 
 
 
@@ -49,26 +54,26 @@ class ProfileController extends Controller
         // Validate dữ liệu đầu vào
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
+            // 'email' => 'required|email|unique:users,email,' . $user->id,
             'gender' => 'required|string|in:male,female,other',
             'date_of_birth' => 'nullable|date',
             'address' => 'nullable|string|max:255',
             'phone_number' => 'nullable|string|max:15',
-            'password' => 'nullable|string|min:6',
+            // 'password' => 'nullable|string|min:6',
         ]);
 
         // Cập nhật thông tin người dùng
         $user->name = $validated['name'];
-        $user->email = $validated['email'];
+        // $user->email = $validated['email'];
         $user->gender = $validated['gender'];
         $user->date_of_birth = $validated['date_of_birth'];
         $user->address = $validated['address'];
         $user->phone_number = $validated['phone_number'];
 
         // Cập nhật mật khẩu nếu có
-        if ($request->filled('password')) {
-            $user->password = bcrypt($request->password);
-        }
+        // if ($request->filled('password')) {
+        //     $user->password = bcrypt($request->password);
+        // }
 
         // Lưu lại thông tin đã cập nhật
         $user->save();
