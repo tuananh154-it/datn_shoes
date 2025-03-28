@@ -20,29 +20,29 @@ const MegaMenu = () => {
                         <div className="row">
                             <div className="col-lg-4">
                                 <ul>
-                                    <li className="title_h5 w-100">products</li>
-                                    <li className="w-100"><a href="#">Men</a></li>
-                                    <li className="w-100"><a href="#">Women</a></li>
-                                    <li className="w-100"><a href="#">Accessories</a></li>
+                                    <li className="title_h5 w-100">Sản phẩm</li>
+                                    <li className="w-100"><a href="#">Nam</a></li>
+                                    <li className="w-100"><a href="#">Nữ</a></li>
+                                    <li className="w-100"><a href="#">Phụ kiện</a></li>
                                 </ul>
                             </div>
                             <div className="col-lg-4">
                                 <ul>
-                                    <li className="title_h5 w-100">Category-1</li>
-                                    <li className="w-100"><a href="#">Dresses</a></li>
-                                    <li className="w-100"><a href="#">Skirts</a></li>
-                                    <li className="w-100"><a href="#">Shirts</a></li>
-                                    <li className="w-100"><a href="#">Jeans</a></li>
+                                    <li className="title_h5 w-100">Danh mục</li>
+                                    <li className="w-100"><a href="#">Giày chạy bộ</a></li>
+                                    <li className="w-100"><a href="#">Giày leo núi</a></li>
+                                    <li className="w-100"><a href="#">Giày thời trang</a></li>
+                                    <li className="w-100"><a href="#">Giày da</a></li>
                                 </ul>
                             </div>
                             <div className="col-lg-4">
                                 <ul>
-                                    <li className="title_h5 w-100">category-2</li>
-                                    <li className="w-100"><a href="javascript:void(0);">winter wear</a></li>
-                                    <li className="w-100"><a href="javascript:void(0);">summer specials</a></li>
-                                    <li className="w-100"><a href="javascript:void(0);">inner wears</a></li>
-                                    <li className="w-100"><a href="javascript:void(0);">tops</a></li>
-                                    <li className="w-100"><a href="javascript:void(0);">jackets</a></li>
+                                    <li className="title_h5 w-100">Thương hiệu</li>
+                                    <li className="w-100"><a href="javascript:void(0);">Adidas</a></li>
+                                    <li className="w-100"><a href="javascript:void(0);">Nike</a></li>
+                                    <li className="w-100"><a href="javascript:void(0);">Puma</a></li>
+                                    <li className="w-100"><a href="javascript:void(0);">Vanz</a></li>
+                                    <li className="w-100"><a href="javascript:void(0);">Balenciaga</a></li>
                                 </ul>
                             </div>
                         </div>

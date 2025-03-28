@@ -18,7 +18,7 @@ const BlogDetail = () => {
             .catch(() => toast.error("Lỗi hiển thị"))
             .finally(() => setLoading(false));
     }, [id]);
-  
+
     return (
         <>
             <div className="menu_overlay"></div>
@@ -40,33 +40,33 @@ const BlogDetail = () => {
                     <div className="blog_list2_section blog_list_section wow fadeIn">
                         <div className="container">
                             <div className="row">
-                                <div className="col-md-8 col-xl-9 wow fadeInLeft" data-wow-duration="1300ms">
+                                <div className="blog-1 col-xl-9 wow fadeInLeft" data-wow-duration="1300ms">
                                     {loading ? (
                                         <p>Đang tải bài viết...</p>
                                     ) : (
                                         <div className="blog_content">
-                                        <img src={article?.image} alt={article?.name} className="img-fluid" />
-                                        <span className="article__date">
-                                            Ngày đăng | {article?.created_at} <span className="diamond_shape"></span>
-                                        </span>
-                                        <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article?.content || "") }} />
+                                            <img src={article?.image} alt={article?.name} className="img-fluid" />
+                                            <span className="article__date">
+                                                Ngày đăng | {article?.created_at} <span className="diamond_shape"></span>
+                                            </span>
+                                            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(article?.content || "") }} />
                                         </div>
-                                        
+
                                     )}
                                 </div>
 
-                                <div className="col-xl-3 col-md-4 wow fadeInRight" data-wow-duration="1300ms">
+                                <div className="col-xl-3 blog-2 wow fadeInRight" data-wow-duration="1300ms">
                                     <div className="featured_posts">
-                                        <h4 className="title_h4 text-capitalize">Featured Posts</h4>
+                                        <h4 className="title_h4 text-capitalize">Bài viết nổi bật</h4>
                                         <div className="featured_posts_content">
                                             <div className="featured_posts_img">
                                                 <img src="../src/images/post1.png" alt="bloglist" className="img-fluid vertical_middle" />
                                             </div>
                                             <div className="featured_posts_text">
                                                 <a href="javascript:void(0);">
-                                                    <h5 className="title_h5">Sed ut perspicia tis unde omnis</h5>
+                                                    <h5 className="title_h5">Nơi mà tất cả bắt đầu</h5>
                                                 </a>
-                                                <p>March 21, 2018</p>
+                                                <p>21 Tháng Ba, 2018</p>
                                             </div>
                                         </div>
 
@@ -76,9 +76,9 @@ const BlogDetail = () => {
                                             </div>
                                             <div className="featured_posts_text">
                                                 <a href="javascript:void(0);">
-                                                    <h5 className="title_h5">Non numquam eius modi</h5>
+                                                    <h5 className="title_h5">Điều kỳ diệu không ngờ tới</h5>
                                                 </a>
-                                                <p>March 21, 2018</p>
+                                                <p>21 Tháng Ba, 2018</p>
                                             </div>
                                         </div>
 
@@ -88,9 +88,9 @@ const BlogDetail = () => {
                                             </div>
                                             <div className="featured_posts_text">
                                                 <a href="javascript:void(0);">
-                                                    <h5 className="title_h5">Ut enim ad minima send</h5>
+                                                    <h5 className="title_h5">Hành trình đến thành công</h5>
                                                 </a>
-                                                <p>March 21, 2018</p>
+                                                <p>21 Tháng Ba, 2018</p>
                                             </div>
                                         </div>
 
@@ -100,9 +100,9 @@ const BlogDetail = () => {
                                             </div>
                                             <div className="featured_posts_text">
                                                 <a href="javascript:void(0);">
-                                                    <h5 className="title_h5">Quis nostrum ullam corporis</h5>
+                                                    <h5 className="title_h5">Bí quyết không ai biết</h5>
                                                 </a>
-                                                <p>March 21, 2018</p>
+                                                <p>21 Tháng Ba, 2018</p>
                                             </div>
                                         </div>
 
@@ -119,6 +119,7 @@ const BlogDetail = () => {
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                         </div>
                     </div>

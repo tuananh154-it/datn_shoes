@@ -54,14 +54,7 @@ const Header = () => {
                     Liên Hệ
                   </Link>
                 </li>
-                {/* <li className="nav-item">
-                  <a
-                    className="nav-link text-uppercase"
-                    href="javascript:void(0);"
-                  >
-                    sale
-                  </a>
-                </li> */}
+
               </ul>
             </div>
           </nav>
@@ -85,11 +78,11 @@ const Header = () => {
               {userId?.id && menuDisplay && (
                 <div className="dropdownUser p-4">
                   <nav>
-                    {userId?.role === "admin" && (
+                    {userId?.role === "admin" || userId?.role === "superadmin" && (
                       <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={() => setMenuDisplay(prev => !prev)}>Admin</Link>
                     )}
                     <Link to="/myaccout" className="p-2">Trang cá nhân</Link>
-                    <p>Đơn hàng</p>
+                  
                     <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                   </nav>
                 </div>

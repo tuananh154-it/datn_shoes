@@ -36,19 +36,24 @@ class CartController extends Controller
                     'default_price' => $item->productDetail->default_price,
                     'discount_price' => $item->productDetail->discount_price ?? $item->productDetail->default_price,
                     'final_price' => ($item->productDetail->discount_price ?? $item->productDetail->default_price) * $item->quantity,
-                    'image' => $this->getImageAsBase64($item->productDetail->image),
+                    'image' => $this->getImageAsBase64($item->product->image), // Chuyển ảnh thành base64
+                    // 'image' =>$item->product->image,
                 ];
             }),
             'total_price' => $cart->items->sum(fn($item) => $item->quantity * ($item->productDetail->discount_price ?? $item->productDetail->default_price)),
         ]);
     }
-
     private function getImageAsBase64($imagePath)
     {
-        if (!$imagePath || !file_exists(public_path($imagePath))) {
+        if (!$imagePath || !file_exists(storage_path('app/public/' . $imagePath))) {
             return null;
         }
-        return base64_encode(file_get_contents(public_path($imagePath)));
+
+        $imageFullPath = storage_path('app/public/' . $imagePath);
+        $imageData = file_get_contents($imageFullPath);
+        $mimeType = mime_content_type($imageFullPath);
+
+        return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
     }
 
 
