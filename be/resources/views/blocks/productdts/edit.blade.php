@@ -39,16 +39,28 @@
                     <div class="form-group">
                         <label for="current_image">Hình ảnh hiện tại</label><br>
                         @if($detail->image)
-                            <img src="{{ asset('storage/' . $detail->image) }}" alt="Ảnh sản phẩm" style="width: 120px; height: auto;">
+                        @php
+                            $images = json_decode($detail->image, true);
+                        @endphp
+                        @if(is_array($images))
+                            @foreach($images as $img)
+                                <img src="{{ asset('storage/' . $img) }}" alt="Ảnh sản phẩm" style="width: 120px; height: auto; margin-right: 10px;">
+                            @endforeach
                         @else
                             <span>Không có ảnh</span>
                         @endif
+                    @else
+                        <span>Không có ảnh</span>
+                    @endif
+                    
                     </div>
 
                     <!-- Cập nhật ảnh mới -->
                     <div class="form-group">
                         <label for="image">Cập nhật hình ảnh mới</label>
-                        <input type="file" name="image" id="image" class="form-control">
+                        {{-- <input type="file" name="image" id="image" class="form-control"> --}}
+                        <input type="file" name="image[]" id="image" class="form-control" multiple>
+
                     </div>
 
                     <!-- Kích thước -->
