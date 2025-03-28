@@ -86,9 +86,9 @@ const Header = () => {
                 <div className="dropdownUser p-4">
                   <nav>
                     {userId?.role === "admin" && (
-                      <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={()=>setMenuDisplay(prev => !prev)}>Admin</Link>
+                     <p> <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={()=>setMenuDisplay(prev => !prev)}>Admin</Link></p>
                     )}
-                    <Link to="/myaccout" className="p-2">Trang cá nhân</Link>
+                    <p><a href="/myaccout" className="p-2">Trang cá nhân</a></p>                   
                     <p>Đơn hàng</p>
                     <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                   </nav>

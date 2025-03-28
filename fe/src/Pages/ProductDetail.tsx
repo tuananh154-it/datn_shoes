@@ -7,6 +7,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import toast from "react-hot-toast";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
@@ -252,14 +253,26 @@ const ProductDetail = () => {
                           href="/wishlist"
                           className="wishlist_btn border-btn text-uppercase"
                         >
-                          add to wishlist
+                          thêm vào ds yêu thích
                         </a>
-                        <a
-                            href="/cart"
-                            className="background-btn text-uppercase cart_btn"
-                          >
-                            add to bag
-                          </a>
+                        <button
+                          type="button"
+                          className="background-btn text-uppercase cart_btn"
+                          onClick={() => {
+                            if (!selectedDetail) {
+                              alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
+                              return;
+                            }
+                            addToCart(Number(selectedDetail.id), quantity);
+                            toast.success("Thêm vào giỏ hàng thành công");
+                            console.log("Dữ liệu gửi lên API:", JSON.stringify({ 
+                              product_detail_id: selectedDetail.id, 
+                              quantity 
+                            }));
+                          }}
+                        >
+                          Add to cart
+                        </button>
                         
                         <div className="product_share">
                           <p>Share the love</p>

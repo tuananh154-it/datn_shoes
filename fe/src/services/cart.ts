@@ -26,7 +26,7 @@ export interface CartItem {
     try {
       await api.post(
         "/cart/add",
-        { product_detail_id: productDetailId, quantity },
+        { product_id: productDetailId, quantity },
         // { withCredentials: true }
       );
     } catch (error) {
