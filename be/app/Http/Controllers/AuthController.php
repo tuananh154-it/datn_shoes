@@ -24,7 +24,6 @@ class AuthController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             // 'password' => 'required|string|min:6|confirmed',
             'password' => ['required', 'string', 'min:8'],
-
         ]);
 
         $user = User::create([
@@ -41,12 +40,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-<<<<<<< HEAD
-            'password' => 'required|string|min:8|',
-            // 'password' => 'required|string|min:8|confirmed',
-=======
             'password' => 'required|string|min:8|confirmed',
->>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3
             // 'gender' => 'nullable|string',
             // 'date_of_birth' => 'nullable|date',
             // 'address' => 'nullable|string|max:255',
@@ -74,29 +68,6 @@ class AuthController extends Controller
         return response()->json(compact('user', 'token'), 201);
     }
 
-    // public function dangnhap(Request $request)
-    // {
-    //     $request->validate([
-    //         'email' => 'required|email',
-    //         'password' => 'required|string',
-    //     ]);
-
-    //     $credentials = $request->only('email', 'password');
-
-    //     if (Auth::attempt($credentials)) {
-    //         $request->session()->regenerate();
-
-    //         $user = Auth::user();
-    //         // Check user role and redirect accordingly
-    //         if (in_array($user->role, ['admin', 'superadmin'])) {
-    //             return redirect()->route('articles.index')->with('success', 'Vào thành công!');
-    //         }
-
-    //         return redirect()->intended(route('login'))->with('error', 'Bạn không có quyền truy cập!');
-    //     }
-
-    //     return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác'])->onlyInput('email');
-    // }
     public function dangnhap(Request $request)
     {
         // Xác thực đầu vào
@@ -124,11 +95,7 @@ class AuthController extends Controller
             $user = Auth::user();
             // Kiểm tra vai trò của người dùng và chuyển hướng
             if (in_array($user->role, ['admin', 'superadmin'])) {
-<<<<<<< HEAD
-                return redirect()->route('articles.index')->with('success', 'Đăng nhập thành công!');
-=======
                 return redirect()->route('dashboards.index')->with('success', 'Vào thành công!');
->>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3
             }
 
             return redirect()->route('login')->withErrors(['email' => 'Bạn không có quyền truy cập!'])->onlyInput('email');
@@ -137,8 +104,6 @@ class AuthController extends Controller
         // Đăng nhập thất bại, quay lại với thông báo lỗi
         return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác'])->onlyInput('email');
     }
-
-
 
     public function login(Request $request)
     {
