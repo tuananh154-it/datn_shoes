@@ -12,37 +12,45 @@ use Illuminate\Support\Facades\Auth;
 class CartController extends Controller
 {
     public function index(Request $request)
-{
-    $user = $request->user();
+    {
+        $user = $request->user();
 
-    if (!$user) {
-        return response()->json(['error' => 'User not authenticated'], 401);
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+        $cart = Cart::where('user_id', $user->id)->with('items.productDetail.product')->first();
+
+        if (!$cart || $cart->items->isEmpty()) {
+            return response()->json(['message' => 'Giỏ hàng trống'], 200);
+        }
+
+        return response()->json([
+            'cart' => $cart->items->map(function ($item) {
+                return [
+                    'id_cart_item' => $item->id,
+                    'product_name' => $item->productDetail->product->name ?? 'N/A',
+                    'color' => $item->productDetail->color->name ?? 'N/A',
+                    'size' => $item->productDetail->size->name ?? 'N/A',
+                    'quantity' => $item->quantity,
+                    'default_price' => $item->productDetail->default_price,
+                    'discount_price' => $item->productDetail->discount_price ?? $item->productDetail->default_price,
+                    'final_price' => ($item->productDetail->discount_price ?? $item->productDetail->default_price) * $item->quantity,
+                    'image' => $this->getImageAsBase64($item->productDetail->image),
+                ];
+            }),
+            'total_price' => $cart->items->sum(fn($item) => $item->quantity * ($item->productDetail->discount_price ?? $item->productDetail->default_price)),
+        ]);
     }
 
-    // Lấy giỏ hàng của user cùng với các sản phẩm trong giỏ hàng
-    $cart = Cart::where('user_id', $user->id)->with('items.productDetail.product')->first();
-
-    if (!$cart || $cart->items->isEmpty()) {
-        return response()->json(['message' => 'Giỏ hàng trống'], 200);
+    private function getImageAsBase64($imagePath)
+    {
+        if (!$imagePath || !file_exists(public_path($imagePath))) {
+            return null;
+        }
+        return base64_encode(file_get_contents(public_path($imagePath)));
     }
 
-    return response()->json([
-        'cart' => $cart->items->map(function ($item) {
-            return [
-                'id_cart_item' => $item->id,
-                'product_name' => $item->productDetail->product->name ?? 'N/A',
-                'color' => $item->productDetail->color->name ?? 'N/A',
-                'size' => $item->productDetail->size->name ?? 'N/A',
-                'quantity' => $item->quantity,
-                'default_price' => $item->productDetail->default_price, // Giá gốc
-                'discount_price' => $item->productDetail->discount_price ?? $item->productDetail->default_price, // Giá khuyến mãi (nếu có)
-                'final_price' => ($item->productDetail->discount_price ?? $item->productDetail->default_price) *$item->quantity, // Giá thực tế áp dụng
-                'image' => $item->productDetail->image ?? null,
-            ];
-        }),
-        'total_price' => $cart->items->sum(fn($item) => $item->quantity * ($item->productDetail->discount_price ?? $item->productDetail->default_price)),
-    ]);
-}
 
 
     // Thêm sản phẩm vào giỏ hàng
@@ -76,8 +84,8 @@ class CartController extends Controller
         $cart = Cart::firstOrCreate(['user_id' => $user->id]);
 
         $cartItem = CartItem::where('cart_id', $cart->id)
-                            ->where('product_detail_id', $productDetailId)
-                            ->first();
+            ->where('product_detail_id', $productDetailId)
+            ->first();
 
         if ($cartItem) {
             if ($productDetail->quantity < ($cartItem->quantity + $quantity)) {
@@ -132,36 +140,36 @@ class CartController extends Controller
         $cartItem->delete();
         return response()->json(['message' => 'Xóa sản phẩm thành công'], 200);
     }
+    //đồng bộ giỏ hàng của fe vs be
     public function syncCart(Request $request)
-{
-    $user = $request->user();
-    if (!$user) {
-        return response()->json(['error' => 'User not authenticated'], 401);
+    {
+        $user = $request->user();
+        if (!$user) {
+            return response()->json(['error' => 'User not authenticated'], 401);
+        }
+
+        $cartItems = $request->input('cart_items'); // Nhận danh sách sản phẩm từ frontend
+
+        if (!$cartItems || !is_array($cartItems)) {
+            return response()->json(['message' => 'Dữ liệu giỏ hàng không hợp lệ'], 400);
+        }
+
+        // Lấy giỏ hàng hiện tại của user
+        $cart = Cart::firstOrCreate(['user_id' => $user->id]);
+
+        // Xóa giỏ hàng cũ để đồng bộ dữ liệu mới
+        CartItem::where('cart_id', $cart->id)->delete();
+
+        // Thêm sản phẩm mới từ request vào database
+        foreach ($cartItems as $item) {
+            CartItem::create([
+                'cart_id' => $cart->id,
+                'product_detail_id' => $item['product_detail_id'],
+                'quantity' => $item['quantity'],
+                'price' => $item['price'],
+            ]);
+        }
+
+        return response()->json(['message' => 'Giỏ hàng đã được đồng bộ'], 200);
     }
-
-    $cartItems = $request->input('cart_items'); // Nhận danh sách sản phẩm từ frontend
-
-    if (!$cartItems || !is_array($cartItems)) {
-        return response()->json(['message' => 'Dữ liệu giỏ hàng không hợp lệ'], 400);
-    }
-
-    // Lấy giỏ hàng hiện tại của user
-    $cart = Cart::firstOrCreate(['user_id' => $user->id]);
-
-    // Xóa giỏ hàng cũ để đồng bộ dữ liệu mới
-    CartItem::where('cart_id', $cart->id)->delete();
-
-    // Thêm sản phẩm mới từ request vào database
-    foreach ($cartItems as $item) {
-        CartItem::create([
-            'cart_id' => $cart->id,
-            'product_detail_id' => $item['product_detail_id'],
-            'quantity' => $item['quantity'],
-            'price' => $item['price'],
-        ]);
-    }
-
-    return response()->json(['message' => 'Giỏ hàng đã được đồng bộ'], 200);
-}
-
 }
