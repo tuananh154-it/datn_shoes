@@ -1,14 +1,15 @@
-import { registerForm, User } from "../services/register";
+import { registerForm, schemaRegister, User } from "../services/register";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form"
 import toast from "react-hot-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const Register = () => {
   const nav = useNavigate();
-  const {register,handleSubmit}=useForm<User>()
+  const {register,handleSubmit,formState:{errors}}=useForm<User>({resolver:zodResolver(schemaRegister)})
    const onSubmit = (data:User)=>{
      registerForm(data).then(()=>{
-       toast("Đã đăng kí thành công")
+       toast.success("Đã đăng kí thành công")
        nav("/login");
      }).catch((e)=>{toast.error("Error:"+e.message)})
    }
@@ -48,9 +49,9 @@ const Register = () => {
                         type="text"
                         className="form-control"
                         id="name"
-                        required
                         {...register("name")}
                       />
+                    {errors.name && <p className="text-danger">{errors.name.message}</p>}    
                     </div>
                     <div className="form-group">
                       <label htmlFor="email" className="title_h5">
@@ -60,9 +61,10 @@ const Register = () => {
                         type="email"
                         className="form-control"
                         id="email"
-                        required
+        
                         {...register("email")}
                       />
+                    {errors.email && <p className="text-danger">{errors.email.message}</p>}    
                     </div>
                     <div className="form-group">
                       <label htmlFor="password" className="title_h5">
@@ -72,9 +74,23 @@ const Register = () => {
                         type="password"
                         className="form-control"
                         id="password"
-                        required
+                        
                         {...register("password")}
                       />
+                    {errors.password && <p className="text-danger">{errors.password.message}</p>}    
+                    </div>
+                    <div className="form-group">
+                      <label htmlFor="password" className="title_h5">
+                        Nhập lại mật khẩu*
+                      </label>
+                      <input
+                        type="password"
+                        className="form-control"
+                        id="confirmed"
+                        
+                        {...register("password_confirmation")}
+                      />
+                    {errors.password_confirmation && <p className="text-danger">{errors.password_confirmation.message}</p>}    
                     </div>
                     <div className="login_links ">
                       <button

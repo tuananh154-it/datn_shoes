@@ -29,14 +29,32 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         .reduce((total, item) => total + item.quantity * item.discount_price, 0);
 
     // Lấy dữ liệu giỏ hàng từ API
+    // const fetchCartData = async () => {
+    //     try {
+    //         const data = await fetchCart();
+    //         setCart(data);
+
+    //         //   // Tính tổng số lượng sản phẩm trong giỏ hàng
+    //         //   const total = data.reduce((sum: number, item: CartItem) => sum + item.quantity, 0);
+    //         //   setTotalItems(total);
+    //     } catch (error) {
+    //         console.error("Lỗi khi lấy giỏ hàng:", error);
+    //     }
+    // };
     const fetchCartData = async () => {
         try {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                console.warn("Không tìm thấy token, không thể lấy giỏ hàng.");
+                return;
+            }
+    
             const data = await fetchCart();
             setCart(data);
-
-            //   // Tính tổng số lượng sản phẩm trong giỏ hàng
-            //   const total = data.reduce((sum: number, item: CartItem) => sum + item.quantity, 0);
-            //   setTotalItems(total);
+    
+            // ✅ Tính tổng số lượng sản phẩm trong giỏ hàng
+            // const total = data.reduce((sum: number, item: CartItem) => sum + item.quantity, 0);
+            // setTotalItems(total);
         } catch (error) {
             console.error("Lỗi khi lấy giỏ hàng:", error);
         }
@@ -47,8 +65,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     //     setTotalItems(total);
     // }, [cart]);
     useEffect(() => {
-        setTotalItems(cart.length); // Chỉ tính số sản phẩm khác nhau
-    }, [cart]);
+    setTotalItems(cart.length); // Chỉ tính số sản phẩm khác nhau
+}, [cart]);
 
     // Thêm sản phẩm vào giỏ hàng
     const handleAddToCart = async (productDetailId: number, quantity: number) => {
