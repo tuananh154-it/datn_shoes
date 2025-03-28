@@ -51,7 +51,8 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            // 'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'password' => ['required', 'string', 'min:8'],
             'gender' => ['required', 'in:male,female,other'], // Kiểm tra giá trị gender
             'date_of_birth' => ['required', 'date'], // Kiểm tra định dạng ngày sinh
             'address' => ['required', 'string', 'max:255'], // Kiểm tra địa chỉ
