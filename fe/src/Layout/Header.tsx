@@ -84,7 +84,7 @@ const Header = () => {
 
               {userId?.id && menuDisplay && (
                 <div className="dropdownUser p-4">
-                  <nav>
+                   <nav>
                     {userId?.role === "admin" && (
                       <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={() => setMenuDisplay(prev => !prev)}>Admin</Link>
                     )}

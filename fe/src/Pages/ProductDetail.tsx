@@ -256,7 +256,7 @@ const ProductDetail = () => {
                           href="/wishlist"
                           className="wishlist_btn border-btn text-uppercase"
                         >
-                          add to wishlist
+                          thêm vào ds yêu thích
                         </a>
                         {/* <a
                             href="/cart"
@@ -265,7 +265,7 @@ const ProductDetail = () => {
                             add to bag
                           </a>
                          */}
-                        <button
+                      <button
                           type="button"
                           className="background-btn text-uppercase cart_btn"
                           onClick={() => {
@@ -295,7 +295,6 @@ const ProductDetail = () => {
                         >
                           Add to cart
                         </button>
-
                         <div className="product_share">
                           <p>Share the love</p>
                           <ul className="social_icons">

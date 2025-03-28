@@ -99,7 +99,7 @@ const Cart = () => {
                                   <button
                                     type="button"
                                     onClick={() => updateCartItem(item.id_cart_item, item.quantity - 1)}
-                                    disabled={item.quantity <= 1}
+                                    disabled={item.quantity <= 1} 
                                   >
                                     -
                                   </button>
