@@ -50,14 +50,27 @@ export const updateCartItem = async (cartItemId: number, quantity: number): Prom
 };
 
 // API: Xóa sản phẩm khỏi giỏ hàng
+// export const removeCartItem = async (cartItemId: number): Promise<void> => {
+//   try {
+//     await api.delete(`/cart/remove/${cartItemId}`,);
+//   } catch (error) {
+//     console.error("Lỗi khi xóa sản phẩm:", error);
+//     throw error;
+//   }
+// };
 export const removeCartItem = async (cartItemId: number): Promise<void> => {
+  const isConfirmed = window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng không?");
+  
+  if (!isConfirmed) return; // Nếu người dùng chọn "Hủy", thoát khỏi hàm
+
   try {
-    await api.delete(`/cart/remove/${cartItemId}`,);
+    await api.delete(`/cart/remove/${cartItemId}`);
   } catch (error) {
     console.error("Lỗi khi xóa sản phẩm:", error);
     throw error;
   }
 };
+
 export const syncCart = async (cartItems: CartItem[]): Promise<boolean> => {
   try {
     await api.post("/cart/sync", { cart: cartItems });
