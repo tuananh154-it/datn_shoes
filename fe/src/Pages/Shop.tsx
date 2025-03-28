@@ -385,7 +385,7 @@ const Shop = () => {
                                 </p>
                               </a>
                               <p className="featured_price title_h5 text-center">
-                                <span>{product.price} VND</span>
+                                <span>{product.price.toLocaleString()}</span>
                               </p>
                             </div>
                           </div>
