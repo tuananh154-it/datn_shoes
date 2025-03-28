@@ -14,7 +14,7 @@
             <header class="card-header">
                 Bảng sản phẩm
             </header>
-            
+
             @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
@@ -39,16 +39,16 @@
                                 <option value="inactive" {{ request()->status == 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
                             </select>
                         </div>
-                       
+
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                         </div>
                     </div>
                 </form>
             </div>
-            
-            
-            
+
+
+
 
             <table class="table table-striped table-advance table-hover">
                 <thead>
@@ -82,20 +82,20 @@
                             </td>
                             <td>
                                 <a href="{{ route('products.edit', $product->id) }}" class="btn btn-primary btn-sm">
-                                    <i class="fa fa-pencil"></i> 
+                                    <i class="fa fa-pencil"></i>
                                 </a>
 
                                 <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-trash-o"></i> 
+                                        <i class="fa fa-trash-o"></i>
                                     </button>
                                 </form>
                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-eye"></i>
                                 </a>
-                                
+
                             </td>
                         </tr>
                     @endforeach

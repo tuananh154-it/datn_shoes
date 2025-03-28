@@ -1,7 +1,7 @@
 import MegaMenu from "./MegaMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { useState} from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../store/useSlice";
 import { useCart } from "../context/CartContext";
@@ -36,32 +36,32 @@ const Header = () => {
             <div className="navbar-collapse collapse" id="collapseNavbar">
               <ul className="navbar-nav">
                 <li className="nav-item active">
-                  <a className="nav-link text-uppercase" href="/">
-                    Home
-                  </a>
+                  <Link to="/" className="nav-link text-uppercase">
+                    Trang chủ
+                  </Link>
                 </li>
-                <MegaMenu/>
+                <MegaMenu />
                 <li className="nav-item dropdown mega-dropdown">
-                  <a className="nav-link text-uppercase" href="/blog">
+                  {/* <a className="nav-link text-uppercase" href="/blog">
                     Blog
-                  </a>
+                  </a> */}
+                  <Link to="/blog" className="nav-link text-uppercase"  >
+                    Bài viết
+                  </Link>
                 </li>
                 <li className="nav-item dropdown mega-dropdown">
-                  <a
-                    className="nav-link text-uppercase  dropdown-toggle"
-                    href="/contacts"
-                  >
-                    Other Pages
-                  </a>
+                  <Link to="/contacts" className="nav-link text-uppercase  dropdown-toggle" >
+                    Liên Hệ
+                  </Link>
                 </li>
-                <li className="nav-item">
+                {/* <li className="nav-item">
                   <a
                     className="nav-link text-uppercase"
                     href="javascript:void(0);"
                   >
                     sale
                   </a>
-                </li>
+                </li> */}
               </ul>
             </div>
           </nav>
@@ -84,9 +84,9 @@ const Header = () => {
 
               {userId?.id && menuDisplay && (
                 <div className="dropdownUser p-4">
-                  <nav>
+                   <nav>
                     {userId?.role === "admin" && (
-                      <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={()=>setMenuDisplay(prev => !prev)}>Admin</Link>
+                      <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={() => setMenuDisplay(prev => !prev)}>Admin</Link>
                     )}
                     <Link to="/myaccout" className="p-2">Trang cá nhân</Link>
                     <p>Đơn hàng</p>
@@ -95,23 +95,26 @@ const Header = () => {
                 </div>
               )}
             </li>
-            <li className="wishlist_icon">
-              <a href="/wishlist">
+            <li className="cart_icon">
+              <Link to="/wishlist">
                 <i className="flaticon-heart"></i>
-              </a>
+                <span className="count text-white rounded-circle text-center">
+                  0
+                </span>
+              </Link>
             </li>
             <li className="search_icon">
-              <a href="javascript:void(0);">
+              <Link to="/search">
                 <i className="flaticon-magnifying-glass"></i>
-              </a>
+              </Link>
             </li>
             <li className="cart_icon">
-              <a href="/cart">
+              <Link to="/cart">
                 <i className="flaticon-shopping-bag"></i>
                 <span className="count text-white rounded-circle text-center">
                   {totalItems}
                 </span>
-              </a>
+              </Link>
             </li>
           </ul>
         </div>

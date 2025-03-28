@@ -6,55 +6,6 @@ import { Product } from "../types/Product";
 import { getAllProduct } from "../services/product";
 
 const Shop = () => {
-  // const [product, setProduct] = useState<Product[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [sortBy,setSortBy] = useState("")
-
-  // useEffect(() => {
-  //   setLoading(true);
-  //   getAllProduct()
-  //     .then(({ data }) => {
-  //       setProduct(data.data);
-  //     })
-  //     .finally(() => setLoading(false));
-  // }, []);
-
-  // // Sắp xếp sản phẩm mỗi khi `sortBy` thay đổi
-  // const handleOnChangeSortBy = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value as "asc" | "dsc";
-  //   setSortBy(value);
-
-  //   setProduct((prev) => {
-  //     console.log("Trước khi sắp xếp:", prev);
-
-  //     const sortedProducts = [...prev].sort((a, b) => {
-  //       const priceA =
-  //         typeof a.price === "string" ? Number(a.price.replace(" VND", "")) : a.price;
-  //       const priceB =
-  //         typeof b.price === "string" ? Number(b.price.replace(" VND", "")) : b.price;
-
-  //       return value === "asc" ? priceA - priceB : priceB - priceA;
-  //     });
-
-  //     console.log("Sau khi sắp xếp:", sortedProducts);
-  //     return sortedProducts;
-  //   });
-  // };
-
-  // const [category, setCategory] = useState<Category[]>([]);
-  // const [brand, setbrand] = useState<Brand[]>([]);
-  // useEffect(() => {
-  //   getAllCategory().then(({ data }) => {
-  //     // console.log("category",data)
-  //     setCategory(data);
-  //   });
-  // }, []);
-  // useEffect(() => {
-  //   getBrand().then(({ data }) => {
-  //     console.log("brand", data);
-  //     setbrand(data);
-  //   });
-  // }, []);
 
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -434,7 +385,7 @@ const Shop = () => {
                                 </p>
                               </a>
                               <p className="featured_price title_h5 text-center">
-                                <span>{product.price} VND</span>
+                                <span>{product.price.toLocaleString()}</span>
                               </p>
                             </div>
                           </div>
