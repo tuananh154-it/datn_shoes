@@ -118,7 +118,7 @@
                     </div>
 
                     <!-- Gender -->
-                    <div>
+                    {{-- <div>
                         <label for="gender">Gender</label>
                         <select id="gender" name="gender" required>
                             <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
@@ -143,7 +143,7 @@
                     <div>
                         <label for="phone_number">Phone Number</label>
                         <input id="phone_number" type="text" name="phone_number" value="{{ old('phone_number') }}" required>
-                    </div>
+                    </div> --}}
 
                     <div>
                         <button type="submit">Register</button>

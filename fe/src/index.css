@@ -77,14 +77,14 @@
   font-weight: bold;
 }
 .profile-name:hover{
-  color: #28a745;
+  color: #86ca30;
 }
 .profile-email {
   color: gray;
   font-size: 14px;
 }
 .profile-email:hover{
-  color: #28a745;
+  color: #86ca30;
 }
 
 .nav-menu {
@@ -107,7 +107,7 @@
 
 .nav-menu button:hover,
 .nav-menu .active {
-  background: #28a745;
+  background: #86ca30;
   color: white;
   border-radius: 5px;
 }
@@ -143,7 +143,7 @@
 }
 
 .btn-save {
-  background: #28a745;
+  background: #86ca30;
   color: white;
   padding: 10px 15px;
   border: none;
@@ -152,7 +152,7 @@
 }
 
 .btn-save:hover {
-  background: #28a745;
+  background: #A3D700;
 }
 /* Orders Tab */
 
@@ -470,7 +470,7 @@
 }
 .back-shop {
   font-size: 18px;
-  color: #28a745;
+  color: #86ca30;
   text-decoration: none;
 }
 .back-shop:hover{
@@ -548,4 +548,145 @@ h2, h3 {
 
 .cancel-button:hover {
   background-color: #ff7875;
+}
+
+.product_img {
+  width: 100px;  /* Điều chỉnh kích thước khung ảnh theo mong muốn */
+  height: 100px; /* Điều chỉnh kích thước khung ảnh theo mong muốn */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* Cắt bớt phần thừa của ảnh */
+}
+
+.product_img img {
+  width: 100%;  /* Ảnh phủ hết khung */
+  height: 100%; /* Ảnh phủ hết khung */
+  object-fit: cover; /* Đảm bảo ảnh luôn điền đầy khung mà không méo */
+}
+
+
+.cart_btns {
+  
+  align-items: center;
+  gap: 20px; /* Khoảng cách giữa hai nút */
+  margin-top: 20px;
+}
+
+.border-btn,
+.background-btn {
+  min-width: 180px; /* Đảm bảo hai nút có chiều rộng bằng nhau */
+  padding: 12px 20px; /* Đảm bảo padding giống nhau */
+  text-align: center;
+  font-size: 16px; /* Đảm bảo kích thước chữ giống nhau */
+  font-weight: bold;
+  border-radius: 6px; /* Bo góc nhẹ để đẹp hơn */
+}
+
+/* Giữ nguyên viền nhưng đảm bảo kích thước nút không thay đổi */
+.border-btn {
+  color: #ff5a5f;
+  background: transparent;
+}
+
+.border-btn:hover {
+  background: #ff5a5f;
+  color: #fff;
+}
+
+/* Đảm bảo kích thước nút "Thanh toán" giống với "Tiếp tục mua sắm" */
+.background-btn {
+  background: #ff5a5f;
+  color: #fff;
+ 
+}
+
+.background-btn:hover {
+  background: #e04e52;
+  border-color: #e04e52;
+}
+
+.featured_btn a {
+  display: inline-block; 
+  width: 100%; 
+  max-width: 204px;
+  text-align: center;
+  padding: 10px 15px; 
+  box-sizing: border-box; 
+  justify-content: center;
+}
+.featured_img_content {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* css lai cho blog */
+.blog_content {
+  max-width: 100%; /* Giới hạn chiều rộng */
+  overflow: hidden; /* Ngăn nội dung tràn ra ngoài */
+  word-wrap: break-word; /* Tự động xuống dòng khi cần */
+}
+
+.blog_content img {
+  max-width: 100%; /* Đảm bảo hình ảnh không tràn */
+  height: auto; 
+  display: block;
+  margin: 0 auto; /* Canh giữa ảnh */
+}
+
+.blog_section .row {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Căn chỉnh tiêu đề bài viết */
+.article__title {
+  font-weight: bold;
+  text-align: left; /* Đảm bảo tiêu đề không bị căn giữa */
+  margin-top: 10px;
+}
+
+/* Căn chỉnh đoạn mô tả */
+.blog_content p {
+  line-height: 1.5;
+  margin-bottom: 10px;
+  text-align: justify; 
+}
+
+/* Căn chỉnh ngày đăng */
+.article__date {
+
+  background: #e0e0e0;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+/* Bố cục bài viết không bị lệch */
+.blog-1 {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+
+.blog-2 {
+  width: 100%;
+  max-width: 300px;
+}
+
+.logo {
+  display: block; 
+  max-width: 140px; 
+  height: auto;
+  margin-bottom: 15px;
+}
+.header_logo {
+  display: flex;
+  justify-content: center; /* Căn giữa ngang */
+  align-items: center; /* Căn giữa dọc */
+  height: 100%; /* Chiều cao full để căn giữa dọc */
+  margin-left: 50px;
 }

@@ -294,7 +294,7 @@
 }
 .checkout-right .product-image {
   width: 100px;
-  height: auto;
+  height: 100px;
   border-radius: 5px;
 }
 .checkout-right .payment-divider {

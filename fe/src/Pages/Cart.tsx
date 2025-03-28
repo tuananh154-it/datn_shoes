@@ -1,6 +1,7 @@
-import  { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
+import Pagination from "../Pages/Pagination"; // Import component phân trang
 
 const Cart = () => {
   const {
@@ -14,9 +15,19 @@ const Cart = () => {
     selectAllItems,
   } = useCart();
 
+  // State cho phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Số sản phẩm hiển thị mỗi trang
+
   useEffect(() => {
     fetchCartData();
   }, []);
+
+  // Tính toán danh sách sản phẩm hiển thị trên trang hiện tại
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = cart.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(cart.length / itemsPerPage);
 
   return (
     <>
@@ -42,11 +53,8 @@ const Cart = () => {
               {cart.length === 0 ? (
                 <div className="text-center">
                   <p>Giỏ hàng trống</p>
-                  {/* <a href="/shop" className="background-btn text-uppercase">
-                    Quay lại mua sắm
-                  </a> */}
                   <Link to="/shop" className="back-shop">
-                  Tiếp tục quay lại mua sắm
+                    Tiếp tục quay lại mua sắm
                   </Link>
                 </div>
               ) : (
@@ -70,7 +78,7 @@ const Cart = () => {
                         </div>
                       </div>
                       <div className="tbody">
-                        {cart.map((item) => (
+                        {currentItems.map((item) => (
                           <div className="tr" key={item.id_cart_item}>
                             <div className="td border-bottom" data-title="Product">
                               <div className="product_img d-table-cell">
@@ -99,7 +107,7 @@ const Cart = () => {
                                   <button
                                     type="button"
                                     onClick={() => updateCartItem(item.id_cart_item, item.quantity - 1)}
-                                    disabled={item.quantity <= 1}
+                                    disabled={item.quantity <= 1} 
                                   >
                                     -
                                   </button>
@@ -140,26 +148,20 @@ const Cart = () => {
                   </div>
 
                   <div className="cart_btns text-right">
-                    {/* <a href="/shop" className="text-uppercase border-btn">
+                    <Link to="/shop" className="text-uppercase border-btn">
                       Tiếp tục mua sắm
-                    </a> */}
-                    <Link to="/shop" className="text-uppercase border-btn" >
-                    Tiếp tục mua sắm
                     </Link>
-                    {/* <a href="/checkout" className="text-uppercase background-btn">
-                      Thanh toán
-                    </a> */}
                     <Link to="/checkout" className="text-uppercase background-btn">
-                    Thanh toán
+                      Thanh toán
                     </Link>
                   </div>
 
-                  <div className="form-group cart_notes">
-                    <label className="title_h5" htmlFor="notes">
-                      Ghi chú cho người bán
-                    </label>
-                    <textarea className="form-control" id="notes" name="Notes"></textarea>
-                  </div>
+                  {/* Phân trang */}
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
                 </form>
               )}
             </div>

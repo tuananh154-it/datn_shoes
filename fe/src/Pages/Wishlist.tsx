@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useCart } from '../context/CartContext';
 import { Product} from '../types/Product';
 import { useParams } from 'react-router-dom';
@@ -34,7 +34,7 @@ const Wishlist = () => {
   return (
    <>
     <div className="menu_overlay"></div>
-   <div className="main_section">
+    <div className="main_section">
   {/* START Breadcrumb */}
   <section className="breadcrumb_section nav">
     <div className="container">
