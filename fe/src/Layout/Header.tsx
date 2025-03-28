@@ -1,7 +1,7 @@
 import MegaMenu from "./MegaMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { useState} from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../store/useSlice";
 import { useCart } from "../context/CartContext";
@@ -37,21 +37,21 @@ const Header = () => {
               <ul className="navbar-nav">
                 <li className="nav-item active">
                   <Link to="/" className="nav-link text-uppercase">
-                  Trang chủ
+                    Trang chủ
                   </Link>
                 </li>
-                <MegaMenu/>
+                <MegaMenu />
                 <li className="nav-item dropdown mega-dropdown">
                   {/* <a className="nav-link text-uppercase" href="/blog">
                     Blog
                   </a> */}
                   <Link to="/blog" className="nav-link text-uppercase"  >
-                  Bài viết
+                    Bài viết
                   </Link>
                 </li>
                 <li className="nav-item dropdown mega-dropdown">
                   <Link to="/contacts" className="nav-link text-uppercase  dropdown-toggle" >
-                  Liên Hẹ
+                    Liên Hệ
                   </Link>
                 </li>
                 {/* <li className="nav-item">
@@ -86,7 +86,7 @@ const Header = () => {
                 <div className="dropdownUser p-4">
                   <nav>
                     {userId?.role === "admin" && (
-                      <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={()=>setMenuDisplay(prev => !prev)}>Admin</Link>
+                      <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={() => setMenuDisplay(prev => !prev)}>Admin</Link>
                     )}
                     <Link to="/myaccout" className="p-2">Trang cá nhân</Link>
                     <p>Đơn hàng</p>
@@ -95,19 +95,22 @@ const Header = () => {
                 </div>
               )}
             </li>
-            <li className="wishlist_icon">
+            <li className="cart_icon">
               <Link to="/wishlist">
-              <i className="flaticon-heart"></i>
+                <i className="flaticon-heart"></i>
+                <span className="count text-white rounded-circle text-center">
+                  0
+                </span>
               </Link>
             </li>
             <li className="search_icon">
               <Link to="/search">
-              <i className="flaticon-magnifying-glass"></i>
+                <i className="flaticon-magnifying-glass"></i>
               </Link>
             </li>
             <li className="cart_icon">
               <Link to="/cart">
-              <i className="flaticon-shopping-bag"></i>
+                <i className="flaticon-shopping-bag"></i>
                 <span className="count text-white rounded-circle text-center">
                   {totalItems}
                 </span>

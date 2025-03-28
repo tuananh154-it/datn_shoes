@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Product, Products } from "../types/Product";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getAllProduct, getProductDetail } from "../services/product";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
@@ -12,7 +12,8 @@ import "swiper/css/navigation";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
-
+  const isLoggedIn = localStorage.getItem('token') ? true : false;
+  const nav=useNavigate();
   const [quantity, setQuantity] = useState<number>(1);
   const handleIncrease = () => {
     setQuantity(quantity + 1);
@@ -33,7 +34,7 @@ const ProductDetail = () => {
     getProductDetail(id).then(({ data }) => {
       console.log("data", data);
       setProductId(data.data);
-        // setSelectedDetail(data.data.details[0]);
+      // setSelectedDetail(data.data.details[0]);
     });
   }, [id]);
   console.log("data", productId);
@@ -61,13 +62,13 @@ const ProductDetail = () => {
     }
   }
 
-    const [products, setProducts] = useState<Product[]>([]);
-   useEffect(() => {
-      getAllProduct()
-        .then(({ data }) => {
-          setProducts(data.data);
-        })
-    }, []);
+  const [products, setProducts] = useState<Product[]>([]);
+  useEffect(() => {
+    getAllProduct()
+      .then(({ data }) => {
+        setProducts(data.data);
+      })
+  }, []);
   return (
     <>
       <div className="menu_overlay"></div>
@@ -85,12 +86,12 @@ const ProductDetail = () => {
                   <i className="flaticon-arrows-4"></i>
                 </li>
                 <li className="breadcrumb-item active text-capitalize">
-                 {productId?.name}
+                  {productId?.name}
                 </li>
               </ol>
             </nav>
             <h1 className="title_h1 font-weight-normal text-capitalize">
-            {productId?.name}
+              {productId?.name}
             </h1>
           </div>
         </section>
@@ -268,20 +269,33 @@ const ProductDetail = () => {
                           type="button"
                           className="background-btn text-uppercase cart_btn"
                           onClick={() => {
+                            // Kiểm tra nếu người dùng chưa đăng nhập
+                            if (!isLoggedIn) {
+                              alert("Vui lòng đăng nhập trước khi thêm vào giỏ hàng!");
+                              nav("/login")
+                              return;
+                            }
+                            
+                            // Kiểm tra xem biến thể đã được chọn chưa
                             if (!selectedDetail) {
                               alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
                               return;
                             }
+
+                            // Thêm sản phẩm vào giỏ hàng
                             addToCart(Number(selectedDetail.id), quantity);
                             toast.success("Thêm vào giỏ hàng thành công");
-                            console.log("Dữ liệu gửi lên API:", JSON.stringify({ 
-                              product_detail_id: selectedDetail.id, 
-                              quantity 
+
+                            // Log dữ liệu gửi lên API
+                            console.log("Dữ liệu gửi lên API:", JSON.stringify({
+                              product_detail_id: selectedDetail.id,
+                              quantity
                             }));
                           }}
                         >
                           Add to cart
                         </button>
+
                         <div className="product_share">
                           <p>Share the love</p>
                           <ul className="social_icons">
@@ -471,53 +485,53 @@ const ProductDetail = () => {
                 </div>
               </div>
               <div className="featured_section padding-top-text-60 wow fadeIn">
-      <h2 className="text-center title_h3">Bạn có thể thích</h2>
-      <Swiper
-        modules={[Navigation]}
-        spaceBetween={20}
-        slidesPerView={4} // Hiển thị 4 sản phẩm mỗi lần
-        navigation // Bật mũi tên điều hướng
-        breakpoints={{
-          320: { slidesPerView: 1 },
-          768: { slidesPerView: 2 },
-          1024: { slidesPerView: 3 },
-          1200: { slidesPerView: 4 },
-        }}
-      >
-        {products.map((product) => (
-          <SwiperSlide key={product.id}>
-            <div className="featured_content">
-              <div className="featured_img_content">
-                <img
-                  src={product.image}
-                  alt="f_product"
-                  className="img-product_detail"
-                />
-                <div className="featured_btn vertical_middle">
-                  <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">
-                    Thêm vào giỏ hàng
-                  </a>
-                  <a href={`/product_detail/${product.id}`} className="text-uppercase border-btn popup_btn">
-                    Xem chi tiết
-                  </a>
-                </div>
-                <a href="javascript:void(0);" className="heart rounded-circle text-center">
-                  <i className="flaticon-heart vertical_middle"></i>
-                </a>
+                <h2 className="text-center title_h3">Bạn có thể thích</h2>
+                <Swiper
+                  modules={[Navigation]}
+                  spaceBetween={20}
+                  slidesPerView={4} // Hiển thị 4 sản phẩm mỗi lần
+                  navigation // Bật mũi tên điều hướng
+                  breakpoints={{
+                    320: { slidesPerView: 1 },
+                    768: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 },
+                    1200: { slidesPerView: 4 },
+                  }}
+                >
+                  {products.map((product) => (
+                    <SwiperSlide key={product.id}>
+                      <div className="featured_content">
+                        <div className="featured_img_content">
+                          <img
+                            src={product.image}
+                            alt="f_product"
+                            className="img-product_detail"
+                          />
+                          <div className="featured_btn vertical_middle">
+                            <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">
+                              Thêm vào giỏ hàng
+                            </a>
+                            <a href={`/product_detail/${product.id}`} className="text-uppercase border-btn popup_btn">
+                              Xem chi tiết
+                            </a>
+                          </div>
+                          <a href="javascript:void(0);" className="heart rounded-circle text-center">
+                            <i className="flaticon-heart vertical_middle"></i>
+                          </a>
+                        </div>
+                        <div className="featured_detail_content">
+                          <a href={`/product_detail/${product.id}`}>
+                            <p className="featured_title text-capitalize text-center">{product.name}</p>
+                          </a>
+                          <p className="featured_price title_h5 text-center">
+                            <span>{product.price}</span>
+                          </p>
+                        </div>
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
-              <div className="featured_detail_content">
-                <a href={`/product_detail/${product.id}`}>
-                  <p className="featured_title text-capitalize text-center">{product.name}</p>
-                </a>
-                <p className="featured_price title_h5 text-center">
-                  <span>{product.price}</span>
-                </p>
-              </div>
-            </div>
-          </SwiperSlide>
-        ))}
-      </Swiper>
-    </div>
             </div>
           ) : (
             <div className="container">

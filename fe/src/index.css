@@ -477,3 +477,75 @@
   text-decoration:underline;
   color:#b91c1c;
 }
+/* OrderDetail.css */
+.order-detail {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+}
+
+h2, h3 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.order-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.order-table th, .order-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.order-table th {
+  background-color: #f4f4f4;
+}
+
+.order-table img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.order-total {
+  display: flex;
+  align-items: center; /* Căn chỉnh các phần tử theo chiều dọc */
+  justify-content: space-between; /* Phân bố không gian giữa các phần tử */
+  margin-top: 20px; /* Khoảng cách từ phần trên */
+  padding: 10px 0; /* Khoảng cách bên trong phần tổng cộng */
+  border-top: 1px solid #ccc; /* Đường kẻ phía trên để tách biệt */
+}
+
+.total-label {
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 10px; /* Khoảng cách giữa nhãn và số tổng tiền */
+}
+
+.total-price {
+  font-size: 25px;
+  color: #333;
+  margin-right: auto; /* Đẩy nút "Hủy đơn" về phía bên phải */
+}
+
+.cancel-button {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  margin-left: 20px; /* Khoảng cách giữa số tổng tiền và nút "Hủy đơn" */
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-button:hover {
+  background-color: #ff7875;
+}
