@@ -52,7 +52,7 @@ const Blog = () => {
             <div className="container">
               <div className="row">
                 {/* Danh sách bài viết */}
-                <div className="col-md-8 col-xl-9 wow fadeInLeft" data-wow-duration="1300ms">
+                <div className="blog-1 col-xl-9 wow fadeInLeft" data-wow-duration="1300ms">
                   {articles.map((article) => (
                     <div key={article.id} className="blog_content">
                       <a href={`/blog/${article.id}`}>
@@ -70,7 +70,7 @@ const Blog = () => {
                 </div>
 
                 {/* Sidebar */}
-                <div className="col-xl-3 col-md-4 wow fadeInRight" data-wow-duration="1300ms">
+                <div className="col-xl-3 blog-2 wow fadeInRight" data-wow-duration="1300ms">
                   {/* Voucher List */}
                   <div className="featured_posts">
                     <h4  style={{fontSize:30,color:"red",width:400}}>Danh sách Voucher</h4>

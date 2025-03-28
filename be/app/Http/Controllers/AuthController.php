@@ -41,8 +41,12 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
+<<<<<<< HEAD
             'password' => 'required|string|min:8|',
             // 'password' => 'required|string|min:8|confirmed',
+=======
+            'password' => 'required|string|min:8|confirmed',
+>>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3
             // 'gender' => 'nullable|string',
             // 'date_of_birth' => 'nullable|date',
             // 'address' => 'nullable|string|max:255',
@@ -120,7 +124,11 @@ class AuthController extends Controller
             $user = Auth::user();
             // Kiểm tra vai trò của người dùng và chuyển hướng
             if (in_array($user->role, ['admin', 'superadmin'])) {
+<<<<<<< HEAD
                 return redirect()->route('articles.index')->with('success', 'Đăng nhập thành công!');
+=======
+                return redirect()->route('dashboards.index')->with('success', 'Vào thành công!');
+>>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3
             }
 
             return redirect()->route('login')->withErrors(['email' => 'Bạn không có quyền truy cập!'])->onlyInput('email');

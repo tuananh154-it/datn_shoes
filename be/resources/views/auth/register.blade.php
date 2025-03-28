@@ -89,9 +89,84 @@
         <div class="register-container">
             <form method="POST" action="{{ route('register') }}">
                 @csrf
+{{-- <<<<<<< HEAD --}}
                 <div class="form-group">
                     <label for="name">Name</label>
                     <input type="text" name="name" required>
+{{-- ======= --}}
+                <h2 class="form-register-heading">Create an Account</h2>
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <!-- Name -->
+                    <div>
+                        <label for="name">Name</label>
+                        <input id="name" type="text" name="name" value="{{ old('name') }}" required autofocus>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div>
+                        <label for="email">Email</label>
+                        <input id="email" type="email" name="email" value="{{ old('email') }}" required>
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <label for="password">Password</label>
+                        <input id="password" type="password" name="password" required>
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div>
+                        <label for="password_confirmation">Confirm Password</label>
+                        <input id="password_confirmation" type="password" name="password_confirmation" required>
+                    </div>
+
+                    <!-- Gender -->
+                    {{-- <div>
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                            <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                    </div>
+
+                    <!-- Date of Birth -->
+                    <div>
+                        <label for="date_of_birth">Date of Birth</label>
+                        <input id="date_of_birth" type="date" name="date_of_birth" value="{{ old('date_of_birth') }}" required>
+                    </div>
+
+                    <!-- Address -->
+                    <div>
+                        <label for="address">Address</label>
+                        <input id="address" type="text" name="address" value="{{ old('address') }}" required>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div>
+                        <label for="phone_number">Phone Number</label>
+                        <input id="phone_number" type="text" name="phone_number" value="{{ old('phone_number') }}" required>
+                    </div> --}}
+
+                    <div>
+                        <button type="submit">Register</button>
+                    </div>
+                </form>
+                <!-- Register Button -->
+                <button class="btn btn-register" type="submit">Register</button>
+
+                <!-- Error Message for Email -->
+                @error('email')
+                <div class="text-danger mt-3">{{ $message }}</div>
+                @enderror
+
+                <!-- Login Link -->
+                <div class="registration">
+                    Already have an account?
+                    <a href="{{ route('login') }}">Login here</a>
+{{-- >>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3 --}}
                 </div>
                 <div class="form-group">
                     <label for="email">Email</label>

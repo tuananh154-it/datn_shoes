@@ -249,7 +249,7 @@
 }
 /*css checkout*/
 
-.containercheckout {
+.checkout-container {
   display: flex;
   background: white;
   width: 90%;
@@ -260,85 +260,83 @@
   margin-top: 30px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-.left, .right {
+.checkout-left, .checkout-right {
   flex: 1;
   padding: 20px;
 }
-.right {
+.checkout-right {
   background: #f5f5f5;
   border-radius: 8px;
 }
-h2 {
+.checkout-left h2 {
   margin-bottom: 20px;
 }
-.left label {
+.checkout-right h2 {
+  margin-bottom: 20px;
+}
+.checkout-left label {
   display: block;
   margin-top: 10px;
 }
-.left input, select {
+.checkout-left input, 
+.checkout-left select {
   width: 100%;
   padding: 10px;
   margin: 5px 0;
   border: 1px solid #ccc;
-  /* background-color: #d9534f; */
   border-radius: 5px;
 }
-.product {
+.checkout-right .product {
   display: flex;
   align-items: center;
   gap: 15px;
   margin-bottom: 15px;
 }
-.product-image {
+.checkout-right .product-image {
   width: 100px;
-  height: auto;
+  height: 100px;
   border-radius: 5px;
 }
-.payment-divider {
+.checkout-right .payment-divider {
   width: 100%;
   border: 0;
   height: 1px;
   background: #ccc;
 }
-.product-details {
+.checkout-right .product-details {
   flex: 1;
 }
-.product-name {
+.checkout-right .product-name {
   font-size: 14px;
 }
-.product-quantity, .product-price {
+.checkout-right .product-quantity, 
+.checkout-right .product-price {
   font-size: 14px;
   color: gray;
 }
-.price-details p {
+.checkout-right .price-details p {
   display: flex;
   justify-content: space-between;
   margin: 5px 0;
 }
-.total {
+.checkout-right .total {
   font-weight: bold;
   font-size: 16px;
 }
-.payment-method {
+.checkout-right .payment-method {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin: 10px 0;
 }
-.payment-option {
+.checkout-right .payment-option {
   display: flex;
   align-items: center;
   gap: 10px;
-  /* background: white; */
   padding: 15px;
   border-radius: 5px;
-  /* border: 1px solid #ccc; */
 }
-.payment-option:nth-child(3){
-  margin-top: -10px;
-  /* background-color: aquamarine; */
-}
-.payment-checkbox.square {
+.checkout-right .payment-checkbox.square {
   width: 18px;
   height: 18px;
   appearance: none;
@@ -347,7 +345,7 @@ h2 {
   display: inline-block;
   position: relative;
 }
-.payment-checkbox.square:checked::before {
+.checkout-right .payment-checkbox.square:checked::before {
   content: "✔";
   font-size: 14px;
   color: black;
@@ -355,11 +353,11 @@ h2 {
   top: 0;
   left: 3px;
 }
-.payment-description {
+.checkout-right .payment-description {
   font-size: 12px;
   color: gray;
 }
-.order-button {
+.checkout-right .order-button {
   width: 100%;
   background: #d9534f;
   color: white;
@@ -369,16 +367,59 @@ h2 {
   cursor: pointer;
   font-size: 16px;
 }
-.sanphamnoibat{
+
+.short_by .htmlForm-group .sanphamnoibat{
   width: 200px;
   border: none;
 }
-.show{
+.htmlForm-group .show{
   width: 45px;
   border: none;
 }
-
-.img-fluid11{
+.featured_content .img-fluid11{
   height: 300px;
   width: 250px;
+}
+/* review */
+/* .review1{
+  display: flex;
+  width: 1000px;
+
+}
+.imageReview{
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+}
+.review2 h5{
+      margin-left: 20px;
+      margin-top: 10px;
+}
+.review2 .review3{
+  margin-left: 20px;
+}
+.review2 p{
+  width: 500px;
+  margin-left: 20px;
+} */
+
+.newProduct{
+  margin-top: -20px;
+  margin-left: -20px;
+  background-color: rgb(144, 244, 45);
+}
+.swiper {
+  padding-bottom: 30px;
+}
+.swiper-button-prev,
+.swiper-button-next {
+  font-weight: bold;
+  color: #333; /* Màu của nút điều hướng */
+}
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  color: #d9534f; /* Màu khi hover */
+}
+.img-product_detail{
+  height: 300px;
 }

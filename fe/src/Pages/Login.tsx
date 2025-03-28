@@ -4,10 +4,12 @@ import { useNavigate } from "react-router-dom"
 import { loginForm, UserLogin } from "../services/login";
 import { useDispatch } from "react-redux";
 import { setUserDetail  } from "../store/useSlice";
+import { useCart } from "../context/CartContext";
+
 
 const Login = () => {
     const nav = useNavigate();
-   
+    const {fetchCartData}=useCart();
     const {register,handleSubmit}=useForm<UserLogin>()
     const dispatch = useDispatch()
     const onSubmit = (data:UserLogin)=>{
@@ -17,6 +19,7 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(data.data))
         localStorage.setItem("token",data.token)
         dispatch(setUserDetail(data.user));
+        fetchCartData();
         // console.log("Dispatched user:", data.data);
          nav("/")
       }).catch((e)=>{toast.error("Error:"+e.message)})
