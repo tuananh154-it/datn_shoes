@@ -471,7 +471,10 @@ const MyAccount = () => {
                                                         >
                                                             {order.status}
                                                         </span>
-                                                        <button className="order-details">Chi tiết</button>
+                                                        {/* <button  className="order-details">Chi tiết</button> */}
+                                                        <Link to="/order_detail" className="order-details">
+                                                        Chi tiết
+                                                        </Link>
                                                     </div>
                                                 </div>
                                                 <div className="order-content">
