@@ -24,8 +24,8 @@ const Header = () => {
         <div className="header_logo col_4 visible-lg d-none">
           <a href="/">
             <img
-              src="../src/images/shoes_header_logo.png"
-              className="img-fluid"
+              src="../src/images/logo_footvibe_01.png"
+              className="logo"
               alt="logo"
             />
           </a>

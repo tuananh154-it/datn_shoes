@@ -677,3 +677,16 @@ h2, h3 {
   max-width: 300px;
 }
 
+.logo {
+  display: block; 
+  max-width: 140px; 
+  height: auto;
+  margin-bottom: 15px;
+}
+.header_logo {
+  display: flex;
+  justify-content: center; /* Căn giữa ngang */
+  align-items: center; /* Căn giữa dọc */
+  height: 100%; /* Chiều cao full để căn giữa dọc */
+  margin-left: 50px;
+}

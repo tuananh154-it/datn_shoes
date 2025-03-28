@@ -7,7 +7,7 @@ const Footer = () => {
               <div className="col-lg-3 col-sm-6  wow fadeInUp ">
                 <div className="column">
                   <a href="shoes.html">
-                    <img src="../src/images/shoes_footer_logo.png" alt="logo" className="img-fluid footer_logo"/>
+                    <img src="../src/images/logo_footvibe_01.png" alt="logo" className="logo"/>
                   </a>
                   <p>Đồng hành trên mọi hành trình, nâng niu từng bước chân...</p>
                 </div>
