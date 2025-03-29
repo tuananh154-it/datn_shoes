@@ -19,6 +19,7 @@ use App\Http\Controllers\SizeController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\UserController;
 
@@ -34,8 +35,6 @@ use App\Http\Controllers\UserController;
 // Public routes
 Route::apiResource('articles', ArticleController::class);
 Route::apiResource('comments', CommentController::class);
-Route::apiResource('payments', PaymentController::class);
-Route::post('/checkout', [CheckoutController::class, 'checkout']);
 
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
@@ -46,6 +45,11 @@ Route::middleware('auth:api')->group(function () {
     // Route::apiResource('order', OrderController::class);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::post('/cart/sync', [CartController::class, 'syncCart']);
+    Route::get('/checkout/init', [OrderController::class, 'getCart']);
+    Route::post('/orders/place', [OrderController::class, 'placeOrder']);
+    Route::get('/orders', [OrderController::class, 'listOrders']);
+    Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
+    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
 });
 Route::apiResource('products', ProductController::class);
 Route::get('/latest-products', [ProductController::class, 'latestProducts']);
