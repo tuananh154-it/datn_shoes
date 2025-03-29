@@ -1,6 +1,4 @@
 import { api } from "../config/axios"
-import { OrderData } from "../Pages/CheckOut"
-
-export const getOrder = (orderData: OrderData)=>{
-      return api.post('/payments',orderData)   
+export const getOrder = (id:string)=>{
+      return api.get(`/payments/${id}`)  
 }

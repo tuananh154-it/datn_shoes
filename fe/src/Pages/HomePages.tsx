@@ -74,7 +74,7 @@ const HomePages = () => {
                 </Swiper>
             </div>
             <div className="main_section">
-                <div className=" shoes_banner_slider_section position-relative">
+                {/* <div className=" shoes_banner_slider_section position-relative">
                     <div className="rev_slider_wrapper fullwidthbanner-container">
                         <div id="rev_slider_2" className="rev_slider fullwidthabanner" data-version="5.4.5" style={{ display: 'none' }}>
                             <ul>
@@ -148,7 +148,7 @@ const HomePages = () => {
                             </ul>
                         </div>
                     </div>
-                </div>
+                </div> */}
                 { /*hình 2018*/}
                 <div className="shoes_collection_section padding-top-60 wow fadeIn">
                     <div className="container">

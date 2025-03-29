@@ -14,7 +14,15 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        $payments = Payment::with(['order', 'order.user'])->get();
+        $payments = Payment::with([
+            'order', 
+            'order.user', 
+            'order.cart', 
+            'order.cart.cartItems', 
+            'order.cart.cartItems.product', 
+            'order.cart.cartItems.product.productDetail'
+        ])->get();
+    
         return response()->json($payments);
     }
 
@@ -85,7 +93,7 @@ class PaymentController extends Controller
 
         if (!$payment) {
             return response()->json(['message' => 'Payment not found'], 404);
-        }
+}
 
         $user = $payment->order->user;
         if (!$user) {
@@ -149,21 +157,5 @@ class PaymentController extends Controller
                 'expiration_date' => $voucher->expiration_date,
             ] : null
         ]);
-    }
-
-    /**
-     * Cập nhật thanh toán (hiện không hỗ trợ)
-     */
-    public function update(Request $request, string $id)
-    {
-        return response()->json(['message' => 'Updating payments is not supported.'], 405);
-    }
-
-    /**
-     * Xóa thanh toán (hiện không hỗ trợ)
-     */
-    public function destroy(string $id)
-    {
-        return response()->json(['message' => 'Deleting payments is not supported.'], 405);
     }
 }

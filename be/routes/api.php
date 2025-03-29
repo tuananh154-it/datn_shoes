@@ -34,7 +34,14 @@ use App\Http\Controllers\UserController;
 // Public routes
 Route::apiResource('articles', ArticleController::class);
 Route::apiResource('comments', CommentController::class);
-Route::apiResource('payments', PaymentController::class);
+// Route::apiResource('payments', PaymentController::class);
+Route::middleware('auth:api')->group(function () {
+    Route::get('/payments', [PaymentController::class, 'index']); // Lấy danh sách thanh toán
+    Route::post('/payments', [PaymentController::class, 'store']); // Tạo thanh toán mới
+    Route::get('/payments/{payment}', [PaymentController::class, 'show']); // Lấy thông tin một thanh toán
+    Route::put('/payments/{payment}', [PaymentController::class, 'update']); // Cập nhật thanh toán
+    Route::delete('/payments/{payment}', [PaymentController::class, 'destroy']); // Xóa thanh toán
+});
 Route::post('/checkout', [CheckoutController::class, 'checkout']);
 
 Route::apiResource('contacts', ContactController::class);

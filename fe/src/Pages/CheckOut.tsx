@@ -376,7 +376,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { CartItem, fetchCart } from "../services/cart";
 import { getOrder } from "../services/Order";
-import axios from "axios";
+import { useParams } from "react-router-dom";
 
 interface Address {
   _id: string;
@@ -387,36 +387,50 @@ interface Address {
   code: number;
 }
 
-interface OrderItem {
-  product_id: string;
-  quantity: number;
-  unit_price: number;
-}
-
-export interface OrderData {
-  order_id?: string | null;
-  user_id: string;
-  recipient: {
-    name: string;
+interface Order {
+  id: number;
+  order_id: number;
+  user_id: number;
+  note: string;
+  payment_date: string;
+  payment_method: string;
+  amount: string;
+  status: string;
+  created_at: string | null;
+  updated_at: string | null;
+  deleted_at: string | null;
+  order: {
+    id: number;
+    username: string;
+    voucher_id: number | null;
+    status: string;
+    deliver_fee: string;
+    user_id: number;
+    payment_status: string;
+    payment_method: string;
+    address: string;
+    phone_number: string;
     email: string;
-    phone: string;
+    total_price: string;
+    note: string;
+    created_at: string | null;
+    updated_at: string | null;
+    deleted_at: string | null;
+    user: {
+      id: number;
+      name: string;
+      email: string;
+      email_verified_at: string | null;
+      role: string;
+      gender: string | null;
+      date_of_birth: string | null;
+      address: string | null;
+      phone_number: string | null;
+      created_at: string;
+      updated_at: string;
+    };
   };
-  shipping_address: {
-    province: string;
-    district: string;
-    ward: string;
-    detail: string;
-  };
-  total_amount: number;
-  shipping_fee: number;
-  payment_method: "cash_on_delivery" | "bank_transfer";
-  payment_date: string | null;
-  voucher_id?: string | null;
-  note?: string;
-  status: "pending" | "confirmed" | "shipped" | "delivered" | "cancelled";
-  items: OrderItem[];
 }
-
 const CheckOut = () => {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [provinces, setProvinces] = useState<Address[]>([]);
@@ -430,17 +444,27 @@ const CheckOut = () => {
   const [address, setAddress] = useState<string>("");
   const [note, setNote] = useState<string>("");
   const [voucher, setVoucher] = useState<string>("");
-  const [paymentMethod, setPaymentMethod] = useState<string>("cod");
+  const [paymentMethod, setPaymentMethod] = useState<string>("COD");
   const [phone, setPhone] = useState<string>("");
 
   const user = useSelector((state: RootState) => state.user.user);
-  console.log("user",user)
+   
+  const [orderData, setOrderData] = useState<Order | null>(null);
+  const {id} = useParams()
+  useEffect(() => {
+    if (!id) return;
+    getOrder(id).then(({data})=>{
+    console.log("checkout",data)
+    // setOrderData(data)
+   })
+  }, []);
+
   useEffect(() => {
     fetchCart().then((data) => {
       setCart(data);
     });
   }, []);
-
+   
   useEffect(() => {
     fetch(`https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1`)
       .then((res) => res.json())
@@ -479,61 +503,9 @@ const CheckOut = () => {
         .catch((error) => console.error("Lỗi khi tải xã/phường:", error));
     }
   }, [selectedDistrict]);
-
-  const total = cart.reduce(
-    (sum, item) => sum + item.discount_price * item.quantity,
-    0
-  );
-  const shippingFee = 30000;
-  const grandTotal = total + shippingFee;
-
-  const handleOrder = async () => {
-    if (!user || !address || !selectedProvince || !selectedDistrict || !selectedWard || cart.length === 0) {
-      alert("Vui lòng nhập đầy đủ thông tin và kiểm tra giỏ hàng!");
-      return;
-    }
-
-    const orderData: OrderData = {
-      order_id: null,
-      user_id: String(user.id), 
-      recipient: {
-        name: user.name,
-        email: user.email,
-        phone: phone,
-      },
-      shipping_address: {
-        province: selectedProvince,
-        district: selectedDistrict,
-        ward: selectedWard,
-        detail: address,
-      },
-      total_amount: grandTotal,
-      shipping_fee: shippingFee,
-      payment_method: paymentMethod === "cod" ? "cash_on_delivery" : "bank_transfer",
-      payment_date: paymentMethod === "cod" ? null : new Date().toISOString(),
-      voucher_id: voucher || null,
-      note: note || "",
-      status: "pending",
-      items: cart.map((item) => ({
-        product_id: String(item.product_detail_id), // Chuyển thành string
-        quantity: item.quantity,
-        unit_price: item.discount_price,
-      })),
-    };
-    try {
-      const response = await getOrder(orderData);
-      alert("Đặt hàng thành công!");
-      console.log("Order response:", response.data);
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        console.error("Lỗi đặt hàng:", error.response?.data || error.message);
-        alert(`Lỗi đặt hàng: ${error.response?.data?.message || "Có lỗi xảy ra!"}`);
-      } else {
-        console.error("Lỗi không xác định:", error);
-        alert("Đã có lỗi xảy ra, vui lòng thử lại!");
-      }
-    }
-  };
+  const grandTotal = orderData
+  ? parseFloat(orderData.order.total_price) + parseFloat(orderData.amount)
+  : 0;
   return (
     <>
       <div className="menu_overlay"></div>
@@ -558,23 +530,19 @@ const CheckOut = () => {
           </div>
         </section>
       </div>
+      <form>
       <div className="checkout-container">
         <div className="checkout-left">
           <h2>Thanh toán & Vận chuyển</h2>
-          <form>
+          
             <label>Họ và tên *</label>
-            <input type="text" value={user?.name || ""} readOnly />
+            <input type="text" value={orderData?.billing_shipping?.name || ""} readOnly />
 
             <label>Số điện thoại *</label>
-            <input
-              type="text"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              required
-            />
+            <input type="text" value={orderData?.order?.phone_number || ""} readOnly />
 
             <label>Email *</label>
-            <input type="email" value={user?.email || ""} readOnly />
+            <input type="email" value={orderData?.order?.email || ""} readOnly />
 
             <label>Tỉnh/Thành phố *</label>
             <select
@@ -618,19 +586,10 @@ const CheckOut = () => {
             </select>
 
             <label>Địa chỉ *</label>
-            <input
-              type="text"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-            />
+            <input type="text" value={orderData?.order?.address || ""} readOnly />
 
             <label>Ghi chú</label>
-            <input
-              type="text"
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-            />
+            <input type="text" value={orderData?.order?.note || ""} readOnly />
 
             <label>Mã giảm giá</label>
             <input
@@ -638,7 +597,6 @@ const CheckOut = () => {
               value={voucher}
               onChange={(e) => setVoucher(e.target.value)}
             />
-          </form>
         </div>
 
         <div className="checkout-right">
@@ -663,17 +621,11 @@ const CheckOut = () => {
             </div>
           ))}
 
-          <div className="price-details">
-            <p>
-              Tổng: <span>{total.toLocaleString()}đ</span>
-            </p>
-            <p>
-              Phí ship: <span>{shippingFee.toLocaleString()}đ</span>
-            </p>
-            <p className="total">
-              Tổng cộng: <strong>{grandTotal.toLocaleString()}đ</strong>
-            </p>
-          </div>
+         <div className="price-details">
+          <p>Tổng: <span>{orderData?.order.total_price}đ</span></p>
+          <p>Phí ship: <span>{orderData?.amount}đ</span></p>
+          <p className="total">Tổng cộng: <strong>{grandTotal.toLocaleString()}đ</strong></p>
+        </div>
 
           <div className="payment-method">
             <label className="payment-option">
@@ -725,11 +677,12 @@ const CheckOut = () => {
                 </p>
               </label>
             </div> */}
-          <button className="order-button" onClick={handleOrder}>
+          <button type="submit" className="order-button" onClick={()=>{handleOrder}}>
             ĐẶT HÀNG
           </button>
         </div>
       </div>
+      </form>
     </>
   );
 };
