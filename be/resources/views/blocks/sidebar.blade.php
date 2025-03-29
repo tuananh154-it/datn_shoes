@@ -7,11 +7,8 @@
             <!-- Dashboard -->
             @can('show-dashboard')
             <li>
-<<<<<<< HEAD
-                <a class="active" href="{{ route('dashboards.index') }}">
-=======
+
                 <a  class="active" href="{{route('dashboards.index')}}">
->>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3
                     <i class="fa fa-dashboard"></i>
                     <span>Thống kê </span>
                 </a>
@@ -21,11 +18,8 @@
             <!-- Quản lý sản phẩm -->
             @canany(['show-products', 'create-product', 'show-sizes', 'show-colors', 'show-categories', 'show-brands'])
             <li class="sub-menu">
-<<<<<<< HEAD
-                <a href="javascript:;">
-=======
+
                 <a>
->>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3
                     <i class="fa fa-cogs"></i>
                     <span>Quản lý sản phẩm</span>
                     <span class="fa fa-chevron-down"></span>
@@ -56,11 +50,8 @@
             <!-- Quản lý tài khoản -->
             @canany(['show-users', 'show-roles'])
             <li class="sub-menu">
-{{-- <<<<<<< HEAD --}}
-                <a href="javascript:;">
-{{-- ======= --}}
+
                 <a>
->>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3
                     <i class="fa fa-users"></i>
                     <span>Quản lý tài khoản</span>
                     <span class="fa fa-chevron-down"></span>
@@ -79,11 +70,7 @@
             <!-- Quản lý bài viết -->
             @canany(['show-articles', 'show-banners', 'show-comments'])
             <li class="sub-menu">
-{{-- <<<<<<< HEAD --}}
-                <a href="javascript:;">
-{{-- ======= --}}
                 <a>
->>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3
                     <i class="fa fa-pencil-square"></i>
                     <span>Quản lý bài viết</span>
                     <span class="fa fa-chevron-down"></span>
