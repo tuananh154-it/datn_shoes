@@ -24,7 +24,8 @@ class Order extends Model
         'phone_number',
         'email',
         'total_price',
-        'note'
+        'note',
+        'user_id'
     ];
     // Quan hệ: Một đơn hàng có nhiều chi tiết đơn hàng
     // public function orderDetails()
@@ -47,8 +48,5 @@ class Order extends Model
     {
         return $this->belongsTo(Voucher::class);
     }
-    public function orderDetails()
-    {
-        return $this->hasMany(OrderDetail::class);
-    }
+   
 }
