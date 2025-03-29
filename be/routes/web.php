@@ -99,8 +99,10 @@ Route::prefix('admin')->middleware(['admin'])->group(function () {
     //thong ke tai khoan 
     Route::get('admin/users', [AdminController::class, 'users'])->name('dashboards.users');
     Route::get('/admin/account-stats-data', [AdminController::class, 'getAccountStatsData'])->name('admin.accountStatsData');
-    
-
+    //thong ke sp
+    Route::get('admin/product', [AdminController::class, 'products'])->name('dashboards.product');
+    //top 10 sp
+    Route::get('admin/top10', [AdminController::class, 'top10'])->name('dashboards.top10');
     
 });
 
