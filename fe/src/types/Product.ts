@@ -7,9 +7,18 @@ export interface Product{
   category:string,
   brand:string,
 }
+export interface Productyeuthich{
+  id:number,
+  name:string,
+  price: string| number;
+  image:string,
+  description:string,
+  category:string,
+  brand:string,
+}
 
 export interface Products {
-  id: number;
+  id: string;
   name: string;
   image: string;
   brand:string,
@@ -17,6 +26,7 @@ export interface Products {
   description: string;
   details: Detail[];
 }
+
 export interface Detail {
   id: string;
   // name: string;
@@ -27,5 +37,4 @@ export interface Detail {
   image: string;
   quantity:number,
   size:number
-  // Các thuộc tính khác cho biến thể
 }

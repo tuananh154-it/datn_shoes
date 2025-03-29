@@ -73,8 +73,7 @@ Route::get('/vouchers/{id}', [VoucherController::class, 'show']);
 Route::middleware(['jwt.auth'])->group(function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
-
-    // Admin routes (only accessible by admins)
+// Admin routes (only accessible by admins)
     Route::middleware(['admin'])->group(function () {
         Route::get('admin/dashboard', [AdminController::class, 'dashboard']);
     });
