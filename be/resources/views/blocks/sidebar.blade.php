@@ -7,7 +7,6 @@
             <!-- Dashboard -->
             @can('show-dashboard')
             <li>
-
                 <a  class="active" href="{{route('dashboards.index')}}">
                     <i class="fa fa-dashboard"></i>
                     <span>Thống kê </span>
@@ -18,7 +17,6 @@
             <!-- Quản lý sản phẩm -->
             @canany(['show-products', 'create-product', 'show-sizes', 'show-colors', 'show-categories', 'show-brands'])
             <li class="sub-menu">
-
                 <a>
                     <i class="fa fa-cogs"></i>
                     <span>Quản lý sản phẩm</span>
@@ -50,7 +48,6 @@
             <!-- Quản lý tài khoản -->
             @canany(['show-users', 'show-roles'])
             <li class="sub-menu">
-
                 <a>
                     <i class="fa fa-users"></i>
                     <span>Quản lý tài khoản</span>
