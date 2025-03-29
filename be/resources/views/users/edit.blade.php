@@ -1,106 +1,106 @@
-@extends('layouts.app')
+@extends('master')
 
 @section('content')
-<style>
-    /* Container styling */
-.container {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 30px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+    <style>
+        .row {
+            padding-top: 60px;
+        }
+    </style>
+    <div class="row">
+        <div class="col">
+            <section class="card">
+                <header class="card-header">
+                    Chỉnh sửa người dùng
+                </header>
+                <div class="card-body">
+                    <!-- Hiển thị lỗi nếu có -->
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-/* Heading style */
-h1 {
-    text-align: center;
-    font-size: 2.5em;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: bold;
-}
+                    <!-- Hiển thị thông báo thành công nếu có -->
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
 
-/* Form input styling */
-input[type="text"], input[type="email"], input[type="password"] {
-    width: 100%;
-    padding: 12px;
-    margin: 8px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1em;
-}
+                    <!-- Form cập nhật người dùng -->
+                    <form action="{{ route('users.update', $user->id) }}" method="POST">
+                        @csrf
+                        @method('PUT')
 
-/* Placeholder text style */
-input::placeholder {
-    font-style: italic;
-    color: #888;
-}
+                        <!-- Tên người dùng -->
+                        <div class="form-group">
+                            <label for="name">Tên người dùng</label>
+                            <input type="text" name="name" id="name" class="form-control form-control-lg mb-2"
+                                placeholder="Tên người dùng" value="{{ old('name', $user->name) }}" required>
+                        </div>
 
-/* Button styling */
-button {
-    width: 100%;
-    padding: 12px;
-    font-size: 1.2em;
-    color: white;
-    background-color: #d9db40;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" id="email" class="form-control form-control-lg mb-2"
+                                placeholder="Email" value="{{ old('email', $user->email) }}" required>
+                        </div>
 
-button:hover {
-    background-color: #9de9ae;
-}
+                        <!-- Mật khẩu mới (nếu cần thay đổi) -->
+                        <div class="form-group">
+                            <label for="password">Mật khẩu mới (Để trống nếu không thay đổi)</label>
+                            <input type="password" name="password" id="password" class="form-control form-control-lg mb-2"
+                                placeholder="Mật khẩu mới">
+                        </div>
 
-/* Style for success message */
-.alert-success {
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #d4edda;
-    color: #155724;
-    border-radius: 5px;
-    text-align: center;
-}
+                        <!-- Số điện thoại -->
+                        <div class="form-group">
+                            <label for="phone">Số điện thoại</label>
+                            <input type="text" name="phone" id="phone" class="form-control form-control-lg mb-2"
+                                placeholder="Số điện thoại" value="{{ old('phone', $user->phone) }}">
+                        </div>
 
-</style>
-<div class="container">
-    <h1>Edit User</h1>
+                        <!-- Giới tính -->
+                        <div class="form-group">
+                            <label for="gender">Giới tính</label>
+                            <select name="gender" id="gender" class="form-control form-control-lg mb-2">
+                                <option value="male" {{ old('gender', $user->gender) == 'male' ? 'selected' : '' }}>Nam</option>
+                                <option value="female" {{ old('gender', $user->gender) == 'female' ? 'selected' : '' }}>Nữ</option>
+                                <option value="other" {{ old('gender', $user->gender) == 'other' ? 'selected' : '' }}>Khác</option>
+                            </select>
+                        </div>
 
-    <!-- Display success message if any -->
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+                        <!-- Ngày sinh -->
+                        <div class="form-group">
+                            <label for="birthdate">Ngày sinh</label>
+                            <input type="date" name="birthdate" id="birthdate" class="form-control form-control-lg mb-2"
+                                value="{{ old('birthdate', $user->birthdate) }}">
+                        </div>
+                        <!-- Vai trò -->
+                        <div class="form-group">
+                            <label for="roles">Vai Trò</label>
+                            <div>
+                                @foreach ($roles as $role)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="roles[]" id="role-{{ $role->id }}"
+                                            value="{{ $role->name }}"
+                                            {{ $user->roles->contains('name', $role->name) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="role-{{ $role->id }}">
+                                            {{ $role->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <!-- Nút cập nhật -->
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </form>
+                </div>
+            </section>
         </div>
-    @endif
-
-    <!-- Form to edit user -->
-    <form action="{{ route('users.update', $user->id) }}" method="POST">
-        @csrf
-        @method('PUT')
-
-        <!-- Name field -->
-        <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" name="name" value="{{ $user->name }}" required>
-        </div>
-
-        <!-- Email field -->
-        <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" value="{{ $user->email }}" required>
-        </div>
-
-        <!-- Password field (optional) -->
-        <div class="form-group">
-            <label for="password">New Password (Leave empty if not changing)</label>
-            <input type="password" name="password" placeholder="New Password">
-        </div>
-
-        <!-- Submit button -->
-        <button type="submit">Update</button>
-    </form>
-</div>
+    </div>
 @endsection

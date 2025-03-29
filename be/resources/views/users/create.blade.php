@@ -1,69 +1,115 @@
-@extends('layouts.app')
+@extends('master')
 
 @section('content')
-<style>
-    /* Container styling */
-.container {
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+    <style>
+        .row {
+            padding-top: 60px;
+        }
+    </style>
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="card">
+                <header class="card-header">
+                    Thêm Người Dùng mới
+                </header>
+                <div class="card-body">
+                    <!-- Form gửi đến route products.store với phương thức POST -->
+                    <form action="{{ route('users.store') }}" method="POST">
 
-/* Heading style */
-h1 {
-    text-align: center;
-    font-size: 2em;
-    color: #333;
-    margin-bottom: 20px;
-}
+                        @csrf
 
-/* Form input fields styling */
-form input {
-    width: 100%;
-    padding: 12px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 1em;
-    box-sizing: border-box;
-}
+                        <!-- Hiển thị lỗi nếu có -->
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
 
-/* Input focus effect */
-form input:focus {
-    outline: none;
-    border-color: #007bff;
-}
+                        <!-- Tên người dùng -->
+                        <div class="form-group">
+                            <label for="name">Tên</label>
+                            <input type="text" name="name" placeholder="Name" value="{{ old('name') }}" required  class="form-control form-control-lg mb-2">
+                        </div>
 
-/* Submit button styling */
-form button {
-    width: 100%;
-    padding: 12px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
-}
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" name="email" placeholder="Email" value="{{ old('email') }}"  class="form-control form-control-lg mb-2" required>
+                        </div>
 
-/* Submit button hover effect */
-form button:hover {
-    background-color: #0056b3;
-}
+                        <!-- Mật khẩu -->
+                        <div class="form-group">
+                            <label for="password">Mật Khẩu</label>
+                            <input type="password" name="password" placeholder="Password"  class="form-control form-control-lg mb-2" required>
+                        </div>
 
-</style>
-<div class="container">
-    <h1>Create User</h1>
-    <form action="{{ route('users.store') }}" method="POST">
-        @csrf
-        <input type="text" name="name" placeholder="Name" required>
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required>
-        <button type="submit">Create</button>
-    </form>
-</div>
+                        <!-- Giới tính -->
+                        <div class="form-group">
+                            <label for="gender">Giới Tính</label>
+                            <select name="gender" required class="form-control">
+                                <option value="" disabled selected>Gender</option>
+                                <option value="male" {{ old('gender') == 'male' ? 'selected' : '' }}>Male</option>
+                                <option value="female" {{ old('gender') == 'female' ? 'selected' : '' }}>Female</option>
+                                <option value="other" {{ old('gender') == 'other' ? 'selected' : '' }}>Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Ngày sinh -->
+                        <div class="form-group">
+                            <label for="date_of_birth">Ngày Sinh</label>
+                            <input type="date" name="date_of_birth" placeholder="Date of Birth"  class="form-control form-control-lg mb-2" value="{{ old('date_of_birth') }}" required>
+                        </div>
+
+                        <!-- Địa chỉ -->
+                        <div class="form-group">
+                            <label for="address">Địa chỉ</label>
+                            <input type="text" name="address" placeholder="Address"  class="form-control form-control-lg mb-2" value="{{ old('address') }}" required>
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="form-group">
+                            <label for="phone_number">Số điện thoại</label>
+                            <input type="text" name="phone_number" placeholder="Phone Number"  class="form-control form-control-lg mb-2" value="{{ old('phone_number') }}" required>
+                        </div>
+    
+                        <div class="form-group">
+                            <label for="roles">Vai Trò</label>
+                            <div>
+                                @foreach ($roles as $role)
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="roles[]" id="role-{{ $role->id }}" value="{{ $role->name }}">
+                                        <label class="form-check-label" for="role-{{ $role->id }}">
+                                            {{ $role->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                        <!-- Nút Thêm -->
+                        <button type="submit" class="btn btn-success">Thêm Người Dùng</button>
+                    </form>
+                </div>
+            </section>
+
+            <script>
+                ClassicEditor
+                    .create(document.querySelector('#description'), {
+                        ckfinder: {
+                            uploadUrl: '{{ route('ckeditor.upload') }}',
+                        },
+                        debug: 'all',
+                        toolbar: [
+                            'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
+                        ]
+                    })
+                    .catch(error => {
+                        console.error(error);
+                    });
+            </script>
+        </div>
+    </div>
 @endsection

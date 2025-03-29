@@ -11,108 +11,120 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <style>
-    body {
-        background-color: #f0f2f5;
-        font-family: 'Arial', sans-serif;
-    }
+        body {
+            background-color: #f0f2f5;
+            font-family: 'Arial', sans-serif;
+        }
 
-    .login-container {
-        max-width: 400px;
-        margin: 0 auto;
-        padding: 40px 20px;
-        background-color: #fff;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        margin-top: 100px;
-    }
+        .login-container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            margin-top: 100px;
+        }
 
-    .form-signin-heading {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-        text-align: center;
-        margin-bottom: 30px;
-    }
+        .form-signin-heading {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
 
-    .form-control {
-        border-radius: 30px;
-        margin-bottom: 15px;
-        padding: 10px 20px;
-    }
+        .form-control {
+            border-radius: 30px;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+        }
 
-    .btn-login {
-        background-color: #007bff;
-        color: #fff;
-        border-radius: 30px;
-        padding: 10px 20px;
-        font-size: 16px;
-        width: 100%;
-        transition: background-color 0.3s;
-    }
+        .btn-login {
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 16px;
+            width: 100%;
+            transition: background-color 0.3s;
+        }
 
-    .btn-login:hover {
-        background-color: #0056b3;
-    }
+        .btn-login:hover {
+            background-color: #0056b3;
+        }
 
-    .checkbox {
-        font-size: 14px;
-    }
+        .checkbox {
+            font-size: 14px;
+        }
 
-    .login-social-link a {
-        display: inline-block;
-        width: 45%;
-        margin: 10px 2%;
-        padding: 10px 0;
-        text-align: center;
-        border-radius: 30px;
-        font-size: 16px;
-    }
+        .login-social-link a {
+            display: inline-block;
+            width: 45%;
+            margin: 10px 2%;
+            padding: 10px 0;
+            text-align: center;
+            border-radius: 30px;
+            font-size: 16px;
+        }
 
-    .facebook {
-        background-color: #3b5998;
-        color: #fff;
-    }
+        .facebook {
+            background-color: #3b5998;
+            color: #fff;
+        }
 
-    .twitter {
-        background-color: #00acee;
-        color: #fff;
-    }
+        .twitter {
+            background-color: #00acee;
+            color: #fff;
+        }
 
-    .login-social-link a:hover {
-        opacity: 0.8;
-    }
+        .login-social-link a:hover {
+            opacity: 0.8;
+        }
 
-    .registration {
-        text-align: center;
-        margin-top: 20px;
-        font-size: 14px;
-    }
+        .registration {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
 
-    .registration a {
-        font-weight: bold;
-        color: #007bff;
-    }
+        .registration a {
+            font-weight: bold;
+            color: #007bff;
+        }
 
-    .registration a:hover {
-        text-decoration: underline;
-    }
+        .registration a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 
 <body>
     @if (session('success'))
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
-@if (session('error'))
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        {{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-@endif
+    @if (session('error'))
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+
+    <!-- Display validation errors -->
+    @if ($errors->any())
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
 
     <div class="container">
         <div class="login-container">
@@ -121,7 +133,7 @@
                 <h2 class="form-signin-heading">Sign in now</h2>
 
                 <!-- Email Field -->
-                <input type="email" class="form-control" name="email" placeholder="Email" required autofocus>
+                <input type="email" class="form-control" name="email" placeholder="Email" value="{{ old('email') }}" required autofocus>
 
                 <!-- Password Field -->
                 <input type="password" class="form-control" name="password" placeholder="Password" required>
@@ -130,14 +142,15 @@
                 <div class="checkbox">
                     <input type="checkbox" value="remember-me"> Remember me
                     <span class="pull-right">
-                        <a data-toggle="modal" href="#myModal">Forgot Password?</a>
+                        <!-- Change the link to the reset password page route -->
+                        <a href="{{ route('password.request') }}">Forgot Password?</a>
                     </span>
                 </div>
 
                 <!-- Sign-in Button -->
                 <button class="btn btn-login" type="submit">Sign in</button>
 
-                <p class="text-center"> <a href="{{ route('register') }}" class="fab ">Đăng kí</a>    or you can sign in via social network</p>
+                <p class="text-center"> <a href="{{ route('register') }}" class="fab ">Đăng kí</a> or you can sign in via social network</p>
 
                 <div class="login-social-link text-center">
                     <a href="#" class="facebook">
@@ -147,37 +160,7 @@
                         <i class="fab fa-twitter"></i> Twitter
                     </a>
                 </div>
-
-                <!-- Create an Account Link -->
-                {{-- <div class="registration">
-                    Don't have an account yet?
-                    <a href="{{ route('register') }}">Create an account</a>
-                </div> --}}
             </form>
-        </div>
-    </div>
-
-    <!-- Modal for Forgot Password -->
-    <div aria-hidden="true" aria-labelledby="myModalLabel" role="dialog" tabindex="-1" id="myModal" class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">Forgot Password ?</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Enter your e-mail address below to reset your password.</p>
-                    <input type="text" name="email" placeholder="Email" autocomplete="off"
-                        class="form-control placeholder-no-fix">
-                </div>
-                <div class="modal-footer">
-
-                    <button data-dismiss="modal" class="btn btn-default" type="button">Cancel</button>
-                    <button class="btn btn-success" type="button">Submit</button>
-                </div>
-            </div>
         </div>
     </div>
 
