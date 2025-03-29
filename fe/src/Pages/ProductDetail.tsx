@@ -235,7 +235,7 @@ const ProductDetail = () => {
                               -
                             </button>
 
-                            <input type="text" value={quantity} />
+                            <input type="text" value={quantity}  />
                             <button
                               type="button"
                               onClick={handleIncrease}
