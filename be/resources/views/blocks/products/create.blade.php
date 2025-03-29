@@ -207,26 +207,7 @@
                     }
                 });
             </script>
-{{-- ======= --}}
 
-
-
-            ClassicEditor
-                .create(document.querySelector('#description'), {
-                    ckfinder: {
-                        uploadUrl: '{{ route('ckeditor.upload') }}',
-                    },
-                    debug: 'all',
-                    toolbar: [
-                        'undo', 'redo', '|', 'bold', 'italic', '|', 'link', 'imageUpload', '|', 'bulletedList', 'numberedList', '|', 'blockQuote', 'insertTable'
-                    ]
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-
-                    </script>
-{{-- >>>>>>> tuan-anh2 --}}
         </div>
     </div>
 @endsection
