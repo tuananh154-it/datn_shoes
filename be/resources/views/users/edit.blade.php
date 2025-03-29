@@ -86,8 +86,8 @@
                             <div>
                                 @foreach ($roles as $role)
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="roles[]" id="role-{{ $role->id }}" 
-                                            value="{{ $role->name }}" 
+                                        <input class="form-check-input" type="checkbox" name="roles[]" id="role-{{ $role->id }}"
+                                            value="{{ $role->name }}"
                                             {{ $user->roles->contains('name', $role->name) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="role-{{ $role->id }}">
                                             {{ $role->name }}

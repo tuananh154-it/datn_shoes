@@ -158,4 +158,19 @@ class PaymentController extends Controller
             ] : null
         ]);
     }
+    /**
+     * Cập nhật thanh toán (hiện không hỗ trợ)
+     */
+    public function update(Request $request, string $id)
+    {
+        return response()->json(['message' => 'Updating payments is not supported.'], 405);
+    }
+
+    /**
+     * Xóa thanh toán (hiện không hỗ trợ)
+     */
+    public function destroy(string $id)
+    {
+        return response()->json(['message' => 'Deleting payments is not supported.'], 405);
+    }
 }

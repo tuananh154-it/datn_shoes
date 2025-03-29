@@ -41,7 +41,6 @@ const ProductDetail = () => {
 
   const handleVariantClick = (detail: any) => {
     if (detail) {
-      // Nếu có variant, chọn variant đó
       setSelectedDetail(detail);
     } else {
       setSelectedDetail(null);
