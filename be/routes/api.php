@@ -35,8 +35,6 @@ use App\Http\Controllers\UserController;
 // Public routes
 Route::apiResource('articles', ArticleController::class);
 Route::apiResource('comments', CommentController::class);
-Route::apiResource('payments', PaymentController::class);
-Route::post('/checkout', [CheckoutController::class, 'checkout']);
 
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
