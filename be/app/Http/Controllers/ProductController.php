@@ -8,6 +8,16 @@ use Illuminate\Support\Facades\{Validator, Storage};
 
 class ProductController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:create-product', ['only' => ['create', 'store']]);
+        $this->middleware('permission:edit-product', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:show-products', ['only' => ['index', 'show']]);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
     public function index(Request $request)
     {
         $searchTerm = $request->input('search');
@@ -49,6 +59,9 @@ class ProductController extends Controller
         return view('blocks.products.show', compact('product'));
     }
 
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
         $validatedData = $request->validate([

@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Category;
 use Illuminate\Http\Request;
+
 class CategoryController extends Controller
 {
     public function index(Request $request)
@@ -10,24 +12,23 @@ class CategoryController extends Controller
         // Lấy các tham số tìm kiếm từ form
         $searchTerm = $request->input('search');
         $status = $request->input('status');
-    
+
         $query = Category::query();
-    
+
         // Tìm kiếm theo tên nếu có
         if ($searchTerm) {
             $query->where('name', 'like', '%' . $searchTerm . '%');
         }
-    
+
         // Lọc theo trạng thái nếu có
         if ($status !== null && in_array($status, ['active', 'inactive'])) {
             $query->where('status', $status);
         }
-    
+
         // Lấy danh sách thuong hieu sau khi lọc và phân trang
         $categories = $query->orderBy('id', 'desc')->paginate(5);
-    
-        return view('categories.index', compact('categories'));
 
+        return view('categories.index', compact('categories'));
     }
     public function create()
     {
@@ -45,9 +46,9 @@ class CategoryController extends Controller
                         $fail('Tên danh mục không được để trống.');
                         return;
                     }
-    
+
                     $normalized_name = trim(strtolower($value));
-    
+
                     if (Category::whereRaw('LOWER(name) = ?', [$normalized_name])->exists()) {
                         $fail('Tên danh mục đã tồn tại.');
                     }
@@ -60,12 +61,12 @@ class CategoryController extends Controller
             'status.required' => 'Trạng thái không được để trống.',
             'status.in' => 'Trạng thái không hợp lệ.',
         ]);
-    
+
         Category::create($request->all());
-    
+
         return redirect()->route('categories.index')->with('success', 'Danh mục đã được thêm thành công!');
     }
-    
+
     public function edit(Category $category)
     {
         return view('categories.edit', compact('category'));
@@ -82,12 +83,13 @@ class CategoryController extends Controller
                         $fail('Tên danh mục  không được để trống.');
                         return;
                     }
-    
+
                     $normalized_name = trim(strtolower($value));
-    
+
                     if (Category::whereRaw('LOWER(name) = ?', [$normalized_name])
                         ->where('id', '!=', $category->id) // Loại trừ danh mục  đang chỉnh sửa
-                        ->exists()) {
+                        ->exists()
+                    ) {
                         $fail('Tên danh mục đã tồn tại.');
                     }
                 },
@@ -99,15 +101,14 @@ class CategoryController extends Controller
             'status.required' => 'Trạng thái không được để trống.',
             'status.in' => 'Trạng thái không hợp lệ.',
         ]);
-    
+
         $category->update($request->all());
-    
+
         return redirect()->route('categories.index')->with('success', 'Thương hiệu đã được cập nhật!');
     }
     public function destroy(Category $category)
     {
         $category->delete();
         return redirect()->route('categories.index')->with('success', 'Danh mục đã được xóa thành công!');
-
     }
 }

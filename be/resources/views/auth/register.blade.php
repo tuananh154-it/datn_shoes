@@ -89,6 +89,11 @@
         <div class="register-container">
             <form method="POST" action="{{ route('register') }}">
                 @csrf
+{{-- <<<<<<< HEAD --}}
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" required>
+{{-- ======= --}}
                 <h2 class="form-register-heading">Create an Account</h2>
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
@@ -161,8 +166,19 @@
                 <div class="registration">
                     Already have an account?
                     <a href="{{ route('login') }}">Login here</a>
+{{-- >>>>>>> c2d07dfa3a2f7d736ca86e808443a7422f15b2e3 --}}
                 </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" name="password" required>
+                </div>
+                <button type="submit">Register</button>
             </form>
+
         </div>
     </div>
 

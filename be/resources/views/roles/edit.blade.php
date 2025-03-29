@@ -19,12 +19,12 @@
             <div>
                 @foreach ($permissions as $permission)
                     <div class="form-check">
-                        <input 
-                            class="form-check-input" 
-                            type="checkbox" 
-                            name="permissions[]" 
-                            id="permission-{{ $permission->id }}" 
-                            value="{{ $permission->id }}" 
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="permissions[]"
+                            id="permission-{{ $permission->id }}"
+                            value="{{ $permission->id }}"
                             {{ in_array($permission->id, $rolePermissions) ? 'checked' : '' }}>
                         <label class="form-check-label" for="permission-{{ $permission->id }}">
                             {{ $permission->name }}

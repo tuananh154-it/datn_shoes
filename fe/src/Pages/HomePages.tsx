@@ -247,7 +247,7 @@ const HomePages = () => {
                         <div className="promoton_collection_section text-center wow fadeInUp position-relative" >
                             <p className="position-relative">THE SEASON BEGINGS</p>
                             <h2 className="title_h2 text-capitalize position-relative">PROMOTION SALE OFF 50%</h2>
-                            <a href="product_list_with_sidebar.html" className="background-btn text-uppercase position-relative">SHOP NOW
+                            <a href="product_list_with_sidebar.html" className="background-btn text-uppercase position-relative">MUA NGAY
                                 <i className="flaticon-arrows-4"></i>
                             </a>
                         </div>
@@ -259,9 +259,9 @@ const HomePages = () => {
                 <section className="padding-top-text-60 arrival_featured_section wow fadeIn">
                     <div className="container">
                         <div className="shoes_featured_title">
-                            <h3 className="title_h3 text-uppercase">Best Sellers</h3>
+                            <h3 className="title_h3 text-uppercase">Sản phẩm bán chạy nhất</h3>
                             <p className="shoes_featured_title_link mb-0">
-                                <a href="/shop" className="text-uppercase">View More<i className="flaticon-arrows-4"></i></a>
+                                <a href="/shop" className="text-uppercase">Xem thêm<i className="flaticon-arrows-4"></i></a>
                             </p>
                         </div>
                         <div className="row">
@@ -320,9 +320,9 @@ const HomePages = () => {
                 <section className="padding-top-text-60 wow fadeIn blog_section shoes_blog_section">
                     <div className="container">
                         <div className="shoes_featured_title">
-                            <h3 className="title_h3 text-uppercase">Latest Blog</h3>
+                            <h3 className="title_h3 text-uppercase">Bài viết mới nhất</h3>
                             <p className="shoes_featured_title_link mb-0">
-                                <a href="grid_blog_list_with_sidebar.html" className="text-uppercase">View More<i className="flaticon-arrows-4"></i></a>
+                                <a href="grid_blog_list_with_sidebar.html" className="text-uppercase">Xem thêm<i className="flaticon-arrows-4"></i></a>
                             </p>
                         </div>
                         <div className="row">

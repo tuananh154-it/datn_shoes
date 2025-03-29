@@ -22,7 +22,8 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            // 'password' => 'required|string|min:6|confirmed',
+            'password' => ['required', 'string', 'min:8'],
         ]);
 
         $user = User::create([
@@ -69,25 +70,38 @@ class AuthController extends Controller
 
     public function dangnhap(Request $request)
     {
+        // Xác thực đầu vào
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
+        // Lấy thông tin đăng nhập từ request
         $credentials = $request->only('email', 'password');
 
+        // Kiểm tra nếu tài khoản tồn tại
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) {
+            // Nếu không có tài khoản với email này
+            return back()->withErrors(['email' => 'Tài khoản không tồn tại.'])->onlyInput('email');
+        }
+
+        // Kiểm tra thông tin đăng nhập
         if (Auth::attempt($credentials)) {
+            // Đăng nhập thành công, tái tạo session
             $request->session()->regenerate();
 
             $user = Auth::user();
-            // Check user role and redirect accordingly
+            // Kiểm tra vai trò của người dùng và chuyển hướng
             if (in_array($user->role, ['admin', 'superadmin'])) {
                 return redirect()->route('dashboards.index')->with('success', 'Vào thành công!');
             }
 
-            return redirect()->intended(route('login'))->with('error', 'Bạn không có quyền truy cập!');
+            return redirect()->route('login')->withErrors(['email' => 'Bạn không có quyền truy cập!'])->onlyInput('email');
         }
 
+        // Đăng nhập thất bại, quay lại với thông báo lỗi
         return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác'])->onlyInput('email');
     }
 
