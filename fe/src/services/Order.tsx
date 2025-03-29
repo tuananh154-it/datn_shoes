@@ -1,6 +1,7 @@
 import { api } from "../config/axios"
-import { OrderData } from "../Pages/CheckOut"
-
-export const getOrder = (orderData: OrderData)=>{
-      return api.post('/payments',orderData)   
+export const getCheckout = ()=>{
+      return api.get("/checkout/init")
+}
+export const getOrder = (orderData: any)=>{
+      return api.post('/orders/place',orderData)
 }
