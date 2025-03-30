@@ -507,3 +507,59 @@
     transform: scale(1);
   }
 }
+
+
+.payment-card {
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  position: relative;
+  background: #fff;
+}
+
+.payment-card input {
+  position: absolute;
+  opacity: 0;
+}
+
+.payment-card.active {
+  border-color: #e60073;
+  background-color: #fff0f5;
+}
+
+.payment-icon {
+  font-size: 24px;
+  margin-right: 12px;
+}
+
+.visa {
+  color: #1a1f71;
+}
+
+.cod {
+  color: #2ecc71;
+}
+
+.momo {
+  color: #e60073;
+}
+
+.continue-button {
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #e60073;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.continue-button:hover {
+  background-color: #b8005e;
+}

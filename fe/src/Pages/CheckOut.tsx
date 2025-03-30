@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { fetchCart } from "../services/cart";
-import { getCheckout, getOrder } from "../services/Order";
+import { getCheckout, getOrder, Momopayment } from "../services/Order";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import { FaCcVisa, FaMoneyBillWave, FaMobileAlt } from "react-icons/fa";
 interface Address {
   _id: string;
   name: string;
@@ -64,14 +63,156 @@ const CheckOut = () => {
     });
   }, []);
   const nav = useNavigate();
+  // const handleOrder = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!checkout) {
+  //     alert("Không có dữ liệu đơn hàng!");
+  //     return;
+  //   }
+
+  //   const orderData = {
+  //     user_id: checkout.user.id,
+  //     username: checkout.user.name,
+  //     phone_number: checkout.user.phone_number,
+  //     email: checkout.user.email,
+  //     address: checkout.user.address,
+  //     note: (document.getElementById("note") as HTMLInputElement)?.value || "",
+  //     cart_items: checkout.cart_items,
+  //     deliver_fee: checkout.deliver_fee,
+  //     discount: checkout.discount,
+  //     subtotal: checkout.subtotal,
+  //     total: checkout.total,
+  //     payment_method: paymentMethod,
+  //   };
+
+  //   console.log("🚀 Sending Order Data:", orderData);
+
+  //   const response = await getOrder(orderData);
+  //   console.log("✅ Order API Response:", response);
+
+  //   if (response.status === 201) {
+  //     // alert("Đặt hàng thành công!");
+  //     toast.success("🎉 Đã đặt hàng thành công")
+  //     nav("/")
+  //   } else {
+  //     alert(`Đặt hàng thất bại! Mã lỗi: ${response.status}`);
+  //   }
+  // };
+  // const handleOrder = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   if (!checkout) {
+  //     alert("Không có dữ liệu đơn hàng!");
+  //     return;
+  //   }
+
+  //   const orderData = {
+  //     user_id: checkout.user.id,
+  //     username: checkout.user.name,
+  //     phone_number: checkout.user.phone_number,
+  //     email: checkout.user.email,
+  //     address: checkout.user.address,
+  //     note: (document.getElementById("note") as HTMLInputElement)?.value || "",
+  //     cart_items: checkout.cart_items,
+  //     deliver_fee: checkout.deliver_fee,
+  //     discount: checkout.discount,
+  //     subtotal: checkout.subtotal,
+  //     total: checkout.total,
+  //     payment_method: paymentMethod,
+  //   };
+
+  //   console.log("🚀 Sending Order Data:", orderData);
+
+  //   try {
+  //     const orderResponse = await getOrder(orderData);
+  //     console.log("✅ Order API Response:", orderResponse);
+
+  //     if (orderResponse.status !== 201) {
+  //       alert(`Đặt hàng thất bại! Mã lỗi: ${orderResponse.status}`);
+  //       return;
+  //     }
+
+  //     toast.success("🎉 Đã đặt hàng thành công!");
+
+  //     if (paymentMethod === "paypal") {
+  //       const momoResponse = await Momopayment({
+  //         amount: checkout.total,
+  //         orderId: orderResponse.data.order_id, // Lấy order_id từ API đơn hàng
+  //         redirectUrl: window.location.origin + "/order-success", // Trang xác nhận
+  //       });
+
+  //       console.log("✅ MoMo API Response:", momoResponse);
+
+  //       if (momoResponse?.payUrl) {
+  //         window.location.href = momoResponse.payUrl;
+  //       } else {
+  //         alert("Lỗi khi tạo thanh toán MoMo!");
+  //       }
+  //     } else {
+  //       nav("/");
+  //     }
+  //   } catch (error) {
+  //     console.error("Lỗi xử lý đơn hàng:", error);
+  //     alert("Có lỗi xảy ra, vui lòng thử lại!");
+  //   }
+  // };
+
   const handleOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-  
+
     if (!checkout) {
       alert("Không có dữ liệu đơn hàng!");
       return;
     }
-  
+
+    if (paymentMethod === "paypal") {
+      // Gọi API MoMo trước
+      const uniqueOrderId = `ORDER_${new Date().getTime()}`;
+
+      const momoData = {
+        amount: checkout.total,
+        orderId: uniqueOrderId, // Mã đơn hàng tạm thời
+        redirectUrl: window.location.origin + "/momo-success", // Trang xử lý sau khi thanh toán MoMo
+      };
+
+      console.log("📦 Dữ liệu gửi API MoMo:", momoData);
+
+      try {
+        const momoResponse = await Momopayment(momoData);
+        console.log("✅ MoMo API Response:", momoResponse);
+
+        const payUrl = momoResponse.data?.payUrl;
+        console.log("🔗 MoMo PayUrl:", payUrl);
+
+        if (payUrl) {
+          localStorage.setItem("pendingOrder", JSON.stringify(checkout)); // Lưu đơn hàng tạm vào localStorage
+          window.location.href = payUrl; // Chuyển hướng đến MoMo
+          return;
+        } else {
+          alert("⚠️ API MoMo không trả về URL thanh toán!");
+          return;
+        }
+      } catch (error) {
+        console.error("❌ Lỗi khi gọi API MoMo:", error);
+        alert("Lỗi khi tạo thanh toán MoMo!");
+        return;
+      }
+    }
+
+    // Nếu chọn "Thanh toán khi nhận hàng" thì đặt hàng ngay
+    if (paymentMethod === "cash_on_delivery") {
+      processOrder();
+    }
+  };
+
+  // Hàm xử lý đặt hàng
+  const processOrder = async () => {
+    const savedOrder = localStorage.getItem("pendingOrder");
+    if (!checkout) {
+      alert("Không có dữ liệu đơn hàng!");
+      return;
+    }
     const orderData = {
       user_id: checkout.user.id,
       username: checkout.user.name,
@@ -86,20 +227,37 @@ const CheckOut = () => {
       total: checkout.total,
       payment_method: paymentMethod,
     };
-  
-    console.log("🚀 Sending Order Data:", orderData);
-  
-    const response = await getOrder(orderData);
-    console.log("✅ Order API Response:", response);
 
-    if (response.status === 201) {
-      // alert("Đặt hàng thành công!");
-      toast.success("🎉 Đã đặt hàng thành công")
-      nav("/")
-    } else {
-      alert(`Đặt hàng thất bại! Mã lỗi: ${response.status}`);
+    console.log("🚀 Sending Order Data:", orderData);
+
+    try {
+      const orderResponse = await getOrder(orderData);
+      console.log("✅ Order API Response:", orderResponse);
+
+      if (orderResponse.status !== 201) {
+        alert(`Đặt hàng thất bại! Mã lỗi: ${orderResponse.status}`);
+        return;
+      }
+
+      toast.success("🎉 Đã đặt hàng thành công!");
+      localStorage.removeItem("pendingOrder"); // Xóa đơn hàng tạm sau khi đặt hàng thành công
+      nav("/");
+    } catch (error) {
+      console.error("❌ Lỗi xử lý đơn hàng:", error);
+      alert("Có lỗi xảy ra, vui lòng thử lại!");
     }
   };
+
+  // Kiểm tra nếu MoMo thanh toán xong
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const momoStatus = urlParams.get("momoStatus");
+
+    if (momoStatus === "success") {
+      processOrder(); // Đặt hàng sau khi thanh toán MoMo thành công
+    }
+  }, []);
+
   useEffect(() => {
     fetch(`https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1`)
       .then((res) => res.json())
@@ -163,11 +321,11 @@ const CheckOut = () => {
           </div>
         </section>
       </div>
-      <form>
-        <div className="checkout-container">
-          <div className="checkout-left">
-            <h2>Thanh toán & Vận chuyển</h2>
 
+      <div className="checkout-container">
+        <div className="checkout-left">
+          <h2>Thanh toán & Vận chuyển</h2>
+          <form>
             <label>Họ và tên *</label>
             <input
               type="text"
@@ -202,80 +360,124 @@ const CheckOut = () => {
 
             <label>Ghi chú</label>
             <input type="text" id="note" />
-          </div>
-          <div className="checkout-right">
-            <h2>Đơn hàng của bạn</h2>
-            {checkout?.cart_items.map((item, index) => (
-              <div className="order-summary" key={index}>
-                <div className="product">
-                  <img
-                    src={JSON.parse(item.image)[0].replace(/\\/g, "")}
-                    alt={item.product_name}
-                    className="product-image"
-                  />
-                  <div className="product-details">
-                    <p className="product-name">{item.product_name}</p>
-                    <p className="product-quantity">x{item.quantity}</p>
-                    <p className="product-price">
-                      {(
-                        parseFloat(item.price) * item.quantity
-                      ).toLocaleString()}
-                      đ
-                    </p>
-                  </div>
+          </form>
+        </div>
+        <div className="checkout-right">
+          <h2>Đơn hàng của bạn</h2>
+          {checkout?.cart_items.map((item, index) => (
+            <div className="order-summary" key={index}>
+              <div className="product">
+                <img
+                  src={JSON.parse(item.image)[0].replace(/\\/g, "")}
+                  alt={item.product_name}
+                  className="product-image"
+                />
+                <div className="product-details">
+                  <p className="product-name">{item.product_name}</p>
+                  <p className="product-quantity">x{item.quantity}</p>
+                  <p className="product-price">
+                    {(parseFloat(item.price) * item.quantity).toLocaleString()}đ
+                  </p>
                 </div>
-                <hr />
               </div>
-            ))}
-
-            <div className="price-details">
-              <p>
-                Tổng: <span>{checkout?.subtotal?.toLocaleString()}đ</span>
-              </p>
-              <p>
-                Phí ship:{" "}
-                <span>{checkout?.deliver_fee?.toLocaleString()}đ</span>
-              </p>
-              <p className="total">
-                Tổng cộng: <strong>{checkout?.total?.toLocaleString()}đ</strong>
-              </p>
+              <hr />
             </div>
+          ))}
 
-            <div className="payment-method">
+          <div className="price-details">
+            <p>
+              Tổng: <span>{checkout?.subtotal?.toLocaleString()}đ</span>
+            </p>
+            <p>
+              Phí ship: <span>{checkout?.deliver_fee?.toLocaleString()}đ</span>
+            </p>
+            <p className="total">
+              Tổng cộng: <strong>{checkout?.total?.toLocaleString()}đ</strong>
+            </p>
+          </div>
+
+          <div className="payment-method">
+            {/* <label>
+              <input
+                type="radio"
+                name="payment"
+                value="credit_card"
+                checked={paymentMethod === "credit_card"}
+                onChange={() => setPaymentMethod("credit_card")}
+              />
+              Thẻ tín dụng
+            </label>
+
             <label>
-  <input
-    type="radio"
-    name="payment"
-    value="credit_card"
-    checked={paymentMethod === "credit_card"}
-    onChange={() => setPaymentMethod("credit_card")}
-  />
-  Thẻ tín dụng
-</label>
+              <input
+                type="radio"
+                name="payment"
+                value="cash_on_delivery"
+                checked={paymentMethod === "cash_on_delivery"}
+                onChange={() => setPaymentMethod("cash_on_delivery")}
+              />
+              Thanh toán khi nhận hàng
+            </label>
 
-<label>
-  <input
-    type="radio"
-    name="payment"
-    value="cash_on_delivery"
-    checked={paymentMethod === "cash_on_delivery"}
-    onChange={() => setPaymentMethod("cash_on_delivery")}
-  />
-  Thanh toán khi nhận hàng
-</label>
+            <label>
+              <input
+                type="radio"
+                name="payment"
+                value="paypal"
+                checked={paymentMethod === "paypal"}
+                onChange={() => setPaymentMethod("paypal")}
+              />
+              Thanh toán MoMo
+            </label> */}
+          <label className={`payment-card ${paymentMethod === "credit_card" ? "active" : ""}`}>
+        <input
+            type="radio"
+            name="payment"
+            value="credit_card"
+            checked={paymentMethod === "credit_card"}
+            onChange={() => setPaymentMethod("credit_card")}
+        />
+        <FaCcVisa className="payment-icon visa" />
+        <span>Thanh toán bằng Visa/Master/JCB</span>
+    </label>
 
-<label>
-  <input
-    type="radio"
-    name="payment"
-    value="paypal"
-    checked={paymentMethod === "paypal"}
-    onChange={() => setPaymentMethod("paypal")}
-  />
-  PayPal
-</label>
-            </div>
-            {/* <div className="payment-method">
+    <label className={`payment-card ${paymentMethod === "cash_on_delivery" ? "active" : ""}`}>
+        <input
+            type="radio"
+            name="payment"
+            value="cash_on_delivery"
+            checked={paymentMethod === "cash_on_delivery"}
+            onChange={() => setPaymentMethod("cash_on_delivery")}
+        />
+        <FaMoneyBillWave className="payment-icon cod" />
+        <span>Thanh toán khi nhận hàng</span>
+    </label>
+
+    <label className={`payment-card ${paymentMethod === "paypal" ? "active" : ""}`}>
+        <input
+            type="radio"
+            name="payment"
+            value="paypal"
+            checked={paymentMethod === "paypal"}
+            onChange={() => setPaymentMethod("paypal")}
+        />
+        <FaMobileAlt className="payment-icon momo" />
+        <span>Thanh toán bằng Ví MoMo</span>
+    </label>
+          </div>
+
+          <button type="submit" className="order-button" onClick={handleOrder}>
+            ĐẶT HÀNG
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default CheckOut;
+{
+  /* <div className="payment-method">
               <label className="payment-option">
                 <input
                   type="radio"
@@ -300,19 +502,5 @@ const CheckOut = () => {
                   Thanh toán qua ngân hàng trước khi giao hàng.
                 </p>
               </label>
-            </div> */}
-            <button
-              type="submit"
-              className="order-button"
-              onClick={handleOrder}
-            >
-              ĐẶT HÀNG
-            </button>
-          </div>
-        </div>
-      </form>
-    </>
-  );
-};
-
-export default CheckOut;
+            </div> */
+}
