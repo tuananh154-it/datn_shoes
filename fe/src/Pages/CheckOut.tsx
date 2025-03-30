@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { getCheckout, getOrder, Momopayment } from "../services/Order";
 import toast from "react-hot-toast";
@@ -274,7 +275,7 @@ const CheckOut = () => {
             <div className="order-summary" key={index}>
               <div className="product">
                 <img
-                  src={JSON.parse(item.image)[0].replace(/\\/g, "")}
+                  src={item.image}
                   alt={item.product_name}
                   className="product-image"
                 />
