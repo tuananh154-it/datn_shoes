@@ -4,6 +4,7 @@ import { getCheckout, getOrder, Momopayment } from "../services/Order";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { FaCcVisa, FaMoneyBillWave, FaMobileAlt } from "react-icons/fa";
+import { string } from "zod";
 interface Address {
   _id: string;
   name: string;
@@ -40,6 +41,7 @@ interface CheckoutData {
   total: number;
   user: User;
   voucher: string | null;
+  note:string
 }
 const CheckOut = () => {
   const [provinces, setProvinces] = useState<Address[]>([]);
@@ -109,6 +111,16 @@ const CheckOut = () => {
     // Nếu chọn "Thanh toán khi nhận hàng" thì đặt hàng ngay
     if (paymentMethod === "cash_on_delivery") {
       processOrder();
+    }
+    if (checkout?.user.address) {
+      const storedAddresses = JSON.parse(localStorage.getItem("savedAddresses") || "[]");
+  
+      // Thêm địa chỉ mới vào đầu danh sách, loại bỏ trùng lặp và giữ tối đa 2 địa chỉ
+      const updatedAddresses = [checkout.user.address, ...storedAddresses]
+        .filter((addr, index, self) => self.indexOf(addr) === index) // Loại bỏ địa chỉ trùng
+        .slice(0, 2); // Giữ tối đa 2 địa chỉ gần nhất
+  
+      localStorage.setItem("savedAddresses", JSON.stringify(updatedAddresses));
     }
   };
 
@@ -202,8 +214,33 @@ const CheckOut = () => {
         .catch((error) => console.error("Lỗi khi tải xã/phường:", error));
     }
   }, [selectedDistrict]);
+  const [specificAddress, setSpecificAddress] = useState("");
 
-  
+  const updateAddress = (newValue?: string) => {
+    setCheckout((prev) =>
+      prev
+        ? {
+            ...prev,
+            user: {
+              ...prev.user,
+              address: `${newValue || specificAddress}, ${
+                wards.find((w) => String(w.code) === selectedWard)?.name || ""
+              }, ${
+                districts.find((d) => String(d.code) === selectedDistrict)?.name || ""
+              }, ${
+                provinces.find((p) => String(p.code) === selectedProvince)?.name || ""
+              }`,
+            },
+          }
+        : null
+    );
+  };
+  const [savedAddresses, setSavedAddresses] = useState<string[]>([]);
+
+useEffect(() => {
+  const storedAddresses = JSON.parse(localStorage.getItem("savedAddresses") || "[]");
+  setSavedAddresses(storedAddresses);
+}, []);
   return (
     <>
       <div className="menu_overlay"></div>
@@ -232,7 +269,7 @@ const CheckOut = () => {
       <div className="checkout-container">
         <div className="checkout-left">
           <h2>Thanh toán & Vận chuyển</h2>
-          <form>
+          {/* <form>
             <label>Họ và tên *</label>
             <input
               type="text"
@@ -267,7 +304,201 @@ const CheckOut = () => {
 
             <label>Ghi chú</label>
             <input type="text" id="note" />
-          </form>
+          </form> */}
+          <form>
+  <label>Họ và tên *</label>
+  <input
+    type="text"
+    id="name"
+    value={checkout?.user.name || ""}
+    onChange={(e) =>
+      setCheckout((prev) =>
+        prev ? { ...prev, user: { ...prev.user, name: e.target.value } } : null
+      )
+    }
+  />
+
+  <label>Số điện thoại *</label>
+  <input
+    type="text"
+    id="phone_number"
+    value={checkout?.user.phone_number || ""}
+    onChange={(e) =>
+      setCheckout((prev) =>
+        prev ? { ...prev, user: { ...prev.user, phone_number: e.target.value } } : null
+      )
+    }
+  />
+
+  <label>Email *</label>
+  <input
+    type="email"
+    id="email"
+    value={checkout?.user.email || ""}
+    onChange={(e) =>
+      setCheckout((prev) =>
+        prev ? { ...prev, user: { ...prev.user, email: e.target.value } } : null
+      )
+    }
+  />
+
+{/* <label>Tỉnh/Thành phố *</label>
+    <select
+      value={selectedProvince}
+      onChange={(e) => {
+        setSelectedProvince(e.target.value);
+        updateAddress(e.target.options[e.target.selectedIndex].text);
+      }}
+    >
+      <option value="">Chọn tỉnh/thành phố</option>
+      {provinces?.map((p) => (
+        <option key={p.code} value={p.code}>{p.name}</option>
+      ))}
+    </select>
+
+    <label>Quận/Huyện *</label>
+    <select
+      value={selectedDistrict}
+      onChange={(e) => {
+        setSelectedDistrict(e.target.value);
+        updateAddress(e.target.options[e.target.selectedIndex].text);
+      }}
+      disabled={!selectedProvince}
+    >
+      <option value="">Chọn quận/huyện</option>
+      {districts.map((d) => (
+        <option key={d.code} value={d.code}>{d.name}</option>
+      ))}
+    </select>
+
+    <label>Phường/Xã *</label>
+    <select
+      value={selectedWard}
+      onChange={(e) => {
+        setSelectedWard(e.target.value);
+        updateAddress(e.target.options[e.target.selectedIndex].text);
+      }}
+      disabled={!selectedDistrict}
+    >
+      <option value="">Chọn phường/xã</option>
+      {wards.map((w) => (
+        <option key={w.code} value={w.code}>{w.name}</option>
+      ))}
+    </select>
+
+    <label>Địa chỉ *</label>
+    <input
+      type="text"
+      id="address"
+      value={checkout?.user.address || ""}
+      onChange={(e) =>
+        setCheckout((prev) =>
+          prev ? { ...prev, user: { ...prev.user, address: e.target.value } } : null
+        )
+      }
+    /> */}
+    <label>Tỉnh/Thành phố *</label>
+    <select
+      value={selectedProvince}
+      onChange={(e) => {
+        setSelectedProvince(e.target.value);
+        updateAddress();
+      }}
+    >
+      <option value="">Chọn tỉnh/thành phố</option>
+      {provinces.map((p) => (
+        <option key={p.code} value={p.code}>
+          {p.name}
+        </option>
+      ))}
+    </select>
+
+    <label>Quận/Huyện *</label>
+    <select
+      value={selectedDistrict}
+      onChange={(e) => {
+        setSelectedDistrict(e.target.value);
+        updateAddress();
+      }}
+      disabled={!selectedProvince}
+    >
+      <option value="">Chọn quận/huyện</option>
+      {districts?.map((d) => (
+        <option key={d.code} value={d.code}>
+          {d.name}
+        </option>
+      ))}
+    </select>
+
+    <label>Phường/Xã *</label>
+    <select
+      value={selectedWard}
+      onChange={(e) => {
+        setSelectedWard(e.target.value);
+        updateAddress();
+      }}
+      disabled={!selectedDistrict}
+    >
+      <option value="">Chọn phường/xã</option>
+      {wards?.map((w) => (
+        <option key={w.code} value={w.code}>
+          {w.name}
+        </option>
+      ))}
+    </select>
+
+    <label>Địa chỉ cụ thể *</label>
+    <input
+      type="text"
+      placeholder="Nhập số nhà, tên đường..."
+      value={specificAddress}
+     onChange={(e) => {
+  setSpecificAddress(e.target.value); // Giữ nguyên chuỗi người dùng nhập
+  updateAddress(e.target.value); // Cập nhật lại địa chỉ đầy đủ
+}}
+    />
+
+    <label>Địa chỉ đầy đủ *</label>
+    <input
+      type="text" 
+      id="address"
+      value={checkout?.user.address || ""}
+      onChange={(e) =>
+        setCheckout((prev) =>
+          prev ? { ...prev, user: { ...prev.user, address: e.target.value } } : null
+        )
+      }
+    />
+    {savedAddresses.length > 0 && (
+  <div style={{ marginTop: "5px" }}>
+   {savedAddresses.length > 0 && (
+  <div style={{ marginTop: "5px" }}>
+    {savedAddresses.map((addr, index) => (
+      <p 
+        key={index} 
+        onClick={() => setCheckout((prev) => prev ? { ...prev, user: { ...prev.user, address: addr } } : null)}
+        style={{ cursor: "pointer", color: "#888", marginBottom: "3px" }}
+      >
+      {addr}
+      </p>
+    ))}
+  </div>
+)}
+  </div>
+)}
+
+  <label>Ghi chú</label>
+  <input
+    type="text"
+    id="note"
+    value={checkout?.note || ""}
+    onChange={(e) =>
+      setCheckout((prev) =>
+        prev ? { ...prev, note: e.target.value } : null
+      )
+    }
+  />
+</form>
         </div>
         <div className="checkout-right">
           <h2>Đơn hàng của bạn</h2>
