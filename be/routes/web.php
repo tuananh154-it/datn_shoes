@@ -323,16 +323,20 @@
     // });
 
     // Routes for Profiles
-    Route::resource('profiles', ProfileController::class);
-    // Route::middleware(['auth'])->group(function () {
-    //     Route::get('profiles/{user_id}', [ProfileController::class, 'show'])->name('profiles.show');
-    //     Route::get('/profile/create', [ProfileController::class, 'create']);
-    //     Route::post('/profile', [ProfileController::class, 'store']);
-    //     Route::get('/profile/{user_id}', [ProfileController::class, 'show']);
-    // });
-    Route::middleware(['auth'])->get('/profile/{user}', [ProfileController::class, 'show'])->name('profiles.show');
-    Route::middleware(['auth'])->get('/profile/{user_id}/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
-    Route::middleware(['auth'])->put('/profile/{user}', [ProfileController::class, 'update'])->name('profiles.update');
+    Route::middleware(['auth'])->group(function () {
+        // Hiển thị thông tin người dùng hiện tại
+        Route::get('/profile', [ProfileController::class, 'show'])->name('profiles.show');
+
+        // Chỉnh sửa thông tin người dùng hiện tại
+        Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
+
+        // Cập nhật thông tin người dùng hiện tại
+        Route::put('/profile', [ProfileController::class, 'update'])->name('profiles.update');
+
+        // Tạo profile cho người dùng hiện tại
+        Route::get('/profile/create', [ProfileController::class, 'create'])->name('profiles.create');
+        Route::post('/profile', [ProfileController::class, 'store'])->name('profiles.store');
+    });
 
 
 
@@ -344,3 +348,5 @@
     Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
     // Route cho trang danh sách người dùng
+    // Thêm route trong web.php
+    Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');

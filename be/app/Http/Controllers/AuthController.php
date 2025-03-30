@@ -52,9 +52,9 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name'          => $request->name,
-            'email'         => $request->email,
-            'password'      => Hash::make($request->password),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
             // 'gender'        => $request->gender,
             // 'date_of_birth' => $request->date_of_birth,
             // 'address'       => $request->address,
@@ -119,6 +119,32 @@ class AuthController extends Controller
             'user' => Auth::user(),
         ]);
     }
+
+    // Đăng xuất ở đây
+    public function logout(Request $request)
+    {
+        try {
+            // Đăng xuất người dùng hiện tại từ session (nếu đang sử dụng session-based login)
+            Auth::logout();
+
+            // Hủy token JWT nếu có
+            if (JWTAuth::getToken()) {
+                JWTAuth::invalidate(JWTAuth::getToken());
+            }
+
+            // Xóa session và làm mới token
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+
+            return redirect()->route('login'); // Chuyển hướng đến trang đăng nhập
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Không thể đăng xuất, vui lòng thử lại! Chi tiết lỗi: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+
 
     public function user(Request $request)
     {

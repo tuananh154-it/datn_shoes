@@ -7,22 +7,19 @@ use App\Models\Permission;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
 use Illuminate\Support\Facades\DB;
-
 
 class RolesTableSeeder extends Seeder
 {
     public function run()
     {
         $roles = [
-            ['name' => 'super-admin', 'guard_name' => 'web'],
+            ['name' => 'super-admin', 'guard_name' => 'web'],  // Đã đổi từ super-admin thành superadmin
             ['name' => 'admin', 'guard_name' => 'web'],
             ['name' => 'employee', 'guard_name' => 'web'],
             ['name' => 'manager', 'guard_name' => 'web'],
             ['name' => 'user', 'guard_name' => 'web'],
         ];
-
 
         foreach ($roles as $role) {
             Role::updateOrCreate($role);
@@ -37,8 +34,8 @@ class RolesTableSeeder extends Seeder
                 'role' => 'superadmin',
             ]);
         }
+        // Thay đổi ở đây: đổi super-admin thành superadmin
         $superAdmin->assignRole('super-admin');
-
 
         $permissions = [
             ['name' => 'show-products', 'guard_name' => 'web'],

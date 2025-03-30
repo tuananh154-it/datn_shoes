@@ -22,7 +22,8 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\UserController;
 
-
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,11 +93,15 @@ Route::put('/users/{user}', [UserController::class, 'update'])->name('api.users.
 // Route để xóa người dùng (API)
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('api.users.destroy');
 Route::post('register', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
 
-Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('logout', [AuthController::class, 'logout']);
 
 // =======
 
 Route::post('login', [AuthController::class, 'login']);
-// >>>>>>> tuan-anh2
+
+// quên mật khẩu 
+Route::post('password/forgot', [ForgotPasswordController::class, 'sendResetToken']);
+
+// đặt lại mật khẩu
+Route::post('password/reset', [ResetPasswordController::class, 'submitResetPasswordForm']);
