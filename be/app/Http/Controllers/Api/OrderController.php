@@ -23,62 +23,62 @@ class OrderController extends Controller
             'voucher_id' => 'nullable|exists:vouchers,id',
             'note' => 'nullable|string',
         ]);
-    
+
         $user = $request->user(); // có thể là null nếu cho phép khách
         $cart = Cart::with('items.productDetail')->where('user_id', $user->id ?? null)->first();
-    
+
         if (!$cart || $cart->items->isEmpty()) {
             return response()->json(['message' => 'Giỏ hàng trống'], 400);
         }
-    
+
         DB::beginTransaction();
-    
+
         try {
             $total = 0;
             $deliverFee = 30000; // ví dụ phí giao hàng cố định
-    
+
             foreach ($cart->items as $item) {
                 $price = $item->productDetail->discount_price ?? $item->productDetail->default_price;
                 $total += $price * $item->quantity;
                 if ($item->productDetail->quantity < $item->quantity) {
                     return response()->json(['message' => 'Sản phẩm "' . $item->productDetail->product->name . '" không đủ số lượng'], 400);
                 }
-                
+
             }
-    
+
             // Xử lý voucher nếu có
             $voucher = null;
             $discount = 0;
-    
+
             if ($request->voucher_id) {
                 $voucher = Voucher::where('id', $request->voucher_id)
                     ->where('status', 'active')
                     ->where('expiration_date', '>=', now())
                     ->first();
-    
+
                 if (!$voucher) {
                     return response()->json(['message' => 'Voucher không hợp lệ'], 400);
                 }
-    
+
                 if ($total < $voucher->min_purchase_amount) {
                     return response()->json(['message' => 'Không đủ điều kiện áp dụng voucher'], 400);
                 }
-    
+
                 if ($voucher->discount_percent) {
                     $discount = $total * ($voucher->discount_percent / 100);
                 } elseif ($voucher->discount_amount) {
                     $discount = $voucher->discount_amount;
                 }
-    
+
                 if ($discount > $voucher->max_discount_amount) {
                     $discount = $voucher->max_discount_amount;
                 }
-    
+
                 $total -= $discount;
             }
-    
+
             $total_price = $total + $deliverFee;
-    
+
             // Tạo đơn hàng
             $order = Order::create([
                 'username' => $request->username,
@@ -94,7 +94,7 @@ class OrderController extends Controller
                 'deliver_fee' => $deliverFee,
                 'total_price' => $total_price,
             ]);
-    
+
             // Chi tiết đơn hàng
             foreach ($cart->items as $item) {
                 $price = $item->productDetail->discount_price ?? $item->productDetail->default_price;
@@ -110,18 +110,18 @@ class OrderController extends Controller
                 ]);
                 $item->productDetail->decrement('quantity', $quantity);
             }
-    
+
             $cart->items()->delete();
-    
+
             DB::commit();
-    
+
             return response()->json([
                 'message' => 'Đặt hàng thành công',
                 'order_id' => $order->id,
                 'total' => $total_price,
                 'discount' => $discount
             ], 201);
-    
+
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json(['message' => 'Lỗi đặt hàng', 'error' => $e->getMessage()], 500);
