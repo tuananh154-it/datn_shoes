@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 const HomePages = () => {
   const [product, setProduct] = useState<Product[]>([]);
   const [lastProduct, getlatesProducts] = useState<Product[]>([]);
-  
+
   useEffect(() => {
     getAllProduct().then(({ data }) => {
       // setProduct(response.data);
@@ -29,7 +29,7 @@ const HomePages = () => {
   useEffect(() => {
     getLatesProducts().then(({ data }) => {
       // setProduct(response.data);
-      console.log("data", data);
+      console.log("datalast", data);
       getlatesProducts(data.data);
     });
   }, []);
@@ -50,26 +50,25 @@ const HomePages = () => {
     });
   }, []);
 
-
   const toggleWishlist = (product: Product) => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
-  
+
     if (!user) {
       alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
       return;
     }
-  
+
     let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-  
+
     // Lưu ID sản phẩm thay vì object
     const index = wishlist.indexOf(product.id);
-  
+
     if (index !== -1) {
       wishlist.splice(index, 1);
     } else {
       wishlist.push(product.id);
     }
-    toast.success("Đã thêm sản phẩm yêu thích")
+    toast.success("Đã thêm sản phẩm yêu thích");
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
   };
 
@@ -211,7 +210,12 @@ const HomePages = () => {
                             />
                           </svg>
                         </a>
-                        <a href="/wishlist" className="heart yeuthich  rounded-circle text-center rounded-circle d-block"><i className="flaticon-heart"></i></a>
+                        <a
+                          href="/wishlist"
+                          className="heart yeuthich  rounded-circle text-center rounded-circle d-block"
+                        >
+                          <i className="flaticon-heart"></i>
+                        </a>
                       </div>
                       <div className="product-label rounded-circle  newProduct">
                         new
@@ -224,7 +228,15 @@ const HomePages = () => {
                         </p>
                       </a>
                       <p className="featured_price title_h5 ">
-                        <span>{lastproduct.price}</span>
+                        <span className="text-color">
+                          {lastproduct?.price
+                            ? Number(
+                                lastproduct.price
+                                  .replace(/,/g, "")
+                                  .replace(" VND", "")
+                              ).toLocaleString("vi-VN") + " VND"
+                            : "0 VND"}
+                        </span>
                       </p>
                       <div className="featured_btn d-xl-none">
                         s
@@ -376,12 +388,6 @@ const HomePages = () => {
                         >
                           <i className="flaticon-heart"></i>
                         </a>
-                        {/* <button
-                                                    onClick={() => handleAddToWishlist} // Gọi hàm khi nhấn vào nút yêu thích
-                                                    className="heart rounded-circle text-center rounded-circle d-block"
-                                                >
-                                                    <i className="flaticon-heart"></i>
-                                                </button> */}
                       </div>
                     </div>
                     <div className="featured_detail_content">
@@ -391,7 +397,15 @@ const HomePages = () => {
                         </p>
                       </a>
                       <p className="featured_price title_h5  ">
-                        <span className="text-color">{product.price}</span>
+                      <span className="text-color">
+                          {product?.price
+                            ? Number(
+                                product.price
+                                  .replace(/,/g, "")
+                                  .replace(" VND", "")
+                              ).toLocaleString("vi-VN") + " VND"
+                            : "0 VND"}
+                        </span>
                       </p>
                       <div className="featured_btn d-xl-none">
                         <a
