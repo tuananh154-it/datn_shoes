@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
+import { Link } from "react-router-dom";
+import Pagination from "../Pages/Pagination"; // Import component phân trang
 
 const Cart = () => {
   const {
@@ -13,9 +15,19 @@ const Cart = () => {
     selectAllItems,
   } = useCart();
 
+  // State cho phân trang
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // Số sản phẩm hiển thị mỗi trang
+
   useEffect(() => {
     fetchCartData();
   }, []);
+
+  // Tính toán danh sách sản phẩm hiển thị trên trang hiện tại
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = cart.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(cart.length / itemsPerPage);
 
   return (
     <>
@@ -39,14 +51,18 @@ const Cart = () => {
           <div className="container">
             <div className="login_form">
               {cart.length === 0 ? (
-                <p className="text-center">Giỏ hàng trống</p>
+                <div className="text-center">
+                  <p>Giỏ hàng trống</p>
+                  <Link to="/shop" className="back-shop">
+                    Tiếp tục quay lại mua sắm
+                  </Link>
+                </div>
               ) : (
                 <form>
                   <div className="cart_table">
                     <div className="table">
                       <div className="thead">
                         <div className="tr">
-                       
                           <div className="th title_h5 border-bottom border-top">Sản phẩm</div>
                           <div className="th title_h5 border-bottom border-top">Giá</div>
                           <div className="th title_h5 border-bottom border-top">Số lượng</div>
@@ -58,13 +74,12 @@ const Cart = () => {
                               checked={selectedItems.length === cart.length && cart.length > 0}
                             />
                           </div>
-                           <div className="th border-bottom border-top"></div>
+                          <div className="th border-bottom border-top"></div>
                         </div>
                       </div>
                       <div className="tbody">
-                        {cart.map((item) => (
+                        {currentItems.map((item) => (
                           <div className="tr" key={item.id_cart_item}>
-                           
                             <div className="td border-bottom" data-title="Product">
                               <div className="product_img d-table-cell">
                                 <img
@@ -92,7 +107,7 @@ const Cart = () => {
                                   <button
                                     type="button"
                                     onClick={() => updateCartItem(item.id_cart_item, item.quantity - 1)}
-                                    disabled={item.quantity <= 1}
+                                    disabled={item.quantity <= 1} 
                                   >
                                     -
                                   </button>
@@ -133,20 +148,20 @@ const Cart = () => {
                   </div>
 
                   <div className="cart_btns text-right">
-                    <a href="/shop" className="text-uppercase border-btn">
+                    <Link to="/shop" className="text-uppercase border-btn">
                       Tiếp tục mua sắm
-                    </a>
-                    <a href="/checkout" className="text-uppercase background-btn">
+                    </Link>
+                    <Link to="/checkout" className="text-uppercase background-btn">
                       Thanh toán
-                    </a>
+                    </Link>
                   </div>
 
-                  <div className="form-group cart_notes">
-                    <label className="title_h5" htmlFor="notes">
-                      Ghi chú cho người bán
-                    </label>
-                    <textarea className="form-control" id="notes" name="Notes"></textarea>
-                  </div>
+                  {/* Phân trang */}
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                  />
                 </form>
               )}
             </div>

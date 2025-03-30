@@ -14,11 +14,9 @@
                 Thêm Chi Tiết Sản Phẩm cho: {{ $product->name }}
             </header>
             <div class="card-body">
-                <!-- Form gửi đến route product-details.store với phương thức POST -->
                 <form action="{{ route('product-details.store', $product->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
 
-                    <!-- Hiển thị lỗi nếu có -->
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -26,6 +24,16 @@
                                     <li>{{ $error }}</li>
                                 @endforeach
                             </ul>
+                        </div>
+                    @endif
+
+                    @if (session('tmp_variant_images'))
+                        <div class="alert alert-info">
+                            <strong>Ảnh đã chọn trước đó:</strong><br>
+                            @foreach (session('tmp_variant_images') as $img)
+                                <img src="{{ asset('storage/' . $img) }}" width="100" style="margin-right: 10px;">
+                                <input type="hidden" name="tmp_images[]" value="{{ $img }}">
+                            @endforeach
                         </div>
                     @endif
 
@@ -82,7 +90,6 @@
                         </select>
                     </div>
 
-                    <!-- Nút Thêm -->
                     <button type="submit" class="btn btn-success">Thêm Chi Tiết Sản Phẩm</button>
                     <a href="{{ route('products.show', $product->id) }}" class="btn btn-secondary">Trở lại</a>
                 </form>

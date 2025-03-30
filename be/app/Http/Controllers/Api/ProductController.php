@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Color;
 use App\Models\Product;
 use App\Models\ProductDetail;
 use Illuminate\Http\Request;
@@ -15,33 +16,11 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        // $searchTerm = $request->input('search');
-        // $category = $request->input('category_id');
-        // $brand = $request->input('brand_id');
-    
+
         $query = Product::where('status', 'active');
-    
-        // if ($searchTerm) {
-        //     $query->where('name', 'like', "%{$searchTerm}%");
-        // }
-        // if ($category) {
-        //     $query->where('category_id', $category);
-        // }
-        // if ($brand) {
-        //     $query->where('brand_id', $brand);
-        // }
-    
-        // Lấy tất cả sản phẩm
+
+
         $products = $query->with(['category', 'brand'])->get();
-    
-        // if ($products->isEmpty()) {
-        //     return response()->json([
-        //         'success' => false,
-        //         'message' => 'Không có sản phẩm nào ',
-        //         'data' => []
-        //     ], 200);
-        // }
-    
         return response()->json([
             'success' => true,
             'message' => 'Danh sách sản phẩm',
@@ -55,13 +34,14 @@ class ProductController extends Controller
                     'status' => $product->status,
                     'category' => $product->category ? $product->category->name : 'Không có',
                     'brand' => $product->brand ? $product->brand->name : 'Không có',
-                    'created_at' => $product->created_at->format('d-m-Y H:i'),
-                    'updated_at' => $product->updated_at->format('d-m-Y H:i'),
+                    'created_at' => $product->created_at ? $product->created_at->format('d-m-Y H:i') : 'Không có dữ liệu',
+                    'updated_at' => $product->updated_at ? $product->updated_at->format('d-m-Y H:i') : 'Không có dữ liệu',
+
                 ];
             })
         ]);
     }
-    
+
 
     public function show($id)
     {
@@ -72,8 +52,11 @@ class ProductController extends Controller
                 'productdetails' => function ($query) {
                     $query->where('status', 'active')->with(['size', 'color']);
                 }
-            ])->where('id', $id)->first();
-    
+            ])
+            ->where('id', $id)
+            ->first(); // Thay vì paginate(3)
+
+
         if (!$product) {
             return response()->json([
                 'success' => false,
@@ -81,7 +64,6 @@ class ProductController extends Controller
                 'data' => null
             ], 404);
         }
-    
         return response()->json([
             'success' => true,
             'message' => 'Chi tiết sản phẩm',
@@ -107,8 +89,31 @@ class ProductController extends Controller
             ]
         ]);
     }
-    
-    
+    public function latestProducts()
+{
+    $products = Product::where('status', 'active')
+        ->orderBy('created_at', 'desc') // Sắp xếp theo ngày tạo giảm dần
+        ->take(3) // Lấy 3 sản phẩm mới nhất
+        ->with(['category', 'brand']) // Lấy thêm thông tin danh mục và thương hiệu
+        ->get();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Danh sách 3 sản phẩm mới nhất',
+        'data' => $products->map(function ($product) {
+            return [
+                'id' => $product->id,
+                'name' => $product->name,
+                'image' => $product->image ? asset('storage/' . $product->image) : null,
+                'price' => number_format($product->price, 2) . ' VND',
+                'description' => $product->description ?? 'Không có mô tả',
+                'status' => $product->status,
+                'category' => $product->category ? $product->category->name : 'Không có danh mục',
+                'brand' => $product->brand ? $product->brand->name : 'Không có thương hiệu',
+                'created_at' => $product->created_at ? $product->created_at->format('d-m-Y H:i') : 'Không có dữ liệu',
+            ];
+        })
+    ]);
 }
 
-
+}

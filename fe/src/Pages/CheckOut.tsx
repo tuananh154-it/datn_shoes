@@ -1,339 +1,380 @@
-import React from 'react'
-
-const CheckOut = () => {
-  return (
-  <>
-  <div className="menu_overlay"></div>
-{/* END Header */}
-<div className="main_section">
-  {/* START Breadcrumb */}
-  <section className="breadcrumb_section nav">
-    <div className="container">
-      <nav aria-label="breadcrumb">
-        <ol className="breadcrumb">
-          <li className="breadcrumb-item text-capitalize">
-            <a href="earthyellow.html">Home</a>
-            <i className="flaticon-arrows-4"></i>
-          </li>
-          <li className="breadcrumb-item active text-capitalize">Checkout</li>
-        </ol>
-      </nav>
-      <h1 className="title_h1 font-weight-normal text-capitalize">Checkout</h1>
-    </div>
-  </section>
-  {/* END Breadcrumb */}
-  {/* START Checkout Section */}
-  <section className="login_section checkout_section padding-top-60 padding-bottom-60">
-    <div className="container">
-      <div className="login_form">
-        <form>
-          <div className="row">
-            <div className="col-lg-6">
-              <div className="head_title">
-                <h4 className="title_h4">Your Order</h4>
-              </div>
-              <div className="cart_table">
-                <div className="table">
-                  <div className="thead">
-                    <div className="tr">
-                      <div className="th title_h5 border-bottom border-top">Product</div>
-                      <div className="th title_h5 border-bottom border-top text-right">Price</div>
-                    </div>
-                  </div>
-                  <div className="tbody">
-                    <div className="tr">
-                      <div className="td border-bottom" data-title="Product">
-                        <div className="product_img d-table-cell">
-                          <img
-                            src="src/images/blue_jacket_img.png"
-                            className="img-fluid vertical_middle"
-                            alt="Blue Jacket"
-                          />
-                        </div>
-                        <div className="product_details d-table-cell">
-                          <div className="product_title">
-                            <a href="product_detail.html">
-                              <h5 className="title_h5">Blue Jacket</h5>
-                            </a>
-                          </div>
-                          <div className="product_variant">
-                            <p>Color: Blue</p>
-                            <p>Size: XL</p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="td border-bottom text-right" data-title="Price">
-                        $59.95
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="cart_subtotal">
-                <div className="subtotal_text">Subtotal</div>
-                <div className="subtotal_price title_h4 text-right">$59.95</div>
-              </div>
-              <div className="head_title">
-                <h4 className="title_h4">Billing Details</h4>
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label className="title_h5">First Name*</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="fname"
-                      name="Firstname"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label className="title_h5">Last Name*</label>
-                    <input type="text" className="form-control" name="Lastname" required />
-                  </div>
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="title_h5">Company</label>
-                <input type="text" className="form-control" name="Company name" />
-              </div>
-              <div className="form-group">
-                <label className="title_h5">Country*</label>
-                <select className="form-control" id="country" name="country">
-                  <option>- Select -</option>
-                  <option>India</option>
-                  <option>USA</option>
-                  <option>UAE</option>
-                </select>
-              </div>
-              <div className="form-group">
-                <label className="title_h5">Address Line 1*</label>
-                <input type="text" className="form-control" name="address" required />
-              </div>
-              <div className="form-group">
-                <label className="title_h5">Address Line 2</label>
-                <input type="text" className="form-control" name="address" />
-              </div>
-              <div className="row">
-                <div className="col-sm-12 col-md-6">
-                  <div className="form-group">
-                    <label className="title_h5">City*</label>
-                    <input type="text" className="form-control" name="City" />
-                  </div>
-                </div>
-                <div className="col-sm-12 col-md-6">
-                  <div className="form-group">
-                    <label className="title_h5">Postal/Zip code*</label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      name="Postal"
-                      onKeyPress={(e) => e.charCode >= 48 && e.charCode <= 57}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="email_one" className="title_h5">
-                  Email*
-                </label>
-                <input
-                  type="email"
-                  className="form-control"
-                  id="email_one"
-                  name="Email"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="phone" className="title_h5">
-                  Phone*
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="phone"
-                  name="Phone"
-                  required
-                  onKeyPress={(e) => e.charCode >= 48 && e.charCode <= 57}
-                  maxLength={10}
-                />
-              </div>
-              <div className="form-group">
-                <div className="check_box">
-                  <input type="checkbox" name="box1" id="box1" />
-                  <label htmlFor="box1">Ship To A Different Address?</label>
-                </div>
-                <div className="border-bottom"></div>
-                <div className="check_box">
-                  <input type="checkbox" name="box2" id="box2" />
-                  <label htmlFor="box2">Create An Account</label>
-                </div>
-              </div>
-              <div className="form-group">
-                <label className="title_h5" htmlFor="notes">
-                  Order Notes
-                </label>
-                <textarea className="form-control" id="notes" name="Notes"></textarea>
-              </div>
-            </div>
-            <div className="col-lg-6">
-              <div className="head_title">
-                <h4 className="title_h4">Already a Member?</h4>
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label htmlFor="email" className="title_h5">
-                      Email*
-                    </label>
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      name="Email"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label htmlFor="password" className="title_h5">
-                      Password*
-                    </label>
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="password"
-                      name="Password"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-sm-12 border-bottom">
-                  <div className="login_links checkbox_links">
-                    <a className="btn-link forgot_text" href="reset_password.html">
-                      <span className="border-bottom">Forgot Password?</span>
-                    </a>
-                    <button
-                      type="submit"
-                      className="btn float-sm-right background-btn text-uppercase"
-                    >
-                      login
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="head_title">
-                <h4 className="title_h4">Have a coupon? Enter Code below!</h4>
-              </div>
-              <div className="form-group">
-                <label htmlFor="ccode" className="title_h5">
-                  Coupon Code
-                </label>
-                <input
-                  type="text"
-                  className="form-control float-left"
-                  id="ccode"
-                  name="coupon code"
-                />
-                <button type="submit" className="btn background-btn text-uppercase float-left">
-                  APPLY
-                </button>
-              </div>
-              <div className="head_title d-inline-block padding-top-text-60">
-                <h4 className="title_h4">Payment Details</h4>
-              </div>
-              <div className="radiobtn_section">
-                <div className="radio_btn d-inline-block">
-                  <input type="radio" name="box3" id="box3" defaultChecked />
-                  <label htmlFor="box3">Credit/Debit Card</label>
-                </div>
-                <div className="radio_btn d-inline-block">
-                  <input type="radio" name="box3" id="box4" />
-                  <label htmlFor="box4">PayPal</label>
-                </div>
-                <div className="radio_btn d-inline-block">
-                  <input type="radio" name="box3" id="box5" />
-                  <label htmlFor="box5">Cash on Delivery</label>
-                </div>
-              </div>
-              <div className="form-group">
-                <label htmlFor="card_name" className="title_h5">
-                  Name On Card*
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="card_name"
-                  name="Card name"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="card_no" className="title_h5">
-                  Card Number*
-                </label>
-                <input
-                  type="text"
-                  className="form-control"
-                  id="card_no"
-                  name="Card no"
-                  required
-                />
-              </div>
-              <div className="row">
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label htmlFor="Edate" className="title_h5">
-                      Expiry Date*
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="Edate"
-                      name="Expiry date"
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                  <div className="form-group">
-                    <label htmlFor="cvv" className="title_h5">
-                      CVV*
-                    </label>
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="cvv"
-                      name="CVV"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="form-group">
-                <button
-                  type="submit"
-                  className="btn background-btn text-uppercase full-width"
-                >
-                  Place Order
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-      </div>
-    </div>
-  </section>
-  {/* END Checkout Section */}
-</div>
-
-  </>
-  )
+import { useEffect, useState } from "react";
+import { getCheckout, getOrder, Momopayment } from "../services/Order";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { FaCcVisa, FaMoneyBillWave, FaMobileAlt } from "react-icons/fa";
+interface Address {
+  _id: string;
+  name: string;
+  slug: string;
+  type: string;
+  name_with_type: string;
+  code: number;
 }
 
-export default CheckOut
+interface CartItem {
+  product_name: string;
+  image: string; // JSON string chứa danh sách ảnh
+  size: string;
+  color: string;
+  price: string;
+  quantity: number;
+}
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  phone_number: string | null;
+  address: string | null;
+  date_of_birth: string | null;
+  gender: string | null;
+}
+
+interface CheckoutData {
+  cart_items: CartItem[];
+  deliver_fee: number;
+  discount: number;
+  subtotal: number;
+  total: number;
+  user: User;
+  voucher: string | null;
+}
+const CheckOut = () => {
+  const [provinces, setProvinces] = useState<Address[]>([]);
+  const [districts, setDistricts] = useState<Address[]>([]);
+  const [wards, setWards] = useState<Address[]>([]);
+
+  const [selectedProvince, setSelectedProvince] = useState<string>("");
+  const [selectedDistrict, setSelectedDistrict] = useState<string>("");
+  const [selectedWard, setSelectedWard] = useState<string>("");
+
+  // const [address, setAddress] = useState<string>("");
+  // const [note, setNote] = useState<string>("");
+  // const [voucher, setVoucher] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<string>("COD");
+  // const [phone, setPhone] = useState<string>("");
+
+  const [checkout, setCheckout] = useState<CheckoutData | null>(null);
+  useEffect(() => {
+    getCheckout().then(({ data }) => {
+      console.log("checkout", data);
+      setCheckout(data);
+    });
+  }, []);
+  const nav = useNavigate();
+  const handleOrder = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!checkout) {
+      alert("Không có dữ liệu đơn hàng!");
+      return;
+    }
+
+    if (paymentMethod === "paypal") {
+      // Gọi API MoMo trước
+      const uniqueOrderId = `ORDER_${new Date().getTime()}`;
+
+      const momoData = {
+        amount: checkout.total,
+        orderId: uniqueOrderId, // Mã đơn hàng tạm thời
+        redirectUrl: window.location.origin + "/momo-success", // Trang xử lý sau khi thanh toán MoMo
+      };
+
+      console.log("📦 Dữ liệu gửi API MoMo:", momoData);
+
+      try {
+        const momoResponse = await Momopayment(momoData);
+        console.log("✅ MoMo API Response:", momoResponse);
+
+        const payUrl = momoResponse.data?.payUrl;
+        console.log("🔗 MoMo PayUrl:", payUrl);
+
+        if (payUrl) {
+          localStorage.setItem("pendingOrder", JSON.stringify(checkout)); // Lưu đơn hàng tạm vào localStorage
+          window.location.href = payUrl; // Chuyển hướng đến MoMo
+          return;
+        } else {
+          alert("⚠️ API MoMo không trả về URL thanh toán!");
+          return;
+        }
+      } catch (error) {
+        console.error("❌ Lỗi khi gọi API MoMo:", error);
+        alert("Lỗi khi tạo thanh toán MoMo!");
+        return;
+      }
+    }
+
+    // Nếu chọn "Thanh toán khi nhận hàng" thì đặt hàng ngay
+    if (paymentMethod === "cash_on_delivery") {
+      processOrder();
+    }
+  };
+
+  // Hàm xử lý đặt hàng
+  const processOrder = async () => {
+    const savedOrder = localStorage.getItem("pendingOrder");
+    if (!checkout) {
+      alert("Không có dữ liệu đơn hàng!");
+      return;
+    }
+    const orderData = {
+      user_id: checkout.user.id,
+      username: checkout.user.name,
+      phone_number: checkout.user.phone_number,
+      email: checkout.user.email,
+      address: checkout.user.address,
+      note: (document.getElementById("note") as HTMLInputElement)?.value || "",
+      cart_items: checkout.cart_items,
+      deliver_fee: checkout.deliver_fee,
+      discount: checkout.discount,
+      subtotal: checkout.subtotal,
+      total: checkout.total,
+      payment_method: paymentMethod,
+    };
+
+    console.log("🚀 Sending Order Data:", orderData);
+
+    try {
+      const orderResponse = await getOrder(orderData);
+      console.log("✅ Order API Response:", orderResponse);
+
+      if (orderResponse.status !== 201) {
+        alert(`Đặt hàng thất bại! Mã lỗi: ${orderResponse.status}`);
+        return;
+      }
+
+      toast.success("🎉 Đã đặt hàng thành công!");
+      localStorage.removeItem("pendingOrder"); // Xóa đơn hàng tạm sau khi đặt hàng thành công
+      nav("/");
+    } catch (error) {
+      console.error("❌ Lỗi xử lý đơn hàng:", error);
+      alert("Có lỗi xảy ra, vui lòng thử lại!");
+    }
+  };
+
+  // Kiểm tra nếu MoMo thanh toán xong
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const momoStatus = urlParams.get("momoStatus");
+
+    if (momoStatus === "success") {
+      processOrder(); // Đặt hàng sau khi thanh toán MoMo thành công
+    }
+  }, []);
+
+  useEffect(() => {
+    fetch(`https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1`)
+      .then((res) => res.json())
+      .then((data) => {
+        setProvinces(data.data.data);
+      })
+      .catch((error) => console.error("Lỗi khi tải tỉnh/thành phố:", error));
+  }, []);
+
+  useEffect(() => {
+    if (selectedProvince) {
+      fetch(
+        `https://vn-public-apis.fpo.vn/districts/getByProvince?provinceCode=${selectedProvince}&limit=-1`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setDistricts(data.data.data);
+          setSelectedDistrict("");
+          setWards([]);
+          setSelectedWard("");
+        })
+        .catch((error) => console.error("Lỗi khi tải huyện:", error));
+    }
+  }, [selectedProvince]);
+
+  useEffect(() => {
+    if (selectedDistrict) {
+      fetch(
+        `https://vn-public-apis.fpo.vn/wards/getByDistrict?districtCode=${selectedDistrict}&limit=-1`
+      )
+        .then((res) => res.json())
+        .then((data) => {
+          setWards(data.data.data);
+          setSelectedWard("");
+        })
+        .catch((error) => console.error("Lỗi khi tải xã/phường:", error));
+    }
+  }, [selectedDistrict]);
+
+  
+  return (
+    <>
+      <div className="menu_overlay"></div>
+      <div className="main_section">
+        {/* START Breadcrumb */}
+        <section className="breadcrumb_section nav">
+          <div className="container">
+            <nav aria-label="breadcrumb">
+              <ol className="breadcrumb">
+                <li className="breadcrumb-item text-capitalize">
+                  <a href="earthyellow.html">Trang chủ</a>
+                  <i className="flaticon-arrows-4"></i>
+                </li>
+                <li className="breadcrumb-item active text-capitalize">
+                  Thanh toán
+                </li>
+              </ol>
+            </nav>
+            <h1 className="title_h1 font-weight-normal text-capitalize">
+              Thanh toán
+            </h1>
+          </div>
+        </section>
+      </div>
+
+      <div className="checkout-container">
+        <div className="checkout-left">
+          <h2>Thanh toán & Vận chuyển</h2>
+          <form>
+            <label>Họ và tên *</label>
+            <input
+              type="text"
+              id="name"
+              value={checkout?.user.name || ""}
+              readOnly
+            />
+
+            <label>Số điện thoại *</label>
+            <input
+              type="text"
+              id="phone_number"
+              value={checkout?.user.phone_number || ""}
+              readOnly
+            />
+
+            <label>Email *</label>
+            <input
+              type="email"
+              id="email"
+              value={checkout?.user.email || ""}
+              readOnly
+            />
+
+            <label>Địa chỉ *</label>
+            <input
+              type="text"
+              id="address"
+              value={checkout?.user.address || ""}
+              readOnly
+            />
+
+            <label>Ghi chú</label>
+            <input type="text" id="note" />
+          </form>
+        </div>
+        <div className="checkout-right">
+          <h2>Đơn hàng của bạn</h2>
+          {checkout?.cart_items.map((item, index) => (
+            <div className="order-summary" key={index}>
+              <div className="product">
+                <img
+                  src={JSON.parse(item.image)[0].replace(/\\/g, "")}
+                  alt={item.product_name}
+                  className="product-image"
+                />
+                <div className="product-details">
+                  <p className="product-name">{item.product_name}</p>
+                  <p className="product-quantity">x{item.quantity}</p>
+                  <p className="product-price">
+                    {(parseFloat(item.price) * item.quantity).toLocaleString()}đ
+                  </p>
+                </div>
+              </div>
+              <hr />
+            </div>
+          ))}
+
+          <div className="price-details">
+            <p>
+              Tổng: <span>{checkout?.subtotal?.toLocaleString()}đ</span>
+            </p>
+            <p>
+              Phí ship: <span>{checkout?.deliver_fee?.toLocaleString()}đ</span>
+            </p>
+            <p className="total">
+              Tổng cộng: <strong>{checkout?.total?.toLocaleString()}đ</strong>
+            </p>
+          </div>
+
+          <div className="payment-method">
+          <label className={`payment-card ${paymentMethod === "credit_card" ? "active" : ""}`}>
+        <input
+            type="radio"
+            name="payment"
+            value="credit_card"
+            checked={paymentMethod === "credit_card"}
+            onChange={() => setPaymentMethod("credit_card")}
+        />
+        <FaCcVisa className="payment-icon visa" />
+        <span>Thanh toán bằng Visa/Master/JCB</span>
+    </label>
+
+    <label className={`payment-card ${paymentMethod === "cash_on_delivery" ? "active" : ""}`}>
+        <input
+            type="radio"
+            name="payment"
+            value="cash_on_delivery"
+            checked={paymentMethod === "cash_on_delivery"}
+            onChange={() => setPaymentMethod("cash_on_delivery")}
+        />
+        <FaMoneyBillWave className="payment-icon cod" />
+        <span>Thanh toán khi nhận hàng</span>
+    </label>
+
+    <label className={`payment-card ${paymentMethod === "paypal" ? "active" : ""}`}>
+        <input
+            type="radio"
+            name="payment"
+            value="paypal"
+            checked={paymentMethod === "paypal"}
+            onChange={() => setPaymentMethod("paypal")}
+        />
+        <FaMobileAlt className="payment-icon momo" />
+        <span>Thanh toán bằng Ví MoMo</span>
+    </label>
+          </div>
+
+          <button type="submit" className="order-button" onClick={handleOrder}>
+            ĐẶT HÀNG
+          </button>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default CheckOut;
+{
+  /* <div className="payment-method">
+              <label className="payment-option">
+                <input
+                  type="radio"
+                  name="payment"
+                  defaultChecked
+                  className="payment-checkbox square"
+                />
+                <span>Trả tiền mặt khi nhận hàng</span>
+                <p className="payment-description">
+                  Bạn đặt hàng và thanh toán sau khi nhận hàng.
+                </p>
+              </label>
+              <hr className="payment-divider" />
+              <label className="payment-option">
+                <input
+                  type="radio"
+                  name="payment"
+                  className="payment-checkbox square"
+                />
+                <span>Chuyển khoản ngân hàng</span>
+                <p className="payment-description">
+                  Thanh toán qua ngân hàng trước khi giao hàng.
+                </p>
+              </label>
+            </div> */
+}

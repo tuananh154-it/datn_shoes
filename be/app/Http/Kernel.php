@@ -86,6 +86,7 @@ class Kernel extends HttpKernel
         'jwt.auth' => \App\Http\Middleware\JwtMiddleware::class,  // Xác thực với JWT
         'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
-        'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
+        'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
+        'admin' => \App\Http\Middleware\CheckAdminRole::class,
     ];
 }

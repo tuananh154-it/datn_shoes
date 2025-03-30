@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\CheckoutController;
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -17,6 +19,8 @@ use App\Http\Controllers\SizeController;
 use App\Http\Controllers\Api\HomeController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\OnlineCheckOutController;
+use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\UserController;
 
@@ -32,18 +36,26 @@ use App\Http\Controllers\UserController;
 // Public routes
 Route::apiResource('articles', ArticleController::class);
 Route::apiResource('comments', CommentController::class);
+
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
 Route::middleware('auth:api')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::put('/cart/update/{id_cart_item}', [CartController::class, 'updateCart']);
     Route::delete('/cart/remove/{id_cart_item}', [CartController::class, 'removeCartItem']);
-
     // Route::apiResource('order', OrderController::class);
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::post('/cart/sync', [CartController::class, 'syncCart']);
+    Route::get('/checkout/init', [OrderController::class, 'getCart']);
+    Route::post('/orders/place', [OrderController::class, 'placeOrder']);
+    Route::get('/orders', [OrderController::class, 'listOrders']);
+    Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
+    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+    Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
 });
 Route::apiResource('products', ProductController::class);
+Route::get('/latest-products', [ProductController::class, 'latestProducts']);
+
 
 
 // Trang Home
@@ -63,8 +75,7 @@ Route::get('/vouchers/{id}', [VoucherController::class, 'show']);
 Route::middleware(['jwt.auth'])->group(function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
-
-    // Admin routes (only accessible by admins)
+// Admin routes (only accessible by admins)
     Route::middleware(['admin'])->group(function () {
         Route::get('admin/dashboard', [AdminController::class, 'dashboard']);
     });
@@ -90,3 +101,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
+// =======
+
+Route::post('login', [AuthController::class, 'login']);
+// >>>>>>> tuan-anh2

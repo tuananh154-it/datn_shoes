@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
-import { Products } from "../types/Product";
-import { useParams } from "react-router-dom";
-import { getProductDetail } from "../services/product";
+import { Product, Products } from "../types/Product";
+import { useNavigate, useParams } from "react-router-dom";
+import { getAllProduct, getProductDetail } from "../services/product";
 import { useCart } from "../context/CartContext";
+import toast from "react-hot-toast";
 // import { getProductDetail } from "../axios/asiox";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
-
+  const isLoggedIn = localStorage.getItem('token') ? true : false;
+  const nav=useNavigate();
   const [quantity, setQuantity] = useState<number>(1);
   const handleIncrease = () => {
     setQuantity(quantity + 1);
@@ -28,13 +34,13 @@ const ProductDetail = () => {
     getProductDetail(id).then(({ data }) => {
       console.log("data", data);
       setProductId(data.data);
-      //   setSelectedDetail(data.data.details[0]);
+      // setSelectedDetail(data.data.details[0]);
     });
   }, [id]);
   console.log("data", productId);
+
   const handleVariantClick = (detail: any) => {
     if (detail) {
-      // Nếu có variant, chọn variant đó
       setSelectedDetail(detail);
     } else {
       setSelectedDetail(null);
@@ -54,6 +60,14 @@ const ProductDetail = () => {
         return "#000000"; // Màu mặc định nếu không tìm thấy
     }
   }
+
+  const [products, setProducts] = useState<Product[]>([]);
+  useEffect(() => {
+    getAllProduct()
+      .then(({ data }) => {
+        setProducts(data.data);
+      })
+  }, []);
   return (
     <>
       <div className="menu_overlay"></div>
@@ -67,16 +81,16 @@ const ProductDetail = () => {
                   <i className="flaticon-arrows-4"></i>
                 </li>
                 <li className="breadcrumb-item text-capitalize">
-                  <a href="product_list_with_sidebar.html">shop</a>{" "}
+                  <a href="product_list_with_sidebar.html">Cửa hàng</a>{" "}
                   <i className="flaticon-arrows-4"></i>
                 </li>
                 <li className="breadcrumb-item active text-capitalize">
-                  Blue Jacket
+                  {productId?.name}
                 </li>
               </ol>
             </nav>
             <h1 className="title_h1 font-weight-normal text-capitalize">
-              Blue Jacket
+              {productId?.name}
             </h1>
           </div>
         </section>
@@ -221,7 +235,7 @@ const ProductDetail = () => {
                               -
                             </button>
 
-                            <input type="text" value={quantity} />
+                            <input type="text" value={quantity}  />
                             <button
                               type="button"
                               onClick={handleIncrease}
@@ -241,15 +255,45 @@ const ProductDetail = () => {
                           href="/wishlist"
                           className="wishlist_btn border-btn text-uppercase"
                         >
-                          add to wishlist
+                          thêm vào ds yêu thích
                         </a>
-                        <a
+                        {/* <a
                             href="/cart"
                             className="background-btn text-uppercase cart_btn"
                           >
                             add to bag
                           </a>
-                        
+                         */}
+                      <button
+                          type="button"
+                          className="background-btn text-uppercase cart_btn"
+                          onClick={() => {
+                            // Kiểm tra nếu người dùng chưa đăng nhập
+                            if (!isLoggedIn) {
+                              alert("Vui lòng đăng nhập trước khi thêm vào giỏ hàng!");
+                              nav("/login")
+                              return;
+                            }
+                            
+                            // Kiểm tra xem biến thể đã được chọn chưa
+                            if (!selectedDetail) {
+                              alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
+                              return;
+                            }
+
+                            // Thêm sản phẩm vào giỏ hàng
+                            addToCart(Number(selectedDetail.id), quantity);
+                            toast.success("Thêm vào giỏ hàng thành công");
+
+                            // Log dữ liệu gửi lên API
+                            console.log("Dữ liệu gửi lên API:", JSON.stringify({
+                              product_detail_id: selectedDetail.id,
+                              quantity
+                            }));
+                          }}
+                        >
+                          Add to cart
+                        </button>
                         <div className="product_share">
                           <p>Share the love</p>
                           <ul className="social_icons">
@@ -439,253 +483,52 @@ const ProductDetail = () => {
                 </div>
               </div>
               <div className="featured_section padding-top-text-60 wow fadeIn">
-                <h2 className="text-center title_h3">
-                  You May Also like to buy
-                </h2>
-                <div className="row">
-                  <div
-                    className="col-lg-3 col-md-4 col-6 wow fadeInLeft"
-                    data-wow-duration="1300ms"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product1.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <a
-                            href="cart.html"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            Add To Bag
-                          </a>
-                          <a
-                            href="javascript:void(0);"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
+                <h2 className="text-center title_h3">Bạn có thể thích</h2>
+                <Swiper
+                  modules={[Navigation]}
+                  spaceBetween={20}
+                  slidesPerView={4} // Hiển thị 4 sản phẩm mỗi lần
+                  navigation // Bật mũi tên điều hướng
+                  breakpoints={{
+                    320: { slidesPerView: 1 },
+                    768: { slidesPerView: 2 },
+                    1024: { slidesPerView: 3 },
+                    1200: { slidesPerView: 4 },
+                  }}
+                >
+                  {products.map((product) => (
+                    <SwiperSlide key={product.id}>
+                      <div className="featured_content">
+                        <div className="featured_img_content">
+                          <img
+                            src={product.image}
+                            alt="f_product"
+                            className="img-product_detail"
+                          />
+                          <div className="featured_btn vertical_middle">
+                            <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">
+                              Thêm vào giỏ hàng
+                            </a>
+                            <a href={`/product_detail/${product.id}`} className="text-uppercase border-btn popup_btn">
+                              Xem chi tiết
+                            </a>
+                          </div>
+                          <a href="javascript:void(0);" className="heart rounded-circle text-center">
+                            <i className="flaticon-heart vertical_middle"></i>
                           </a>
                         </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Dress
+                        <div className="featured_detail_content">
+                          <a href={`/product_detail/${product.id}`}>
+                            <p className="featured_title text-capitalize text-center">{product.name}</p>
+                          </a>
+                          <p className="featured_price title_h5 text-center">
+                            <span>{product.price}</span>
                           </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$59.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio1" name="size" />
-                            <label htmlFor="radio1">xs</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio2" name="size" />
-                            <label htmlFor="radio2">s</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio3" name="size" />
-                            <label htmlFor="radio3">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio4" name="size" />
-                            <label htmlFor="radio4">l</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio5" name="size" />
-                            <label htmlFor="radio5">xl</label>
-                          </div>
                         </div>
                       </div>
-                    </div>
-                  </div>
-                  <div
-                    className="col-lg-3 col-md-4 col-6 wow fadeInLeft "
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.2s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product2.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <a
-                            href="cart.html"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            Add To Bag
-                          </a>
-                          <a
-                            href="javascript:void(0);"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Premium Party Suit
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$79.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio6" name="size" />
-                            <label htmlFor="radio6">s</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio7" name="size" />
-                            <label htmlFor="radio7">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio8" name="size" />
-                            <label htmlFor="radio8">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="col-lg-3 col-md-4 col-6 wow fadeInLeft"
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.4s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product3.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <a
-                            href="cart.html"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            Add To Bag
-                          </a>
-                          <a
-                            href="javascript:void(0);"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <div className="product-label  text-uppercase  new-label ">
-                          new<span className="diamond_shape"></span>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Silk Party Dress
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$99.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio9" name="size" />
-                            <label htmlFor="radio9">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    className="col-lg-3 col-md-4 col-6 wow fadeInLeft "
-                    data-wow-duration="1300ms"
-                    data-wow-delay="0.6s"
-                  >
-                    <div className="featured_content">
-                      <div className="featured_img_content">
-                        <img
-                          src="src/images/f_product2.png"
-                          alt="f_product"
-                          className="img-fluid"
-                        />
-                        <div className="featured_btn vertical_middle">
-                          <a
-                            href="/cart"
-                            className="text-uppercase background-btn add_to_bag_btn"
-                          >
-                            Add To Bag
-                          </a>
-                          <a
-                            href="javascript:void(0);"
-                            className="text-uppercase border-btn popup_btn"
-                            data-modal="#modalone"
-                          >
-                            Quick View
-                          </a>
-                        </div>
-                        <a
-                          href="javascript:void(0);"
-                          className="heart  rounded-circle text-center "
-                        >
-                          <i className="flaticon-heart vertical_middle"></i>
-                        </a>
-                      </div>
-                      <div className="featured_detail_content">
-                        <a href="product_list_detail.html">
-                          <p className="featured_title  text-capitalize  text-center">
-                            Premium Party Suit
-                          </p>
-                        </a>
-                        <p className="featured_price title_h5  text-center">
-                          <span>$79.95</span>
-                        </p>
-                        <div className="featured_variyant  text-center">
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio16" name="size" />
-                            <label htmlFor="radio16">s</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio17" name="size" />
-                            <label htmlFor="radio17">m</label>
-                          </div>
-                          <div className="radio text-uppercase  text-center">
-                            <input type="radio" id="radio18" name="size" />
-                            <label htmlFor="radio18">l</label>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             </div>
           ) : (
