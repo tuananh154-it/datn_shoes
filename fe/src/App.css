@@ -563,3 +563,98 @@
 .continue-button:hover {
   background-color: #b8005e;
 }
+
+
+
+/* Tiêu đề bộ lọc */
+.price-filter-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Danh sách bộ lọc */
+.price-filter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Mỗi mục trong bộ lọc */
+.price-filter-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Ẩn input radio mặc định */
+.price-filter-item input {
+  display: none;
+}
+
+/* Thiết kế label */
+.price-filter-item label {
+  font-size: 16px;
+  cursor: pointer;
+  flex: 1;
+}
+
+/* Khi radio được chọn, đổi màu nền */
+.price-filter-item input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #007bff;
+  border-radius: 50%;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Khi input được chọn, đổi màu nền */
+.price-filter-item input:checked {
+  background: #007bff;
+}
+
+/* Khi input được chọn, label có cùng màu nền */
+.price-filter-item input:checked + label {
+  background: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.checkbox input {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Khi checkbox được chọn, đổi màu nền */
+.checkbox input:checked {
+  background: #007bff;
+}
+
+/* Khi checkbox được chọn, label có cùng màu nền */
+.checkbox input:checked + label {
+  background: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}

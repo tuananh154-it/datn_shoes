@@ -63,101 +63,6 @@ const CheckOut = () => {
     });
   }, []);
   const nav = useNavigate();
-  // const handleOrder = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!checkout) {
-  //     alert("Không có dữ liệu đơn hàng!");
-  //     return;
-  //   }
-
-  //   const orderData = {
-  //     user_id: checkout.user.id,
-  //     username: checkout.user.name,
-  //     phone_number: checkout.user.phone_number,
-  //     email: checkout.user.email,
-  //     address: checkout.user.address,
-  //     note: (document.getElementById("note") as HTMLInputElement)?.value || "",
-  //     cart_items: checkout.cart_items,
-  //     deliver_fee: checkout.deliver_fee,
-  //     discount: checkout.discount,
-  //     subtotal: checkout.subtotal,
-  //     total: checkout.total,
-  //     payment_method: paymentMethod,
-  //   };
-
-  //   console.log("🚀 Sending Order Data:", orderData);
-
-  //   const response = await getOrder(orderData);
-  //   console.log("✅ Order API Response:", response);
-
-  //   if (response.status === 201) {
-  //     // alert("Đặt hàng thành công!");
-  //     toast.success("🎉 Đã đặt hàng thành công")
-  //     nav("/")
-  //   } else {
-  //     alert(`Đặt hàng thất bại! Mã lỗi: ${response.status}`);
-  //   }
-  // };
-  // const handleOrder = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   if (!checkout) {
-  //     alert("Không có dữ liệu đơn hàng!");
-  //     return;
-  //   }
-
-  //   const orderData = {
-  //     user_id: checkout.user.id,
-  //     username: checkout.user.name,
-  //     phone_number: checkout.user.phone_number,
-  //     email: checkout.user.email,
-  //     address: checkout.user.address,
-  //     note: (document.getElementById("note") as HTMLInputElement)?.value || "",
-  //     cart_items: checkout.cart_items,
-  //     deliver_fee: checkout.deliver_fee,
-  //     discount: checkout.discount,
-  //     subtotal: checkout.subtotal,
-  //     total: checkout.total,
-  //     payment_method: paymentMethod,
-  //   };
-
-  //   console.log("🚀 Sending Order Data:", orderData);
-
-  //   try {
-  //     const orderResponse = await getOrder(orderData);
-  //     console.log("✅ Order API Response:", orderResponse);
-
-  //     if (orderResponse.status !== 201) {
-  //       alert(`Đặt hàng thất bại! Mã lỗi: ${orderResponse.status}`);
-  //       return;
-  //     }
-
-  //     toast.success("🎉 Đã đặt hàng thành công!");
-
-  //     if (paymentMethod === "paypal") {
-  //       const momoResponse = await Momopayment({
-  //         amount: checkout.total,
-  //         orderId: orderResponse.data.order_id, // Lấy order_id từ API đơn hàng
-  //         redirectUrl: window.location.origin + "/order-success", // Trang xác nhận
-  //       });
-
-  //       console.log("✅ MoMo API Response:", momoResponse);
-
-  //       if (momoResponse?.payUrl) {
-  //         window.location.href = momoResponse.payUrl;
-  //       } else {
-  //         alert("Lỗi khi tạo thanh toán MoMo!");
-  //       }
-  //     } else {
-  //       nav("/");
-  //     }
-  //   } catch (error) {
-  //     console.error("Lỗi xử lý đơn hàng:", error);
-  //     alert("Có lỗi xảy ra, vui lòng thử lại!");
-  //   }
-  // };
-
   const handleOrder = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -297,6 +202,7 @@ const CheckOut = () => {
     }
   }, [selectedDistrict]);
 
+  
   return (
     <>
       <div className="menu_overlay"></div>
@@ -397,38 +303,6 @@ const CheckOut = () => {
           </div>
 
           <div className="payment-method">
-            {/* <label>
-              <input
-                type="radio"
-                name="payment"
-                value="credit_card"
-                checked={paymentMethod === "credit_card"}
-                onChange={() => setPaymentMethod("credit_card")}
-              />
-              Thẻ tín dụng
-            </label>
-
-            <label>
-              <input
-                type="radio"
-                name="payment"
-                value="cash_on_delivery"
-                checked={paymentMethod === "cash_on_delivery"}
-                onChange={() => setPaymentMethod("cash_on_delivery")}
-              />
-              Thanh toán khi nhận hàng
-            </label>
-
-            <label>
-              <input
-                type="radio"
-                name="payment"
-                value="paypal"
-                checked={paymentMethod === "paypal"}
-                onChange={() => setPaymentMethod("paypal")}
-              />
-              Thanh toán MoMo
-            </label> */}
           <label className={`payment-card ${paymentMethod === "credit_card" ? "active" : ""}`}>
         <input
             type="radio"
