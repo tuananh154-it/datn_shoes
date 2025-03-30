@@ -73,9 +73,9 @@ class OnlineCheckOutController extends Controller
 
         // Tạo chữ ký HMAC SHA256
         $rawHash = "accessKey=" . $accessKey . "&amount=" . $total . "&extraData=" . $extraData .
-                   "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo .
-                   "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl .
-                   "&requestId=" . $requestId . "&requestType=" . $requestType;
+            "&ipnUrl=" . $ipnUrl . "&orderId=" . $orderId . "&orderInfo=" . $orderInfo .
+            "&partnerCode=" . $partnerCode . "&redirectUrl=" . $redirectUrl .
+            "&requestId=" . $requestId . "&requestType=" . $requestType;
         $signature = hash_hmac("sha256", $rawHash, $secretKey);
 
         $data = [
@@ -99,22 +99,77 @@ class OnlineCheckOutController extends Controller
 
         return response()->json(['payUrl' => $jsonResult['payUrl'] ?? null]);
     }
+
     private function execPostRequest($url, $data)
-{
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        'Content-Type: application/json',
-        'Content-Length: ' . strlen($data)
-    ]);
+    {
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data)
+        ]);
 
-    $response = curl_exec($ch);
-    curl_close($ch);
+        $response = curl_exec($ch);
+        curl_close($ch);
 
-    return $response;
-}
+        return $response;
+    }
+    // public function momo_payment_code(Request $request)
+    // {
+    //     $accessKey = "LZ8Xcb60k0cA7N6S";
+    //     $secretKey = "atQhBsd8fC4Qkwu3y0oQkLpfPb7mC8mE";
+    //     $partnerCode = "MOMOBKUN20180529";
+    //     $endpoint = "https://test-payment.momo.vn/v2/gateway/api/pos";
+
+    //     // Lấy thông tin từ request
+    //     $total = $request->input('total');
+    //     $paymentCode = $request->input('paymentCode');
+
+    //     if (empty($total) || empty($paymentCode)) {
+    //         return response()->json(["error" => "Missing required parameters"], 400);
+    //     }
+
+    //     $orderId = time() . "" . rand(1000, 9999);
+    //     $orderInfo = "Thanh toan don hang Momo POS";
+    //     $requestId = time() . "" . rand(1000, 9999);
+    //     $extraData = "";
+
+    //     // Tạo chuỗi rawHash
+    //     $rawHash = "accessKey=$accessKey&amount=$total&extraData=$extraData&orderId=$orderId&orderInfo=$orderInfo&partnerCode=$partnerCode&paymentCode=$paymentCode&requestId=$requestId";
+
+    //     // Tạo chữ ký HMAC SHA256
+    //     $signature = hash_hmac("sha256", $rawHash, $secretKey);
+
+    //     // Dữ liệu gửi đến Momo
+    //     $data = [
+    //         "partnerCode" => $partnerCode,
+    //         "partnerName" => "Test",
+    //         "storeId" => "MomoTestStore",
+    //         "requestId" => $requestId,
+    //         "amount" => $total,
+    //         "orderId" => $orderId,
+    //         "orderInfo" => $orderInfo,
+    //         "requestType" => "captureWallet",
+    //         "extraData" => $extraData,
+    //         "paymentCode" => $paymentCode,
+    //         "lang" => "vi",
+    //         "signature" => $signature
+    //     ];
+
+    //     // Gửi request đến API MoMo
+    //     $result = $this->execPostRequest($endpoint, json_encode($data));
+
+    //     $jsonResult = json_decode($result, true);
+
+    //     if (isset($jsonResult['payUrl']) && !empty($jsonResult['payUrl'])) {
+    //         header('Location: ' . $jsonResult['payUrl']);
+    //         exit;
+    //     }
+
+    //     return response()->json($jsonResult);
+    // }
 
 
 }
