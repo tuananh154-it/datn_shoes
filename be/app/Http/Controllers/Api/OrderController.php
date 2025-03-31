@@ -175,12 +175,16 @@ class OrderController extends Controller
         ->get();
 
     return response()->json($orders);
-}
-public function orderDetail($id, Request $request)
+}public function orderDetail($id, Request $request)
 {
     $user = $request->user();
 
-    $order = Order::with(['order_details.productDetail', 'voucher'])
+    $order = Order::with([
+            'order_details.productDetail',
+            'order_details.productDetail.color', // Lấy thông tin màu sắc
+            'order_details.productDetail.size',  // Lấy thông tin kích thước
+            'voucher'
+        ])
         ->where('user_id', $user->id)
         ->find($id);
 
@@ -188,8 +192,16 @@ public function orderDetail($id, Request $request)
         return response()->json(['message' => 'Không tìm thấy đơn hàng'], 404);
     }
 
+    // Thêm thông tin về màu sắc và kích thước vào dữ liệu trả về
+    foreach ($order->order_details as $orderDetail) {
+        $productDetail = $orderDetail->productDetail;
+        $orderDetail->color = $productDetail->color ? $productDetail->color->name : null;
+        $orderDetail->size = $productDetail->size ? $productDetail->size->name : null;
+    }
+
     return response()->json($order);
 }
+
 public function cancelOrder($id, Request $request)
 {
     $user = $request->user();
