@@ -20,6 +20,20 @@ const ProductDetail = () => {
     setQuantity(quantity + 1);
   };
 
+  const formatPrice = (price: string | number | undefined) => {
+    if (typeof price === "number") {
+      return price.toLocaleString("vi-VN") + " VND";
+    }
+    if (typeof price === "string") {
+      return (
+        Number(price.replace(/,/g, "").replace(" VND", "")).toLocaleString(
+          "vi-VN"
+        ) + " VND"
+      );
+    }
+    return "0 VND";
+  };
+
   // Hàm để giảm số lượng
   const handleDecrease = () => {
     if (quantity > 1) {
@@ -162,16 +176,32 @@ const ProductDetail = () => {
                         {selectedDetail?.discount_price ? (
                           <>
                             <span className="original-price">
-                              {selectedDetail?.default_price}
+                              {selectedDetail?.default_price
+                                ? Number(
+                                    selectedDetail.default_price
+                                      .replace(/,/g, "")
+                                      .replace(" VND", "")
+                                  ).toLocaleString("vi-VN") + " VND"
+                                : "0 VND"}
                             </span>{" "}
                             {/* Giá gốc */}
                             <span className="discount-price">
-                              {selectedDetail?.discount_price}
+                              {selectedDetail?.default_price
+                                ? Number(
+                                    selectedDetail.default_price
+                                      .replace(/,/g, "")
+                                      .replace(" VND", "")
+                                  ).toLocaleString("vi-VN") + " VND"
+                                : "0 VND"}
                             </span>{" "}
                             {/* Giá khuyến mại */}
                           </>
                         ) : (
-                          selectedDetail?.default_price || productId.price
+                          <span className="default-price">
+                            {formatPrice(
+                              selectedDetail?.default_price || productId?.price
+                            )}
+                          </span>
                         )}
                       </p>
 
