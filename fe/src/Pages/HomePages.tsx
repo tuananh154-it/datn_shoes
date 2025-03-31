@@ -341,6 +341,24 @@ const HomePages = () => {
                                                 alt="shoes_product"
                                             />
                                             <div className="featured_btn vertical_middle">
+                                                {/* <a
+                          href="/cart"
+                          className="text-uppercase add_to_bag_btn rounded-circle d-block"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="21"
+                            viewBox="0 0 18 21"
+                          >
+                            <path
+                              fill="#000"
+                              data-name="Bag Icon copy"
+                              className="cls-1"
+                              d="M18,18.2L16.7,4.58a0.543,0.543,0,0,0-.56-0.474H13.411A4.278,4.278,0,0,0,9,0,4.278,4.278,0,0,0,4.588,4.106H1.856a0.549,0.549,0,0,0-.56.474L0,18.2v0.048A3.089,3.089,0,0,0,3.334,21H14.666A3.089,3.089,0,0,0,18,18.247V18.2ZM9,1.041a3.191,3.191,0,0,1,3.292,3.065H5.707A3.191,3.191,0,0,1,9,1.041Zm5.666,18.91H3.334a2.02,2.02,0,0,1-2.215-1.687L2.369,5.149h2.22v1.83a0.561,0.561,0,0,0,1.119,0V5.149h6.584v1.83a0.561,0.561,0,0,0,1.119,0V5.149h2.22l1.25,13.119A2.02,2.02,0,0,1,14.666,19.951Z"
+                            />
+                          </svg>
+                        </a> */}
                                                 <Link
                                                     to="#"
                                                     className="text-uppercase add_to_bag_btn rounded-circle d-block"
@@ -447,7 +465,7 @@ const HomePages = () => {
                                                         />
                                                     </svg>
                                                 </a>
-                                                <a
+                                                {/* <a
                                                     href="#"
                                                     className="heart yeuthich rounded-circle text-center d-block"
                                                     onClick={(e) => {
@@ -456,7 +474,7 @@ const HomePages = () => {
                                                     }}
                                                 >
                                                     <i className="flaticon-heart"></i>
-                                                </a>
+                                                </a> */}
                                             </div>
                                         </div>
                                     </div>

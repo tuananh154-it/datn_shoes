@@ -7,7 +7,6 @@ import { getAllProduct } from "../services/product";
 import QuickViewProduct from "./QuickViewProduct";
 
 const Shop = () => {
-
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -25,6 +24,38 @@ const Shop = () => {
       .finally(() => setLoading(false));
   }, []);
 
+  // useEffect(() => {
+  //   let updatedProducts = [...products];
+
+  //   if (selectedCategories.length) {
+  //     updatedProducts = updatedProducts.filter((product) =>
+  //       selectedCategories.includes(product.category)
+  //     );
+  //   }
+
+  //   if (selectedBrands.length) {
+  //     updatedProducts = updatedProducts.filter((product) =>
+  //       selectedBrands.includes(product.brand)
+  //     );
+  //   }
+
+  //   if (sortBy) {
+  //     updatedProducts.sort((a, b) => {
+  //       const priceA =
+  //         typeof a.price === "string"
+  //           ? Number(a.price.replace(" VND", ""))
+  //           : a.price;
+  //       const priceB =
+  //         typeof b.price === "string"
+  //           ? Number(b.price.replace(" VND", ""))
+  //           : b.price;
+  //       return sortBy === "asc" ? priceA - priceB : priceB - priceA;
+  //     });
+  //   }
+
+  //   setFilteredProducts(updatedProducts);
+  // }, [sortBy, selectedCategories, selectedBrands, products]);
+  const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
   useEffect(() => {
     let updatedProducts = [...products];
 
@@ -40,23 +71,20 @@ const Shop = () => {
       );
     }
 
-    if (sortBy) {
-      updatedProducts.sort((a, b) => {
-        const priceA =
-          typeof a.price === "string"
-            ? Number(a.price.replace(" VND", ""))
-            : a.price;
-        const priceB =
-          typeof b.price === "string"
-            ? Number(b.price.replace(" VND", ""))
-            : b.price;
-        return sortBy === "asc" ? priceA - priceB : priceB - priceA;
+    if (priceRange) {
+      updatedProducts = updatedProducts.filter((product) => {
+        // Chuyển `price` từ chuỗi thành số đúng
+        const price =
+          typeof product.price === "string"
+            ? Number(product.price.replace(/,/g, "").replace(" VND", ""))
+            : product.price;
+
+        return price >= priceRange[0] && price <= priceRange[1];
       });
     }
 
     setFilteredProducts(updatedProducts);
-  }, [sortBy, selectedCategories, selectedBrands, products]);
-
+  }, [selectedCategories, selectedBrands, priceRange, products]);
   const handleCategoryChange = (category: string) => {
     setSelectedCategories((prev) =>
       prev.includes(category)
@@ -123,7 +151,7 @@ const Shop = () => {
                         <span className="category_close_icon flaticon-down-arrow float-right"></span>
                       </div>
                       <div className="layer-filter">
-                        <form className="py-2">
+                        {/* <form className="py-2">
                           <ul>
                             <li>
                               <div className="flex items-center gap-3">
@@ -160,6 +188,50 @@ const Shop = () => {
                                   Giá - Giá từ lớn đến bé
                                 </label>
                               </div>
+                            </li>
+                          </ul>
+                        </form> */}
+                        <form className="price-filter-container">
+                          <ul className="price-filter-list">
+                            <li className="price-filter-item">
+                              <input
+                                type="radio"
+                                name="priceRange"
+                                id="price-range-all"
+                                onChange={() => setPriceRange(null)}
+                              />
+                              <label htmlFor="price-range-all">Tất cả</label>
+                            </li>
+                            <li className="price-filter-item">
+                              <input
+                                type="radio"
+                                name="priceRange"
+                                id="price-range-1"
+                                onChange={() => setPriceRange([0, 200000])}
+                              />
+                              <label htmlFor="price-range-1">0 - 200K</label>
+                            </li>
+                            <li className="price-filter-item">
+                              <input
+                                type="radio"
+                                name="priceRange"
+                                id="price-range-2"
+                                onChange={() => setPriceRange([200000, 500000])}
+                              />
+                              <label htmlFor="price-range-2">200K - 500K</label>
+                            </li>
+                            <li className="price-filter-item">
+                              <input
+                                type="radio"
+                                name="priceRange"
+                                id="price-range-3"
+                                onChange={() =>
+                                  setPriceRange([500000, 1000000])
+                                }
+                              />
+                              <label htmlFor="price-range-3">
+                                500K - 1000K
+                              </label>
                             </li>
                           </ul>
                         </form>
@@ -390,7 +462,16 @@ const Shop = () => {
                                 </p>
                               </Link>
                               <p className="featured_price title_h5 text-center">
-                                <span>{product.price.toLocaleString()}</span>
+                                {/* <span>{product.price.toLocaleString()}</span> */}
+                                <span className="text-color">
+                                  {product?.price
+                                    ? Number(
+                                        product.price
+                                          .replace(/,/g, "")
+                                          .replace(" VND", "")
+                                      ).toLocaleString("vi-VN") + " VND"
+                                    : "0 VND"}
+                                </span>
                               </p>
                             </div>
                           </div>
