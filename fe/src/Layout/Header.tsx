@@ -2,11 +2,9 @@ import MegaMenu from "./MegaMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { logout } from "../store/useSlice";
 import { useCart } from "../context/CartContext";
-import { Product } from "../types/Product";
-import { getAllProduct } from "../services/product";
 
 
 const Header = () => {
@@ -44,33 +42,6 @@ const Header = () => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
-    const [products, setProducts] = useState<Product[]>([]);
-    useEffect(() => {
-       getAllProduct()
-         .then(({ data }) => {
-           setProducts(data.data);
-         })
-     }, []);
-
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState("");
-
-  // Lọc sản phẩm theo tên nhập vào
-  const navigate = useNavigate();
-
-  // Xử lý khi nhấn tìm kiếm
-  const handleSearch = () => {
-    if (searchTerm.trim()) {
-      // Thực hiện tìm kiếm và điều hướng
-      navigate(`/shop?search=${encodeURIComponent(searchTerm)}`);
-      
-      // Tắt thanh tìm kiếm sau khi tìm kiếm xong
-      setIsOpen(false);
-    }
-  };
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
   return (
     <>
       <header className="shoes_header shoes_home_header">
@@ -149,26 +120,11 @@ const Header = () => {
                 </span>
               </Link>
             </li>
-           
-      <li className="search_icon" onClick={toggleDropdown}>
-        <a href="#">
-          <i className="flaticon-magnifying-glass"></i>
-        </a>
-      </li>
-
-      {isOpen && (
-        <div className="search-dropdown">
-          <input
-            type="text"
-            placeholder="Tìm kiếm sản phẩm..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleSearch()} // Tìm kiếm khi nhấn Enter
-          />
-          <button onClick={handleSearch}>Tìm</button>
-        </div>
-      )}
-  
+            <li className="search_icon">
+              <Link to="/search">
+                <i className="flaticon-magnifying-glass"></i>
+              </Link>
+            </li>
             <li className="cart_icon">
               <Link to="/cart">
                 <i className="flaticon-shopping-bag"></i>

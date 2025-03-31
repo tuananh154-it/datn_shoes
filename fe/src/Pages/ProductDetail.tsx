@@ -14,6 +14,8 @@ import { getComments } from "../services/comments";
 const ProductDetail = () => {
   const { addToCart } = useCart();
 
+  const isLoggedIn = localStorage.getItem("token") ? true : false;
+
   const isLoggedIn = localStorage.getItem('token') ? true : false;
 
   const nav = useNavigate();
@@ -35,7 +37,6 @@ const ProductDetail = () => {
   const handleIncrease = () => {
     setQuantity(quantity + 1);
   };
-
 
   // Hàm để giảm số lượng
   const handleDecrease = () => {
