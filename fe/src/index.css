@@ -698,35 +698,77 @@ h2, h3 {
   margin-left: 50px;
 }
 /* binh luan danh gia */
-.comment-list {
-  list-style: none;
+.comment-section {
+  max-width: 600px; 
+  margin: 0; /* Xóa căn giữa */
   padding: 0;
+  font-family: Arial, sans-serif;
 }
 
-.comment-item {
-  padding: 8px 0;
-  border-bottom: 1px solid #ddd;
+.comment-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  justify-content: flex-start; /* Đẩy hết sang trái */
 }
 
-.comment-date {
-  font-size: 12px;
-  color: gray;
-  margin-left: 10px;
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.comment-content {
+  background: #f0f2f5;
+  padding: 10px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #65676b;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #050505;
+}
+
+.comment-text {
+  font-size: 14px;
+  margin: 5px 0;
 }
 
 .comment-input {
   display: flex;
+  gap: 10px;
   margin-top: 10px;
 }
 
-.comment-input input {
-  flex: 1;
+.form-control {
+  flex-grow: 1;
   padding: 8px;
-  margin-right: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
-.comment-input button {
-  padding: 8px 12px;
+.btn-primary {
+  padding: 8px 15px;
+  border: none;
+  background: #1877f2;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .quickview-overlay {

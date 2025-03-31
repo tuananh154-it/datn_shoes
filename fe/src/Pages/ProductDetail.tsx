@@ -9,7 +9,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { getComments } from "../services/comments";
+import { getComments, getCommentsByProductId } from "../services/comments";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
@@ -73,14 +73,30 @@ const ProductDetail = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   // Gửi bình luận mới
-  const handleAddComment = () => {
-    if (!newComment.trim()) return;
+
+
+
+  //   useEffect(() => {
+  //     const fetchComments = async () => {
+  //         try {
+  //             const response = await getCommentsByProductId(productId);
+  //             setComments(response.data);
+  //         } catch (err) {
+  //            "loi"
+  //         } 
+  //     };
+
+  //     fetchComments();
+  // }, [productId]);
+
+  useEffect(() => {
     getComments()
       .then(({ data }) => {
         setComments(data)
+        console.log(data);
+
       })
-      .catch(() => toast.error("Loi lay comments"))
-  };
+  }, [])
   return (
     <>
       <div className="menu_overlay"></div>
@@ -350,7 +366,7 @@ const ProductDetail = () => {
                     </h5>
                     <p>
                       Nhằm mang đến trải nghiệm mua sắm thuận tiện nhất, chúng tôi cung cấp dịch vụ giao hàng nhanh chóng,
-                       an toàn và linh hoạt trên toàn quốc.
+                      an toàn và linh hoạt trên toàn quốc.
 
                       Thời gian giao hàng:
 
@@ -361,15 +377,15 @@ const ProductDetail = () => {
                       Giao hàng hỏa tốc: Nhận hàng trong ngày (chỉ áp dụng tại một số khu vực).
 
                       Đối tác vận chuyển:
-                      Chúng tôi hợp tác với các đơn vị giao hàng uy tín như GHN, GHTK, Viettel Post, J&T Express… 
+                      Chúng tôi hợp tác với các đơn vị giao hàng uy tín như GHN, GHTK, Viettel Post, J&T Express…
                       nhằm đảm bảo đơn hàng được giao đúng thời gian, đúng địa điểm và trong tình trạng nguyên vẹn.
 
                       Chính sách kiểm tra hàng trước khi nhận:
                       Khách hàng có thể kiểm tra sản phẩm trước khi thanh toán. Nếu có bất kỳ lỗi sản xuất hoặc sai sót trong đơn hàng,
-                       chúng tôi cam kết hỗ trợ đổi trả nhanh chóng mà không mất thêm phí.
+                      chúng tôi cam kết hỗ trợ đổi trả nhanh chóng mà không mất thêm phí.
 
                       Miễn phí vận chuyển:
-                      Chúng tôi hỗ trợ miễn phí vận chuyển cho các đơn hàng từ [số tiền cụ thể] trở lên, 
+                      Chúng tôi hỗ trợ miễn phí vận chuyển cho các đơn hàng từ [số tiền cụ thể] trở lên,
                       giúp khách hàng tiết kiệm chi phí khi mua sắm.
                     </p>
                   </div>
@@ -422,14 +438,20 @@ const ProductDetail = () => {
                           <div className="card-body">
                             {/* Hiển thị danh sách bình luận */}
                             {comments.length > 0 ? (
-                              <ul className="comment-list">
-                                {comments.map(comment => (
-                                  <li key={comment.id} className="comment-item">
-                                    <strong>{comment.user}:</strong> {comment.content}
-                                    <span className="comment-date">{new Date(comment.created_at).toLocaleString()}</span>
-                                  </li>
-                                ))}
-                              </ul>
+                              <div className="comment-section">
+                              {comments.map((comment) => (
+                                <div key={comment.id} className="comment-container">
+                                  <img src={comment.avatar} alt="User Avatar" className="avatar" />
+                                  <div className="comment-content">
+                                    <div className="comment-header">
+                                      <strong className="user-name">{comment.user_name}</strong>
+                                      <span className="comment-time">{comment.time}</span>
+                                    </div>
+                                    <p className="comment-text">{comment.comment}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
                             ) : (
                               <p>Bạn hãy là người đầu tiên bình luận!</p>
                             )}
@@ -443,7 +465,7 @@ const ProductDetail = () => {
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                               />
-                              <button className="btn btn-primary" onClick={handleAddComment}>
+                              <button className="btn btn-primary" >
                                 Gửi
                               </button>
                             </div>
