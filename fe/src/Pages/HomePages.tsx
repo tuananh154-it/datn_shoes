@@ -695,6 +695,33 @@ const HomePages = () => {
         });
     }, []);
 
+<<<<<<< HEAD
+=======
+
+
+  // const toggleWishlist = (product: Product) => {
+  //   const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  //   if (!user) {
+  //     alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
+  //     return;
+  //   }
+
+  //   let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+
+  //   // Lưu ID sản phẩm thay vì object
+  //   const index = wishlist.indexOf(product.id);
+
+  //   if (index !== -1) {
+  //     wishlist.splice(index, 1);
+  //   } else {
+  //     wishlist.push(product.id);
+  //   }
+  //   toast.success("Đã thêm sản phẩm yêu thích");
+  //   localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  // };
+
+>>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
   const toggleWishlist = (product: Product) => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
   
@@ -720,6 +747,123 @@ const HomePages = () => {
     // Phát sự kiện cập nhật để các component khác biết
     window.dispatchEvent(new Event("storage"));
   };
+<<<<<<< HEAD
+=======
+  return (
+    <>
+      <div className="menu_overlay"></div>
+      <div className="banner nav">
+        <Swiper
+          modules={[Navigation, Pagination, Autoplay]}
+          pagination={{ clickable: true }}
+          autoplay={{ delay: 2000 }}
+          loop
+        >
+          {banners.map((banner) => (
+            <SwiperSlide key={banner.id} style={{ height: "600px" }}>
+              <a href={banner.link}>
+                <img src={banner.image_url} alt="" className="img-fluid" />
+              </a>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </div>
+      <div className="main_section">
+        {/*hình 2018*/}
+        <div className="shoes_collection_section padding-top-60 wow fadeIn">
+          <div className="container">
+            <div className="row">
+              <div className="col-md-8 col-sm-8 wow fadeInLeft animated">
+                <div className="home_collection_content  position-relative">
+                  <img
+                    src="src/images/shoes_collection1.jpg"
+                    alt="women"
+                    className="img-fluid"
+                  />
+                  <div className="shoes_collection_content">
+                    <h2 className="text-uppercase title_h2">2018</h2>
+                    <p className="text-uppercase">New Collection</p>
+                    <a
+                      href="product_list_with_sidebar.html"
+                      className="background-btn  text-uppercase"
+                    >
+                      shop now <i className="flaticon-arrows-4"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-4 col-sm-4 wow fadeInDown animated">
+                <div className="home_collection_content position-relative">
+                  <img
+                    src="src/images/shoes_collection2.jpg"
+                    alt="men"
+                    className="img-fluid"
+                  />
+                  <div className="shoes_collection_content">
+                    <span className="text-uppercase">for</span>
+                    <p className="text-uppercase">Men</p>
+                  </div>
+                </div>
+                <div className="home_collection_content position-relative">
+                  <img
+                    src="src/images/shoes_collection3.png"
+                    alt="products"
+                    className="img-fluid"
+                  />
+                  <div className="shoes_collection_content">
+                    <span className="text-uppercase">for</span>
+                    <p className="text-uppercase">Women</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {/* hinh 2018 */}
+        {/* New arrival */}
+        <section className="padding-top-text-60 arrival_featured_section wow fadeIn">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-3 col-md-4 col-6">
+                <div className="arrival_collection_content position-relative">
+                  <img
+                    src="src/images/arrival_img.jpg"
+                    alt="arrival_img"
+                    className="img-fluid"
+                  />
+                  <div className="arrival_collection_text ">
+                    <h2 className="title_h2 text-uppercase">New Arrivals</h2>
+                    <p className="text-uppercase">Just in Now</p>
+                  </div>
+                </div>
+              </div>
+              {lastProduct.map((lastproduct) => (
+                <div
+                  className="col-lg-3 col-md-4 col-6 wow fadeInLeft animated arrival"
+                  data-wow-duration="1300ms"
+
+    const toggleWishlist = (product: Product) => {
+        const user = JSON.parse(localStorage.getItem("user") || "null");
+
+        if (!user) {
+            alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
+            return;
+        }
+
+        let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+
+        // Lưu ID sản phẩm thay vì object
+        const index = wishlist.indexOf(product.id);
+
+        if (index !== -1) {
+            wishlist.splice(index, 1);
+        } else {
+            wishlist.push(product.id);
+        }
+        toast.success("Đã thêm sản phẩm yêu thích")
+        localStorage.setItem("wishlist", JSON.stringify(wishlist));
+    };
+>>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
 
     return (
         <>

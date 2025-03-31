@@ -11,6 +11,7 @@ import "rc-slider/assets/index.css";
 import QuickViewProduct from "./QuickViewProduct";
 import toast from "react-hot-toast";
 
+
 const Shop = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
@@ -61,31 +62,51 @@ const Shop = () => {
   //   }
 
   //   setFilteredProducts(updatedProducts);
+<<<<<<< HEAD
   // }, [selectedCategories, selectedBrands, priceRange, products]);
   // useEffect(() => {
   //   let updatedProducts = [...products];
   
   //   // Lọc theo category
+=======
+  // }, [sortBy, selectedCategories, selectedBrands, products]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
+  // useEffect(() => {
+  //   let updatedProducts = [...products];
+
+>>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
   //   if (selectedCategories.length) {
   //     updatedProducts = updatedProducts.filter((product) =>
   //       selectedCategories.includes(product.category)
   //     );
   //   }
+<<<<<<< HEAD
   
   //   // Lọc theo brand
+=======
+
+>>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
   //   if (selectedBrands.length) {
   //     updatedProducts = updatedProducts.filter((product) =>
   //       selectedBrands.includes(product.brand)
   //     );
   //   }
+<<<<<<< HEAD
   
   //   // Lọc theo khoảng giá
   //   if (priceRange) {
   //     updatedProducts = updatedProducts.filter((product) => {
+=======
+
+  //   if (priceRange) {
+  //     updatedProducts = updatedProducts.filter((product) => {
+  //       // Chuyển `price` từ chuỗi thành số đúng
+>>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
   //       const price =
   //         typeof product.price === "string"
   //           ? Number(product.price.replace(/,/g, "").replace(" VND", ""))
   //           : product.price;
+<<<<<<< HEAD
   
   //       return price >= priceRange[0] && price <= priceRange[1];
   //     });
@@ -109,6 +130,15 @@ const Shop = () => {
   }, [location]);
 
   // Lọc và cập nhật danh sách sản phẩm
+=======
+
+  //       return price >= priceRange[0] && price <= priceRange[1];
+  //     });
+  //   }
+
+  //   setFilteredProducts(updatedProducts);
+  // }, [selectedCategories, selectedBrands, priceRange, products]);
+>>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
   useEffect(() => {
     let updatedProducts = [...products];
 
@@ -196,6 +226,7 @@ const Shop = () => {
       setPriceRange([newRange[0], newRange[1]]);
     }
   };
+<<<<<<< HEAD
     const toggleWishlist = (product: Product) => {
       const user = JSON.parse(localStorage.getItem("user") || "null");
     
@@ -223,6 +254,8 @@ const Shop = () => {
     };
    
   
+=======
+>>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
   return (
     <>
       <div className="menu_overlay"></div>

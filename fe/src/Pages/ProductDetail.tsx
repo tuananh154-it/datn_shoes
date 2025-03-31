@@ -13,9 +13,27 @@ import { getComments } from "../services/comments";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
+
+  const isLoggedIn = localStorage.getItem("token") ? true : false;
+
   const isLoggedIn = localStorage.getItem('token') ? true : false;
+
   const nav = useNavigate();
   const [quantity, setQuantity] = useState<number>(1);
+
+  const formatPrice = (price: string | number | undefined) => {
+    if (typeof price === "number") {
+      return price.toLocaleString("vi-VN") + " VND";
+    }
+    if (typeof price === "string") {
+      return (
+        Number(price.replace(/,/g, "").replace(" VND", "")).toLocaleString(
+          "vi-VN"
+        ) + " VND"
+      );
+    }
+    return "0 VND";
+  };
   const handleIncrease = () => {
     setQuantity(quantity + 1);
   };
@@ -78,10 +96,9 @@ const ProductDetail = () => {
 
   const [products, setProducts] = useState<Product[]>([]);
   useEffect(() => {
-    getAllProduct()
-      .then(({ data }) => {
-        setProducts(data.data);
-      })
+    getAllProduct().then(({ data }) => {
+      setProducts(data.data);
+    });
   }, []);
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -313,14 +330,18 @@ const ProductDetail = () => {
                           onClick={() => {
                             // Kiểm tra nếu người dùng chưa đăng nhập
                             if (!isLoggedIn) {
-                              alert("Vui lòng đăng nhập trước khi thêm vào giỏ hàng!");
-                              nav("/login")
+                              alert(
+                                "Vui lòng đăng nhập trước khi thêm vào giỏ hàng!"
+                              );
+                              nav("/login");
                               return;
                             }
 
                             // Kiểm tra xem biến thể đã được chọn chưa
                             if (!selectedDetail) {
-                              alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
+                              alert(
+                                "Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!"
+                              );
                               return;
                             }
 
@@ -329,10 +350,13 @@ const ProductDetail = () => {
                             toast.success("Thêm vào giỏ hàng thành công");
 
                             // Log dữ liệu gửi lên API
-                            console.log("Dữ liệu gửi lên API:", JSON.stringify({
-                              product_detail_id: selectedDetail.id,
-                              quantity
-                            }));
+                            console.log(
+                              "Dữ liệu gửi lên API:",
+                              JSON.stringify({
+                                product_detail_id: selectedDetail.id,
+                                quantity,
+                              })
+                            );
                           }}
                         >
                           Add to cart
@@ -607,20 +631,31 @@ const ProductDetail = () => {
                             className="img-product_detail"
                           />
                           <div className="featured_btn vertical_middle">
-                            <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">
+                            <a
+                              href="cart.html"
+                              className="text-uppercase background-btn add_to_bag_btn"
+                            >
                               Thêm vào giỏ hàng
                             </a>
-                            <a href={`/product_detail/${product.id}`} className="text-uppercase border-btn popup_btn">
+                            <a
+                              href={`/product_detail/${product.id}`}
+                              className="text-uppercase border-btn popup_btn"
+                            >
                               Xem chi tiết
                             </a>
                           </div>
-                          <a href="javascript:void(0);" className="heart rounded-circle text-center">
+                          <a
+                            href="javascript:void(0);"
+                            className="heart rounded-circle text-center"
+                          >
                             <i className="flaticon-heart vertical_middle"></i>
                           </a>
                         </div>
                         <div className="featured_detail_content">
                           <a href={`/product_detail/${product.id}`}>
-                            <p className="featured_title text-capitalize text-center">{product.name}</p>
+                            <p className="featured_title text-capitalize text-center">
+                              {product.name}
+                            </p>
                           </a>
                           <p className="featured_price title_h5 text-center">
                             <span>{product.price}</span>
