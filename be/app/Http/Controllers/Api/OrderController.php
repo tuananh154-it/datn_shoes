@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\CartItem;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+
 use App\Models\Voucher;
 use Illuminate\Http\Request;
 use App\Models\Cart;
@@ -14,6 +18,11 @@ class OrderController extends Controller
 {
     public function placeOrder(Request $request)
     {
+        
+        if (!$request->user()) {
+            return response()->json(['message' => 'Bạn cần đăng nhập để đặt hàng'], 401);
+        }
+    
         $request->validate([
             'username' => 'required|string',
             'email' => 'required|email',
@@ -22,70 +31,90 @@ class OrderController extends Controller
             'payment_method' => 'required|in:credit_card,cash_on_delivery,paypal',
             'voucher_id' => 'nullable|exists:vouchers,id',
             'note' => 'nullable|string',
+            'selected_items' => 'required|array|min:1',
+            'selected_items.*' => 'integer|exists:cart_items,id',
         ]);
-
-        $user = $request->user(); // có thể là null nếu cho phép khách
-        $cart = Cart::with('items.productDetail')->where('user_id', $user->id ?? null)->first();
-
-        if (!$cart || $cart->items->isEmpty()) {
-            return response()->json(['message' => 'Giỏ hàng trống'], 400);
+    
+        $user = $request->user();
+        $selectedItemIds = $request->selected_items;
+    
+        $validItemCount = CartItem::whereIn('id', $selectedItemIds)
+            ->whereHas('cart', function($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })->count();
+    
+        if ($validItemCount !== count($selectedItemIds)) {
+            return response()->json(['message' => 'Có sản phẩm không hợp lệ hoặc không thuộc quyền sở hữu'], 403);
         }
-
+    
+        $cart = Cart::with(['items' => function ($query) use ($selectedItemIds) {
+            $query->whereIn('id', $selectedItemIds);
+        }, 'items.productDetail.product'])->where('user_id', $user->id)->first();
+    
+        if (!$cart || $cart->items->isEmpty()) {
+            return response()->json(['message' => 'Không có sản phẩm nào được chọn để đặt hàng'], 400);
+        }
+    
         DB::beginTransaction();
-
+    
         try {
             $total = 0;
-            $deliverFee = 30000; // ví dụ phí giao hàng cố định
-
-            foreach ($cart->items as $item) {
-                $price = $item->productDetail->discount_price ?? $item->productDetail->default_price;
-                $total += $price * $item->quantity;
-                if ($item->productDetail->quantity < $item->quantity) {
-                    return response()->json(['message' => 'Sản phẩm "' . $item->productDetail->product->name . '" không đủ số lượng'], 400);
-                }
-
-            }
-
-            // Xử lý voucher nếu có
-            $voucher = null;
+            $deliverFee = 30000;
             $discount = 0;
-
+    
+            foreach ($cart->items as $item) {
+                $productDetail = $item->productDetail;
+                $price = $productDetail->discount_price ?? $productDetail->default_price;
+    
+                if ($productDetail->quantity < $item->quantity) {
+                    return response()->json([
+                        'message' => 'Sản phẩm "' . $productDetail->product->name . '" không đủ số lượng'
+                    ], 400);
+                }
+                // if ($productDetail->quantity < $item->quantity) {
+                //     throw new \Exception('Sản phẩm "' . $productDetail->product->name . '" không đủ số lượng');
+                // }
+    
+                $total += $price * $item->quantity;
+            }
+    
+            $voucher = null;
+    
             if ($request->voucher_id) {
                 $voucher = Voucher::where('id', $request->voucher_id)
                     ->where('status', 'active')
                     ->where('expiration_date', '>=', now())
                     ->first();
-
+    
                 if (!$voucher) {
                     return response()->json(['message' => 'Voucher không hợp lệ'], 400);
                 }
-
+    
                 if ($total < $voucher->min_purchase_amount) {
                     return response()->json(['message' => 'Không đủ điều kiện áp dụng voucher'], 400);
                 }
-
+    
                 if ($voucher->discount_percent) {
                     $discount = $total * ($voucher->discount_percent / 100);
                 } elseif ($voucher->discount_amount) {
                     $discount = $voucher->discount_amount;
                 }
-
+    
                 if ($discount > $voucher->max_discount_amount) {
                     $discount = $voucher->max_discount_amount;
                 }
-
+    
                 $total -= $discount;
             }
-
+    
             $total_price = $total + $deliverFee;
-
-            // Tạo đơn hàng
+    
             $order = Order::create([
                 'username' => $request->username,
                 'email' => $request->email,
                 'phone_number' => $request->phone_number,
                 'address' => $request->address,
-                'user_id' => $user?->id ?? 1, // fallback nếu khách (bạn có thể cần user guest mặc định)
+                'user_id' => $user->id,
                 'voucher_id' => $voucher->id ?? null,
                 'status' => 'waiting_for_confirmation',
                 'payment_status' => 'unpaid',
@@ -94,39 +123,48 @@ class OrderController extends Controller
                 'deliver_fee' => $deliverFee,
                 'total_price' => $total_price,
             ]);
-
-            // Chi tiết đơn hàng
+    
             foreach ($cart->items as $item) {
-                $price = $item->productDetail->discount_price ?? $item->productDetail->default_price;
+                $productDetail = $item->productDetail;
+                $price = $productDetail->discount_price ?? $productDetail->default_price;
                 $quantity = $item->quantity;
-                $lineTotal = $price * $quantity;
-
+    
                 OrderDetail::create([
                     'order_id' => $order->id,
                     'product_detail_id' => $item->product_detail_id,
-                    'quantity' => $item->quantity,
+                    'quantity' => $quantity,
                     'price' => $price,
-                    'total_price' => $lineTotal,
+                    'total_price' => $price * $quantity,
                 ]);
-                $item->productDetail->decrement('quantity', $quantity);
+    
+                $productDetail->decrement('quantity', $quantity);
             }
-
-            $cart->items()->delete();
-
+    
+            $cart->items()->whereIn('id', $selectedItemIds)->delete();
+    
             DB::commit();
-
+    try {
+        Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail(  $order->load('order_details.productDetail.product')));
+    } catch (\Exception $e) {
+        Log::error('Lỗi gửi email xác nhận đơn hàng: ' . $e->getMessage());
+        // Không cần return lỗi, vẫn tiếp tục gửi response thành công
+    }
             return response()->json([
                 'message' => 'Đặt hàng thành công',
                 'order_id' => $order->id,
                 'total' => $total_price,
                 'discount' => $discount
             ], 201);
-
+    
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['message' => 'Lỗi đặt hàng', 'error' => $e->getMessage()], 500);
+            return response()->json([
+                'message' => 'Lỗi đặt hàng',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
+    
     public function listOrders(Request $request)
 {
     $user = $request->user();
@@ -168,36 +206,39 @@ public function cancelOrder($id, Request $request)
     $order->update(['status' => 'cancelled']);
 
     return response()->json(['message' => 'Đơn hàng đã được hủy']);
-}
-public function getCart(Request $request)
+}public function getCart(Request $request)
 {
     $user = $request->user();
 
     if (!$user) {
-        return response()->json(['message' => 'Chưa đăng nhập'], 401);
+        return response()->json(['message' => 'Bạn cần đăng nhập để xem giỏ hàng'], 401);
     }
 
-    // Lấy giỏ hàng
-    $cart = Cart::with(['items.productDetail.product', 'items.productDetail.size', 'items.productDetail.color'])
-        ->where('user_id', $user->id)
-        ->first();
+    // Lấy giỏ hàng cùng các item và thông tin liên quan
+    $cart = Cart::with([
+        'items.productDetail.product',
+        'items.productDetail.size',
+        'items.productDetail.color'
+    ])->where('user_id', $user->id)->first();
 
     if (!$cart || $cart->items->isEmpty()) {
         return response()->json(['message' => 'Giỏ hàng trống'], 400);
     }
 
-    // Tính tiền
+    // Tính tổng tiền hàng
     $subtotal = 0;
     $items = $cart->items->map(function ($item) use (&$subtotal) {
-        $price = $item->productDetail->discount_price ?? $item->productDetail->default_price;
+        $productDetail = $item->productDetail;
+        $price = $productDetail->discount_price ?? $productDetail->default_price;
         $lineTotal = $price * $item->quantity;
         $subtotal += $lineTotal;
 
         return [
-            'product_name' => $item->productDetail->product->name,
-            'image' => $item->productDetail->image,
-            'size' => $item->productDetail->size->name,
-            'color' => $item->productDetail->color->name,
+            'id' => $item->id, // ✅ Quan trọng cho FE & đặt hàng
+            'product_name' => $productDetail->product->name,
+            'image' => $productDetail->image,
+            'size' => $productDetail->size->name ?? null,
+            'color' => $productDetail->color->name ?? null,
             'price' => $price,
             'quantity' => $item->quantity,
             'line_total' => $lineTotal,
@@ -205,7 +246,7 @@ public function getCart(Request $request)
     });
 
     // Xử lý mã giảm giá (nếu có)
-    $voucherCode = $request->query('voucher');
+    $voucherCode = $request->query('voucher'); // /checkout/init?voucher=ABC123
     $discount = 0;
     $voucherInfo = null;
 
@@ -233,19 +274,16 @@ public function getCart(Request $request)
     $deliverFee = 30000;
     $total = $subtotal - $discount + $deliverFee;
 
-    // ✅ Trả **toàn bộ thông tin user**
-    $userInfo = [
-        'id' => $user->id,
-        'name' => $user->name,
-        'email' => $user->email,
-        'gender' => $user->gender,
-        'date_of_birth' => $user->date_of_birth,
-        'phone_number' => $user->phone_number,
-        'address' => $user->address,
-    ];
-
     return response()->json([
-        'user' => $userInfo,
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'gender' => $user->gender,
+            'date_of_birth' => $user->date_of_birth,
+            'phone_number' => $user->phone_number,
+            'address' => $user->address,
+        ],
         'cart_items' => $items,
         'subtotal' => $subtotal,
         'discount' => $discount,
@@ -254,5 +292,6 @@ public function getCart(Request $request)
         'total' => $total
     ]);
 }
+
 
 }
