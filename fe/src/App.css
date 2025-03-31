@@ -674,7 +674,6 @@ input[type="range"] {
 }
 .chon{
   width: 150px;
-<<<<<<< HEAD
 }
 
 .search-container {
@@ -746,6 +745,5 @@ input[type="range"] {
     opacity: 1;
     transform: translateY(0);
   }
-=======
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
+
 }

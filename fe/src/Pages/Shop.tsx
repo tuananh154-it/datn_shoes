@@ -35,92 +35,7 @@ const Shop = () => {
   const location = useLocation();
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  // useEffect(() => {
-  //   let updatedProducts = [...products];
-
-  //   if (selectedCategories.length) {
-  //     updatedProducts = updatedProducts.filter((product) =>
-  //       selectedCategories.includes(product.category)
-  //     );
-  //   }
-
-  //   if (selectedBrands.length) {
-  //     updatedProducts = updatedProducts.filter((product) =>
-  //       selectedBrands.includes(product.brand)
-  //     );
-  //   }
-
-  //   if (priceRange) {
-  //     updatedProducts = updatedProducts.filter((product) => {
-  //       const price =
-  //         typeof product.price === "string"
-  //           ? Number(product.price.replace(/,/g, "").replace(" VND", ""))
-  //           : product.price;
-
-  //       return price >= priceRange[0] && price <= priceRange[1];
-  //     });
-  //   }
-
-  //   setFilteredProducts(updatedProducts);
-<<<<<<< HEAD
-  // }, [selectedCategories, selectedBrands, priceRange, products]);
-  // useEffect(() => {
-  //   let updatedProducts = [...products];
-  
-  //   // Lọc theo category
-=======
-  // }, [sortBy, selectedCategories, selectedBrands, products]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
-  // useEffect(() => {
-  //   let updatedProducts = [...products];
-
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
-  //   if (selectedCategories.length) {
-  //     updatedProducts = updatedProducts.filter((product) =>
-  //       selectedCategories.includes(product.category)
-  //     );
-  //   }
-<<<<<<< HEAD
-  
-  //   // Lọc theo brand
-=======
-
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
-  //   if (selectedBrands.length) {
-  //     updatedProducts = updatedProducts.filter((product) =>
-  //       selectedBrands.includes(product.brand)
-  //     );
-  //   }
-<<<<<<< HEAD
-  
-  //   // Lọc theo khoảng giá
-  //   if (priceRange) {
-  //     updatedProducts = updatedProducts.filter((product) => {
-=======
-
-  //   if (priceRange) {
-  //     updatedProducts = updatedProducts.filter((product) => {
-  //       // Chuyển `price` từ chuỗi thành số đúng
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
-  //       const price =
-  //         typeof product.price === "string"
-  //           ? Number(product.price.replace(/,/g, "").replace(" VND", ""))
-  //           : product.price;
-<<<<<<< HEAD
-  
-  //       return price >= priceRange[0] && price <= priceRange[1];
-  //     });
-  //   }
-  
-  //   // Lọc theo từ khóa tìm kiếm
-  //   if (searchTerm) {
-  //     updatedProducts = updatedProducts.filter((product) =>
-  //       product.name.toLowerCase().includes(searchTerm.toLowerCase())
-  //     );
-  //   }
-  
-  //   setFilteredProducts(updatedProducts);
-  // }, [selectedCategories, selectedBrands, priceRange, products, searchTerm]);
+ 
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
     const search = queryParams.get("search");
@@ -128,17 +43,6 @@ const Shop = () => {
       setSearchTerm(search);
     }
   }, [location]);
-
-  // Lọc và cập nhật danh sách sản phẩm
-=======
-
-  //       return price >= priceRange[0] && price <= priceRange[1];
-  //     });
-  //   }
-
-  //   setFilteredProducts(updatedProducts);
-  // }, [selectedCategories, selectedBrands, priceRange, products]);
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
   useEffect(() => {
     let updatedProducts = [...products];
 
@@ -226,7 +130,6 @@ const Shop = () => {
       setPriceRange([newRange[0], newRange[1]]);
     }
   };
-<<<<<<< HEAD
     const toggleWishlist = (product: Product) => {
       const user = JSON.parse(localStorage.getItem("user") || "null");
     
@@ -253,9 +156,6 @@ const Shop = () => {
       window.dispatchEvent(new Event("storage"));
     };
    
-  
-=======
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
   return (
     <>
       <div className="menu_overlay"></div>

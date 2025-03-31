@@ -14,8 +14,6 @@ import { getComments } from "../services/comments";
 const ProductDetail = () => {
   const { addToCart } = useCart();
 
-  const isLoggedIn = localStorage.getItem("token") ? true : false;
-
   const isLoggedIn = localStorage.getItem('token') ? true : false;
 
   const nav = useNavigate();
@@ -38,19 +36,6 @@ const ProductDetail = () => {
     setQuantity(quantity + 1);
   };
 
-  const formatPrice = (price: string | number | undefined) => {
-    if (typeof price === "number") {
-      return price.toLocaleString("vi-VN") + " VND";
-    }
-    if (typeof price === "string") {
-      return (
-        Number(price.replace(/,/g, "").replace(" VND", "")).toLocaleString(
-          "vi-VN"
-        ) + " VND"
-      );
-    }
-    return "0 VND";
-  };
 
   // Hàm để giảm số lượng
   const handleDecrease = () => {

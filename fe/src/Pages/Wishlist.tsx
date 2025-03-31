@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 // import  { useEffect, useState } from 'react'
 // import { useCart } from '../context/CartContext';
 // import { Product, Productyeuthich} from '../types/Product';
@@ -176,9 +176,6 @@
 // }
 
 // export default Wishlist
-=======
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
-
 import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
 import { Productyeuthich, Detail } from "../types/Product";
@@ -287,51 +284,6 @@ const Wishlist = () => {
             <Link to="/shop" className="btn btn-primary">
               Tiếp tục mua sắm
             </Link>
-<<<<<<< HEAD
-          </div>
-        ) : (
-          // ✅ Hiển thị danh sách sản phẩm yêu thích
-          <div className="cart_table">
-            <div className="table">
-              <div className="thead">
-                <div className="tr">
-                  <div className="th title_h5 border-bottom border-top">Ảnh</div>
-                  <div className="th title_h5 border-bottom border-top">Giá</div>
-                  <div className="th title_h5 border-bottom border-top">Số lượng</div>
-                  <div className="th title_h5 border-bottom border-top">Tùy chọn</div>
-                  <div className="th title_h5 border-bottom border-top"></div>
-                  <div className="th title_h5 border-bottom border-top"></div>
-                </div>
-              </div>
-              <div className="tbody">
-                {wishlistProducts.map((product) => {
-                  const selectedDetail = selectedDetails[product.id] || product.details[0];
-                  const quantity = quantities[product.id] || 1;
-                  const price = selectedDetail?.discount_price
-                    ? Number(selectedDetail.discount_price.replace(/,/g, "").replace(" VND", "")) * quantity
-                    : Number(selectedDetail.default_price.replace(/,/g, "").replace(" VND", "")) * quantity;
-
-                  return (
-                    <div className="tr" key={product.id}>
-                      <div className="td border-bottom" data-title="Product">
-                        <div className="product_img d-table-cell">
-                          <img src={selectedDetail?.image || product.image} alt={product.name} />
-                        </div>
-                        <div className="product_details d-table-cell">
-                          <div className="product_title">
-                            <a href="product_list_detail.html">
-                              <h5 className="title_h5">{product.name}</h5>
-                            </a>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="td border-bottom" data-title="Price">
-                        <p className="price">{price.toLocaleString("vi-VN")} VND</p>
-                      </div>
-                      <div className="td border-bottom" data-title="Quantity">
-                        <div className="form-group quantity_box d-inline-block">
-                          <div className="qty_number">
-=======
           </div>
         ) : (
           // ✅ Hiển thị danh sách sản phẩm yêu thích
@@ -446,113 +398,13 @@ const Wishlist = () => {
             </div>
           </div>
         )}
-          <div className="tbody">
-           
-           {wishlistProducts.map((product)=>(
-             <div className="tr">
-             <div className="td border-bottom" data-title="Product">
-               <div className="product_img d-table-cell">
-                 <img src={product.image} className="vertical_middle img-fluid" alt="Product" />
-               </div>
-               <div className="product_details d-table-cell">
-                 <div className="product_title">
-                   <a href="product_list_detail.html">
-                     <h5 className="title_h5">{product.name}</h5>
-                   </a>
-                 </div>
-               </div>
-             </div>
-             <div className="td border-bottom" data-title="Price">{product.price}</div>
-             <div className="td border-bottom" data-title="Quantity">
-               <div className="form-group quantity_box d-inline-block">
-                 <div className="qty_number">
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
-                            <button
-                              type="button"
-                              onClick={() => handleDecrease(product.id)}
-                              style={{ padding: "5px 10px", cursor: "pointer" }}
-                            >
-                              -
-                            </button>
-                            <input type="text" value={quantity} readOnly />
-                            <button
-                              type="button"
-                              onClick={() => handleIncrease(product.id)}
-                              style={{ padding: "5px 10px", cursor: "pointer" }}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="td border-bottom" data-title="Options">
-                        <div className="wishlist_variant">
-                          <div className="options">
-                            <label htmlFor="sizes" className="title_h5">Size:</label>
-                            <select
-                              className="form-control chon"
-                              onChange={(e) => {
-                                const newDetail = product.details.find((d) => d.size === e.target.value);
-                                if (newDetail) handleVariantChange(product.id, newDetail);
-                              }}
-                            >
-                              {product.details.map((detail) => (
-                                <option key={detail.id} value={detail.size}>{detail.size}</option>
-                              ))}
-                            </select>
-                          </div>
-                          <div className="options">
-                            <label htmlFor="colors" className="title_h5">Màu:</label>
-                            <select
-                              className="form-control chon"
-                              onChange={(e) => {
-                                const newDetail = product.details.find((d) => d.color === e.target.value);
-                                if (newDetail) handleVariantChange(product.id, newDetail);
-                              }}
-                            >
-                              {product.details.map((detail) => (
-                                <option key={detail.id} value={detail.color}>{detail.color}</option>
-                              ))}
-                            </select>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="td cart_bag border-bottom" data-title="Add To Bag">
-                        <a
-                          type="button"
-                          onClick={() => {
-                            if (!selectedDetail) {
-                              alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
-                              return;
-                            }
-                            handleAddToCart(product.id, Number(selectedDetail.id), quantity);
-                          }}
-                        >
-                          <i className="flaticon-shopping-bag"></i>
-                        </a>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        )}
+         
         </div>
         </section>
       </div>
-<<<<<<< HEAD
-=======
-    </section>
-  </div>
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
 </div>
     </>
   );
 };
 
-<<<<<<< HEAD
 export default Wishlist;
-=======
-export default Wishlist;
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233

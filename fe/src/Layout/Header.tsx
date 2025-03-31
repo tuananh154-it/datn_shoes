@@ -2,11 +2,7 @@ import MegaMenu from "./MegaMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useEffect, useState } from "react";
-<<<<<<< HEAD
 import { Link, useNavigate } from "react-router-dom";
-=======
-import { Link } from "react-router-dom";
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
 import { logout } from "../store/useSlice";
 import { useCart } from "../context/CartContext";
 import { Product } from "../types/Product";
@@ -48,7 +44,6 @@ const Header = () => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
-<<<<<<< HEAD
     const [products, setProducts] = useState<Product[]>([]);
     useEffect(() => {
        getAllProduct()
@@ -76,8 +71,6 @@ const Header = () => {
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
-=======
->>>>>>> a85fe6d73b7bff651b863e050570e139c2ddd233
   return (
     <>
       <header className="shoes_header shoes_home_header">
