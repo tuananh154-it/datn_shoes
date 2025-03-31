@@ -50,28 +50,53 @@ const HomePages = () => {
     });
   }, []);
 
+  // const toggleWishlist = (product: Product) => {
+  //   const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  //   if (!user) {
+  //     alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
+  //     return;
+  //   }
+
+  //   let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+
+  //   // Lưu ID sản phẩm thay vì object
+  //   const index = wishlist.indexOf(product.id);
+
+  //   if (index !== -1) {
+  //     wishlist.splice(index, 1);
+  //   } else {
+  //     wishlist.push(product.id);
+  //   }
+  //   toast.success("Đã thêm sản phẩm yêu thích");
+  //   localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  // };
+
   const toggleWishlist = (product: Product) => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
-
+  
     if (!user) {
       alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
       return;
     }
-
+  
     let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-
+  
     // Lưu ID sản phẩm thay vì object
     const index = wishlist.indexOf(product.id);
-
+  
     if (index !== -1) {
       wishlist.splice(index, 1);
     } else {
       wishlist.push(product.id);
+      toast.success("Đã thêm sản phẩm yêu thích");
     }
-    toast.success("Đã thêm sản phẩm yêu thích");
+  
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  
+    // Phát sự kiện cập nhật để các component khác biết
+    window.dispatchEvent(new Event("storage"));
   };
-
   return (
     <>
       <div className="menu_overlay"></div>
