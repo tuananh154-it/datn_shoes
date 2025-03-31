@@ -9,10 +9,15 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import { getComments } from "../services/comments";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
+
   const isLoggedIn = localStorage.getItem("token") ? true : false;
+
+  const isLoggedIn = localStorage.getItem('token') ? true : false;
+
   const nav = useNavigate();
   const [quantity, setQuantity] = useState<number>(1);
 
@@ -81,6 +86,18 @@ const ProductDetail = () => {
       setProducts(data.data);
     });
   }, []);
+
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [newComment, setNewComment] = useState("");
+  // Gửi bình luận mới
+  const handleAddComment = () => {
+    if (!newComment.trim()) return;
+    getComments()
+      .then(({ data }) => {
+        setComments(data)
+      })
+      .catch(() => toast.error("Loi lay comments"))
+  };
   return (
     <>
       <div className="menu_overlay"></div>
@@ -361,7 +378,7 @@ const ProductDetail = () => {
                     className="col-md-6 wow fadeInRight"
                     data-wow-duration="1300ms"
                   >
-                    <h5 className="title_h5 text-capitalize">Description</h5>
+                    <h5 className="title_h5 text-capitalize">Mô tả sản phẩm</h5>
                     <p>{productId.description}</p>
                   </div>
                   <div
@@ -369,17 +386,31 @@ const ProductDetail = () => {
                     data-wow-duration="1300ms"
                   >
                     <h5 className="title_h5 text-capitalize">
-                      Quality Time, All The Time
+                      Giao hàng nhanh, mọi lúc ,mọi nơi
                     </h5>
                     <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                      sed do eiusmod tempor incididunt ut labore et dolore magna
-                      aliqua. Ut enim ad minim veniam, quis nostrud exercitation
-                      ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                      Duis aute irure dolor in reprehenderit in voluptate velit
-                      esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                      sint occaecat cupidatat non proident, sunt in culpa qui
-                      officia deserunt mollit anim id est laborum.
+                      Nhằm mang đến trải nghiệm mua sắm thuận tiện nhất, chúng tôi cung cấp dịch vụ giao hàng nhanh chóng,
+                       an toàn và linh hoạt trên toàn quốc.
+
+                      Thời gian giao hàng:
+
+                      Giao hàng tiêu chuẩn: 2-5 ngày làm việc.
+
+                      Giao hàng nhanh: 24-48 giờ (áp dụng tại các thành phố lớn).
+
+                      Giao hàng hỏa tốc: Nhận hàng trong ngày (chỉ áp dụng tại một số khu vực).
+
+                      Đối tác vận chuyển:
+                      Chúng tôi hợp tác với các đơn vị giao hàng uy tín như GHN, GHTK, Viettel Post, J&T Express… 
+                      nhằm đảm bảo đơn hàng được giao đúng thời gian, đúng địa điểm và trong tình trạng nguyên vẹn.
+
+                      Chính sách kiểm tra hàng trước khi nhận:
+                      Khách hàng có thể kiểm tra sản phẩm trước khi thanh toán. Nếu có bất kỳ lỗi sản xuất hoặc sai sót trong đơn hàng,
+                       chúng tôi cam kết hỗ trợ đổi trả nhanh chóng mà không mất thêm phí.
+
+                      Miễn phí vận chuyển:
+                      Chúng tôi hỗ trợ miễn phí vận chuyển cho các đơn hàng từ [số tiền cụ thể] trở lên, 
+                      giúp khách hàng tiết kiệm chi phí khi mua sắm.
                     </p>
                   </div>
                   <div
@@ -387,7 +418,7 @@ const ProductDetail = () => {
                     data-wow-duration="1300ms"
                   >
                     <div id="accordion">
-                      <div className="card">
+                      {/* <div className="card">
                         <div className="card-header" id="headingOne">
                           <h5 className="mb-0">
                             <button
@@ -397,7 +428,7 @@ const ProductDetail = () => {
                               aria-expanded="true"
                               aria-controls="collapseOne"
                             >
-                              Additional Info
+                              BÌnh luận
                             </button>
                           </h5>
                         </div>
@@ -408,15 +439,58 @@ const ProductDetail = () => {
                           data-parent="#accordion"
                         >
                           <div className="card-body">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing
-                            elit, sed do eiusmod tempor incididunt ut labore et
-                            dolore magna aliqua. Ut enim ad minim veniam, quis
-                            nostrud exercitation ullamco laboris nisi ut aliquip
-                            ex ea commodo consequat.
+                           
+                          </div>
+                        </div>
+                      </div> */}
+
+                      <div className="card">
+                        <div className="card-header" id="headingOne">
+                          <h5 className="mb-0">
+                            <button
+                              className="title_h5 btn-link collapsed text-left"
+                              data-toggle="collapse"
+                              data-target="#collapseOne"
+                              aria-expanded="true"
+                              aria-controls="collapseOne"
+                            >
+                              Bình luận
+                            </button>
+                          </h5>
+                        </div>
+                        <div id="collapseOne" className="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                          <div className="card-body">
+                            {/* Hiển thị danh sách bình luận */}
+                            {comments.length > 0 ? (
+                              <ul className="comment-list">
+                                {comments.map(comment => (
+                                  <li key={comment.id} className="comment-item">
+                                    <strong>{comment.user}:</strong> {comment.content}
+                                    <span className="comment-date">{new Date(comment.created_at).toLocaleString()}</span>
+                                  </li>
+                                ))}
+                              </ul>
+                            ) : (
+                              <p>Bạn hãy là người đầu tiên bình luận!</p>
+                            )}
+
+                            {/* Ô nhập bình luận */}
+                            <div className="comment-input">
+                              <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Viết bình luận..."
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                              />
+                              <button className="btn btn-primary" onClick={handleAddComment}>
+                                Gửi
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
-                      <div className="card">
+                      {/* <div className="card">
                         <div className="card-header" id="headingTwo">
                           <h5 className="mb-0">
                             <button
@@ -451,7 +525,7 @@ const ProductDetail = () => {
                             </p>
                           </div>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="card">
                         <div className="card-header" id="headingThree">
                           <h5 className="mb-0">
@@ -462,7 +536,7 @@ const ProductDetail = () => {
                               aria-expanded="false"
                               aria-controls="collapseThree"
                             >
-                              Reviews (1)
+                              Đánh giá (1)
                             </button>
                           </h5>
                         </div>
@@ -474,26 +548,27 @@ const ProductDetail = () => {
                         >
                           <div className="card-body">
                             <div className="review_title">
-                              <h4 className="title_h4">Customer Reviews</h4>
+                              <h4 className="title_h4">Khách hàng đánh giá</h4>
                               <div className="star">
                                 <img
-                                  src="src/images/star.png"
+                                  src="../src/images/star.png"
                                   className="img-fluid"
                                   alt="star"
                                 />{" "}
-                                Based on 1 review
+
+                                Dựa trên 1 đánh giá
                               </div>
                               <a
                                 href="javascript:void(0):"
                                 className="write_review_text"
                               >
-                                Write a review
+                                Thêm đánh giá
                               </a>
                             </div>
                             <div className="review_content">
                               <div className="user_img rounded-circle">
                                 <img
-                                  src="src/images/reivew_user.png"
+                                  src="../src/images/reivew_user.png"
                                   className="img-fluid vertical_middle"
                                   alt="star"
                                 />
@@ -504,10 +579,10 @@ const ProductDetail = () => {
                                   April 5, 2018
                                 </span>
                                 <p>
-                                  Curabitur egestas malesuada volutpat. Nunc vel
-                                  vestibulum odio, ac pellen tesque lacus.
-                                  Pellentesque dapibus nunc nec est imperdiet, a
-                                  malesuada sem rutrum.{" "}
+                                  🔥 "Chất lượng tuyệt vời!"
+                                  Mình đã sử dụng đôi này hơn 6 tháng, đi rất êm chân và không bị đau dù mang cả ngày.
+                                  Thiết kế đơn giản nhưng cực kỳ phong cách, dễ phối đồ. Đế giày bám tốt, không bị trơn trượt.
+                                  Rất đáng tiền!.{" "}
                                 </p>
                               </div>
                             </div>

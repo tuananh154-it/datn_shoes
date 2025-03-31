@@ -106,7 +106,7 @@ const Header = () => {
                       <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={() => setMenuDisplay(prev => !prev)}>Admin</Link>
                     )}
                     <Link to="/myaccout" className="p-2">Trang cá nhân</Link>
-                  
+                    
                     <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                   </nav>
                 </div>

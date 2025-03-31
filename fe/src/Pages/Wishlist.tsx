@@ -221,6 +221,89 @@ const Wishlist = () => {
             </div>
           </div>
         )}
+          <div className="tbody">
+           
+           {wishlistProducts.map((product)=>(
+             <div className="tr">
+             <div className="td border-bottom" data-title="Product">
+               <div className="product_img d-table-cell">
+                 <img src={product.image} className="vertical_middle img-fluid" alt="Product" />
+               </div>
+               <div className="product_details d-table-cell">
+                 <div className="product_title">
+                   <a href="product_list_detail.html">
+                     <h5 className="title_h5">{product.name}</h5>
+                   </a>
+                 </div>
+               </div>
+             </div>
+             <div className="td border-bottom" data-title="Price">{product.price}</div>
+             <div className="td border-bottom" data-title="Quantity">
+               <div className="form-group quantity_box d-inline-block">
+                 <div className="qty_number">
+                            <button
+                              type="button"
+                              onClick={handleDecrease}
+                              style={{
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              -
+                            </button>
+
+                            <input type="text" value={quantity} />
+                            <button
+                              type="button"
+                              onClick={handleIncrease}
+                              style={{
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              +
+                            </button>
+                 </div>
+               </div>
+             </div>
+             <div className="td border-bottom" data-title="Options">
+               <div className="wishlist_variant">
+                 <div className="options">
+                   <form>
+                     <div className="form-group">
+                       <label htmlFor="sizes" className="title_h5">Size:</label>
+                       <select className="form-control" id="sizes" name="sizes">
+                         <option>S</option>
+                       </select>
+                     </div>
+                   </form>
+                 </div>
+                 <div className="options">
+                   <form>
+                     <div className="form-group">
+                       <label htmlFor="show" className="title_h5">Color:</label>
+                       <select className="form-control" id="show" name="show">
+                         <option>Red</option>
+                       </select>
+                     </div>
+                   </form>
+                 </div>
+               </div>
+             </div>
+             <div className="td cart_bag border-bottom" data-title="Add To Bag">
+               <a href="cart.html">
+                 <i className="flaticon-shopping-bag"></i>
+               </a>
+             </div>
+             <div className="td remove_cart border-bottom text-right" data-title="Remove">
+               <a href="javascript:void(0);">
+                 <i className="flaticon-close"></i>
+               </a>
+             </div>
+           </div>
+           ))}
+          </div>
+        </div>
       </div>
     </section>
   </div>

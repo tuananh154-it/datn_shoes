@@ -402,7 +402,10 @@
   width: 500px;
   margin-left: 20px;
 } */
-
+.menu_arrow{
+  margin-top: -20px
+  ;
+}
 .newProduct{
   width: 50px;
   height: 100px;
