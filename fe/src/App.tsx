@@ -16,10 +16,7 @@ import Contact from "./Pages/Contact";
 import BlogDetail from "./Pages/BlogDetail";
 import { Toaster } from "react-hot-toast";
 import MyAccount from "./Pages/MyAccout";
-// import OrderPage from "./Pages/OrderPage";
-// import OrderDetail from "./Pages/OrderDetail";
-
-
+ 
 
 function App() {
 
@@ -29,13 +26,11 @@ function App() {
             {path:"/shop",element:<Shop/>},
             {path:"/cart",element:<Cart/>},
             {path:"/blog",element:<Blog/>},
-            // {path:"/order",element:<OrderPage/>},
             {path:"/myaccout",element:<MyAccount/>},
             {path:"/blog/:id",element:<BlogDetail/>},
             {path:"/contacts",element:<Contact/>},
             {path:"/wishlist",element:<Wishlist/>},
             {path:"/product_detail/:id",element:<ProductDetail/>},
-            // {path:"/order_detail",element:<OrderDetail/>},
             {path:"/login",element:<Login/>},
             {path:"/register",element:<Register/>},
             {path:"/checkout",element:<CheckOut/>},
