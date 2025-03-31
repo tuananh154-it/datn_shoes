@@ -22,6 +22,8 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\OnlineCheckOutController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\VoucherController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\UserController;
 
 
@@ -105,3 +107,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::post('login', [AuthController::class, 'login']);
 // >>>>>>> tuan-anh2
+
+// quên mật khẩu
+Route::post('password/forgot', [ForgotPasswordController::class, 'sendResetToken']);
+
+// đặt lại mật khẩu
+Route::post('password/reset', [ResetPasswordController::class, 'submitResetPasswordForm']);
