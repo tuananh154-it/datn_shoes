@@ -4,7 +4,12 @@ import { Category, getAllCategory } from "../services/category";
 import { Brand, getBrand } from "../services/brand";
 import { Product } from "../types/Product";
 import { getAllProduct } from "../services/product";
+
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+
 import QuickViewProduct from "./QuickViewProduct";
+
 
 const Shop = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -55,7 +60,36 @@ const Shop = () => {
 
   //   setFilteredProducts(updatedProducts);
   // }, [sortBy, selectedCategories, selectedBrands, products]);
-  const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
+  // useEffect(() => {
+  //   let updatedProducts = [...products];
+
+  //   if (selectedCategories.length) {
+  //     updatedProducts = updatedProducts.filter((product) =>
+  //       selectedCategories.includes(product.category)
+  //     );
+  //   }
+
+  //   if (selectedBrands.length) {
+  //     updatedProducts = updatedProducts.filter((product) =>
+  //       selectedBrands.includes(product.brand)
+  //     );
+  //   }
+
+  //   if (priceRange) {
+  //     updatedProducts = updatedProducts.filter((product) => {
+  //       // Chuyển `price` từ chuỗi thành số đúng
+  //       const price =
+  //         typeof product.price === "string"
+  //           ? Number(product.price.replace(/,/g, "").replace(" VND", ""))
+  //           : product.price;
+
+  //       return price >= priceRange[0] && price <= priceRange[1];
+  //     });
+  //   }
+
+  //   setFilteredProducts(updatedProducts);
+  // }, [selectedCategories, selectedBrands, priceRange, products]);
   useEffect(() => {
     let updatedProducts = [...products];
 
@@ -73,7 +107,6 @@ const Shop = () => {
 
     if (priceRange) {
       updatedProducts = updatedProducts.filter((product) => {
-        // Chuyển `price` từ chuỗi thành số đúng
         const price =
           typeof product.price === "string"
             ? Number(product.price.replace(/,/g, "").replace(" VND", ""))
@@ -106,10 +139,11 @@ const Shop = () => {
     getAllCategory().then(({ data }) => setCategories(data));
     getBrand().then(({ data }) => setBrands(data));
   }, []);
-  // const [colors, setColors] = useState<Color[]>([]);
-
-  // Giả lập API call
-
+  const handleChange = (newRange: number | number[]) => {
+    if (Array.isArray(newRange)) {
+      setPriceRange([newRange[0], newRange[1]]);
+    }
+  };
   return (
     <>
       <div className="menu_overlay"></div>
@@ -151,90 +185,28 @@ const Shop = () => {
                         <span className="category_close_icon flaticon-down-arrow float-right"></span>
                       </div>
                       <div className="layer-filter">
-                        {/* <form className="py-2">
-                          <ul>
-                            <li>
-                              <div className="flex items-center gap-3">
-                                <label
-                                  style={{
-                                    fontSize: "16px",
-                                    fontFamily: "Arial, sans-serif",
-                                  }}
-                                >
-                                  <input
-                                    type="radio"
-                                    name="sortBy"
-                                    value="asc"
-                                    checked={sortBy === "asc"}
-                                    onChange={() => setSortBy("asc")}
-                                  />{" "}
-                                  Giá - Giá từ bé đến lớn
-                                </label>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <label
-                                  style={{
-                                    fontSize: "16px",
-                                    fontFamily: "Arial, sans-serif",
-                                  }}
-                                >
-                                  <input
-                                    type="radio"
-                                    name="sortBy"
-                                    value="dsc"
-                                    checked={sortBy === "dsc"}
-                                    onChange={() => setSortBy("dsc")}
-                                  />{" "}
-                                  Giá - Giá từ lớn đến bé
-                                </label>
-                              </div>
-                            </li>
-                          </ul>
-                        </form> */}
-                        <form className="price-filter-container">
-                          <ul className="price-filter-list">
-                            <li className="price-filter-item">
-                              <input
-                                type="radio"
-                                name="priceRange"
-                                id="price-range-all"
-                                onChange={() => setPriceRange(null)}
-                              />
-                              <label htmlFor="price-range-all">Tất cả</label>
-                            </li>
-                            <li className="price-filter-item">
-                              <input
-                                type="radio"
-                                name="priceRange"
-                                id="price-range-1"
-                                onChange={() => setPriceRange([0, 200000])}
-                              />
-                              <label htmlFor="price-range-1">0 - 200K</label>
-                            </li>
-                            <li className="price-filter-item">
-                              <input
-                                type="radio"
-                                name="priceRange"
-                                id="price-range-2"
-                                onChange={() => setPriceRange([200000, 500000])}
-                              />
-                              <label htmlFor="price-range-2">200K - 500K</label>
-                            </li>
-                            <li className="price-filter-item">
-                              <input
-                                type="radio"
-                                name="priceRange"
-                                id="price-range-3"
-                                onChange={() =>
-                                  setPriceRange([500000, 1000000])
-                                }
-                              />
-                              <label htmlFor="price-range-3">
-                                500K - 1000K
-                              </label>
-                            </li>
-                          </ul>
-                        </form>
+                        <div>
+                          {/* <label>Khoảng giá: {priceRange[0].toLocaleString()} - {priceRange[1].toLocaleString()} VND</label> */}
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            {priceRange[0].toLocaleString()}
+                            <Slider
+                              range
+                              min={0}
+                              max={3000000}
+                              step={10000}
+                              value={priceRange}
+                              onChange={handleChange}
+                              style={{ width: "150px", margin: "10px auto" }}
+                            />
+                            {priceRange[1].toLocaleString()}
+                          </div>
+                        </div>
                       </div>
                     </div>
                     {/* //category// */}
