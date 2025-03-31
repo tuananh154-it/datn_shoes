@@ -4,6 +4,7 @@ import { Category, getAllCategory } from "../services/category";
 import { Brand, getBrand } from "../services/brand";
 import { Product } from "../types/Product";
 import { getAllProduct } from "../services/product";
+import QuickViewProduct from "./QuickViewProduct";
 
 const Shop = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -12,7 +13,7 @@ const Shop = () => {
   const [sortBy, setSortBy] = useState<"asc" | "dsc" | "">("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   useEffect(() => {
     setLoading(true);
     getAllProduct()
@@ -430,8 +431,12 @@ const Shop = () => {
                               />
                               <div className="featured_btn vertical_middle">
                                 <Link
-                                  to="/cart"
+                                  to="#"
                                   className="text-uppercase background-btn add_to_bag_btn"
+                                  onClick={(e) => {
+                                    e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
+                                    setSelectedProductId(product.id);
+                                  }}
                                 >
                                   Thêm vào giỏ hàng
                                 </Link>
@@ -451,11 +456,11 @@ const Shop = () => {
                               </a>
                             </div>
                             <div className="featured_detail_content">
-                              <a href="product_list_detail.html">
+                              <Link to={`/product_detail/${product.id}`}>
                                 <p className="featured_title text-capitalize text-center">
-                                  {product.name}
+                                  {product.name.slice(0, 25) + (product.name.length > 6 ? "..." : "")}
                                 </p>
-                              </a>
+                              </Link>
                               <p className="featured_price title_h5 text-center">
                                 {/* <span>{product.price.toLocaleString()}</span> */}
                                 <span className="text-color">
@@ -509,6 +514,13 @@ const Shop = () => {
           </div>
         </section>
       </div>
+      {/* Quick View hiển thị khi có productId */}
+      {selectedProductId && (
+        <QuickViewProduct
+          productId={selectedProductId}
+          onClose={() => setSelectedProductId(null)}
+        />
+      )}
     </>
   );
 };

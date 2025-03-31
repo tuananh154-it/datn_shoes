@@ -101,9 +101,28 @@ const Wishlist = () => {
              <div className="td border-bottom" data-title="Quantity">
                <div className="form-group quantity_box d-inline-block">
                  <div className="qty_number">
-                   <input type="text" value="1" />
-                   <div className="inc button"><span>+</span></div>
-                   <div className="dec button"><span>-</span></div>
+                            <button
+                              type="button"
+                              onClick={handleDecrease}
+                              style={{
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              -
+                            </button>
+
+                            <input type="text" value={quantity} />
+                            <button
+                              type="button"
+                              onClick={handleIncrease}
+                              style={{
+                                padding: "5px 10px",
+                                cursor: "pointer",
+                              }}
+                            >
+                              +
+                            </button>
                  </div>
                </div>
              </div>
