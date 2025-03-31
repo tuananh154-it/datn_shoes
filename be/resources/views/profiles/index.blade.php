@@ -53,15 +53,14 @@
 </style>
 
 <div class="user-list-container">
-    <h2>Danh sách người dùng</h2>
+    <h2>Thông tin người dùng</h2>
     <ul class="user-list">
-        @foreach($users as $user)
-            <li>
-                <a href="{{ route('profiles.show', $user->id) }}">
-                    {{ $user->name }} - {{ $user->email }}
-                </a>
-            </li>
-        @endforeach
+        <!-- Hiển thị người dùng hiện tại -->
+        <li>
+            <a href="{{ route('profiles.show') }}">
+                {{ Auth::user()->name }} - {{ Auth::user()->email }}
+            </a>
+        </li>
     </ul>
 </div>
 @endsection
