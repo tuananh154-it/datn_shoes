@@ -50,6 +50,7 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::post('/cart/sync', [CartController::class, 'syncCart']);
     Route::get('/checkout/init', [OrderController::class, 'getCart']);
+    Route::post('/checkout/preview', [OrderController::class, 'previewCheckout']);
     Route::post('/orders', [OrderController::class, 'placeOrder']);
     Route::get('/orders', [OrderController::class, 'listOrders']);
     Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
