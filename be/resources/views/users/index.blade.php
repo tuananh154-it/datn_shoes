@@ -21,12 +21,12 @@
                 </div>
             @endif
 
-            <div class="">
+            {{-- <div class="">
                 <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
 
                     <i class="fa fa-plus"></i> Thêm sản người dùng
                 </a>
-            </div>
+            </div> --}}
             <div class="mb-3">
                 <div class="mb-3">
                     <form action="{{ route('users.index') }}" method="GET">
@@ -54,7 +54,12 @@
                 </div>
 
             </div>
-
+            {{-- them moi  --}}
+            <div class="mb-3">
+                <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
+                    <i class="fa fa-plus"></i> Thêm người dùng  
+                </a>
+            </div>
 
 
 
@@ -76,15 +81,15 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->roles->first()?->name }}</td>
                             <td>
-                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                {{-- <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="fa fa-trash-o"></i> Xóa
                                     </button>
-                                </form>
-                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-pencil"></i> Sửa
+                                </form> --}}
+                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary  btn-sm">
+                                    <i class="fa fa-pencil"></i> 
                                 </a>
                             </td>
                         </tr>

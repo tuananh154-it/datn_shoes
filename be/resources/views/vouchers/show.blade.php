@@ -34,7 +34,7 @@
         <div class="col-12"> <!-- Đảm bảo chiếm hết màn hình -->
             <div class="card shadow-sm w-100"> <!-- Thêm w-100 để mở rộng -->
                 <header class="card-header">
-                    Chi tiết Voucher
+                    Chi tiết mã giảm giá 
                 </header>
 
                 <div class="card mt-3">

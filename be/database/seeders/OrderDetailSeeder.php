@@ -2,29 +2,37 @@
 
 namespace Database\Seeders;
 
-use App\Models\Order;
-use App\Models\OrderDetail;
-use App\Models\ProductDetail;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Faker\Factory as Faker;
 
 class OrderDetailSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */  public function run()
+    public function run()
     {
-        // Lặp qua các đơn hàng và tạo order_details
-        $orders = Order::all();
+        $faker = Faker::create();
+        $orders = DB::table('orders')->pluck('id'); // Lấy danh sách các đơn hàng từ bảng orders
+        $productDetails = DB::table('product_details')->pluck('id'); // Lấy danh sách product_detail_id
 
-        foreach ($orders as $order) {
-            // Tạo 1-3 chi tiết đơn hàng cho mỗi đơn hàng
-            for ($i = 0; $i < rand(1, 3); $i++) {
-                OrderDetail::create([
-                    'order_id' => $order->id,
-                    'product_detail_id' => ProductDetail::inRandomOrder()->first()->id, // Lấy product_detail ngẫu nhiên
-                    'price' => fake()->randomFloat(2, 50, 200),
-                    'quantity' => rand(1, 5),
+        foreach ($orders as $orderId) {
+            $numProducts = rand(1, 5); // Mỗi đơn hàng có từ 1 đến 5 sản phẩm
+
+            for ($i = 0; $i < $numProducts; $i++) {
+                // Chọn ngẫu nhiên product_detail_id từ bảng product_details
+                $productDetailId = $faker->randomElement($productDetails);
+                $quantity = rand(1, 3); // Số lượng sản phẩm ngẫu nhiên
+                $price = rand(100000, 500000); // Giá sản phẩm ngẫu nhiên
+                $total = $quantity * $price; // Tổng tiền cho sản phẩm
+
+                // Tạo bản ghi mới cho order_details
+                DB::table('order_details')->insert([
+                    'order_id' => $orderId,
+                    'product_detail_id' => $productDetailId,
+                    'price' => $price,
+                    'quantity' => $quantity,
+                    'total_price' => $total,
+                    'created_at' => now(),
+                    'updated_at' => now(),
                 ]);
             }
         }

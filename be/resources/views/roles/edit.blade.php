@@ -34,7 +34,7 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">Update Role</button>
+        <button type="submit" class="btn btn-warning ">Cập nhập  </button>
     </form>
 </div>
 @endsection

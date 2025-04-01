@@ -23,7 +23,7 @@
                 @endforeach
             </div>
         </div>
-        <button type="submit" class="btn btn-primary">Create Role</button>
+        <button type="submit" class="btn btn-success "> Thêm mới </button>
     </form>
 </div>
 @endsection
