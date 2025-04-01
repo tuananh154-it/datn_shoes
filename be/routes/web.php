@@ -321,7 +321,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     //tim kiem (lọc )
     Route::get('/admin/dashboard/filter', [AdminController::class, 'filterRevenue']);
 
-    
+
     //thong ke tai khoan
     Route::get('admin/users', [AdminController::class, 'users'])->name('dashboards.users');
     Route::get('/admin/account-stats-data', [AdminController::class, 'getAccountStatsData'])->name('admin.accountStatsData');
@@ -371,10 +371,23 @@ Route::resource('profiles', ProfileController::class);
 //     Route::post('/profile', [ProfileController::class, 'store']);
 //     Route::get('/profile/{user_id}', [ProfileController::class, 'show']);
 // });
-Route::middleware(['auth'])->get('/profile/{user}', [ProfileController::class, 'show'])->name('profiles.show');
-Route::middleware(['auth'])->get('/profile/{user_id}/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
-Route::middleware(['auth'])->put('/profile/{user}', [ProfileController::class, 'update'])->name('profiles.update');
+// Route::middleware(['auth'])->get('/profile/{user}', [ProfileController::class, 'show'])->name('profiles.show');
+// Route::middleware(['auth'])->get('/profile/{user_id}/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
+// Route::middleware(['auth'])->put('/profile/{user}', [ProfileController::class, 'update'])->name('profiles.update');
+Route::middleware(['auth'])->group(function () {
+    // Hiển thị thông tin người dùng hiện tại
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profiles.show');
 
+    // Chỉnh sửa thông tin người dùng hiện tại
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
+
+    // Cập nhật thông tin người dùng hiện tại
+    Route::put('/profile', [ProfileController::class, 'update'])->name('profiles.update');
+
+    // Tạo profile cho người dùng hiện tại
+    Route::get('/profile/create', [ProfileController::class, 'create'])->name('profiles.create');
+    Route::post('/profile', [ProfileController::class, 'store'])->name('profiles.store');
+});
 
 
 
