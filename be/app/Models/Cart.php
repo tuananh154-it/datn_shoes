@@ -9,13 +9,8 @@ class Cart extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'user_id',
-    ];
+    protected $fillable = ['user_id', 'session_id']; // Thêm session_id để hỗ trợ khách vãng lai
 
-    /**
-     * Một giỏ hàng có nhiều CartItem
-     */
     public function items()
     {
         return $this->hasMany(CartItem::class);

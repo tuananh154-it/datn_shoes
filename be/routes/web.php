@@ -282,7 +282,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     //tim kiem (lọc )
     Route::get('/admin/dashboard/filter', [AdminController::class, 'filterRevenue']);
 
-    
+
     //thong ke tai khoan
     Route::get('admin/users', [AdminController::class, 'users'])->name('dashboards.users');
     Route::get('/admin/account-stats-data', [AdminController::class, 'getAccountStatsData'])->name('admin.accountStatsData');
@@ -346,3 +346,4 @@ Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEm
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 // Route cho trang danh sách người dùng
+

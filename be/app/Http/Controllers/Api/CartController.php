@@ -178,5 +178,5 @@ class CartController extends Controller
         return response()->json(['message' => 'Giỏ hàng đã được đồng bộ'], 200);
     }
 
-    
+
 }

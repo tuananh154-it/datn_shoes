@@ -39,20 +39,33 @@ Route::apiResource('comments', CommentController::class);
 
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
+
+
 Route::middleware('auth:api')->group(function () {
-    Route::get('/cart', [CartController::class, 'index']);
-    Route::put('/cart/update/{id_cart_item}', [CartController::class, 'updateCart']);
-    Route::delete('/cart/remove/{id_cart_item}', [CartController::class, 'removeCartItem']);
-    // Route::apiResource('order', OrderController::class);
-    Route::post('/cart/add', [CartController::class, 'addToCart']);
-    Route::post('/cart/sync', [CartController::class, 'syncCart']);
+    // Cart routes
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::post('/add', [CartController::class, 'addToCart']);
+        Route::put('/update/{id_cart_item}', [CartController::class, 'updateCart']);
+        Route::delete('/remove/{id_cart_item}', [CartController::class, 'removeCartItem']);
+        Route::post('/sync', [CartController::class, 'syncCart']);
+    });
+
+    // Order routes
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'listOrders']);
+        Route::post('/place', [OrderController::class, 'placeOrder']);
+        Route::get('/{id}', [OrderController::class, 'orderDetail'])->whereNumber('id');
+        Route::post('/{id}/cancel', [OrderController::class, 'cancelOrder'])->whereNumber('id');
+    });
+
+    // Checkout
     Route::get('/checkout/init', [OrderController::class, 'getCart']);
-    Route::post('/orders/place', [OrderController::class, 'placeOrder']);
-    Route::get('/orders', [OrderController::class, 'listOrders']);
-    Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
-    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+
+    // Payment
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
 });
+
 Route::apiResource('products', ProductController::class);
 Route::get('/latest-products', [ProductController::class, 'latestProducts']);
 
