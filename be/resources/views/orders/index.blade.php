@@ -87,7 +87,7 @@
                                 </form>
                             </td>
                             <td>
-                                <a href="{{ route('orders.show', $order->id) }}" class="btn btn-info btn-sm">
+                                <a href="{{ route('orders.show', $order->id) }}" class="btn btn-warning  btn-sm">
                                     <i class="fa fa-eye"></i> Xem chi tiết
                                 </a>
                             </td>
