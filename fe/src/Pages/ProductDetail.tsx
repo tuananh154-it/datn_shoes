@@ -13,9 +13,6 @@ import { getComments } from "../services/comments";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
-
-  const isLoggedIn = localStorage.getItem("token") ? true : false;
-
   const isLoggedIn = localStorage.getItem('token') ? true : false;
 
   const nav = useNavigate();
@@ -644,7 +641,15 @@ const ProductDetail = () => {
                             </p>
                           </a>
                           <p className="featured_price title_h5 text-center">
-                            <span>{product.price}</span>
+                          <span className="text-color">
+                                  {product?.price
+                                    ? Number(
+                                        product.price
+                                          .replace(/,/g, "")
+                                          .replace(" VND", "")
+                                      ).toLocaleString("vi-VN") + " VND"
+                                    : "0 VND"}
+                                </span>
                           </p>
                         </div>
                       </div>
