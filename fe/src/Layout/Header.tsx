@@ -1,7 +1,7 @@
 import MegaMenu from "./MegaMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { logout } from "../store/useSlice";
 import { useCart } from "../context/CartContext";
@@ -18,6 +18,30 @@ const Header = () => {
     window.location.href = "/login";
   };
 
+
+  //số lượng trong yêu thích
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  // Hàm cập nhật số lượng wishlist
+  const updateWishlistCount = () => {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    setWishlistCount(wishlist.length);
+  };
+
+  useEffect(() => {
+    // Cập nhật số lượng khi component mount
+    updateWishlistCount();
+
+    // Lắng nghe sự kiện storage để cập nhật realtime
+    const handleStorageChange = () => {
+      updateWishlistCount();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
   return (
     <>
       <header className="shoes_header shoes_home_header">
@@ -92,7 +116,7 @@ const Header = () => {
               <Link to="/wishlist">
                 <i className="flaticon-heart"></i>
                 <span className="count text-white rounded-circle text-center">
-                  0
+                {wishlistCount}
                 </span>
               </Link>
             </li>

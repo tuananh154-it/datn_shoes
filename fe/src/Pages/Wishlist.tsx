@@ -43,34 +43,7 @@ const Wishlist = () => {
         console.error("Lỗi khi lấy sản phẩm yêu thích:", error)
       );
   }, []);
-  // useEffect(() => {
-  //   const wishlistIds = JSON.parse(localStorage.getItem("wishlist") || "[]");
-  //   if (wishlistIds.length === 0) return;
 
-  //  Promise.all(wishlistIds.map((id: string) => getProductDetail(Number(id)).catch(() => null)))
-  //     .then((responses) => {
-  //       const products = responses
-  //         .filter((response) => response && response.data && response.data.data) // Lọc bỏ sản phẩm lỗi
-  //         .map(({ data }) => data.data);
-
-  //       setWishlistProducts(products);
-
-  //       // Khởi tạo state số lượng và biến thể mặc định
-  //       const initialDetails: { [key: number]: Detail } = {};
-  //       const initialQuantities: { [key: number]: number } = {};
-
-  //       products.forEach((product) => {
-  //         if (product.details.length > 0) {
-  //           initialDetails[product.id] = product.details[0];
-  //           initialQuantities[product.id] = 1;
-  //         }
-  //       });
-
-  //       setSelectedDetails(initialDetails);
-  //       setQuantities(initialQuantities);
-  //     })
-  //     .catch((error) => console.error("Lỗi khi lấy sản phẩm yêu thích:", error));
-  // }, []);
 
   // Hàm tăng số lượng
   const handleIncrease = (productId: number) => {
@@ -88,6 +61,7 @@ const Wishlist = () => {
   const handleVariantChange = (productId: number, detail: Detail) => {
     setSelectedDetails((prev) => ({ ...prev, [productId]: detail }));
   };
+
   const handleRemoveFromWishlist = (productId: number) => {
     setWishlistProducts((prev) => prev.filter((p) => p.id !== productId));
 
@@ -116,6 +90,7 @@ const Wishlist = () => {
   return (
     <>
       <section className="breadcrumb_section nav">
+
         <div className="container">
           <nav aria-label="breadcrumb">
             <ol className="breadcrumb">
@@ -270,3 +245,5 @@ const Wishlist = () => {
 };
 
 export default Wishlist;
+
+   

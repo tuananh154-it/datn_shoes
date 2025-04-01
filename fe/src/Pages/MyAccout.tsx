@@ -5,14 +5,15 @@ import OrderDetail from "./OrderDetail";
 import { getAllOrders, getDetailOrder, getStatusLabel, Order, OrdersDetail } from "../services/Orders";
 import toast from "react-hot-toast";
 import { getProductDetail } from "../services/product";
+import { getUser, Users } from "../services/user";
 
-const mockUser = {
-    name: "John Doe",
-    email: "john.doe@example.com",
-    phone: "123-456-7890",
-    password: "123456",
-    address: "123 Main St, City, Country",
-};
+// const mockUser = {
+//     name: "John Doe",
+//     email: "john.doe@example.com",
+//     phone: "123-456-7890",
+//     password: "123456",
+//     address: "123 Main St, City, Country",
+// };
 
 const MyAccount = () => {
     const [activeTab, setActiveTab] = useState("profile");
@@ -42,15 +43,15 @@ const MyAccount = () => {
                 // 1️⃣ Lấy danh sách đơn hàng
                 const response = await getAllOrders();
                 if (!response || !response.data) throw new Error("API không trả về dữ liệu hợp lệ");
-    
+
                 const ordersData = response.data;
                 if (!Array.isArray(ordersData)) throw new Error("Dữ liệu đơn hàng không phải là mảng");
-    
+
                 // 2️⃣ Gọi API lấy chi tiết đơn hàng song song (giới hạn 5 requests cùng lúc)
                 const orderDetailsResponses = await Promise.allSettled(
                     ordersData.map(order => getDetailOrder(order.id))
                 );
-    
+
                 // 3️⃣ Lọc đơn hàng hợp lệ
                 const ordersWithDetails = ordersData.map((order, index) => ({
                     ...order,
@@ -58,28 +59,28 @@ const MyAccount = () => {
                         ? orderDetailsResponses[index].value?.data?.order_details || []
                         : []
                 }));
-    
+
                 // 4️⃣ Lọc danh sách product_id (loại bỏ trùng lặp)
                 const productIds = [...new Set(
-                    ordersWithDetails.flatMap(order => 
+                    ordersWithDetails.flatMap(order =>
                         order.order_details.map(detail => detail.product_detail.product_id)
                     )
                 )];
-    
+
                 // 5️⃣ Chia nhỏ danh sách sản phẩm thành nhóm (batch requests)
                 const chunkSize = 10; // Giới hạn mỗi lần gọi tối đa 10 sản phẩm
                 const productChunks = [];
                 for (let i = 0; i < productIds.length; i += chunkSize) {
                     productChunks.push(productIds.slice(i, i + chunkSize));
                 }
-    
+
                 // 6️⃣ Gọi API lấy chi tiết sản phẩm theo nhóm (tránh quá tải)
                 const productResponses = await Promise.all(
                     productChunks.map(chunk =>
                         Promise.all(chunk.map(id => getProductDetail(id)))
                     )
                 );
-    
+
                 // 7️⃣ Lưu kết quả vào map để tra cứu nhanh
                 const productMap = new Map();
                 productResponses.flat().forEach(response => {
@@ -87,7 +88,7 @@ const MyAccount = () => {
                         productMap.set(response.data.data.id, response.data.data.name);
                     }
                 });
-    
+
                 // 8️⃣ Gán tên sản phẩm vào order_details
                 const finalOrders = ordersWithDetails.map(order => ({
                     ...order,
@@ -99,18 +100,54 @@ const MyAccount = () => {
                         }
                     }))
                 }));
-    
+
                 setOrders(finalOrders);
             } catch (error) {
                 console.error("Lỗi khi lấy danh sách đơn hàng:", error);
             }
         };
-    
+
         fetchOrdersWithDetails();
     }, []);
-    
-    
 
+    const [user, setUser] = useState<Users | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const [name, setName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [gender, setGender] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+
+    useEffect(() => {
+        getUser()
+            .then(({ data }) => {
+                setUser(data);
+                setName(data?.name || '');
+                setPhoneNumber(data?.phone_number || '');
+                setGender(data?.gender || '');
+                // Xử lý date_of_birth
+                if (data?.date_of_birth) {
+                    // Đảm bảo date_of_birth có định dạng YYYY-MM-DD
+                    const formattedDate = new Date(data.date_of_birth)
+                        .toISOString()
+                        .split('T')[0];
+                    setDateOfBirth(formattedDate);
+                }
+                setLoading(false);
+            })
+            .catch(err => {
+                setError("Lỗi khi lấy thông tin user");
+                setLoading(false);
+            });
+    }, []);
+
+    // if (loading) {
+    //     return <div>Đang tải...</div>;
+    // }
+
+    // if (error) {
+    //     return <div>{error}</div>;
+    // }
     return (
         <>
             <div className="menu_overlay"></div>
@@ -141,8 +178,8 @@ const MyAccount = () => {
                                         <div className="avatar">
                                             <User className="icon" />
                                         </div>
-                                        <h2 className="profile-name">{mockUser.name}</h2>
-                                        <p className="profile-email">{mockUser.email}</p>
+                                        <h2 className="profile-name">{user?.name}</h2>
+                                        <p className="profile-email">{user?.email}</p>
                                     </div>
                                     <nav className="nav-menu">
                                         <button onClick={() => setActiveTab("profile")} className={activeTab === "profile" ? "active" : ""}>
@@ -172,28 +209,69 @@ const MyAccount = () => {
                                         <h2 className="section-title">Thông tin cá nhân</h2>
                                         <div className="form-group">
                                             <label>Họ Tên</label>
-                                            <input type="text" defaultValue={mockUser.name} />
+                                            <input type="text" value={name}
+                                                onChange={(e) => setName(e.target.value)} />
                                         </div>
                                         <div className="form-group">
                                             <label>Email</label>
-                                            <input type="email" defaultValue={mockUser.email} />
+                                            <input type="text" defaultValue={user?.email} disabled />
                                         </div>
                                         <div className="form-group">
                                             <label>Số điện thoại</label>
-                                            <input type="tel" defaultValue={mockUser.phone} />
+                                            <input type="tel" value={phoneNumber}
+                                                onChange={(e) => setPhoneNumber(e.target.value)} />
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Giới tính:</label>
+                                            <div className="radio-group">
+                                                <label>
+                                                    <input
+                                                        type="radio"
+                                                        name="gender"
+                                                        value="Nam"
+                                                        checked={gender === 'Nam'}
+                                                        onChange={(e) => setGender(e.target.value)}
+                                                    />
+                                                    Nam
+                                                </label>
+                                                <label>
+                                                    <input
+                                                        type="radio"
+                                                        name="gender"
+                                                        value="Nữ"
+                                                        checked={gender === 'Nữ'}
+                                                        onChange={(e) => setGender(e.target.value)}
+                                                    />
+                                                    Nữ
+                                                </label>
+                                                <label>
+                                                    <input
+                                                        type="radio"
+                                                        name="gender"
+                                                        value="Khác"
+                                                        checked={gender === 'Khác'}
+                                                        onChange={(e) => setGender(e.target.value)}
+                                                    />
+                                                    Khác
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div className="form-group">
+                                            <label>Ngày sinh</label>
+                                            <input type="date" defaultValue={dateOfBirth} />
                                         </div>
                                         <h3 className="section-title">Thay đổi mật khẩu</h3>
                                         <div className="form-group">
                                             <label htmlFor="password">Mật khẩu</label>
-                                            <input type="password" defaultValue={mockUser.password} />
+                                            <input type="text" defaultValue="" />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="password">Mật khẩu mới</label>
-                                            <input type="password" defaultValue="" />
+                                            <input type="text" defaultValue="" />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="password">Xác nhận mật khẩu</label>
-                                            <input type="password" defaultValue="" />
+                                            <input type="text" defaultValue="" />
                                         </div>
                                         <button className="btn-save">Lưu thay đổi</button>
                                     </div>
@@ -273,11 +351,9 @@ const MyAccount = () => {
                                                 </div>
                                                 <h3 className="address-heading">Địa chỉ</h3>
                                                 <p className="address-details">
-                                                    {mockUser.name}
+                                                    {user?.address}
                                                     <br />
-                                                    {mockUser.address}
-                                                    <br />
-                                                    {mockUser.phone}
+                                                    {user?.phone_number}
                                                 </p>
                                             </div>
                                             <div className="address-add-card">
