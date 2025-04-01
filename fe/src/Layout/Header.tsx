@@ -1,10 +1,12 @@
 import MegaMenu from "./MegaMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { logout } from "../store/useSlice";
 import { useCart } from "../context/CartContext";
+import { Product } from "../types/Product";
+import { getAllProduct } from "../services/product";
 
 
 const Header = () => {
@@ -18,6 +20,57 @@ const Header = () => {
     window.location.href = "/login";
   };
 
+
+  //số lượng trong yêu thích
+  const [wishlistCount, setWishlistCount] = useState(0);
+
+  // Hàm cập nhật số lượng wishlist
+  const updateWishlistCount = () => {
+    const wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    setWishlistCount(wishlist.length);
+  };
+
+  useEffect(() => {
+    // Cập nhật số lượng khi component mount
+    updateWishlistCount();
+
+    // Lắng nghe sự kiện storage để cập nhật realtime
+    const handleStorageChange = () => {
+      updateWishlistCount();
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+  const [products, setProducts] = useState<Product[]>([]);
+    useEffect(() => {
+       getAllProduct()
+         .then(({ data }) => {
+           setProducts(data.data);
+         })
+     }, []);
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Lọc sản phẩm theo tên nhập vào
+  const navigate = useNavigate();
+
+  // Xử lý khi nhấn tìm kiếm
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      // Thực hiện tìm kiếm và điều hướng
+      navigate(`/shop?search=${encodeURIComponent(searchTerm)}`);
+      
+      // Tắt thanh tìm kiếm sau khi tìm kiếm xong
+      setIsOpen(false);
+    }
+  };
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
   return (
     <>
       <header className="shoes_header shoes_home_header">
@@ -82,7 +135,7 @@ const Header = () => {
                       <Link to={"http://127.0.0.1:8000/admin/dashboards"} className='whitespace-nowrap hidden md:block hover:bg-slate-100 p-2' onClick={() => setMenuDisplay(prev => !prev)}>Admin</Link>
                     )}
                     <Link to="/myaccout" className="p-2">Trang cá nhân</Link>
-                  
+                    
                     <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
                   </nav>
                 </div>
@@ -92,15 +145,28 @@ const Header = () => {
               <Link to="/wishlist">
                 <i className="flaticon-heart"></i>
                 <span className="count text-white rounded-circle text-center">
-                  0
+                {wishlistCount}
                 </span>
               </Link>
             </li>
-            <li className="search_icon">
-              <Link to="/search">
-                <i className="flaticon-magnifying-glass"></i>
-              </Link>
-            </li>
+            <li className="search_icon" onClick={toggleDropdown}>
+        <a href="#">
+          <i className="flaticon-magnifying-glass"></i>
+        </a>
+      </li>
+
+      {isOpen && (
+        <div className="search-dropdown">
+          <input
+            type="text"
+            placeholder="Tìm kiếm sản phẩm..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()} // Tìm kiếm khi nhấn Enter
+          />
+          <button onClick={handleSearch}>Tìm</button>
+        </div>
+      )}
             <li className="cart_icon">
               <Link to="/cart">
                 <i className="flaticon-shopping-bag"></i>

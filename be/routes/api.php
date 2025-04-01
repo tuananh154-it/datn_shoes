@@ -21,7 +21,10 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\OnlineCheckOutController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\VoucherController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\UserController;
 
 
@@ -62,7 +65,12 @@ Route::middleware('auth:api')->group(function () {
     // Checkout
     Route::get('/checkout/init', [OrderController::class, 'getCart']);
 
+
     // Payment
+    Route::post('/orders', [OrderController::class, 'placeOrder']);
+    Route::get('/orders', [OrderController::class, 'listOrders']);
+    Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
+    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
 });
 
@@ -88,7 +96,7 @@ Route::get('/vouchers/{id}', [VoucherController::class, 'show']);
 Route::middleware(['jwt.auth'])->group(function () {
     Route::get('user', [AuthController::class, 'user']);
     Route::post('/auth/logout', [AuthController::class, 'logout']);
-// Admin routes (only accessible by admins)
+    // Admin routes (only accessible by admins)
     Route::middleware(['admin'])->group(function () {
         Route::get('admin/dashboard', [AdminController::class, 'dashboard']);
     });
@@ -118,3 +126,31 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::post('login', [AuthController::class, 'login']);
 // >>>>>>> tuan-anh2
+
+// quên mật khẩu
+Route::post('password/forgot', [ForgotPasswordController::class, 'sendResetToken']);
+
+// đặt lại mật khẩu
+Route::post('password/reset', [ResetPasswordController::class, 'submitResetPasswordForm']);
+
+// Bình luận
+Route::get('product/{productId}/comments', [CommentController::class, 'index']); // Danh sách bình luận theo sản phẩm
+Route::get('comment/{commentId}', [CommentController::class, 'show']); // Chi tiết bình luận
+Route::post('product/{productId}/post', [CommentController::class, 'store'])->middleware('auth:api'); // Đăng bình luận
+Route::post('comment/{parentId}/reply', [CommentController::class, 'reply'])->middleware('auth:api'); // Phản hồi bình luận
+Route::put('comment/{commentId}/edit', [CommentController::class, 'update'])->middleware('auth:api'); // Sửa bình luận
+Route::delete('comment/{commentId}', [CommentController::class, 'destroy'])->middleware('auth:api'); // Xóa mềm bình luận
+Route::delete('comment/{commentId}/force', [CommentController::class, 'forceDelete'])->middleware('auth:api'); // Xóa vĩnh viễn (Admin)
+Route::put('comment/{commentId}/like', action: [CommentController::class, 'like'])->middleware('auth:api'); // Like bình luận
+Route::put('comment/{commentId}/report', [CommentController::class, 'report'])->middleware('auth:api'); // Báo cáo bình luận
+
+// Đánh giá
+Route::get('product/{productId}/reviews', [ReviewController::class, 'index']); // Danh sách đánh giá theo sản phẩm
+Route::get('reviews', [ReviewController::class, 'myReviews'])->middleware('auth:api'); // Đánh giá của bản thân
+Route::get('review/{reviewId}', [ReviewController::class, 'show'])->middleware('auth:api'); // Chi tiết đánh giá
+Route::post('product/{productId}/order/{orderId}/review', [ReviewController::class, 'storeReviewAfterDelivery'])->middleware('auth:api'); // Đánh giá sau khi nhận hàng
+Route::post('review/{reviewId}/reply', [ReviewController::class, 'reply'])->middleware('auth:api'); // Phản hồi đánh giá (Admin)
+Route::put('review/{reviewId}/edit', [ReviewController::class, 'update'])->middleware('auth:api'); // Chỉnh sửa đánh giá (chỉ 1 lần)
+Route::put('review/{reviewId}/like', [ReviewController::class, 'like'])->middleware('auth:api'); // Like đánh giá
+Route::put('review/{reviewId}/report', [ReviewController::class, 'report'])->middleware('auth:api'); // Báo cáo đánh giá
+Route::put('review/{reviewId}/anonymous', [ReviewController::class, 'toggleAnonymous'])->middleware('auth:api'); // ẩn danh đánh giá

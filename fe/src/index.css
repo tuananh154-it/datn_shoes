@@ -18,6 +18,7 @@
   .dropdown-menu.megamenu_full_screen li {
     display: block !important;
   }
+  
  
 /* style.css */
 .container {
@@ -49,6 +50,8 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-height: 600px; /* Giới hạn chiều cao */
+  overflow: auto;
 }
 
 .profile-section {
@@ -157,15 +160,18 @@
 /* Orders Tab */
 
 .order-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  flex-grow: 1; /* Cho phép danh sách mở rộng hết không gian còn lại */
+  overflow-y: auto; /* Cho phép cuộn dọc khi nội dung quá dài */
+  max-height: 100%; /* Chắc chắn không vượt quá .card */
+  padding-right: 10px; /* Tránh bị che bởi thanh cuộn */
+
 }
 
 .order-card {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 16px;
+  max-height: 500px; /* Giới hạn chiều cao của thẻ */
 }
 
 .order-header {
@@ -227,6 +233,7 @@
 .order-content {
   border-top: 1px solid #e5e7eb;
   padding-top: 16px;
+ 
 }
 
 .order-items {
@@ -480,9 +487,10 @@
 /* OrderDetail.css */
 .order-detail {
   max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
+  /* margin: 20px auto;
+  padding: 20px; */
   background: #fff;
+  /* display: block !important; Đảm bảo hiển thị */
 }
 
 h2, h3 {
@@ -657,7 +665,6 @@ h2, h3 {
 
 /* Căn chỉnh ngày đăng */
 .article__date {
-
   background: #e0e0e0;
   padding: 5px 10px;
   border-radius: 5px;
@@ -689,4 +696,91 @@ h2, h3 {
   align-items: center; /* Căn giữa dọc */
   height: 100%; /* Chiều cao full để căn giữa dọc */
   margin-left: 50px;
+}
+/* binh luan danh gia */
+.comment-list {
+  list-style: none;
+  padding: 0;
+}
+
+.comment-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.comment-date {
+  font-size: 12px;
+  color: gray;
+  margin-left: 10px;
+}
+
+.comment-input {
+  display: flex;
+  margin-top: 10px;
+}
+
+.comment-input input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 5px;
+}
+
+.comment-input button {
+  padding: 8px 12px;
+}
+
+.quickview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Định dạng main_section để hiển thị nội dung */
+.quickview-overlay .main_section {
+  position: relative;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 900px;
+  width: 100%;
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  max-height: 700px;
+}
+
+/* Định dạng nút đóng */
+.quickview-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.quickview-close:hover {
+  color: red;
+}
+
+.back-button {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 120px;
+}
+.back-button:hover {
+  background-color:#86ca30;
 }

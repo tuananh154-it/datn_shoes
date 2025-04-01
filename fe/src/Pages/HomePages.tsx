@@ -13,12 +13,15 @@ import "swiper/css/pagination";
 import "swiper/css/autoplay";
 import { getAllProduct, getLatesProducts } from "../services/product";
 import toast from "react-hot-toast";
+import QuickViewProduct from "./QuickViewProduct";
 // import { getAllProduct } from "../services/product";
 
 const HomePages = () => {
   const [product, setProduct] = useState<Product[]>([]);
   const [lastProduct, getlatesProducts] = useState<Product[]>([]);
-
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null
+  );
   useEffect(() => {
     getAllProduct().then(({ data }) => {
       // setProduct(response.data);
@@ -29,11 +32,10 @@ const HomePages = () => {
   useEffect(() => {
     getLatesProducts().then(({ data }) => {
       // setProduct(response.data);
-      console.log("datalast", data);
+      console.log("data", data);
       getlatesProducts(data.data);
     });
   }, []);
-
   console.log("product", product);
   useEffect(() => {
     // Nếu bạn đang sử dụng thư viện như Revolution Slider, khởi tạo slider ở đây nếu cần.
@@ -49,6 +51,28 @@ const HomePages = () => {
       console.log(data);
     });
   }, []);
+
+  // const toggleWishlist = (product: Product) => {
+  //   const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  //   if (!user) {
+  //     alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
+  //     return;
+  //   }
+
+  //   let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+
+  //   // Lưu ID sản phẩm thay vì object
+  //   const index = wishlist.indexOf(product.id);
+
+  //   if (index !== -1) {
+  //     wishlist.splice(index, 1);
+  //   } else {
+  //     wishlist.push(product.id);
+  //   }
+  //   toast.success("Đã thêm sản phẩm yêu thích");
+  //   localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  // };
 
   const toggleWishlist = (product: Product) => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
@@ -67,9 +91,13 @@ const HomePages = () => {
       wishlist.splice(index, 1);
     } else {
       wishlist.push(product.id);
+      toast.success("Đã thêm sản phẩm yêu thích");
     }
-    toast.success("Đã thêm sản phẩm yêu thích");
+
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
+    // Phát sự kiện cập nhật để các component khác biết
+    window.dispatchEvent(new Event("storage"));
   };
 
   return (
@@ -104,13 +132,10 @@ const HomePages = () => {
                     className="img-fluid"
                   />
                   <div className="shoes_collection_content">
-                    <h2 className="text-uppercase title_h2">2018</h2>
-                    <p className="text-uppercase">New Collection</p>
-                    <a
-                      href="product_list_with_sidebar.html"
-                      className="background-btn  text-uppercase"
-                    >
-                      shop now <i className="flaticon-arrows-4"></i>
+                    <h2 className="text-uppercase title_h2">2025</h2>
+                    <p className="text-uppercase">Bộ siêu tập mới</p>
+                    <a href="/shop" className="background-btn  text-uppercase">
+                      Mua ngay <i className="flaticon-arrows-4"></i>
                     </a>
                   </div>
                 </div>
@@ -123,8 +148,8 @@ const HomePages = () => {
                     className="img-fluid"
                   />
                   <div className="shoes_collection_content">
-                    <span className="text-uppercase">for</span>
-                    <p className="text-uppercase">Men</p>
+                    <span className="text-uppercase">Phiên Bản</span>
+                    <p className="text-uppercase">Nam</p>
                   </div>
                 </div>
                 <div className="home_collection_content position-relative">
@@ -134,8 +159,8 @@ const HomePages = () => {
                     className="img-fluid"
                   />
                   <div className="shoes_collection_content">
-                    <span className="text-uppercase">for</span>
-                    <p className="text-uppercase">Women</p>
+                    <span className="text-uppercase">Phiên bản</span>
+                    <p className="text-uppercase">Nữ</p>
                   </div>
                 </div>
               </div>
@@ -155,8 +180,8 @@ const HomePages = () => {
                     className="img-fluid"
                   />
                   <div className="arrival_collection_text ">
-                    <h2 className="title_h2 text-uppercase">New Arrivals</h2>
-                    <p className="text-uppercase">Just in Now</p>
+                    <h2 className="title_h2 text-uppercase">Sản phẩm mới</h2>
+                    <p className="text-uppercase">Ngay bây giờ</p>
                   </div>
                 </div>
               </div>
@@ -168,14 +193,18 @@ const HomePages = () => {
                   <div className="featured_content">
                     <div className="featured_img_content position-relative">
                       <img
-                        src={lastproduct.image}
+                        src={`http://localhost:8000/storage/product_images/${lastproduct.image}`}
                         className="img-product"
                         alt="shoes_product"
                       />
                       <div className="featured_btn vertical_middle">
-                        <a
-                          href="cart.html"
-                          className="text-uppercase  add_to_bag_btn rounded-circle d-block"
+                        <Link
+                          to="#"
+                          className="text-uppercase add_to_bag_btn rounded-circle d-block"
+                          onClick={(e) => {
+                            e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
+                            setSelectedProductId(lastproduct.id);
+                          }}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -190,7 +219,7 @@ const HomePages = () => {
                               d="M18,18.2L16.7,4.58a0.543,0.543,0,0,0-.56-0.474H13.411A4.278,4.278,0,0,0,9,0,4.278,4.278,0,0,0,4.588,4.106H1.856a0.549,0.549,0,0,0-.56.474L0,18.2v0.048A3.089,3.089,0,0,0,3.334,21H14.666A3.089,3.089,0,0,0,18,18.247V18.2ZM9,1.041a3.191,3.191,0,0,1,3.292,3.065H5.707A3.191,3.191,0,0,1,9,1.041Zm5.666,18.91H3.334a2.02,2.02,0,0,1-2.215-1.687L2.369,5.149h2.22v1.83a0.561,0.561,0,0,0,1.119,0V5.149h6.584v1.83a0.561,0.561,0,0,0,1.119,0V5.149h2.22l1.25,13.119A2.02,2.02,0,0,1,14.666,19.951Z"
                             />
                           </svg>
-                        </a>
+                        </Link>
                         <a
                           href={`/product_detail/${lastproduct.id}`}
                           className="text-uppercase  popup_btn rounded-circle d-block"
@@ -211,14 +240,18 @@ const HomePages = () => {
                           </svg>
                         </a>
                         <a
-                          href="/wishlist"
-                          className="heart yeuthich  rounded-circle text-center rounded-circle d-block"
+                          href="#"
+                          className="heart yeuthich rounded-circle text-center d-block"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            toggleWishlist(lastproduct);
+                          }}
                         >
                           <i className="flaticon-heart"></i>
                         </a>
                       </div>
                       <div className="product-label rounded-circle  newProduct">
-                        new
+                        MỚI
                       </div>
                     </div>
                     <div className="featured_detail_content position-relative">
@@ -292,6 +325,13 @@ const HomePages = () => {
                   </div>
                 </div>
               ))}
+              {/* Quick View hiển thị khi có productId */}
+              {selectedProductId && (
+                <QuickViewProduct
+                  productId={selectedProductId}
+                  onClose={() => setSelectedProductId(null)}
+                />
+              )}
             </div>
           </div>
         </section>
@@ -299,9 +339,9 @@ const HomePages = () => {
         <section className="padding-top-60 wow fadeIn">
           <div className="container">
             <div className="promoton_collection_section text-center wow fadeInUp position-relative">
-              <p className="position-relative">THE SEASON BEGINGS</p>
+              <p className="position-relative">MÙA HÈ BẮT ĐẦU</p>
               <h2 className="title_h2 text-capitalize position-relative">
-                PROMOTION SALE OFF 50%
+                KHUYẾN MẠI GIẢM GIÁ 50%
               </h2>
               <a
                 href="product_list_with_sidebar.html"
@@ -341,7 +381,7 @@ const HomePages = () => {
                         alt="shoes_product"
                       />
                       <div className="featured_btn vertical_middle">
-                        <a
+                        {/* <a
                           href="/cart"
                           className="text-uppercase add_to_bag_btn rounded-circle d-block"
                         >
@@ -358,7 +398,29 @@ const HomePages = () => {
                               d="M18,18.2L16.7,4.58a0.543,0.543,0,0,0-.56-0.474H13.411A4.278,4.278,0,0,0,9,0,4.278,4.278,0,0,0,4.588,4.106H1.856a0.549,0.549,0,0,0-.56.474L0,18.2v0.048A3.089,3.089,0,0,0,3.334,21H14.666A3.089,3.089,0,0,0,18,18.247V18.2ZM9,1.041a3.191,3.191,0,0,1,3.292,3.065H5.707A3.191,3.191,0,0,1,9,1.041Zm5.666,18.91H3.334a2.02,2.02,0,0,1-2.215-1.687L2.369,5.149h2.22v1.83a0.561,0.561,0,0,0,1.119,0V5.149h6.584v1.83a0.561,0.561,0,0,0,1.119,0V5.149h2.22l1.25,13.119A2.02,2.02,0,0,1,14.666,19.951Z"
                             />
                           </svg>
-                        </a>
+                        </a> */}
+                        <Link
+                          to="#"
+                          className="text-uppercase add_to_bag_btn rounded-circle d-block"
+                          onClick={(e) => {
+                            e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
+                            setSelectedProductId(product.id);
+                          }}
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="18"
+                            height="21"
+                            viewBox="0 0 18 21"
+                          >
+                            <path
+                              fill="#000"
+                              data-name="Bag Icon copy"
+                              className="cls-1"
+                              d="M18,18.2L16.7,4.58a0.543,0.543,0,0,0-.56-0.474H13.411A4.278,4.278,0,0,0,9,0,4.278,4.278,0,0,0,4.588,4.106H1.856a0.549,0.549,0,0,0-.56.474L0,18.2v0.048A3.089,3.089,0,0,0,3.334,21H14.666A3.089,3.089,0,0,0,18,18.247V18.2ZM9,1.041a3.191,3.191,0,0,1,3.292,3.065H5.707A3.191,3.191,0,0,1,9,1.041Zm5.666,18.91H3.334a2.02,2.02,0,0,1-2.215-1.687L2.369,5.149h2.22v1.83a0.561,0.561,0,0,0,1.119,0V5.149h6.584v1.83a0.561,0.561,0,0,0,1.119,0V5.149h2.22l1.25,13.119A2.02,2.02,0,0,1,14.666,19.951Z"
+                            />
+                          </svg>
+                        </Link>
                         <a
                           href={`/product_detail/${product.id}`}
                           className="text-uppercase  popup_btn rounded-circle d-block"
@@ -388,6 +450,12 @@ const HomePages = () => {
                         >
                           <i className="flaticon-heart"></i>
                         </a>
+                        {/* <button
+                                                    onClick={() => handleAddToWishlist} // Gọi hàm khi nhấn vào nút yêu thích
+                                                    className="heart rounded-circle text-center rounded-circle d-block"
+                                                >
+                                                    <i className="flaticon-heart"></i>
+                                                </button> */}
                       </div>
                     </div>
                     <div className="featured_detail_content">
@@ -397,7 +465,7 @@ const HomePages = () => {
                         </p>
                       </a>
                       <p className="featured_price title_h5  ">
-                      <span className="text-color">
+                        <span className="text-color">
                           {product?.price
                             ? Number(
                                 product.price
@@ -445,16 +513,16 @@ const HomePages = () => {
                             />
                           </svg>
                         </a>
-                        <a
-                          href="#"
-                          className="heart yeuthich rounded-circle text-center d-block"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            toggleWishlist(product);
-                          }}
-                        >
-                          <i className="flaticon-heart"></i>
-                        </a>
+                        {/* <a
+                                                    href="#"
+                                                    className="heart yeuthich rounded-circle text-center d-block"
+                                                    onClick={(e) => {
+                                                        e.preventDefault();
+                                                        toggleWishlist(product);
+                                                    }}
+                                                >
+                                                    <i className="flaticon-heart"></i>
+                                                </a> */}
                       </div>
                     </div>
                   </div>
@@ -469,12 +537,9 @@ const HomePages = () => {
             <div className="shoes_featured_title">
               <h3 className="title_h3 text-uppercase">Bài viết mới nhất</h3>
               <p className="shoes_featured_title_link mb-0">
-                <a
-                  href="grid_blog_list_with_sidebar.html"
-                  className="text-uppercase"
-                >
+                <Link to="/blog" className="text-uppercase">
                   Xem thêm<i className="flaticon-arrows-4"></i>
-                </a>
+                </Link>
               </p>
             </div>
             <div className="row">
