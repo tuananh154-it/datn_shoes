@@ -218,6 +218,9 @@ public function cancelOrder($id, Request $request)
     $order->update(['status' => 'cancelled']);
 
     return response()->json(['message' => 'Đơn hàng đã được hủy']);
+
+
+
 }public function getCart(Request $request)
 {
     $user = $request->user();
@@ -304,6 +307,97 @@ public function cancelOrder($id, Request $request)
         'total' => $total
     ]);
 }
+public function previewCheckout(Request $request)
+{
+    $user = $request->user();
 
+    if (!$user) {
+        return response()->json(['message' => 'Bạn cần đăng nhập để tiếp tục'], 401);
+    }
+
+    $selectedItemIds = $request->input('item_ids');
+
+    if (!is_array($selectedItemIds) || empty($selectedItemIds)) {
+        return response()->json(['message' => 'Vui lòng chọn sản phẩm để thanh toán'], 400);
+    }
+
+    // Lấy các item được chọn
+    $items = CartItem::with(['productDetail.product', 'productDetail.size', 'productDetail.color'])
+        ->whereIn('id', $selectedItemIds)
+        ->whereHas('cart', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+        ->get();
+
+    if ($items->isEmpty()) {
+        return response()->json(['message' => 'Không tìm thấy sản phẩm phù hợp'], 400);
+    }
+
+    $subtotal = 0;
+    $processedItems = $items->map(function ($item) use (&$subtotal) {
+        $productDetail = $item->productDetail;
+        $price = $productDetail->discount_price ?? $productDetail->default_price;
+        $lineTotal = $price * $item->quantity;
+        $subtotal += $lineTotal;
+
+        return [
+            'id' => $item->id,
+            'product_name' => $productDetail->product->name,
+            'image' => $productDetail->image,
+            'size' => $productDetail->size->name ?? null,
+            'color' => $productDetail->color->name ?? null,
+            'price' => $price,
+            'quantity' => $item->quantity,
+            'line_total' => $lineTotal,
+        ];
+    });
+
+    // Voucher (nếu có)
+    $voucherCode = $request->input('voucher');
+    $discount = 0;
+    $voucherInfo = null;
+
+    if ($voucherCode) {
+        $voucher = Voucher::where('name', $voucherCode)
+            ->where('status', 'active')
+            ->where('expiration_date', '>=', now())
+            ->first();
+
+        if ($voucher && $subtotal >= $voucher->min_purchase_amount) {
+            $discount = $voucher->discount_percent
+                ? $subtotal * ($voucher->discount_percent / 100)
+                : $voucher->discount_amount;
+
+            $discount = min($discount, $voucher->max_discount_amount);
+
+            $voucherInfo = [
+                'id' => $voucher->id,
+                'name' => $voucher->name,
+                'discount' => $discount,
+            ];
+        }
+    }
+
+    $deliverFee = 30000;
+    $total = $subtotal - $discount + $deliverFee;
+
+    return response()->json([
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'gender' => $user->gender,
+            'date_of_birth' => $user->date_of_birth,
+            'phone_number' => $user->phone_number,
+            'address' => $user->address,
+        ],
+        'selected_items' => $processedItems,
+        'subtotal' => $subtotal,
+        'discount' => $discount,
+        'voucher' => $voucherInfo,
+        'deliver_fee' => $deliverFee,
+        'total' => $total,
+    ]);
+}
 
 }
