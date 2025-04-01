@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { sendForgotPasswordEmail } from "../services/user";
 import { Link, useNavigate } from "react-router-dom";  // Dùng useNavigate để điều hướng trong react-router-dom v6+
+import toast from "react-hot-toast";
 
 const ForgotPassword = () => {
     const [email, setEmail] = useState("");
@@ -12,13 +13,15 @@ const ForgotPassword = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-
+        
         try {
             const response = await sendForgotPasswordEmail(email);
             setMessage(response.data.message); // Hiển thị thông báo thành công
             setIsEmailSent(true); // Đánh dấu email đã được gửi thành công
+            toast.success("Bạn đã gửi yêu cầu thành công , kiểm tra mail!")
         } catch (error) {
             setMessage("Có lỗi xảy ra. Vui lòng thử lại.");
+            toast.error("Có lỗi xảy ra. Vui lòng thử lại.")
         } finally {
             setLoading(false);
         }

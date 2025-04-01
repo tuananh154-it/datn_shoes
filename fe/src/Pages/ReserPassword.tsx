@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { resetPassword } from "../services/user"; // Đảm bảo import đúng hàm resetPassword
+import toast from "react-hot-toast";
 
 const ResetPassword = () => {
     const [email, setEmail] = useState("");
@@ -30,7 +31,8 @@ const ResetPassword = () => {
             setMessage(response.data.message);  // Hiển thị thông báo thành công
             setIsPasswordUpdated(true);  // Đánh dấu đã cập nhật mật khẩu thành công
             console.log("Phản hồi từ backend:", response.data);
-
+            toast.success("Bạn đã thay đổi mật khẩu thanh công")
+            navigate("/login")
         } catch (error) {
             console.error("Lỗi từ backend:", error.response?.data || error);
             setMessage("Có lỗi xảy ra. Vui lòng thử lại.");
@@ -76,7 +78,7 @@ const ResetPassword = () => {
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label htmlFor="token" className="title_h5">Token*</label>
+                                            <label htmlFor="token" className="title_h5">Mã xác nhận*</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -90,9 +92,9 @@ const ResetPassword = () => {
                                         <div className="form-group">
                                             <label htmlFor="password" className="title_h5">Mật khẩu mới*</label>
                                             <input
-                                                type="password"
+                                                type="text"
                                                 className="form-control"
-                                                id="password"
+                                                id="text"
                                                 name="password"
                                                 value={password}
                                                 onChange={(e) => setPassword(e.target.value)}
@@ -102,7 +104,7 @@ const ResetPassword = () => {
                                         <div className="form-group">
                                             <label htmlFor="confirmPassword" className="title_h5">Xác nhận mật khẩu*</label>
                                             <input
-                                                type="password"
+                                                type="text"
                                                 className="form-control"
                                                 id="confirmPassword"
                                                 name="confirmPassword"

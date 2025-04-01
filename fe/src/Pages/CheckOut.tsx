@@ -15,6 +15,7 @@ interface Address {
 }
 
 interface CartItem {
+  id:number
   product_name: string;
   image: string; // JSON string chứa danh sách ảnh
   size: string;
@@ -138,13 +139,10 @@ const CheckOut = () => {
       email: checkout.user.email,
       address: checkout.user.address,
       note: (document.getElementById("note") as HTMLInputElement)?.value || "",
-      cart_items: checkout.cart_items,
-      deliver_fee: checkout.deliver_fee,
-      discount: checkout.discount,
-      subtotal: checkout.subtotal,
-      total: checkout.total,
       payment_method: paymentMethod,
-    };
+      selected_items: checkout.cart_items.map(item => item.id), // Lấy chỉ ID các sản phẩm
+      // voucher_id: checkout.voucher ? checkout.voucher.id : null, // Nếu có voucher, gắn voucher_id
+  };
 
     console.log("🚀 Sending Order Data:", orderData);
 

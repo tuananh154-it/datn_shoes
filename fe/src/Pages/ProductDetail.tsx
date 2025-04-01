@@ -14,6 +14,7 @@ import { getComments, getCommentsByProductId } from "../services/comments";
 const ProductDetail = () => {
   const { addToCart } = useCart();
 
+
   const isLoggedIn = localStorage.getItem("token") ? true : false;
 
   const nav = useNavigate();
@@ -85,33 +86,42 @@ const ProductDetail = () => {
     });
   }, []);
 
+  // binh luan va danh giagia
   const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState("");
-  // Gửi bình luận mới
+  const [newComment, setNewComment] = useState({ comment: '', rating: 5 });
+  const [replyContent, setReplyContent] = useState<{ [key: number]: string }>({});
+  const [editContent, setEditContent] = useState<{ [key: number]: string }>({});
+  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
 
 
-
-  //   useEffect(() => {
-  //     const fetchComments = async () => {
-  //         try {
-  //             const response = await getCommentsByProductId(productId);
-  //             setComments(response.data);
-  //         } catch (err) {
-  //            "loi"
-  //         } 
-  //     };
-
-  //     fetchComments();
-  // }, [productId]);
-
+  // Lấy danh sách bình luận
   useEffect(() => {
-    getComments()
-      .then(({ data }) => {
-        setComments(data)
-        console.log(data);
+    const fetchComments = async () => {
+      try {
+        const response = await getCommentsByProductId(productId);
+        setComments(response.data);
+      } catch (error) {
+        console.error('Lỗi khi lấy bình luận:', error);
+      }
+    };
+    fetchComments();
+  }, [productId]);
 
-      })
-  }, [])
+  // Đăng bình luận mới
+  const handlePostComment = async () => {
+    if (!newComment.comment.trim()) {
+      alert('Vui lòng nhập nội dung bình luận!');
+      return;
+    }
+    try {
+      const response = await postComment(productId, newComment.comment, newComment.rating);
+      setComments([...comments, response.data]);
+      setNewComment({ comment: '', rating: 5 });
+    } catch (error) {
+      console.error('Lỗi khi đăng bình luận:', error);
+      alert('Lỗi khi đăng bình luận!');
+    }
+  };
   return (
     <>
       <div className="menu_overlay"></div>
@@ -195,20 +205,20 @@ const ProductDetail = () => {
                             <span className="original-price">
                               {selectedDetail?.default_price
                                 ? Number(
-                                    selectedDetail.default_price
-                                      .replace(/,/g, "")
-                                      .replace(" VND", "")
-                                  ).toLocaleString("vi-VN") + " VND"
+                                  selectedDetail.default_price
+                                    .replace(/,/g, "")
+                                    .replace(" VND", "")
+                                ).toLocaleString("vi-VN") + " VND"
                                 : "0 VND"}
                             </span>{" "}
                             {/* Giá gốc */}
                             <span className="discount-price">
                               {selectedDetail?.default_price
                                 ? Number(
-                                    selectedDetail.default_price
-                                      .replace(/,/g, "")
-                                      .replace(" VND", "")
-                                  ).toLocaleString("vi-VN") + " VND"
+                                  selectedDetail.default_price
+                                    .replace(/,/g, "")
+                                    .replace(" VND", "")
+                                ).toLocaleString("vi-VN") + " VND"
                                 : "0 VND"}
                             </span>{" "}
                             {/* Giá khuyến mại */}
@@ -473,8 +483,8 @@ const ProductDetail = () => {
                           </h5>
                         </div>
                         <div id="collapseOne" className="collapse" aria-labelledby="headingOne" data-parent="#accordion">
-                          <div className="card-body">
-                            {/* Hiển thị danh sách bình luận */}
+                          {/* <div className="card-body">
+                            
                             {comments.length > 0 ? (
                               <div className="comment-section">
                               {comments.map((comment) => (
@@ -494,7 +504,7 @@ const ProductDetail = () => {
                               <p>Bạn hãy là người đầu tiên bình luận!</p>
                             )}
 
-                            {/* Ô nhập bình luận */}
+                           
                             <div className="comment-input">
                               <input
                                 type="text"
@@ -504,6 +514,49 @@ const ProductDetail = () => {
                                 onChange={(e) => setNewComment(e.target.value)}
                               />
                               <button className="btn btn-primary" >
+                                Gửi
+                              </button>
+                            </div>
+                          </div> */}
+                          <div className="card-body">
+                            {/* Hiển thị danh sách bình luận */}
+                            {comments.length > 0 ? (
+                              <div className="comment-section">
+                                {comments.map((comment) => (
+                                  <div key={comment?.id} className="comment-container">
+                                    <img
+                                      src={ 'https://via.placeholder.com/40'} // Nếu không có avatar, dùng ảnh mặc định
+                                      alt="User Avatar"
+                                      className="avatar"
+                                    />
+                                    <div className="comment-content">
+                                      <div className="comment-header">
+                                        <strong className="user-name">
+                                          {comment?.is_anonymous ? 'Ẩn danh' : comment.user_name}
+                                        </strong>
+                                        <span className="comment-time">
+                                          {new Date(comment.created_at).toLocaleString()}
+                                        </span>
+                                      </div>
+                                      <p className="comment-text">{comment.content}</p>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
+                            ) : (
+                              <p>Bạn hãy là người đầu tiên bình luận!</p>
+                            )}
+
+                            {/* Ô nhập bình luận */}
+                            <div className="comment-input">
+                              <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Viết bình luận..."
+                                value={newComment}
+                                onChange={(e) => setNewComment(e.target.value)}
+                              />
+                              <button className="btn btn-primary" onClick={handlePostComment}>
                                 Gửi
                               </button>
                             </div>
@@ -664,7 +717,15 @@ const ProductDetail = () => {
                             </p>
                           </a>
                           <p className="featured_price title_h5 text-center">
-                            <span>{product.price}</span>
+                            <span className="text-color">
+                              {product?.price
+                                ? Number(
+                                  product.price
+                                    .replace(/,/g, "")
+                                    .replace(" VND", "")
+                                ).toLocaleString("vi-VN") + " VND"
+                                : "0 VND"}
+                            </span>
                           </p>
                         </div>
                       </div>
