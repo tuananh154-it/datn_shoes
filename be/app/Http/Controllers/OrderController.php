@@ -55,32 +55,42 @@ class OrderController extends Controller
         return view('orders.show', compact('order', 'total_product_value', 'shipping_fee', 'total_price'));
     }
 
-    
     public function updateStatus(Request $request, $id)
-    {
-        // Tìm đơn hàng theo id
-        $order = Order::findOrFail($id);
+{
+    $order = Order::findOrFail($id);
 
-        // Định nghĩa các trạng thái hợp lệ và chuyển tiếp trạng thái
-        $validStatusTransitions = [
-            'waiting_for_confirmation' => 'waiting_for_pickup',
-            'waiting_for_pickup' => 'waiting_for_delivery',
-            'waiting_for_delivery' => 'delivered',
-            'delivered' => 'returned',
-            'returned' => 'cancelled',
-        ];
+    $currentStatus = $order->status;
+    $newStatus = $request->status;
 
-        // Kiểm tra nếu trạng thái mới hợp lệ
-        if (isset($validStatusTransitions[$order->status]) && $validStatusTransitions[$order->status] === $request->status) {
-            // Cập nhật trạng thái mới
-            $order->status = $request->status;
-            $order->save();
+    // Các trạng thái hợp lệ và luồng chuyển tiếp
+    $validStatusTransitions = [
+        'waiting_for_confirmation' => 'waiting_for_pickup',
+        'waiting_for_pickup' => 'waiting_for_delivery',
+        'waiting_for_delivery' => 'delivered',
+        'delivered' => 'returned',
+        'returned' => 'cancelled',
+    ];
 
-            // Thông báo thành công
-            return redirect()->route('orders.index')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
+    //  Không cho admin chuyển từ "chờ xác nhận" sang "chờ lấy hàng"
+    if ($currentStatus === 'waiting_for_confirmation' && $newStatus === 'waiting_for_pickup') {
+        return redirect()->route('orders.index')->with('success', 'Chỉ người dùng mới có thể xác nhận đơn hàng qua email.');
+    }
+
+    // ✅ Nếu chuyển đúng theo luồng
+    if (isset($validStatusTransitions[$currentStatus]) && $validStatusTransitions[$currentStatus] === $newStatus) {
+        $order->status = $newStatus;
+
+        if ($newStatus === 'delivered') {
+            $order->payment_status = 'paid';
         }
 
-        // Thông báo lỗi nếu trạng thái không hợp lệ
-        return redirect()->route('orders.index')->with('error', 'Trạng thái không hợp lệ.');
+        $order->save();
+
+        return redirect()->route('orders.index')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
     }
+
+    return redirect()->route('orders.index')->with('error', 'Trạng thái không hợp lệ.');
+}
+
+    
 }

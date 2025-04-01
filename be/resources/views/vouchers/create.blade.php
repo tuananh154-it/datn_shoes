@@ -98,11 +98,11 @@
                     </div>
 
                     {{-- Hành động --}}
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('vouchers.index') }}" class="btn btn-secondary btn-lg">Quay lại</a>
+                   
+                        <a href="{{ route('vouchers.index') }}" class="btn btn-secondary gitgit">Quay lại</a>
                         <button type="reset" class="btn btn-primary  ">Reset</button>
                         <button type="submit" class="btn btn-success  ">Thêm Mới</button>
-                    </div>
+                    
                 </form>
             </div>
         </section>
