@@ -21,12 +21,12 @@
                     <td>{{ $user->email }}</td>
                     <td>{{ $user->status }}</td>
                     <td>
-                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-warning">Sửa</a>
-                        <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                        <a href="{{ route('admin.users.edit', $user->id) }}" class="btn btn-primary "><i class="fa fa-pencil"></i></a>
+                        {{-- <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger">Xóa</button>
-                        </form>
+                        </form> --}}
                     </td>
                 </tr>
             @endforeach

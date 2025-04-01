@@ -20,10 +20,8 @@
                 </div>
             @endif
 
-            <div class="">
-                <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
-                    <i class="fa fa-plus"></i> Thêm sản người dùng
-                </a>
+          
+
             </div>
 
             <div class="mb-3">
@@ -50,6 +48,16 @@
                 </form>
             </div>
 
+            {{-- them moi  --}}
+            <div class="mb-3">
+                <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
+                    <i class="fa fa-plus"></i> Thêm người dùng  
+                </a>
+            </div>
+
+
+
+
             <table class="table table-striped table-advance table-hover">
                 <thead>
                     <tr>
@@ -66,10 +74,19 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->roles->first()?->name }}</td>
                             <td>
+<<<<<<< HEAD
+                                {{-- <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash-o"></i> Xóa
+                                    </button>
+                                </form> --}}
+                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary  btn-sm">
+                                    <i class="fa fa-pencil"></i> 
+
                                 <!-- Mắt Xem -->
-                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-warning btn-sm">
-                                    <i class="fa fa-pencil"></i> Sửa
-                                </a>
+           
                                 <a href="{{ route('users.show', $user->id) }}" class="btn btn-danger btn-sm">
                                     <i class="fa fa-eye"></i>
                                 </a>

@@ -45,10 +45,7 @@
                         </select>
                     </div>
                         {{-- hanh dong --}}
-
-                        <div class="mb-3 d-flex">
-                            <button type="submit" class="btn btn-warning btn-lg flex-fill">Cập nhập</button>
-                        </div>
+                        <button type="submit" class="btn btn-warning ">Cập nhập</button>
                 </form>
             </div>
         </section>

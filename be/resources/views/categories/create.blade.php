@@ -59,9 +59,9 @@
                         {{-- hanh dong --}}
 
                     <div  class="">
-                        <a href="{{ route('categories.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
-                        <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
-                        <button type="submit" class="btn btn-primary btn-lg flex-fill">Thêm Mới</button>
+                        <a href="{{ route('categories.index') }}" class="btn btn-secondary ">Quay lại</a>
+                        <button type="reset" class="btn btn-warning">Reset</button>
+                        <button type="submit" class="btn btn-success">Thêm danh mục </button>
                     </div>
                 </form>
             </div>

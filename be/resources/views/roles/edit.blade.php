@@ -143,7 +143,8 @@
             @endforeach
         </div>
 
-        <button type="submit" class="btn btn-primary">Cập nhật vai trò</button>
-    </form>
+
+        <button type="submit" class="btn btn-warning ">Cập nhập  </button>
+
 </div>
 @endsection
