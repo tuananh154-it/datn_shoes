@@ -27,7 +27,8 @@ return new class extends Migration
             // $table->foreignId('customer_id')->constrained('customers');
             $table->foreignId('user_id')->constrained('users');
             $table->enum('payment_status', ['paid', 'unpaid', 'pending', 'failed'])->default('unpaid');
-            $table->enum('payment_method', ['credit_card', 'cash_on_delivery', 'paypal']);
+            $table->enum('payment_method', ['cash_on_delivery', 'momo', 'zalopay']);
+
             $table->string('address');
             $table->string('phone_number');
             $table->string('email');
