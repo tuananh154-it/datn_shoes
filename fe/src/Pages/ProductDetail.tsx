@@ -44,6 +44,8 @@ const ProductDetail = () => {
 
   const [productId, setProductId] = useState<Products>();
   const [selectedDetail, setSelectedDetail] = useState<any>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const { id } = useParams();
   useEffect(() => {
     if (!id) return;
@@ -53,8 +55,40 @@ const ProductDetail = () => {
       // setSelectedDetail(data.data.details[0]);
     });
   }, [id]);
-  console.log("data", productId);
+  console.log("data", productId); 
+// Nhóm size theo từng màu
+const colorSizeMap = productId?.details?.reduce((acc, detail) => {
+  if (!acc[detail.color]) {
+    acc[detail.color] = [];
+  }
+  acc[detail.color].push(detail.size);
+  return acc;
+}, {} as Record<string, string[]>) || {};
 
+// Danh sách màu sắc không trùng lặp
+const uniqueColors = Object.keys(colorSizeMap);
+
+const getVariantImagesForColor = (color: string) => {
+  const colorDetails = productId?.details.filter((detail) => detail.color === color) || [];
+  return colorDetails.flatMap((detail) => detail.image); // flatMap giúp kết hợp tất cả các ảnh vào một mảng
+};
+const handleColorSelect = (color: string) => {
+  setSelectedColor(color);
+  setSelectedSize(colorSizeMap[color][0]); // Chọn size đầu tiên của màu đó
+  const matchingDetail = productId?.details.find(
+    (d) => d.color === color && d.size === colorSizeMap[color][0]
+  );
+  setSelectedDetail(matchingDetail || null);
+};
+
+// Xử lý chọn size
+const handleSizeSelect = (size: string) => {
+  setSelectedSize(size);
+  const matchingDetail = productId?.details.find(
+    (d) => d.color === selectedColor && d.size === size
+  );
+  setSelectedDetail(matchingDetail || null);
+};
   const handleVariantClick = (detail: any) => {
     if (detail) {
       setSelectedDetail(detail);
@@ -63,12 +97,12 @@ const ProductDetail = () => {
     }
   };
 
-  function getColorFromText(colorText: any) {
+  function getColorFromText(colorText: string): string {
     switch (colorText.toLowerCase()) {
-      case "màu vàng":
-        return "#FFCC00"; // Mã màu vàng
-      case "màu đỏ":
-        return "#FF0000"; // Mã màu đỏ
+      case "màu trắng":
+        return "#FFFFFF"; // Mã màu trắng
+      case "màu đen":
+        return "#000000"; // Mã màu đen
       case "màu xanh":
         return "#008000"; // Mã màu xanh
       // Thêm các màu khác vào đây nếu cần
@@ -95,6 +129,7 @@ const ProductDetail = () => {
       })
       .catch(() => toast.error("Loi lay comments"))
   };
+  
   return (
     <>
       <div className="menu_overlay"></div>
@@ -127,31 +162,26 @@ const ProductDetail = () => {
               <div className="main">
                 {/* Phần bên trái với ảnh chính */}
                 <div className="main-left" data-wow-duration="1300ms">
-                  <div className="imageProduct">
-                    <img
-                      src={selectedDetail?.image || productId.image}
-                      alt="Product"
-                    />
-                  </div>
-                  <div className="imageBienthe">
-                    <img
-                      src={productId.image}
-                      alt="Product main"
-                      style={{ cursor: "pointer", marginRight: "10px" }}
-                      onClick={() => handleVariantClick(null)} // Xử lý khi click vào ảnh chính
-                    />
-                    {/* Lặp qua chi tiết sản phẩm để hiển thị ảnh các variant */}
-                    {productId.details.map((detail, index) => (
-                      <img
-                        key={index}
-                        src={detail.image}
-                        alt={`Variant ${index}`}
-                        onClick={() => handleVariantClick(detail)} // Xử lý khi click vào variant
-                        style={{ cursor: "pointer", marginRight: "10px" }}
-                      />
-                    ))}
-                  </div>
-                </div>
+        <div className="imageProduct">
+          {/* Hiển thị ảnh chính */}
+          <img
+            src={selectedDetail?.image?.[0] || productId.image}
+            alt="Product"
+          />
+        </div>
+        <div className="imageBienthe">
+          {/* Chỉ hiển thị ảnh của các biến thể có màu sắc đã chọn */}
+          {selectedColor && getVariantImagesForColor(selectedColor).map((imgSrc, index) => (
+            <img
+              key={index}
+              src={imgSrc}
+              alt={`Variant ${index}`}
+              onClick={() => handleVariantClick(productId?.details.find(d => d.image.includes(imgSrc)))} // Khi click vào ảnh biến thể
+              style={{ cursor: "pointer", marginRight: "10px" }}
+            />
+          ))}
+        </div>
+      </div>
                 <div className="main-right" data-wow-duration="1300ms">
                   <div className="product_content">
                     <div className="product_title">
@@ -165,13 +195,6 @@ const ProductDetail = () => {
                         Thương hiệu:{" "}
                         <a className="font-bold">{productId.brand}</a>
                       </p>
-
-                      {/* Giá sản phẩm */}
-                      {/* <p className="text-color title_h4">
-                          {selectedDetail?.discount_price ||
-                            selectedDetail?.price ||
-                            productId.price}
-                        </p> */}
                       <p className="text-color title_h4">
                         {selectedDetail?.discount_price ? (
                           <>
@@ -225,41 +248,40 @@ const ProductDetail = () => {
                           </label>
 
                           {/* Màu sắc */}
-                          {productId.details.map((detail, index) => (
-                            <div
-                              key={index}
-                              className="radio text-uppercase text-center"
-                            >
-                              <input
-                                type="radio"
-                                name="color11"
-                                id={`color${index + 1}`}
-                                checked={selectedDetail?.id === detail.id}
-                                onChange={() => handleVariantClick(detail)}
-                              />
-                              <label
-                                htmlFor={`color${index + 1}`}
-                                className={`color${index + 1}`}
-                                style={{
-                                  backgroundColor: getColorFromText(
-                                    detail.color
-                                  ),
-                                }}
-                              ></label>
-                            </div>
-                          ))}
+                         
+                          {uniqueColors.map((color, index) => (
+  <div key={index} className="radio p-2">
+    <input
+      type="radio"
+      name="color"
+      id={`color${index}`}
+      checked={selectedColor === color}
+      onChange={() => handleColorSelect(color)}
+    />
+    <label
+      htmlFor={`color${index}`}
+      style={{ backgroundColor: getColorFromText(color) }} // Dùng hàm getColorFromText để lấy mã màu
+    ></label>
+  </div>
+))}
                         </div>
 
                         <div className="form-group size_box">
                           <label className="title_h5 text-capitalize">
                             Kích thước
                           </label>
-                          <select className="form-control">
-                            <option>
-                              {selectedDetail?.size ||
-                                productId.details[0]?.size}
-                            </option>
-                          </select>
+                          <select
+              className="form-control"
+              value={selectedSize || ""}
+              onChange={(e) => handleSizeSelect(e.target.value)}
+            >
+              {selectedColor &&
+                colorSizeMap[selectedColor].map((size, index) => (
+                  <option key={index} value={size}>
+                    {size}
+                  </option>
+                ))}
+            </select>
                         </div>
 
                         <div className="form-group quantity_box">

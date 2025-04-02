@@ -77,10 +77,10 @@ const HomePages = () => {
   const toggleWishlist = (product: Product) => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
 
-    if (!user) {
-      alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
-      return;
-    }
+    // if (!user) {
+    //   alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
+    //   return;
+    // }
 
     let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
 

@@ -1,11 +1,10 @@
-
 import { useEffect, useState } from "react";
 import { getCheckOut, getOrder, Momopayment } from "../services/Order";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { FaCcVisa, FaMoneyBillWave, FaMobileAlt } from "react-icons/fa";
 // import { string } from "zod";
-import { useCart } from "../context/CartContext";
+// import { useCart } from "../context/CartContext";
 import { AxiosError } from "axios";
 interface Address {
   _id: string;
@@ -17,7 +16,7 @@ interface Address {
 }
 
 interface CartItem {
-  id:number
+  id: number;
   product_name: string;
   image: string; // JSON string chứa danh sách ảnh
   size: string;
@@ -45,7 +44,7 @@ interface CheckoutData {
   user: User;
   voucher: string | null;
   note: string;
-  selected_items: CartItem[];  // Add this property to the interface
+  selected_items: CartItem[]; // Add this property to the interface
 }
 const CheckOut = () => {
   const [provinces, setProvinces] = useState<Address[]>([]);
@@ -64,31 +63,31 @@ const CheckOut = () => {
 
   const [checkout, setCheckout] = useState<CheckoutData | null>(null);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-    console.log("checkout",checkout)
-    useEffect(() => {
-      const storedSelectedItems = localStorage.getItem("selectedItems");
-      if (storedSelectedItems) {
-        const parsedItems = JSON.parse(storedSelectedItems);
-        setSelectedItems(parsedItems);
-      }
-    }, []);
-    console.log("checkout",checkout)
-  
-    // Fetch checkout data when selectedItems are updated
-    useEffect(() => {
-      if (selectedItems.length > 0) {
-        const userId = 1; // Replace with dynamic userId from state or context
-  
-        getCheckOut(userId, selectedItems)
-          .then(({ data }) => {
-            setCheckout(data);
-          })
-          .catch((error) => {
-            console.error("API Error:", error);
-            toast.error("Failed to load checkout data.");
-          });
-      }
-    }, [selectedItems]);
+  console.log("checkout", checkout);
+  useEffect(() => {
+    const storedSelectedItems = localStorage.getItem("selectedItems");
+    if (storedSelectedItems) {
+      const parsedItems = JSON.parse(storedSelectedItems);
+      setSelectedItems(parsedItems);
+    }
+  }, []);
+  console.log("checkout", checkout);
+
+  // Fetch checkout data when selectedItems are updated
+  useEffect(() => {
+    if (selectedItems.length > 0) {
+      const userId = 1; // Replace with dynamic userId from state or context
+
+      getCheckOut(userId, selectedItems)
+        .then(({ data }) => {
+          setCheckout(data);
+        })
+        .catch((error) => {
+          console.error("API Error:", error);
+          toast.error("Failed to load checkout data.");
+        });
+    }
+  }, [selectedItems]);
   const nav = useNavigate();
   const handleOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -137,13 +136,15 @@ const CheckOut = () => {
       processOrder();
     }
     if (checkout?.user.address) {
-      const storedAddresses = JSON.parse(localStorage.getItem("savedAddresses") || "[]");
-  
+      const storedAddresses = JSON.parse(
+        localStorage.getItem("savedAddresses") || "[]"
+      );
+
       // Thêm địa chỉ mới vào đầu danh sách, loại bỏ trùng lặp và giữ tối đa 2 địa chỉ
       const updatedAddresses = [checkout.user.address, ...storedAddresses]
         .filter((addr, index, self) => self.indexOf(addr) === index) // Loại bỏ địa chỉ trùng
         .slice(0, 2); // Giữ tối đa 2 địa chỉ gần nhất
-  
+
       localStorage.setItem("savedAddresses", JSON.stringify(updatedAddresses));
     }
   };
@@ -175,7 +176,7 @@ const CheckOut = () => {
   //     })),
   //     // voucher_id: checkout?.voucher ? checkout.voucher.id : null, // If there's a voucher, include the voucher_id
   //   };
-    
+
   //   console.log("🚀 Sending Order Data:", orderData);
 
   //   try {
@@ -195,20 +196,21 @@ const CheckOut = () => {
   //     alert("Có lỗi xảy ra, vui lòng thử lại!");
   //   }
   // };
-  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+  const delay = (ms: number) =>
+    new Promise((resolve) => setTimeout(resolve, ms));
   const processOrder = async () => {
     const savedOrder = localStorage.getItem("pendingOrder");
-    
+
     // Step 1: Check if checkout data is available
     if (!checkout) {
       console.error("Checkout data is missing.");
       alert("Không có dữ liệu đơn hàng!");
       return;
     }
-  
+
     // Log checkout data to ensure it has the expected structure
     console.log("Checkout Data:", checkout);
-  
+
     // Step 2: Prepare the order data
     const orderData = {
       user_id: checkout?.user.id,
@@ -218,39 +220,39 @@ const CheckOut = () => {
       address: checkout?.user.address,
       note: (document.getElementById("note") as HTMLInputElement)?.value || "",
       payment_method: paymentMethod,
-      selected_items: (checkout?.selected_items || []).map(item => item.id), // ❗ CHỈ LẤY ID
+      selected_items: (checkout?.selected_items || []).map((item) => item.id), // ❗ CHỈ LẤY ID
+      // voucher_id: checkout?.voucher ? checkout.voucher.id : null,
     };
-  
+
     // Log the order data before sending it
     console.log("🚀 Sending Order Data:", orderData);
-  
+
     try {
       await delay(2000);
       // Step 3: Make the API call to place the order
       const orderResponse = await getOrder(orderData);
-  
+
       // Log the API response to inspect the result
       console.log("✅ Order API Response:", orderResponse);
-  
+
       // Step 4: Check for successful order response
       if (orderResponse.status !== 201) {
         console.error(`Order failed with status: ${orderResponse.status}`);
         alert(`Đặt hàng thất bại! Mã lỗi: ${orderResponse.status}`);
         return;
       }
-  
+
       // Step 5: Handle success
       toast.success("🎉 Đã đặt hàng thành công!");
       localStorage.removeItem("pendingOrder"); // Xóa đơn hàng tạm sau khi đặt hàng thành công
       nav("/");
-  
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data?.message || "Có lỗi xảy ra!";
-        
+
         if (errorMessage.includes("Too Many Attempts")) {
           alert("Bạn đã thử quá nhiều lần, vui lòng chờ một chút rồi thử lại!");
-        } else {
+        } else {  
           alert(errorMessage);
         }
       } else {
@@ -258,16 +260,26 @@ const CheckOut = () => {
         alert("Có lỗi xảy ra, vui lòng thử lại!");
       }
     }
-  }
-  
+  };
 
   // Kiểm tra nếu MoMo thanh toán xong
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.search);
+  //   const momoStatus = urlParams.get("momoStatus");
+
+  //   if (momoStatus === "success") {
+  //     processOrder(); // Đặt hàng sau khi thanh toán MoMo thành công
+  //   }
+  // }, []);
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     const momoStatus = urlParams.get("momoStatus");
 
     if (momoStatus === "success") {
       processOrder(); // Đặt hàng sau khi thanh toán MoMo thành công
+      nav("/");  // Chuyển về trang chủ sau khi thanh toán thành công
+    } else {
+      nav("/checkout");  // Nếu thanh toán thất bại, chuyển về trang checkout
     }
   }, []);
 
@@ -321,9 +333,11 @@ const CheckOut = () => {
               address: `${newValue || specificAddress}, ${
                 wards.find((w) => String(w.code) === selectedWard)?.name || ""
               }, ${
-                districts.find((d) => String(d.code) === selectedDistrict)?.name || ""
+                districts.find((d) => String(d.code) === selectedDistrict)
+                  ?.name || ""
               }, ${
-                provinces.find((p) => String(p.code) === selectedProvince)?.name || ""
+                provinces.find((p) => String(p.code) === selectedProvince)
+                  ?.name || ""
               }`,
             },
           }
@@ -332,10 +346,12 @@ const CheckOut = () => {
   };
   const [savedAddresses, setSavedAddresses] = useState<string[]>([]);
 
-useEffect(() => {
-  const storedAddresses = JSON.parse(localStorage.getItem("savedAddresses") || "[]");
-  setSavedAddresses(storedAddresses);
-}, []);
+  useEffect(() => {
+    const storedAddresses = JSON.parse(
+      localStorage.getItem("savedAddresses") || "[]"
+    );
+    setSavedAddresses(storedAddresses);
+  }, []);
   return (
     <>
       <div className="menu_overlay"></div>
@@ -401,43 +417,52 @@ useEffect(() => {
             <input type="text" id="note" />
           </form> */}
           <form>
-  <label>Họ và tên *</label>
-  <input
-    type="text"
-    id="name"
-    value={checkout?.user.name || ""}
-    onChange={(e) =>
-      setCheckout((prev) =>
-        prev ? { ...prev, user: { ...prev.user, name: e.target.value } } : null
-      )
-    }
-  />
+            <label>Họ và tên *</label>
+            <input
+              type="text"
+              id="name"
+              value={checkout?.user.name || ""}
+              onChange={(e) =>
+                setCheckout((prev) =>
+                  prev
+                    ? { ...prev, user: { ...prev.user, name: e.target.value } }
+                    : null
+                )
+              }
+            />
 
-  <label>Số điện thoại *</label>
-  <input
-    type="text"
-    id="phone_number"
-    value={checkout?.user.phone_number || ""}
-    onChange={(e) =>
-      setCheckout((prev) =>
-        prev ? { ...prev, user: { ...prev.user, phone_number: e.target.value } } : null
-      )
-    }
-  />
+            <label>Số điện thoại *</label>
+            <input
+              type="text"
+              id="phone_number"
+              value={checkout?.user.phone_number || ""}
+              onChange={(e) =>
+                setCheckout((prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        user: { ...prev.user, phone_number: e.target.value },
+                      }
+                    : null
+                )
+              }
+            />
 
-  <label>Email *</label>
-  <input
-    type="email"
-    id="email"
-    value={checkout?.user.email || ""}
-    onChange={(e) =>
-      setCheckout((prev) =>
-        prev ? { ...prev, user: { ...prev.user, email: e.target.value } } : null
-      )
-    }
-  />
+            <label>Email *</label>
+            <input
+              type="email"
+              id="email"
+              value={checkout?.user.email || ""}
+              onChange={(e) =>
+                setCheckout((prev) =>
+                  prev
+                    ? { ...prev, user: { ...prev.user, email: e.target.value } }
+                    : null
+                )
+              }
+            />
 
-{/* <label>Tỉnh/Thành phố *</label>
+            {/* <label>Tỉnh/Thành phố *</label>
     <select
       value={selectedProvince}
       onChange={(e) => {
@@ -492,108 +517,126 @@ useEffect(() => {
         )
       }
     /> */}
-    <label>Tỉnh/Thành phố *</label>
-    <select
-      value={selectedProvince}
-      onChange={(e) => {
-        setSelectedProvince(e.target.value);
-        updateAddress();
-      }}
-    >
-      <option value="">Chọn tỉnh/thành phố</option>
-      {provinces?.map((p) => (
-        <option key={p.code} value={p.code}>
-          {p.name}
-        </option>
-      ))}
-    </select>
+            <label>Tỉnh/Thành phố *</label>
+            <select
+              value={selectedProvince}
+              onChange={(e) => {
+                setSelectedProvince(e.target.value);
+                updateAddress();
+              }}
+            >
+              <option value="">Chọn tỉnh/thành phố</option>
+              {provinces?.map((p) => (
+                <option key={p.code} value={p.code}>
+                  {p.name}
+                </option>
+              ))}
+            </select>
 
-    <label>Quận/Huyện *</label>
-    <select
-      value={selectedDistrict}
-      onChange={(e) => {
-        setSelectedDistrict(e.target.value);
-        updateAddress();
-      }}
-      disabled={!selectedProvince}
-    >
-      <option value="">Chọn quận/huyện</option>
-      {districts?.map((d) => (
-        <option key={d.code} value={d.code}>
-          {d.name}
-        </option>
-      ))}
-    </select>
+            <label>Quận/Huyện *</label>
+            <select
+              value={selectedDistrict}
+              onChange={(e) => {
+                setSelectedDistrict(e.target.value);
+                updateAddress();
+              }}
+              disabled={!selectedProvince}
+            >
+              <option value="">Chọn quận/huyện</option>
+              {districts?.map((d) => (
+                <option key={d.code} value={d.code}>
+                  {d.name}
+                </option>
+              ))}
+            </select>
 
-    <label>Phường/Xã *</label>
-    <select
-      value={selectedWard}
-      onChange={(e) => {
-        setSelectedWard(e.target.value);
-        updateAddress();
-      }}
-      disabled={!selectedDistrict}
-    >
-      <option value="">Chọn phường/xã</option>
-      {wards?.map((w) => (
-        <option key={w.code} value={w.code}>
-          {w.name}
-        </option>
-      ))}
-    </select>
+            <label>Phường/Xã *</label>
+            <select
+              value={selectedWard}
+              onChange={(e) => {
+                setSelectedWard(e.target.value);
+                updateAddress();
+              }}
+              disabled={!selectedDistrict}
+            >
+              <option value="">Chọn phường/xã</option>
+              {wards?.map((w) => (
+                <option key={w.code} value={w.code}>
+                  {w.name}
+                </option>
+              ))}
+            </select>
 
-    <label>Địa chỉ cụ thể *</label>
-    <input
-      type="text"
-      placeholder="Nhập số nhà, tên đường..."
-      value={specificAddress}
-     onChange={(e) => {
-  setSpecificAddress(e.target.value); // Giữ nguyên chuỗi người dùng nhập
-  updateAddress(e.target.value); // Cập nhật lại địa chỉ đầy đủ
-}}
-    />
+            <label>Địa chỉ cụ thể *</label>
+            <input
+              type="text"
+              placeholder="Nhập số nhà, tên đường..."
+              value={specificAddress}
+              onChange={(e) => {
+                setSpecificAddress(e.target.value); // Giữ nguyên chuỗi người dùng nhập
+                updateAddress(e.target.value); // Cập nhật lại địa chỉ đầy đủ
+              }}
+            />
 
-    <label>Địa chỉ đầy đủ *</label>
-    <input
-      type="text" 
-      id="address"
-      value={checkout?.user.address || ""}
-      onChange={(e) =>
-        setCheckout((prev) =>
-          prev ? { ...prev, user: { ...prev.user, address: e.target.value } } : null
-        )
-      }
-    />
-    {savedAddresses.length > 0 && (
-  <div style={{ marginTop: "5px" }}>
-   {savedAddresses.length > 0 && (
-  <div style={{ marginTop: "5px" }}>
-    {savedAddresses.map((addr, index) => (
-      <p 
-        key={index} 
-        onClick={() => setCheckout((prev) => prev ? { ...prev, user: { ...prev.user, address: addr } } : null)}
-        style={{ cursor: "pointer", color: "#888", marginBottom: "3px" }}
-      >
-      {addr}
-      </p>
-    ))}
-  </div>
-)}
-  </div>
-)}
+            <label>Địa chỉ đầy đủ *</label>
+            <input
+              type="text"
+              id="address"
+              value={checkout?.user.address || ""}
+              onChange={(e) =>
+                setCheckout((prev) =>
+                  prev
+                    ? {
+                        ...prev,
+                        user: { ...prev.user, address: e.target.value },
+                      }
+                    : null
+                )
+              }
+            />
+            {savedAddresses.length > 0 && (
+              <div style={{ marginTop: "5px" }}>
+                {savedAddresses.length > 0 && (
+                  <div style={{ marginTop: "5px" }}>
+                    {savedAddresses.map((addr, index) => (
+                      <p
+                        key={index}
+                        onClick={() =>
+                          setCheckout((prev) =>
+                            prev
+                              ? {
+                                  ...prev,
+                                  user: { ...prev.user, address: addr },
+                                }
+                              : null
+                          )
+                        }
+                        style={{
+                          cursor: "pointer",
+                          color: "#888",
+                          marginBottom: "3px",
+                        }}
+                      >
+                        {addr}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
-  <label>Ghi chú</label>
-  <input
-    type="text"
-    id="note"
-    value={checkout?.note || ""}
-    onChange={(e) =>
-      setCheckout((prev) =>
-        prev ? { ...prev, note: e.target.value } : null
-      )
-    }
-  />
-</form>
+            <label>Ghi chú</label>
+            <input
+              type="text"
+              id="note"
+              value={checkout?.note || ""}
+              onChange={(e) =>
+                setCheckout((prev) =>
+                  prev ? { ...prev, note: e.target.value } : null
+                )
+              }
+            />
+          </form>
         </div>
         <div className="checkout-right">
           <h2>Đơn hàng của bạn</h2>
@@ -616,35 +659,38 @@ useEffect(() => {
               <hr />
             </div>
           ))} */}
-          {checkout?.selected_items?.length > 0 ? (
-  checkout.selected_items.map((item, index) => {
-    // Assuming image is a JSON string that contains an array of image URLs.
-    const images = JSON.parse(item.image); // Parse image string to get an array of images
-    const productImage = images[0]; // You can pick the first image from the array
+          {(checkout?.selected_items || []).length > 0 ? (
+            checkout?.selected_items.map((item) => {
+              // Assuming image is a JSON string that contains an array of image URLs.
+              const images = JSON.parse(item.image); // Parse image string to get an array of images
+              const productImage = images[0]; // You can pick the first image from the array
 
-    return (
-      <div className="order-summary" key={item.id}>
-        <div className="product">
-          <img
-            src={productImage}
-            alt={item.product_name}
-            className="product-image"
-          />
-          <div className="product-details">
-            <p className="product-name">{item.product_name}</p>
-            <p className="product-quantity">x{item.quantity}</p>
-            <p className="product-price">
-              {(parseFloat(item.price) * item.quantity).toLocaleString()}đ
-            </p>
-          </div>
-        </div>
-        <hr />
-      </div>
-    );
-  })
-) : (
-  <p>No items in the cart.</p>
-)}
+              return (
+                <div className="order-summary" key={item.id}>
+                  <div className="product">
+                    <img
+                      src={productImage}
+                      alt={item.product_name}
+                      className="product-image"
+                    />
+                    <div className="product-details">
+                      <p className="product-name">{item.product_name}</p>
+                      <p className="product-quantity">x{item.quantity}</p>
+                      <p className="product-price">
+                        {(
+                          parseFloat(item.price) * item.quantity
+                        ).toLocaleString()}
+                        đ
+                      </p>
+                    </div>
+                  </div>
+                  <hr />
+                </div>
+              );
+            })
+          ) : (
+            <p>No items in the cart.</p>
+          )}
 
           <div className="price-details">
             <p>
@@ -659,41 +705,53 @@ useEffect(() => {
           </div>
 
           <div className="payment-method">
-          <label className={`payment-card ${paymentMethod === "credit_card" ? "active" : ""}`}>
-        <input
-            type="radio"
-            name="payment"
-            value="credit_card"
-            checked={paymentMethod === "credit_card"}
-            onChange={() => setPaymentMethod("credit_card")}
-        />
-        <FaCcVisa className="payment-icon visa" />
-        <span>Thanh toán bằng Visa/Master/JCB</span>
-    </label>
+            <label
+              className={`payment-card ${
+                paymentMethod === "credit_card" ? "active" : ""
+              }`}
+            >
+              <input
+                type="radio"
+                name="payment"
+                value="credit_card"
+                checked={paymentMethod === "credit_card"}
+                onChange={() => setPaymentMethod("credit_card")}
+              />
+              <FaCcVisa className="payment-icon visa" />
+              <span>Thanh toán bằng Visa/Master/JCB</span>
+            </label>
 
-    <label className={`payment-card ${paymentMethod === "cash_on_delivery" ? "active" : ""}`}>
-        <input
-            type="radio"
-            name="payment"
-            value="cash_on_delivery"
-            checked={paymentMethod === "cash_on_delivery"}
-            onChange={() => setPaymentMethod("cash_on_delivery")}
-        />
-        <FaMoneyBillWave className="payment-icon cod" />
-        <span>Thanh toán khi nhận hàng</span>
-    </label>
+            <label
+              className={`payment-card ${
+                paymentMethod === "cash_on_delivery" ? "active" : ""
+              }`}
+            >
+              <input
+                type="radio"
+                name="payment"
+                value="cash_on_delivery"
+                checked={paymentMethod === "cash_on_delivery"}
+                onChange={() => setPaymentMethod("cash_on_delivery")}
+              />
+              <FaMoneyBillWave className="payment-icon cod" />
+              <span>Thanh toán khi nhận hàng</span>
+            </label>
 
-    <label className={`payment-card ${paymentMethod === "paypal" ? "active" : ""}`}>
-        <input
-            type="radio"
-            name="payment"
-            value="paypal"
-            checked={paymentMethod === "paypal"}
-            onChange={() => setPaymentMethod("paypal")}
-        />
-        <FaMobileAlt className="payment-icon momo" />
-        <span>Thanh toán bằng Ví MoMo</span>
-    </label>
+            <label
+              className={`payment-card ${
+                paymentMethod === "paypal" ? "active" : ""
+              }`}
+            >
+              <input
+                type="radio"
+                name="payment"
+                value="paypal"
+                checked={paymentMethod === "paypal"}
+                onChange={() => setPaymentMethod("paypal")}
+              />
+              <FaMobileAlt className="payment-icon momo" />
+              <span>Thanh toán bằng Ví MoMo</span>
+            </label>
           </div>
 
           <button type="submit" className="order-button" onClick={handleOrder}>
@@ -706,4 +764,3 @@ useEffect(() => {
 };
 
 export default CheckOut;
-
