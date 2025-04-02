@@ -76,7 +76,6 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'Người dùng đã được tạo thành công!');
     }
-
     public function edit(User $user)
     {
         $roles = Role::all(); // Lấy tất cả các vai trò
@@ -140,5 +139,12 @@ class UserController extends Controller
     public function show(User $user)
     {
         return view('users.show', compact('user'));
+    }
+    public function updateApi(Request $request, $user_id)
+    {
+        // Logic cập nhật người dùng thông qua API
+        $user = User::findOrFail($user_id);
+        $user->update($request->all()); // Cập nhật thông tin người dùng
+        return response()->json(['message' => 'User updated successfully']);
     }
 }

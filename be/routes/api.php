@@ -95,8 +95,7 @@ Route::get('/users', [UserController::class, 'index'])->name('api.users.index');
 Route::post('/users', [UserController::class, 'store'])->name('api.users.store');
 
 // Route để chỉnh sửa thông tin người dùng (API)
-Route::put('/users/{user}', [UserController::class, 'update'])->name('api.users.update');
-
+Route::put('/users/{user}', [UserController::class, 'updateApi'])->middleware('auth:api');
 // Route để xóa người dùng (API)
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('api.users.destroy');
 Route::post('register', [AuthController::class, 'register']);

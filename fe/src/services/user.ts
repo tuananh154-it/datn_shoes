@@ -30,3 +30,6 @@ export const resetPassword = (token: string, email: string, password: string, pa
         token
     });
 }
+export const updateUser = (userId: number, userData: Partial<Users>) => {
+    return api.put(`/users/${userId}`, userData);
+}

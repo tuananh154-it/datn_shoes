@@ -5,7 +5,7 @@ import OrderDetail from "./OrderDetail";
 import { getAllOrders, getDetailOrder, getStatusLabel, Order, OrdersDetail } from "../services/Orders";
 import toast from "react-hot-toast";
 import { getProductDetail } from "../services/product";
-import { getUser, Users } from "../services/user";
+import { getUser, updateUser, Users } from "../services/user";
 
 // const mockUser = {
 //     name: "John Doe",
@@ -117,7 +117,9 @@ const MyAccount = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [gender, setGender] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
-
+    const [password, setPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
     useEffect(() => {
         getUser()
             .then(({ data }) => {
@@ -140,6 +142,35 @@ const MyAccount = () => {
                 setLoading(false);
             });
     }, []);
+    const handleUpdate = async () => {
+        if (!user) return alert("Không có thông tin người dùng!");
+    
+        // Kiểm tra xác nhận mật khẩu
+        if (newPassword && newPassword !== confirmPassword) {
+            return alert("Mật khẩu mới và xác nhận mật khẩu không khớp!");
+        }
+    
+        const updatedData = {
+            name,
+            phone_number: phoneNumber,
+            gender,
+            date_of_birth: dateOfBirth,
+            ...(newPassword && { password: newPassword }), // Chỉ thêm nếu người dùng nhập mật khẩu mới
+        };
+    
+        try {
+            const response = await updateUser(user.id, updatedData);
+            alert(response.data.message);
+            setUser(response.data.data);
+            setPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+            toast.success("Thay đổi thông tin thành công")
+        } catch (error) {
+            // console.error("Lỗi khi cập nhật:", error.response?.data);
+            alert("Có lỗi xảy ra khi cập nhật thông tin!");
+        }
+    };
 
     // if (loading) {
     //     return <div>Đang tải...</div>;
@@ -263,17 +294,17 @@ const MyAccount = () => {
                                         <h3 className="section-title">Thay đổi mật khẩu</h3>
                                         <div className="form-group">
                                             <label htmlFor="password">Mật khẩu</label>
-                                            <input type="text" defaultValue="" />
+                                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="password">Mật khẩu mới</label>
-                                            <input type="text" defaultValue="" />
+                                            <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
                                         </div>
                                         <div className="form-group">
                                             <label htmlFor="password">Xác nhận mật khẩu</label>
-                                            <input type="text" defaultValue="" />
+                                            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
                                         </div>
-                                        <button className="btn-save">Lưu thay đổi</button>
+                                        <button className="btn-save" onClick={handleUpdate}>Lưu thay đổi</button>
                                     </div>
                                 )}
                                 {activeTab === "orders" && (

@@ -120,7 +120,7 @@ const Header = () => {
                   className="text-3xl cursor-pointer relative flex justify-center"
                   onClick={() => setMenuDisplay((prev) => !prev)}
                 >
-                  <a style={{ cursor: "pointer" }}>{userId.name}</a>
+                  <a style={{ cursor: "pointer" }}>{userId?.name}</a>
                 </div>
               ) : (
                 <Link to="/login">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Product, Products } from "../types/Product";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getAllProduct, getProductDetail } from "../services/product";
 import { useCart } from "../context/CartContext";
 import toast from "react-hot-toast";
@@ -9,7 +9,10 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
-import { getComments, getCommentsByProductId } from "../services/comments";
+import { getCommentsByProductId, postComment } from "../services/comments";
+import { getReviewsByProductId, postReview, Review, ReviewPayload } from "../services/reviews";
+import { getAllOrders, getDetailOrder, Order, OrdersDetail } from "../services/orders";
+import Modal from 'react-modal';
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
@@ -86,42 +89,255 @@ const ProductDetail = () => {
     });
   }, []);
 
-  // binh luan va danh giagia
+  // Bình luận 
   const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState({ comment: '', rating: 5 });
-  const [replyContent, setReplyContent] = useState<{ [key: number]: string }>({});
-  const [editContent, setEditContent] = useState<{ [key: number]: string }>({});
-  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+  const [newComment, setNewComment] = useState<string>(''); // Sửa thành chuỗi
+  const [totalComments, setTotalComments] = useState(0);
+  // const [replyContent, setReplyContent] = useState<{ [key: number]: string }>({});
+  // const [editContent, setEditContent] = useState<{ [key: number]: string }>({});
+  // const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Lấy productId từ products
+  const productIdNumber = products.find(product => product.id === parseInt(id || '0', 10))?.id || parseInt(id || '0', 10);
 
   // Lấy danh sách bình luận
   useEffect(() => {
     const fetchComments = async () => {
+      if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
+        setError('Không có productID hợp lệ.');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await getCommentsByProductId(productId);
-        setComments(response.data);
-      } catch (error) {
+        setLoading(true);
+        setError(null);
+        const response = await getCommentsByProductId(productIdNumber);
+        console.log('Dữ liệu bình luận:', response.data);
+        setComments(response.data.comments);
+        setTotalComments(response.data.total_comments); // Lưu tổng số đánh giá
+        console.log("Danh sách bình luận:", comments);
+      } catch (error: any) {
         console.error('Lỗi khi lấy bình luận:', error);
+        setError(error.response?.data?.message || 'Không thể tải bình luận. Vui lòng thử lại sau.');
+      } finally {
+        setLoading(false);
       }
     };
-    fetchComments();
-  }, [productId]);
+
+    if (products.length > 0) { // Đảm bảo products đã được tải
+      fetchComments();
+    }
+  }, [productIdNumber, products]);
 
   // Đăng bình luận mới
   const handlePostComment = async () => {
-    if (!newComment.comment.trim()) {
+    if (!newComment.trim()) {
       alert('Vui lòng nhập nội dung bình luận!');
       return;
     }
+
+    if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
+      console.error('productID không hợp lệ:', productIdNumber);
+      alert('productID không hợp lệ. Vui lòng kiểm tra lại.');
+      return;
+    }
+
     try {
-      const response = await postComment(productId, newComment.comment, newComment.rating);
-      setComments([...comments, response.data]);
-      setNewComment({ comment: '', rating: 5 });
-    } catch (error) {
+      const response = await postComment(productIdNumber, newComment);
+      console.log('Bình luận mới:', response.data);
+      setComments([...comments, response.data.data]);
+      setNewComment('');
+    } catch (error: any) {
       console.error('Lỗi khi đăng bình luận:', error);
-      alert('Lỗi khi đăng bình luận!');
+      alert(error.response?.data?.message || 'Lỗi khi đăng bình luận!');
     }
   };
+  // đánh giá sản phẩm
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [totalReviews, setTotalReviews] = useState(0);
+  const [newReview, setNewReview] = useState<string>(''); // Sửa thành chuỗi
+  const [eligibleOrderId, setEligibleOrderId] = useState<string | null>(null); // OrderId hợp lệ
+  const [rating, setRating] = useState<number>(0);       // Rating từ 1-5
+  const [isModalOpen, setIsModalOpen] = useState(false);      // Trạng thái modal
+  const [hasReviewed, setHasReviewed] = useState(false);
+  // sao đánh giá
+  // Hàm render sao (hiển thị và cho phép bấm trong form)
+  const renderStars = (rating: number, editable: boolean = false) => {
+    return Array.from({ length: 5 }, (_, index) => (
+      <span
+        key={index}
+        style={{
+          color: index < rating ? 'gold' : 'gray',
+          cursor: editable ? 'pointer' : 'default',
+          fontSize: '24px', // Tùy chỉnh kích thước sao
+        }}
+        onClick={editable ? () => setRating(index + 1) : undefined} // Bấm để chọn rating
+      >
+        ★
+      </span>
+    ));
+  };
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
+        setError('Không có productID hợp lệ.');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError(null);
+        const response = await getReviewsByProductId(productIdNumber);
+        console.log('Dữ liệu đánh giá:', response.data);
+        setReviews(response.data.reviews);
+        setTotalReviews(response.data.total_reviews); // Lưu tổng số đánh giá
+        console.log("tong review:", totalReviews);
+
+        console.log("Danh sách đánh giá:", reviews);
+      } catch (error: any) {
+        console.error('Lỗi khi lấy đánh giá:', error);
+        setError(error.response?.data?.message || 'Không thể tải đánh giá. Vui lòng thử lại sau.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (products.length > 0) { // Đảm bảo products đã được tải
+      fetchReviews();
+    }
+  }, [productIdNumber, products]);
+  // tạo đánh giá mới
+  useEffect(() => {
+    const fetchOrders = async () => {
+      try {
+        setLoading(true);
+
+        // 1️⃣ Lấy danh sách đơn hàng
+        const response = await getAllOrders();
+        const orders: Order[] = response.data;
+        console.log("Danh sách đơn hàng:", orders);
+
+        // 2️⃣ Lọc đơn hàng có trạng thái 'delivered'
+        const deliveredOrders = orders.filter(order => order.status === "delivered");
+        console.log("Đơn hàng có trạng thái 'delivered':", deliveredOrders);
+
+        if (deliveredOrders.length === 0) {
+          console.log("Không có đơn hàng nào được giao.");
+          setEligibleOrderId(null);
+          setLoading(false);
+          return;
+        }
+
+        // 3️⃣ Gọi API getDetailOrder và kiểm tra lỗi
+        const orderDetailsResponses = await Promise.all(
+          deliveredOrders.map(async (order) => {
+            try {
+              console.log(`Gọi API getDetailOrder với order.id = ${order.id}`);
+              const res = await getDetailOrder(order.id);
+              return { orderId: order.id, data: res.data }; // Lưu cả orderId
+            } catch (error) {
+              console.error(`Lỗi khi gọi API getDetailOrder(${order.id}):`, error);
+              return null;
+            }
+          })
+        );
+
+        // 4️⃣ Loại bỏ các response null (có lỗi 404)
+        const validOrders = orderDetailsResponses.filter(item => item !== null);
+        if (validOrders.length === 0) {
+          console.log("Không có đơn hàng hợp lệ sau khi gọi API getDetailOrder.");
+          setEligibleOrderId(null);
+          setLoading(false);
+          return;
+        }
+
+        // 5️⃣ Tìm đơn hàng chứa sản phẩm
+        let eligibleOrderId = null;
+        for (const order of validOrders) {
+          const productIds = order.data.order_details
+            .map((detail: OrdersDetail) => detail.product_detail?.product_id)
+            .filter(id => id !== undefined);
+          console.log(`Danh sách product_id trong đơn hàng ${order.orderId}:`, productIds);
+
+          if (productIds.includes(productIdNumber)) {
+            eligibleOrderId = order.orderId.toString(); // Lưu orderId thực sự
+            break;
+          }
+        }
+
+        console.log("Eligible Order ID:", eligibleOrderId);
+        setEligibleOrderId(eligibleOrderId);
+
+      } catch (err) {
+        console.error("Lỗi khi lấy danh sách đơn hàng:", err);
+        setError('Không thể tải danh sách đơn hàng');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [productIdNumber]);
+
+
+
+
+  console.log("id cua san pham", productIdNumber);
+
+  const handlePostReview = async () => {
+    // Kiểm tra nhanh các điều kiện đầu vào
+    if (!newReview.trim()) {
+      alert('Vui lòng nhập nội dung bình luận!');
+      return;
+    }
+    if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
+      alert('productID không hợp lệ!');
+      return;
+    }
+    if (!eligibleOrderId) {
+      alert('Bạn chưa mua sản phẩm này hoặc đơn hàng chưa được giao.');
+      return;
+    }
+    if (rating === 0) {
+      alert('Vui lòng chọn số sao!');
+      return;
+    }
+
+    const reviewData: ReviewPayload = {
+      rating,
+      content: newReview,
+    };
+
+    try {
+      const newReviewResponse = await postReview(
+        productIdNumber.toString(),
+        eligibleOrderId,
+        reviewData
+      );
+      console.log("New Review Response:", newReviewResponse); // In dữ liệu trả về
+      setReviews((prev) => [...prev, newReviewResponse]); // Tối ưu cập nhật state
+      toast.success("Đánh giá của bạn đã được đăng thành công!");
+      setNewReview('');
+      setRating(0);
+      setHasReviewed(true);
+      setIsModalOpen(false);
+    } catch (error: any) {
+      alert(error.message || 'Lỗi khi đăng đánh giá!');
+    }
+  };
+
+  // if (loading) return <div>Đang kiểm tra đơn hàng...</div>;
+  // if (error) return <div>{error}</div>;
+  // Bind Modal với root element (cần cho accessibility)
+  Modal.setAppElement('#root');
+  useEffect(() => {
+    console.log("Trạng thái modal:", isModalOpen);
+  }, [isModalOpen]);
   return (
     <>
       <div className="menu_overlay"></div>
@@ -240,7 +456,7 @@ const ProductDetail = () => {
                           className="img-fluid"
                           alt="star"
                         />
-                        (1 Review)
+                        ({totalReviews} review)
                       </div>
                     </div>
 
@@ -478,7 +694,7 @@ const ProductDetail = () => {
                               aria-expanded="true"
                               aria-controls="collapseOne"
                             >
-                              Bình luận
+                              Bình luận({totalComments})
                             </button>
                           </h5>
                         </div>
@@ -523,22 +739,24 @@ const ProductDetail = () => {
                             {comments.length > 0 ? (
                               <div className="comment-section">
                                 {comments.map((comment) => (
-                                  <div key={comment?.id} className="comment-container">
+                                  <div key={comment.id} className="comment-container">
                                     <img
-                                      src={ 'https://via.placeholder.com/40'} // Nếu không có avatar, dùng ảnh mặc định
+                                      src="../src/images/reivew_user.png "// Nếu không có avatar, dùng ảnh mặc định
                                       alt="User Avatar"
                                       className="avatar"
                                     />
+
                                     <div className="comment-content">
+                                      <strong className="user-name">
+                                        {comment.is_anonymous ? 'Ẩn danh' : comment.user_name}
+                                      </strong>
+                                      <p className="comment-text">{comment.content}</p>
                                       <div className="comment-header">
-                                        <strong className="user-name">
-                                          {comment?.is_anonymous ? 'Ẩn danh' : comment.user_name}
-                                        </strong>
                                         <span className="comment-time">
-                                          {new Date(comment.created_at).toLocaleString()}
+                                          {comment.created_at}
                                         </span>
                                       </div>
-                                      <p className="comment-text">{comment.content}</p>
+
                                     </div>
                                   </div>
                                 ))}
@@ -609,7 +827,7 @@ const ProductDetail = () => {
                               aria-expanded="false"
                               aria-controls="collapseThree"
                             >
-                              Đánh giá (1)
+                              Đánh giá ({totalReviews})
                             </button>
                           </h5>
                         </div>
@@ -623,42 +841,73 @@ const ProductDetail = () => {
                             <div className="review_title">
                               <h4 className="title_h4">Khách hàng đánh giá</h4>
                               <div className="star">
-                                <img
-                                  src="../src/images/star.png"
-                                  className="img-fluid"
-                                  alt="star"
-                                />{" "}
-
-                                Dựa trên 1 đánh giá
+                                <img src="../src/images/star.png" className="img-fluid" alt="star" />
+                                Dựa trên {totalReviews} đánh giá
                               </div>
-                              <a
-                                href="javascript:void(0):"
+                              <Link
+                                to="#"
                                 className="write_review_text"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  // if (!hasReviewed) {
+                                  //   toast.error("Bạn đã đánh giá sản phẩm này rồi. Tiếp tục mua hàng để đánh giá thêm.");
+                                  //   return;
+                                  // }
+                                  console.log("Mở modal");
+                                  setIsModalOpen(true);
+                                }}
                               >
                                 Thêm đánh giá
-                              </a>
+                              </Link>
                             </div>
-                            <div className="review_content">
-                              <div className="user_img rounded-circle">
-                                <img
-                                  src="../src/images/reivew_user.png"
-                                  className="img-fluid vertical_middle"
-                                  alt="star"
-                                />
+
+                            {reviews.map((review) => (
+                              <div className="review_content" key={review.id}>
+                                <div className="user_img rounded-circle">
+                                  <img
+                                    src="../src/images/reivew_user.png"
+                                    className="img-fluid vertical_middle"
+                                    alt="user"
+                                  />
+                                </div>
+                                <div className="user_detail">
+                                  <h5 className="title_h5">{review.user_name}</h5>
+                                  <p>{renderStars(review.rating)}</p>
+                                  <span className="review__date">{review.created_at}</span>
+                                  <p>{review.content}</p>
+                                </div>
                               </div>
-                              <div className="user_detail">
-                                <h5 className="title_h5">Ammy G.</h5>
-                                <span className="review__date">
-                                  April 5, 2018
-                                </span>
-                                <p>
-                                  🔥 "Chất lượng tuyệt vời!"
-                                  Mình đã sử dụng đôi này hơn 6 tháng, đi rất êm chân và không bị đau dù mang cả ngày.
-                                  Thiết kế đơn giản nhưng cực kỳ phong cách, dễ phối đồ. Đế giày bám tốt, không bị trơn trượt.
-                                  Rất đáng tiền!.{" "}
-                                </p>
-                              </div>
-                            </div>
+                            ))}
+
+                            {/* Modal đánh giá */}
+                            <Modal
+                              isOpen={isModalOpen}
+                              onRequestClose={() => setIsModalOpen(false)}
+                              className="review-modal"
+                              overlayClassName="review-modal-overlay"
+                            >
+                              <h2>Thêm đánh giá của bạn</h2>
+                              {!eligibleOrderId ? (
+                                <p>Bạn cần mua và nhận sản phẩm này để đánh giá.</p>
+                              ) : (
+                                <div className="review-form">
+                                  <label>Đánh giá (1-5 sao):</label>
+                                  <div>{renderStars(rating, true)}</div>
+                                  <label>Nội dung đánh giá:</label>
+                                  <textarea
+                                    value={newReview}
+                                    onChange={(e) => setNewReview(e.target.value)}
+                                    maxLength={500}
+                                    placeholder="Viết đánh giá của bạn..."
+                                    rows={4}
+                                  />
+                                  <div className="modal-buttons">
+                                    <button onClick={handlePostReview} className="submit-btn">Gửi</button>
+                                    <button onClick={() => setIsModalOpen(false)} className="cancel-btn">Hủy</button>
+                                  </div>
+                                </div>
+                              )}
+                            </Modal>
                           </div>
                         </div>
                       </div>

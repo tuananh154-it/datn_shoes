@@ -2,33 +2,27 @@ import { api } from "../config/axios";
 
 export type Comment = {
     id: number;
-    user_id: number;
     user_name: string;
-    product_id: number;
-    parent_id: number | null;
+    user_role?: string; // Thêm trường user_role
     content: string;
     number_of_likes: number;
+    created_at: string;
     is_anonymous: boolean;
     is_edited: boolean;
-    deleted_at: string | null;
-    created_at: string;
-    updated_at: string | null;
-    replies?: Comment[];
-    is_liked?: boolean;
+    total_reports?: number; // Thêm trường total_reports
+    total_replies?: number; // Thêm trường total_replies
+    replies?: Comment[]; // Thêm trường replies
+    // total_comments:string;
   };
   
   // Lấy danh sách bình luận theo sản phẩm
   export const getCommentsByProductId = (productId: number) => {
-    return api.get<Comment[]>(`/product/${productId}/comments`); // Sửa đường dẫn
+    return api.get(`/product/${productId}/comments`);
   };
   
   // Đăng bình luận mới
-  export const postComment = (productId: number, content: string, token: string) => {
-    return api.post(
-      `/product/${productId}/post`,
-      { content },
-      { headers: { Authorization: `Bearer ${token}` } }
-    );
+  export const postComment = (productId: number, content: string) => {
+    return api.post(`/product/${productId}/post`, { content });
   };
   
   // Trả lời bình luận
