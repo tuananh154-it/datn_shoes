@@ -370,7 +370,14 @@ const Cart = () => {
                               className="td border-bottom"
                               data-title="Price"
                             >
-                              {item.discount_price.toLocaleString()} VNĐ
+                              {/* {item.discount_price.toLocaleString()} VNĐ */}
+                              {item.discount_price
+                                ? Number(
+                                    String(item.discount_price)
+                                      .replace(/,/g, "")
+                                      .replace(" VND", "")
+                                  ).toLocaleString("vi-VN") + " VND"
+                                : "0 VND"}
                             </div>
                             <div
                               className="td border-bottom"

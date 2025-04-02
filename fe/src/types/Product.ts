@@ -7,6 +7,9 @@ export interface Product{
   category:string,
   brand:string,
 }
+export interface TopProductResponse {
+  top_selling_products: Product[];
+}
 export interface Detail {
   id: number;
   image: string;

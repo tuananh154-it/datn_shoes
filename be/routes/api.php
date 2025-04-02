@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\Top10SPController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -64,7 +65,9 @@ Route::get('/latest-products', [ProductController::class, 'latestProducts']);
 
 // Trang Home
 Route::get('/home', [HomeController::class, 'index']);
+// top 10 sp
 
+Route::get('/top10', [Top10SPController::class, 'top10']);
 // Trang Danh Mục
 Route::get('/categories', [CategoryController::class, 'index']);
 
