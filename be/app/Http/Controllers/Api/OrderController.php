@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CartItem;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use App\Mail\OrderPlacedMail;
 
 use App\Models\Voucher;
 use Illuminate\Http\Request;
@@ -28,7 +29,7 @@ class OrderController extends Controller
             'email' => 'required|email',
             'phone_number' => 'required|string',
             'address' => 'required|string',
-            'payment_method' => 'required|in:credit_card,cash_on_delivery,paypal',
+            'payment_method' => 'required|in:cash_on_delivery,zalopay,momo',
             'voucher_id' => 'nullable|exists:vouchers,id',
             'note' => 'nullable|string',
             'selected_items' => 'required|array|min:1',
@@ -216,97 +217,19 @@ public function cancelOrder($id, Request $request)
     }
 
     $order->update(['status' => 'cancelled']);
-
-    return response()->json(['message' => 'Đơn hàng đã được hủy']);
-
-
-
-}public function getCart(Request $request)
-{
-    $user = $request->user();
-
-    if (!$user) {
-        return response()->json(['message' => 'Bạn cần đăng nhập để xem giỏ hàng'], 401);
-    }
-
-    // Lấy giỏ hàng cùng các item và thông tin liên quan
-    $cart = Cart::with([
-        'items.productDetail.product',
-        'items.productDetail.size',
-        'items.productDetail.color'
-    ])->where('user_id', $user->id)->first();
-
-    if (!$cart || $cart->items->isEmpty()) {
-        return response()->json(['message' => 'Giỏ hàng trống'], 400);
-    }
-
-    // Tính tổng tiền hàng
-    $subtotal = 0;
-    $items = $cart->items->map(function ($item) use (&$subtotal) {
-        $productDetail = $item->productDetail;
-        $price = $productDetail->discount_price ?? $productDetail->default_price;
-        $lineTotal = $price * $item->quantity;
-        $subtotal += $lineTotal;
-
-        return [
-            'id' => $item->id, // ✅ Quan trọng cho FE & đặt hàng
-            'product_name' => $productDetail->product->name,
-            'image' => $productDetail->image,
-            'size' => $productDetail->size->name ?? null,
-            'color' => $productDetail->color->name ?? null,
-            'price' => $price,
-            'quantity' => $item->quantity,
-            'line_total' => $lineTotal,
-        ];
-    });
-
-    // Xử lý mã giảm giá (nếu có)
-    $voucherCode = $request->query('voucher'); // /checkout/init?voucher=ABC123
-    $discount = 0;
-    $voucherInfo = null;
-
-    if ($voucherCode) {
-        $voucher = Voucher::where('name', $voucherCode)
-            ->where('status', 'active')
-            ->where('expiration_date', '>=', now())
-            ->first();
-
-        if ($voucher && $subtotal >= $voucher->min_purchase_amount) {
-            $discount = $voucher->discount_percent
-                ? $subtotal * ($voucher->discount_percent / 100)
-                : $voucher->discount_amount;
-
-            $discount = min($discount, $voucher->max_discount_amount);
-
-            $voucherInfo = [
-                'id' => $voucher->id,
-                'name' => $voucher->name,
-                'discount' => $discount,
-            ];
+    foreach ($order->order_details as $detail) {
+        if ($detail->productDetail) {
+            $detail->productDetail->increment('quantity', $detail->quantity);
         }
     }
+  
+return response()->json(['message' => 'Đơn hàng đã được hủy và hàng tồn đã được hoàn lại']);
 
-    $deliverFee = 30000;
-    $total = $subtotal - $discount + $deliverFee;
 
-    return response()->json([
-        'user' => [
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'gender' => $user->gender,
-            'date_of_birth' => $user->date_of_birth,
-            'phone_number' => $user->phone_number,
-            'address' => $user->address,
-        ],
-        'cart_items' => $items,
-        'subtotal' => $subtotal,
-        'discount' => $discount,
-        'voucher' => $voucherInfo,
-        'deliver_fee' => $deliverFee,
-        'total' => $total
-    ]);
+
 }
+
+
 public function previewCheckout(Request $request)
 {
     $user = $request->user();
@@ -321,7 +244,6 @@ public function previewCheckout(Request $request)
         return response()->json(['message' => 'Vui lòng chọn sản phẩm để thanh toán'], 400);
     }
 
-    // Lấy các item được chọn
     $items = CartItem::with(['productDetail.product', 'productDetail.size', 'productDetail.color'])
         ->whereIn('id', $selectedItemIds)
         ->whereHas('cart', function ($query) use ($user) {
@@ -334,25 +256,33 @@ public function previewCheckout(Request $request)
     }
 
     $subtotal = 0;
-    $processedItems = $items->map(function ($item) use (&$subtotal) {
-        $productDetail = $item->productDetail;
-        $price = $productDetail->discount_price ?? $productDetail->default_price;
-        $lineTotal = $price * $item->quantity;
-        $subtotal += $lineTotal;
+    try {
+        $processedItems = $items->map(function ($item) use (&$subtotal) {
+            $productDetail = $item->productDetail;
 
-        return [
-            'id' => $item->id,
-            'product_name' => $productDetail->product->name,
-            'image' => $productDetail->image,
-            'size' => $productDetail->size->name ?? null,
-            'color' => $productDetail->color->name ?? null,
-            'price' => $price,
-            'quantity' => $item->quantity,
-            'line_total' => $lineTotal,
-        ];
-    });
+            if ($productDetail->quantity < $item->quantity) {
+                throw new \Exception('Sản phẩm "' . $productDetail->product->name . '" không đủ hàng tồn');
+            }
 
-    // Voucher (nếu có)
+            $price = $productDetail->discount_price ?? $productDetail->default_price;
+            $lineTotal = $price * $item->quantity;
+            $subtotal += $lineTotal;
+
+            return [
+                'id' => $item->id,
+                'product_name' => $productDetail->product->name,
+                'image' => $productDetail->image,
+                'size' => $productDetail->size->name ?? null,
+                'color' => $productDetail->color->name ?? null,
+                'price' => $price,
+                'quantity' => $item->quantity,
+                'line_total' => $lineTotal,
+            ];
+        });
+    } catch (\Exception $e) {
+        return response()->json(['message' => $e->getMessage()], 400);
+    }
+
     $voucherCode = $request->input('voucher');
     $discount = 0;
     $voucherInfo = null;
