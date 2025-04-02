@@ -169,18 +169,7 @@ const handleSizeSelect = (size: string) => {
             alt="Product"
           />
         </div>
-        <div className="imageBienthe">
-          {/* Chỉ hiển thị ảnh của các biến thể có màu sắc đã chọn */}
-          {selectedColor && getVariantImagesForColor(selectedColor).map((imgSrc, index) => (
-            <img
-              key={index}
-              src={imgSrc}
-              alt={`Variant ${index}`}
-              onClick={() => handleVariantClick(productId?.details.find(d => d.image.includes(imgSrc)))} // Khi click vào ảnh biến thể
-              style={{ cursor: "pointer", marginRight: "10px" }}
-            />
-          ))}
-        </div>
+        
       </div>
                 <div className="main-right" data-wow-duration="1300ms">
                   <div className="product_content">
