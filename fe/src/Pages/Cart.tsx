@@ -250,6 +250,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import Pagination from "../Pages/Pagination"; // Import component phân trang
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const {
@@ -467,18 +468,24 @@ const Cart = () => {
                       Tiếp tục mua sắm
                     </Link>
                     <Link
-                      to="/checkout"
+                      to={selectedItems.length > 0 ? "/checkout" : "#"}
                       className="text-uppercase background-btn"
-                      onClick={() => {
-                        // Lưu selectedItems vào localStorage trước khi chuyển đến trang checkout
-                        console.log(
-                          "💾 Saving selectedItems to localStorage:",
-                          selectedItems
-                        );
-                        localStorage.setItem(
-                          "selectedItems",
-                          JSON.stringify(selectedItems)
-                        );
+                      onClick={(e) => {
+                        if (selectedItems.length === 0) {
+                          e.preventDefault(); // Ngăn chuyển hướng
+                          toast.error(
+                            "Vui lòng chọn ít nhất một sản phẩm để thanh toán!"
+                          );
+                        } else {
+                          console.log(
+                            "💾 Saving selectedItems to localStorage:",
+                            selectedItems
+                          );
+                          localStorage.setItem(
+                            "selectedItems",
+                            JSON.stringify(selectedItems)
+                          );
+                        }
                       }}
                     >
                       Thanh toán
