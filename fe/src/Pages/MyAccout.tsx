@@ -6,7 +6,8 @@ import { getAllOrders, getDetailOrder, getStatusLabel, Order, OrdersDetail } fro
 import toast from "react-hot-toast";
 import { getProductDetail } from "../services/product";
 import { getUser, updateUser, Users } from "../services/user";
-
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store/store";
 // const mockUser = {
 //     name: "John Doe",
 //     email: "john.doe@example.com",
@@ -120,6 +121,7 @@ const MyAccount = () => {
     const [password, setPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
     useEffect(() => {
         getUser()
             .then(({ data }) => {
@@ -142,14 +144,29 @@ const MyAccount = () => {
                 setLoading(false);
             });
     }, []);
+
+    useEffect(() => {
+        if (user) {
+            setName(user.name || '');
+            setPhoneNumber(user.phone_number || '');
+            setGender(user.gender || '');
+            if (user.date_of_birth) {
+                const formattedDate = new Date(user.date_of_birth)
+                    .toISOString()
+                    .split('T')[0];
+                setDateOfBirth(formattedDate);
+            }
+        }
+    }, [user]);  // Chạy lại mỗi khi `user` thay đổi
     const handleUpdate = async () => {
         if (!user) return alert("Không có thông tin người dùng!");
-    
+
         // Kiểm tra xác nhận mật khẩu
         if (newPassword && newPassword !== confirmPassword) {
             return alert("Mật khẩu mới và xác nhận mật khẩu không khớp!");
         }
-    
+        // Nếu ngày sinh chỉ có ngày (YYYY-MM-DD), thêm thời gian (HH:mm:ss) để phù hợp với định dạng của backend
+        // const formattedDateOfBirth = dateOfBirth ? `${dateOfBirth} 00:00:00` : '';
         const updatedData = {
             name,
             phone_number: phoneNumber,
@@ -157,7 +174,7 @@ const MyAccount = () => {
             date_of_birth: dateOfBirth,
             ...(newPassword && { password: newPassword }), // Chỉ thêm nếu người dùng nhập mật khẩu mới
         };
-    
+
         try {
             const response = await updateUser(user.id, updatedData);
             alert(response.data.message);
@@ -289,7 +306,7 @@ const MyAccount = () => {
                                         </div>
                                         <div className="form-group">
                                             <label>Ngày sinh</label>
-                                            <input type="date" defaultValue={dateOfBirth} />
+                                            <input type="date" value={dateOfBirth}  onChange={(e) => setDateOfBirth(e.target.value)} />
                                         </div>
                                         <h3 className="section-title">Thay đổi mật khẩu</h3>
                                         <div className="form-group">

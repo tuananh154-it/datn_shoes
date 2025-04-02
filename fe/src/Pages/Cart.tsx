@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import Pagination from "../Pages/Pagination"; // Import component phân trang
+import toast from "react-hot-toast";
 
 const Cart = () => {
   const {
@@ -107,7 +108,7 @@ const Cart = () => {
                                   <button
                                     type="button"
                                     onClick={() => updateCartItem(item.id_cart_item, item.quantity - 1)}
-                                    disabled={item.quantity <= 1} 
+                                    disabled={item.quantity <= 1}
                                   >
                                     -
                                   </button>
@@ -151,7 +152,27 @@ const Cart = () => {
                     <Link to="/shop" className="text-uppercase border-btn">
                       Tiếp tục mua sắm
                     </Link>
-                    <Link to="/checkout" className="text-uppercase background-btn">
+                    <Link
+                      to={selectedItems.length > 0 ? "/checkout" : "#"}
+                      className="text-uppercase background-btn"
+                      onClick={(e) => {
+                        if (selectedItems.length === 0) {
+                          e.preventDefault(); // Ngăn chuyển hướng
+                          toast.error(
+                            "Vui lòng chọn ít nhất một sản phẩm để thanh toán!"
+                          );
+                        } else {
+                          console.log(
+                            "💾 Saving selectedItems to localStorage:",
+                            selectedItems
+                          );
+                          localStorage.setItem(
+                            "selectedItems",
+                            JSON.stringify(selectedItems)
+                          );
+                        }
+                      }}
+                    >
                       Thanh toán
                     </Link>
                   </div>
