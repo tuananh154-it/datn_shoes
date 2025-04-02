@@ -71,7 +71,16 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders', [OrderController::class, 'listOrders']);
     Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
-    Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
+    // Route gửi yêu cầu thanh toán MoMo
+    Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment'])->name('momo.payment');
+
+    // Route nhận phản hồi từ MoMo (IPN)
+    Route::post('/momo/ipn', [OnlineCheckOutController::class, 'momo_ipn'])->name('momo.ipn');
+
+    // Route kiểm tra trạng thái thanh toán (nếu cần)
+    Route::get('/momo/status', function () {
+        return response()->json(['message' => 'MoMo IPN hoạt động!']);
+    })->name('momo.status');
 });
 
 Route::apiResource('products', ProductController::class);

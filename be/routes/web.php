@@ -387,7 +387,9 @@ Route::middleware(['auth'])->group(function () {
     // Tạo profile cho người dùng hiện tại
     Route::get('/profile/create', [ProfileController::class, 'create'])->name('profiles.create');
     Route::post('/profile', [ProfileController::class, 'store'])->name('profiles.store');
+
 });
+Route::post('/profile/{user_id}/update', [ProfileController::class, 'update']);
 
 
 
