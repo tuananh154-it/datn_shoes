@@ -1,10 +1,12 @@
 
 import { useEffect, useState } from "react";
-import { getCheckout, getOrder, Momopayment } from "../services/Order";
+import { getCheckOut, getOrder, Momopayment } from "../services/Order";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { FaCcVisa, FaMoneyBillWave, FaMobileAlt } from "react-icons/fa";
-import { string } from "zod";
+// import { string } from "zod";
+import { useCart } from "../context/CartContext";
+import { AxiosError } from "axios";
 interface Address {
   _id: string;
   name: string;
@@ -15,6 +17,7 @@ interface Address {
 }
 
 interface CartItem {
+  id:number
   product_name: string;
   image: string; // JSON string chứa danh sách ảnh
   size: string;
@@ -41,7 +44,8 @@ interface CheckoutData {
   total: number;
   user: User;
   voucher: string | null;
-  note:string
+  note: string;
+  selected_items: CartItem[];  // Add this property to the interface
 }
 const CheckOut = () => {
   const [provinces, setProvinces] = useState<Address[]>([]);
@@ -59,12 +63,32 @@ const CheckOut = () => {
   // const [phone, setPhone] = useState<string>("");
 
   const [checkout, setCheckout] = useState<CheckoutData | null>(null);
-  useEffect(() => {
-    getCheckout().then(({ data }) => {
-      console.log("checkout", data);
-      setCheckout(data);
-    });
-  }, []);
+  const [selectedItems, setSelectedItems] = useState<number[]>([]);
+    console.log("checkout",checkout)
+    useEffect(() => {
+      const storedSelectedItems = localStorage.getItem("selectedItems");
+      if (storedSelectedItems) {
+        const parsedItems = JSON.parse(storedSelectedItems);
+        setSelectedItems(parsedItems);
+      }
+    }, []);
+    console.log("checkout",checkout)
+  
+    // Fetch checkout data when selectedItems are updated
+    useEffect(() => {
+      if (selectedItems.length > 0) {
+        const userId = 1; // Replace with dynamic userId from state or context
+  
+        getCheckOut(userId, selectedItems)
+          .then(({ data }) => {
+            setCheckout(data);
+          })
+          .catch((error) => {
+            console.error("API Error:", error);
+            toast.error("Failed to load checkout data.");
+          });
+      }
+    }, [selectedItems]);
   const nav = useNavigate();
   const handleOrder = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,46 +149,117 @@ const CheckOut = () => {
   };
 
   // Hàm xử lý đặt hàng
+  // const processOrder = async () => {
+  //   const savedOrder = localStorage.getItem("pendingOrder");
+  //   if (!checkout) {
+  //     alert("Không có dữ liệu đơn hàng!");
+  //     return;
+  //   }
+  //   const orderData = {
+  //     user_id: checkout?.user.id, // User ID
+  //     username: checkout?.user.name, // User Name
+  //     phone_number: checkout?.user.phone_number, // User Phone Number
+  //     email: checkout?.user.email, // User Email
+  //     address: checkout?.user.address, // User Address
+  //     note: (document.getElementById("note") as HTMLInputElement)?.value || "", // Note from input field
+  //     payment_method: paymentMethod, // Payment Method
+  //     selected_items: (checkout?.selected_items || []).map(item => ({
+  //       id: item.id.toString(), // Ensure the ID is a string
+  //       product_name: item.product_name, // Product Name
+  //       image: item.image, // Image URL or path
+  //       size: item.size, // Size
+  //       color: item.color, // Color
+  //       price: item.price, // Price
+  //       quantity: item.quantity, // Quantity
+  //       // line_total: item.line_total, // Line Total (Price * Quantity)
+  //     })),
+  //     // voucher_id: checkout?.voucher ? checkout.voucher.id : null, // If there's a voucher, include the voucher_id
+  //   };
+    
+  //   console.log("🚀 Sending Order Data:", orderData);
+
+  //   try {
+  //     const orderResponse = await getOrder(orderData);
+  //     console.log("✅ Order API Response:", orderResponse);
+
+  //     if (orderResponse.status !== 201) {
+  //       alert(`Đặt hàng thất bại! Mã lỗi: ${orderResponse.status}`);
+  //       return;
+  //     }
+
+  //     toast.success("🎉 Đã đặt hàng thành công!");
+  //     localStorage.removeItem("pendingOrder"); // Xóa đơn hàng tạm sau khi đặt hàng thành công
+  //     nav("/");
+  //   } catch (error) {
+  //     console.error("❌ Lỗi xử lý đơn hàng:", error);
+  //     alert("Có lỗi xảy ra, vui lòng thử lại!");
+  //   }
+  // };
+  const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
   const processOrder = async () => {
     const savedOrder = localStorage.getItem("pendingOrder");
+    
+    // Step 1: Check if checkout data is available
     if (!checkout) {
+      console.error("Checkout data is missing.");
       alert("Không có dữ liệu đơn hàng!");
       return;
     }
+  
+    // Log checkout data to ensure it has the expected structure
+    console.log("Checkout Data:", checkout);
+  
+    // Step 2: Prepare the order data
     const orderData = {
-      user_id: checkout.user.id,
-      username: checkout.user.name,
-      phone_number: checkout.user.phone_number,
-      email: checkout.user.email,
-      address: checkout.user.address,
+      user_id: checkout?.user.id,
+      username: checkout?.user.name,
+      phone_number: checkout?.user.phone_number,
+      email: checkout?.user.email,
+      address: checkout?.user.address,
       note: (document.getElementById("note") as HTMLInputElement)?.value || "",
-      cart_items: checkout.cart_items,
-      deliver_fee: checkout.deliver_fee,
-      discount: checkout.discount,
-      subtotal: checkout.subtotal,
-      total: checkout.total,
       payment_method: paymentMethod,
+      selected_items: (checkout?.selected_items || []).map(item => item.id), // ❗ CHỈ LẤY ID
     };
-
+  
+    // Log the order data before sending it
     console.log("🚀 Sending Order Data:", orderData);
-
+  
     try {
+      await delay(2000);
+      // Step 3: Make the API call to place the order
       const orderResponse = await getOrder(orderData);
+  
+      // Log the API response to inspect the result
       console.log("✅ Order API Response:", orderResponse);
-
+  
+      // Step 4: Check for successful order response
       if (orderResponse.status !== 201) {
+        console.error(`Order failed with status: ${orderResponse.status}`);
         alert(`Đặt hàng thất bại! Mã lỗi: ${orderResponse.status}`);
         return;
       }
-
+  
+      // Step 5: Handle success
       toast.success("🎉 Đã đặt hàng thành công!");
       localStorage.removeItem("pendingOrder"); // Xóa đơn hàng tạm sau khi đặt hàng thành công
       nav("/");
-    } catch (error) {
-      console.error("❌ Lỗi xử lý đơn hàng:", error);
-      alert("Có lỗi xảy ra, vui lòng thử lại!");
+  
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        const errorMessage = error.response?.data?.message || "Có lỗi xảy ra!";
+        
+        if (errorMessage.includes("Too Many Attempts")) {
+          alert("Bạn đã thử quá nhiều lần, vui lòng chờ một chút rồi thử lại!");
+        } else {
+          alert(errorMessage);
+        }
+      } else {
+        console.error("❌ Unexpected error:", error);
+        alert("Có lỗi xảy ra, vui lòng thử lại!");
+      }
     }
-  };
+  }
+  
 
   // Kiểm tra nếu MoMo thanh toán xong
   useEffect(() => {
@@ -406,7 +501,7 @@ useEffect(() => {
       }}
     >
       <option value="">Chọn tỉnh/thành phố</option>
-      {provinces.map((p) => (
+      {provinces?.map((p) => (
         <option key={p.code} value={p.code}>
           {p.name}
         </option>
@@ -502,7 +597,7 @@ useEffect(() => {
         </div>
         <div className="checkout-right">
           <h2>Đơn hàng của bạn</h2>
-          {checkout?.cart_items.map((item, index) => (
+          {/* {checkout?.cart_items.map((item, index) => (
             <div className="order-summary" key={index}>
               <div className="product">
                 <img
@@ -520,7 +615,36 @@ useEffect(() => {
               </div>
               <hr />
             </div>
-          ))}
+          ))} */}
+          {checkout?.selected_items?.length > 0 ? (
+  checkout.selected_items.map((item, index) => {
+    // Assuming image is a JSON string that contains an array of image URLs.
+    const images = JSON.parse(item.image); // Parse image string to get an array of images
+    const productImage = images[0]; // You can pick the first image from the array
+
+    return (
+      <div className="order-summary" key={item.id}>
+        <div className="product">
+          <img
+            src={productImage}
+            alt={item.product_name}
+            className="product-image"
+          />
+          <div className="product-details">
+            <p className="product-name">{item.product_name}</p>
+            <p className="product-quantity">x{item.quantity}</p>
+            <p className="product-price">
+              {(parseFloat(item.price) * item.quantity).toLocaleString()}đ
+            </p>
+          </div>
+        </div>
+        <hr />
+      </div>
+    );
+  })
+) : (
+  <p>No items in the cart.</p>
+)}
 
           <div className="price-details">
             <p>
@@ -582,31 +706,4 @@ useEffect(() => {
 };
 
 export default CheckOut;
-{
-  /* <div className="payment-method">
-              <label className="payment-option">
-                <input
-                  type="radio"
-                  name="payment"
-                  defaultChecked
-                  className="payment-checkbox square"
-                />
-                <span>Trả tiền mặt khi nhận hàng</span>
-                <p className="payment-description">
-                  Bạn đặt hàng và thanh toán sau khi nhận hàng.
-                </p>
-              </label>
-              <hr className="payment-divider" />
-              <label className="payment-option">
-                <input
-                  type="radio"
-                  name="payment"
-                  className="payment-checkbox square"
-                />
-                <span>Chuyển khoản ngân hàng</span>
-                <p className="payment-description">
-                  Thanh toán qua ngân hàng trước khi giao hàng.
-                </p>
-              </label>
-            </div> */
-}
+

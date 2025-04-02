@@ -400,4 +400,4 @@ public function previewCheckout(Request $request)
     ]);
 }
 
-}   
+}
