@@ -7,7 +7,10 @@ const Blog = () => {
   // Bài viết
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-
+ const handleReceiveVoucher = (voucherCode: string) => {
+  localStorage.setItem("voucher_code", voucherCode); // Lưu vào localStorage
+  alert(`Mã ${voucherCode} đã được lưu!`);
+};
   useEffect(() => {
     getArticles()
       .then(({ data }) => {
