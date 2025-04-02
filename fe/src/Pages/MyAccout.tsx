@@ -1,7 +1,10 @@
-
 import { User, Package, Home, CreditCard, Settings } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import OrderDetail from "./OrderDetail";
+import { getAllOrders, getDetailOrder, getStatusLabel, Order, OrdersDetail } from "../services/Orders";
+import toast from "react-hot-toast";
+import { getProductDetail } from "../services/product";
 
 const mockUser = {
     name: "John Doe",
@@ -11,33 +14,103 @@ const mockUser = {
     address: "123 Main St, City, Country",
 };
 
-const mockOrders = [
-    {
-        id: "ORD-12345",
-        date: "March 15, 2024",
-        status: "Delivered",
-        total: 1299.97,
-        items: [
-            { id: "1", name: "Modern Sofa", price: 899.99, quantity: 1 },
-            { id: "2", name: "Wooden Coffee Table", price: 299.99, quantity: 1 },
-            { id: "7", name: "Bedside Table", price: 129.99, quantity: 1 },
-        ],
-    },
-    {
-        id: "ORD-12344",
-        date: "February 28, 2024",
-        status: "Delivered",
-        total: 449.99,
-        items: [{ id: "9", name: "Standing Desk", price: 449.99, quantity: 1 }],
-    },
-]
 const MyAccount = () => {
     const [activeTab, setActiveTab] = useState("profile");
-    const [selectedOrder, setSelectedOrder] = useState(null);
+    // const [isOpen, setIsOpen] = useState(false);
+    const [orders, setOrders] = useState<Order[]>([]);
+    // const [ordersDetail, setOrdersDetail] = useState<OrdersDetail[]>([]);
+    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+    const toggleOrderDetails = (orderId: number) => {
+        console.log("Button clicked! Đang lấy chi tiết cho đơn hàng:", orderId);
+        setSelectedOrderId(orderId);
+        setActiveTab("orderDetail");
+    };
 
-const toggleOrderDetails = (orderId) => {
-    setSelectedOrder(selectedOrder === orderId ? null : orderId);
-};
+    // useEffect(() => {
+    //     getAllOrders()
+    //         .then(({ data }) => {
+    //             setOrders(data);
+    //             console.log("Dữ liệu đơn hàng từ API:", data); // Kiểm tra API trả về gì
+    //         })
+    //         .catch(() => toast.error("Lỗi khi lấy đơn hàng"));
+    // }, []);
+
+
+    useEffect(() => {
+        const fetchOrdersWithDetails = async () => {
+            try {
+                // 1️⃣ Lấy danh sách đơn hàng
+                const response = await getAllOrders();
+                if (!response || !response.data) throw new Error("API không trả về dữ liệu hợp lệ");
+    
+                const ordersData = response.data;
+                if (!Array.isArray(ordersData)) throw new Error("Dữ liệu đơn hàng không phải là mảng");
+    
+                // 2️⃣ Gọi API lấy chi tiết đơn hàng song song (giới hạn 5 requests cùng lúc)
+                const orderDetailsResponses = await Promise.allSettled(
+                    ordersData.map(order => getDetailOrder(order.id))
+                );
+    
+                // 3️⃣ Lọc đơn hàng hợp lệ
+                const ordersWithDetails = ordersData.map((order, index) => ({
+                    ...order,
+                    order_details: orderDetailsResponses[index].status === "fulfilled"
+                        ? orderDetailsResponses[index].value?.data?.order_details || []
+                        : []
+                }));
+    
+                // 4️⃣ Lọc danh sách product_id (loại bỏ trùng lặp)
+                const productIds = [...new Set(
+                    ordersWithDetails.flatMap(order => 
+                        order.order_details.map(detail => detail.product_detail.product_id)
+                    )
+                )];
+    
+                // 5️⃣ Chia nhỏ danh sách sản phẩm thành nhóm (batch requests)
+                const chunkSize = 10; // Giới hạn mỗi lần gọi tối đa 10 sản phẩm
+                const productChunks = [];
+                for (let i = 0; i < productIds.length; i += chunkSize) {
+                    productChunks.push(productIds.slice(i, i + chunkSize));
+                }
+    
+                // 6️⃣ Gọi API lấy chi tiết sản phẩm theo nhóm (tránh quá tải)
+                const productResponses = await Promise.all(
+                    productChunks.map(chunk =>
+                        Promise.all(chunk.map(id => getProductDetail(id)))
+                    )
+                );
+    
+                // 7️⃣ Lưu kết quả vào map để tra cứu nhanh
+                const productMap = new Map();
+                productResponses.flat().forEach(response => {
+                    if (response?.data?.data) {
+                        productMap.set(response.data.data.id, response.data.data.name);
+                    }
+                });
+    
+                // 8️⃣ Gán tên sản phẩm vào order_details
+                const finalOrders = ordersWithDetails.map(order => ({
+                    ...order,
+                    order_details: order.order_details.map(detail => ({
+                        ...detail,
+                        product_detail: {
+                            ...detail.product_detail,
+                            product_name: productMap.get(detail.product_detail.product_id) || "Không xác định"
+                        }
+                    }))
+                }));
+    
+                setOrders(finalOrders);
+            } catch (error) {
+                console.error("Lỗi khi lấy danh sách đơn hàng:", error);
+            }
+        };
+    
+        fetchOrdersWithDetails();
+    }, []);
+    
+    
+
     return (
         <>
             <div className="menu_overlay"></div>
@@ -59,7 +132,6 @@ const toggleOrderDetails = (orderId) => {
                 {/* END Breadcrumb */}
                 {/* START Wishlist Section */}
                 <section className="wishlist_section padding-top-60 padding-bottom-60">
-
                     <main className="container">
                         <div className="menu_overlay"></div>
                         <div className="grid-container ">
@@ -76,11 +148,14 @@ const toggleOrderDetails = (orderId) => {
                                         <button onClick={() => setActiveTab("profile")} className={activeTab === "profile" ? "active" : ""}>
                                             <User className="icon" /> Thông tin cá nhân
                                         </button>
-                                        <button onClick={() => setActiveTab("orders")} className={activeTab === "orders" ? "active" : ""}>
+                                        <button
+                                            onClick={() => setActiveTab("orders")}
+                                            className={activeTab === "orders" || activeTab === "orderDetail" ? "active" : ""}
+                                        >
                                             <Package className="icon" /> Đơn mua
                                         </button>
                                         <button onClick={() => setActiveTab("addresses")} className={activeTab === "addresses" ? "active" : ""}>
-                                            <Home className="icon" /> Dịa chỉ
+                                            <Home className="icon" /> Địa chỉ
                                         </button>
                                         <button onClick={() => setActiveTab("payment")} className={activeTab === "payment" ? "active" : ""}>
                                             <CreditCard className="icon" /> Phương thức thanh toán
@@ -125,65 +200,66 @@ const toggleOrderDetails = (orderId) => {
                                 )}
                                 {activeTab === "orders" && (
                                     <div className="card">
-                                        <div>
-                                            <h2 className="section-title">Lịch sử mua hàng</h2>
-                                            {mockOrders.length > 0 ? (
-                                                <div className="order-list">
-                                                    {mockOrders.map((order) => (
-                                                        <div key={order.id} className="order-card">
-                                                            <div className="order-header">
-                                                                <div>
-                                                                    <h3 className="order-id">Đơn #{order.id}</h3>
-                                                                    <p className="order-date">Ngày mua {order.date}</p>
-                                                                </div>
-                                                                <div className="order-status-wrapper">
-                                                                    <span
-                                                                        className={`order-status ${order.status === "Delivered"
-                                                                            ? "delivered"
-                                                                            : order.status === "Processing"
-                                                                                ? "processing"
-                                                                                : "pending"
-                                                                            }`}
-                                                                    >
-                                                                        {order.status}
-                                                                    </span>
-                                                                    {/* <button  className="order-details">Chi tiết</button> */}
-                                                                    <Link to="/order_detail" className="order-details">
-                                                                        Chi tiết
-                                                                    </Link>
-                                                                </div>
+                                        <h2 className="section-title">Lịch sử mua hàng</h2>
+                                        {orders.length > 0 ? (
+                                            <div className="order-list">
+                                                {orders.map((order) => (
+                                                    <div key={order.id} className="order-card">
+                                                        <div className="order-header">
+                                                            <div>
+                                                                <h3 className="order-id">Đơn #{order.id}</h3>
+                                                                <p className="order-date">Ngày mua {new Date(order.created_at).toLocaleDateString()}</p>
                                                             </div>
-                                                            <div className="order-content">
-                                                                <div className="order-items">
-                                                                    {order.items.map((item) => (
-                                                                        <div key={item.id} className="order-item">
-                                                                            <div>
-                                                                                <span className="item-name">{item.name}</span>
-                                                                                <span className="item-quantity"> x{item.quantity}</span>
-                                                                            </div>
-                                                                            <span className="item-price">${(item.price * item.quantity).toFixed(2)}</span>
-                                                                        </div>
-                                                                    ))}
-                                                                </div>
-                                                                <div className="order-total">
-                                                                    <span>Tổng</span>
-                                                                    <span>${order.total.toFixed(2)}</span>
-                                                                </div>
+                                                            <div className="order-status-wrapper">
+                                                                <span
+                                                                    className={`order-status ${order.status === "Delivered"
+                                                                        ? "delivered"
+                                                                        : order.status === "Processing"
+                                                                            ? "processing"
+                                                                            : "pending"
+                                                                        }`}
+                                                                >
+                                                                    {getStatusLabel(order.status)}
+                                                                </span>
+                                                                <button className="order-details" onClick={() => toggleOrderDetails(order.id)}>
+                                                                    Chi tiết
+                                                                </button>
                                                             </div>
                                                         </div>
-                                                    ))}
-                                                </div>
-                                            ) : (
-                                                <div className="order-empty">
-                                                    <Package className="order-empty-icon" />
-                                                    <h3 className="order-empty-title">No Orders Yet</h3>
-                                                    <p className="order-empty-text">You haven't placed any orders yet.</p>
-                                                    <Link to="/shop" className="order-empty-link">
-                                                        Tiếp tục mua sắm
-                                                    </Link>
-                                                </div>
-                                            )}
-                                        </div>
+                                                        <div className="order-content">
+                                                            <div className="order-items">
+                                                                {order.order_details?.map((item) => (
+                                                                    <div key={item.id} className="order-item">
+                                                                        <div>
+                                                                            <span className="item-name">
+                                                                                {item.product_detail.product_name || "Tên sản phẩm không có"}
+                                                                            </span>
+                                                                            <span className="item-quantity"> x{item.quantity}</span>
+                                                                        </div>
+                                                                        <span className="item-price">
+                                                                            {parseFloat(item.price).toLocaleString()} VND
+                                                                        </span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                            <div className="order-total">
+                                                                <span>Tổng</span>
+                                                                <span>{parseFloat(order.total_price).toLocaleString()} VND</span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div className="order-empty">
+                                                <Package className="order-empty-icon" />
+                                                <h3 className="order-empty-title">Chưa có đơn hàng nào</h3>
+                                                <p className="order-empty-text">Bạn chưa có đơn hàng nào.</p>
+                                                <Link to="/shop" className="order-empty-link">
+                                                    Tiếp tục mua sắm
+                                                </Link>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                                 {activeTab === "addresses" && (
@@ -245,6 +321,14 @@ const toggleOrderDetails = (orderId) => {
                                     <div className="card">
                                         <h2 className="section-title">Account Settings</h2>
                                         <button className="btn-logout">Logout</button>
+                                    </div>
+                                )}
+                                {activeTab === "orderDetail" && selectedOrderId && (
+                                    <div className="card">
+                                        <button className="back-button" onClick={() => setActiveTab("orders")}>
+                                            ⬅ Quay lại
+                                        </button>
+                                        <OrderDetail orderId={selectedOrderId} />
                                     </div>
                                 )}
                             </div>

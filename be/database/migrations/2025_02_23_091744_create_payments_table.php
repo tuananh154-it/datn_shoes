@@ -17,7 +17,7 @@ return new class extends Migration
         $table->foreignId('user_id')->constrained('users'); 
         $table->string('note')->nullable(); 
         $table->dateTime('payment_date');
-        $table->enum('payment_method', ['COD', 'VnPAY', 'zaloPay']);
+        $table->enum('payment_method', ['cash_on_delivery', 'momo', 'zalopay']);
         $table->decimal('amount', 15, 2);
         $table->enum('status', ['pending', 'completed', 'failed'])->default('pending');
         $table->timestamps();

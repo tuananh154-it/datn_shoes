@@ -7,7 +7,27 @@ export interface Product{
   category:string,
   brand:string,
 }
-export interface Productyeuthich{
+export interface Detail {
+  id: number;
+  image: string;
+  size: string;
+  color: string;
+  quantity: number;
+  default_price: string;  // Giá gốc của biến thể
+  discount_price: string; // Giá giảm (nếu có)
+}
+
+export interface Productyeuthich {
+  id: number;
+  name: string;
+  price: string | number;
+  image: string;
+  description: string;
+  category: string;
+  brand: string;
+  details: Detail[];
+}
+export interface Productyeuthich1{
   id:number,
   name:string,
   price: string| number;
@@ -15,8 +35,8 @@ export interface Productyeuthich{
   description:string,
   category:string,
   brand:string,
+  details: Detail[];
 }
-
 export interface Products {
   id: string;
   name: string;
@@ -25,16 +45,4 @@ export interface Products {
   price: number;
   description: string;
   details: Detail[];
-}
-
-export interface Detail {
-  id: string;
-  // name: string;
-  color:string,
-  default_price: number;
-  discount_price:number,
-  description: string;
-  image: string;
-  quantity:number,
-  size:number
 }

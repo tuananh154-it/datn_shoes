@@ -21,12 +21,12 @@
                 </div>
             @endif
 
-            <div class="mb-3">
+            {{-- <div class="mb-3">
                 <a href="{{ route('sizes.create') }}" class="btn btn-success btn-sm">
                     <i class="fa fa-plus"></i> Thêm kích thước
                     
                 </a>
-            </div>
+            </div> --}}
             
             <div class="mb-3">
                 <form action="{{ route('sizes.index') }}" method="GET">
@@ -48,6 +48,11 @@
                 </form>
             </div>
             
+            <div class="mb-3">
+                <a href="{{ route('sizes.create') }}" class="btn btn-success btn-sm">
+                    <i class="fa fa-plus"></i> Thêm kích thước
+                </a>
+            </div>
           
             
             <table class="table table-striped table-advance table-hover">

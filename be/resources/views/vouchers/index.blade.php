@@ -12,7 +12,7 @@
     <div class="col-lg-12">
         <section class="card">
             <header class="card-header">
-                Danh sách Voucher
+                Danh sách mã giảm giá
             </header>
            
            
@@ -44,14 +44,14 @@
             {{-- them moi  --}}
             <div class="mb-3">
                 <a href="{{ route('vouchers.create') }}" class="btn btn-success btn-sm">
-                    <i class="fa fa-plus"></i> Thêm Voucher
+                    <i class="fa fa-plus"></i> Thêm mã giảm giá 
                 </a>
             </div>
             <table class="table table-striped table-advance table-hover">
                 <thead>
                     <tr>
-                        <th>Mã Voucher </th>
-                        <th>Tên Voucher </th>
+                        <th>Mã giảm giá  </th>
+                        <th>Tên mã giảm giá  </th>
                         {{-- <th> Số tiền giảm</th> --}}
                         <th> Phần trăm giảm giá</th>
                         {{-- <th>Ngày hết hạn </th>
@@ -80,9 +80,9 @@
                         <td>{{ $voucher->discount_percent }} %</td>
                         <td>
                             @if ($voucher->status == 'active')
-                                <span class="badge badge-info">Active</span>
+                                <span class="badge badge-info">Hoạt động </span>
                             @else
-                                <span class="badge badge-danger">Inactive</span>
+                                <span class="badge badge-danger">Không hoạt động </span>
                             @endif
                         </td>
                         
@@ -91,13 +91,13 @@
                         <td>
                             {{-- <button class="btn btn-success btn-sm"><i class="fa fa-check"></i></button> --}}
                             {{-- <a class="btn btn-success btn-sm" href="{{ route('vouchers.show ', $voucher->id) }}"><i class="fa fa-check"></i></a> --}}
-                            <a class="btn btn-primary btn-sm" href="{{route('vouchers.show',$voucher->id)}}"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-success btn-sm" href="{{ route('vouchers.edit', $voucher->id) }}"><i class="fa fa-pencil"></i></a> 
-                            <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Ban co chac chan muon xoa voucher?');">
+                            <a class="btn btn-warning  btn-sm" href="{{route('vouchers.show',$voucher->id)}}"><i class="fa fa-eye"></i></a>
+                            <a class="btn btn-primary  btn-sm" href="{{ route('vouchers.edit', $voucher->id) }}"><i class="fa fa-pencil"></i></a> 
+                            {{-- <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Ban co chac chan muon xoa voucher?');">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger btn-sm" type="submit"><i class="fa fa-trash-o "></i></button>
-                            </form>
+                            </form> --}}
                         </td>
                     </tr>
                     @endforeach

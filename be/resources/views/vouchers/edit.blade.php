@@ -38,7 +38,7 @@
                     @method('PUT')
                     {{-- Tên voucher --}}
                     <div class="form-group mb-3">
-                        <label for="name">Tên Voucher</label>
+                        <label for="name">Tên Mã giảm giá </label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{ old('name', $voucher->name) }}">
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -94,8 +94,8 @@
                     <div class="form-group mb-3">
                         <label class="form-label" for="status">Trạng thái</label>
                         <select name="status" id="status" class="form-control @error('status') is-invalid @enderror">
-                            <option value="active" {{ old('status', $voucher->status) == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ old('status', $voucher->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="active" {{ old('status', $voucher->status) == 'active' ? 'selected' : '' }}>Hoạt động </option>
+                            <option value="inactive" {{ old('status', $voucher->status) == 'inactive' ? 'selected' : '' }}>Không hoạt động </option>
                         </select>
                         @error('status')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -103,10 +103,7 @@
                     </div>
 
                         {{-- hanh dong --}}
-
-                        <div class="mb-3 d-flex">
-                            <button type="submit" class="btn btn-warning btn-lg flex-fill">Cập nhập</button>
-                        </div>
+                            <button type="submit" class="btn btn-warning ">Cập nhập</button>
                 </form>
             </div>
         </section>

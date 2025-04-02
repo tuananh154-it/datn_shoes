@@ -62,21 +62,21 @@
                         <td>{{ $category->name }}</td>
                         <td>
                             @if ($category->status == 'active')
-                                <span class="badge badge-info">Active</span>
+                                <span class="badge badge-info">Hoạt động </span>
                             @else
-                                <span class="badge badge-danger">Inactive</span>
+                                <span class="badge badge-danger">Không hoạt động </span>
                             @endif
                         </td>
                        
                       
                         <td>
                            
-                            <a class="btn btn-success btn-sm" href="{{ route('categories.edit', $category->id) }}"><i class="fa fa-pencil"></i></a> 
-                            <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Ban co chac chan muon xoa danh mục?');">
+                            <a class="btn btn-primary  btn-sm" href="{{ route('categories.edit', $category->id) }}"><i class="fa fa-pencil"></i></a> 
+                            {{-- <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Ban co chac chan muon xoa danh mục?');">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger btn-sm" type="submit"><i class="fa fa-trash-o "></i></button>
-                            </form>
+                            </form> --}}
                         </td>
                     </tr>
                     @endforeach

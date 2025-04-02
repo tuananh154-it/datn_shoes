@@ -1,59 +1,266 @@
-import  { useEffect, useState } from 'react'
-import { useCart } from '../context/CartContext';
-import { Product, Productyeuthich} from '../types/Product';
-import { useParams } from 'react-router-dom';
-import { getProductDetail } from '../services/product';
+
+// import  { useEffect, useState } from 'react'
+// import { useCart } from '../context/CartContext';
+// import { Product, Productyeuthich} from '../types/Product';
+// import { useParams } from 'react-router-dom';
+// import { getProductDetail } from '../services/product';
+
+// const Wishlist = () => {
+//   // const { addToCart } = useCart();
+  
+//   const [quantity, setQuantity] = useState<number>(1);
+//   const handleIncrease = () => {
+//     setQuantity(quantity + 1);
+//   };
+
+//   // Hàm để giảm số lượng
+//   const handleDecrease = () => {
+//     if (quantity > 1) {
+//       setQuantity(quantity - 1);
+//     }
+//   };
+
+//   const [product, setProduct] = useState<Product |null>(null);
+//   // const [selectedDetail, setSelectedDetail] = useState<any>(null);
+//   const { id } = useParams();
+//   useEffect(() => {
+//     if (!id) return;
+//     getProductDetail(id).then(({ data }) => {
+//       console.log("data", data);
+//       setProduct(data);
+//         // setSelectedDetail(data.data.details[0]);
+//     });
+//   }, [id]);
+//   console.log("data", product);
+//   const [wishlistProducts, setWishlistProducts] = useState<Productyeuthich[]>([]);
+//   useEffect(() => {
+//     const wishlistIds = JSON.parse(localStorage.getItem("wishlist") || "[]");
+  
+//     if (wishlistIds.length === 0) {
+//       setWishlistProducts([]);
+//       return;
+//     }
+
+//     Promise.all(wishlistIds.map((id: string) => getProductDetail(id)))
+//       .then((responses) => {
+//         const products = responses.map(({ data }) => data.data);
+//         setWishlistProducts(products);
+//       })
+//       .catch((error) => console.error("Lỗi khi lấy sản phẩm yêu thích:", error));
+//   }, []);
+//   console.log("biến thể",wishlistProducts)
+//   return (
+//    <>
+//     <div className="menu_overlay"></div>
+//     <div className="main_section">
+//   {/* START Breadcrumb */}
+//   <section className="breadcrumb_section nav">
+//     <div className="container">
+//       <nav aria-label="breadcrumb">
+//         <ol className="breadcrumb">
+//           <li className="breadcrumb-item text-capitalize">
+//             <a href="earthyellow.html">Home</a> <i className="flaticon-arrows-4"></i>
+//           </li>
+//           <li className="breadcrumb-item active text-capitalize">Sản phẩm yêu thích</li>
+//         </ol>
+//       </nav>
+//       <h1 className="title_h1 font-weight-normal text-capitalize">Sản phẩm yêu thích</h1>
+//     </div>
+//   </section>
+
+//   <section className="wishlist_section padding-top-60 padding-bottom-60">
+//     <div className="container">
+//       <div className="cart_table">
+//         <div className="table">
+//           <div className="thead">
+//             <div className="tr">
+//               <div className="th title_h5 border-bottom border-top">Product</div>
+//               <div className="th title_h5 border-bottom border-top">Price</div>
+//               <div className="th title_h5 border-bottom border-top">Quantity</div>
+//               <div className="th title_h5 border-bottom border-top">Options</div>
+//               <div className="th title_h5 border-bottom border-top"></div>
+//               <div className="th title_h5 border-bottom border-top"></div>
+//             </div>
+//           </div>
+//           <div className="tbody">
+           
+//            {wishlistProducts.map((product)=>(
+//              <div className="tr">
+//              <div className="td border-bottom" data-title="Product">
+//                <div className="product_img d-table-cell">
+//                  <img src={product.image} className="vertical_middle img-fluid" alt="Product" />
+//                </div>
+//                <div className="product_details d-table-cell">
+//                  <div className="product_title">
+//                    <a href="product_list_detail.html">
+//                      <h5 className="title_h5">{product.name}</h5>
+//                    </a>
+//                  </div>
+//                </div>
+//              </div>
+//              <div className="td border-bottom" data-title="Price">{product.price}</div>
+//              <div className="td border-bottom" data-title="Quantity">
+//                <div className="form-group quantity_box d-inline-block">
+//                  <div className="qty_number">
+//                             <button
+//                               type="button"
+//                               onClick={handleDecrease}
+//                               style={{
+//                                 padding: "5px 10px",
+//                                 cursor: "pointer",
+//                               }}
+//                             >
+//                               -
+//                             </button>
+
+//                             <input type="text" value={quantity} />
+//                             <button
+//                               type="button"
+//                               onClick={handleIncrease}
+//                               style={{
+//                                 padding: "5px 10px",
+//                                 cursor: "pointer",
+//                               }}
+//                             >
+//                               +
+//                             </button>
+//                  </div>
+//                </div>
+//              </div>
+//              <div className="td border-bottom" data-title="Options">
+//                <div className="wishlist_variant">
+//                  <div className="options">
+//                    <form>
+//                      <div className="form-group">
+//                        <label htmlFor="sizes" className="title_h5">Size:</label>
+//                        <select className="form-control" id="sizes" name="sizes">
+//                          <option>S</option>
+//                        </select>
+//                      </div>
+//                    </form>
+//                  </div>
+//                  <div className="options">
+//                    <form>
+//                      <div className="form-group">
+//                        <label htmlFor="show" className="title_h5">Color:</label>
+//                        <select className="form-control" id="show" name="show">
+//                          <option>Red</option>
+//                        </select>
+//                      </div>
+//                    </form>
+//                  </div>
+//                </div>
+//              </div>
+//              <div className="td cart_bag border-bottom" data-title="Add To Bag">
+//                <a href="cart.html">
+//                  <i className="flaticon-shopping-bag"></i>
+//                </a>
+//              </div>
+//              <div className="td remove_cart border-bottom text-right" data-title="Remove">
+//                <a href="javascript:void(0);">
+//                  <i className="flaticon-close"></i>
+//                </a>
+//              </div>
+//            </div>
+//            ))}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   </section>
+//   {/* END Wishlist Section */}
+// </div>
+
+//    </>
+//   )
+// }
+
+// export default Wishlist
+import { useEffect, useState } from "react";
+import { useCart } from "../context/CartContext";
+import { Productyeuthich, Detail } from "../types/Product";
+import { getProductDetail } from "../services/product";
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 const Wishlist = () => {
-  // const { addToCart } = useCart();
-  
-  const [quantity, setQuantity] = useState<number>(1);
-  const handleIncrease = () => {
-    setQuantity(quantity + 1);
-  };
+  const { addToCart } = useCart();
+  const [wishlistProducts, setWishlistProducts] = useState<Productyeuthich[]>(
+    []
+  );
+  const [selectedDetails, setSelectedDetails] = useState<{
+    [key: number]: Detail;
+  }>({});
+  const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
 
-  // Hàm để giảm số lượng
-  const handleDecrease = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
-
-  const [product, setProduct] = useState<Product |null>(null);
-  // const [selectedDetail, setSelectedDetail] = useState<any>(null);
-  const { id } = useParams();
-  useEffect(() => {
-    if (!id) return;
-    getProductDetail(id).then(({ data }) => {
-      console.log("data", data);
-      setProduct(data);
-        // setSelectedDetail(data.data.details[0]);
-    });
-  }, [id]);
-  console.log("data", product);
-  const [wishlistProducts, setWishlistProducts] = useState<Productyeuthich[]>([]);
   useEffect(() => {
     const wishlistIds = JSON.parse(localStorage.getItem("wishlist") || "[]");
-  
-    if (wishlistIds.length === 0) {
-      setWishlistProducts([]);
-      return;
-    }
+    if (wishlistIds.length === 0) return;
 
     Promise.all(wishlistIds.map((id: string) => getProductDetail(id)))
       .then((responses) => {
         const products = responses.map(({ data }) => data.data);
         setWishlistProducts(products);
+
+        // Khởi tạo state số lượng và biến thể mặc định
+        const initialDetails: { [key: number]: Detail } = {};
+        const initialQuantities: { [key: number]: number } = {};
+
+        products.forEach((product) => {
+          if (product.details.length > 0) {
+            initialDetails[product.id] = product.details[0]; // Chọn biến thể đầu tiên mặc định
+            initialQuantities[product.id] = 1; // Số lượng mặc định là 1
+          }
+        });
+
+        setSelectedDetails(initialDetails);
+        setQuantities(initialQuantities);
       })
-      .catch((error) => console.error("Lỗi khi lấy sản phẩm yêu thích:", error));
+      .catch((error) =>
+        console.error("Lỗi khi lấy sản phẩm yêu thích:", error)
+      );
   }, []);
-  console.log("biến thể",wishlistProducts)
+
+  // Hàm tăng số lượng
+  const handleIncrease = (productId: number) => {
+    setQuantities((prev) => ({ ...prev, [productId]: prev[productId] + 1 }));
+  };
+
+  // Hàm giảm số lượng
+  const handleDecrease = (productId: number) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [productId]: prev[productId] > 1 ? prev[productId] - 1 : 1,
+    }));
+  };
+
+  const handleVariantChange = (productId: number, detail: Detail) => {
+    setSelectedDetails((prev) => ({ ...prev, [productId]: detail }));
+  };
+
+  const handleAddToCart = (
+    productId: number,
+    detailId: number,
+    quantity: number
+  ) => {
+    addToCart(detailId, quantity);
+    toast.success("Thêm vào giỏ hàng thành công");
+  
+    // Xóa sản phẩm khỏi wishlist
+    setWishlistProducts((prev) => prev.filter((p) => p.id !== productId));
+  
+    // Cập nhật localStorage
+    const updatedWishlist = JSON.parse(
+      localStorage.getItem("wishlist") || "[]"
+    ).filter((id: number) => id !== productId);
+    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+  
+    // Phát sự kiện cập nhật để header tự động cập nhật
+    window.dispatchEvent(new Event("storage"));
+  };
   return (
-   <>
-    <div className="menu_overlay"></div>
-    <div className="main_section">
-  {/* START Breadcrumb */}
-  <section className="breadcrumb_section nav">
+    <>
+      <section className="breadcrumb_section nav">
     <div className="container">
       <nav aria-label="breadcrumb">
         <ol className="breadcrumb">
@@ -66,93 +273,138 @@ const Wishlist = () => {
       <h1 className="title_h1 font-weight-normal text-capitalize">Sản phẩm yêu thích</h1>
     </div>
   </section>
+  <div className="wishlist_section">
+  <div className="wishlist_container">
+    <section className="wishlist_section padding-top-60 padding-bottom-60">
+      <div className="container">
+        {wishlistProducts.length === 0 ? (
+          <div className="text-center">
+            <h3 className="title_h3">Không có sản phẩm yêu thích</h3>
+            <p>Hãy thêm sản phẩm vào danh sách yêu thích để xem sau!</p>
+            <Link to="/shop" className="btn btn-primary">
+              Tiếp tục mua sắm
+            </Link>
+          </div>
+        ) : (
+          // ✅ Hiển thị danh sách sản phẩm yêu thích
+          <div className="cart_table">
+            <div className="table">
+              <div className="thead">
+                <div className="tr">
+                  <div className="th title_h5 border-bottom border-top">Ảnh</div>
+                  <div className="th title_h5 border-bottom border-top">Giá</div>
+                  <div className="th title_h5 border-bottom border-top">Số lượng</div>
+                  <div className="th title_h5 border-bottom border-top">Tùy chọn</div>
+                  <div className="th title_h5 border-bottom border-top"></div>
+                  <div className="th title_h5 border-bottom border-top"></div>
+                </div>
+              </div>
+              <div className="tbody">
+                {wishlistProducts.map((product) => {
+                  const selectedDetail = selectedDetails[product.id] || product.details[0];
+                  const quantity = quantities[product.id] || 1;
+                  const price = selectedDetail?.discount_price
+                    ? Number(selectedDetail.discount_price.replace(/,/g, "").replace(" VND", "")) * quantity
+                    : Number(selectedDetail.default_price.replace(/,/g, "").replace(" VND", "")) * quantity;
 
-  <section className="wishlist_section padding-top-60 padding-bottom-60">
-    <div className="container">
-      <div className="cart_table">
-        <div className="table">
-          <div className="thead">
-            <div className="tr">
-              <div className="th title_h5 border-bottom border-top">Product</div>
-              <div className="th title_h5 border-bottom border-top">Price</div>
-              <div className="th title_h5 border-bottom border-top">Quantity</div>
-              <div className="th title_h5 border-bottom border-top">Options</div>
-              <div className="th title_h5 border-bottom border-top"></div>
-              <div className="th title_h5 border-bottom border-top"></div>
+                  return (
+                    <div className="tr" key={product.id}>
+                      <div className="td border-bottom" data-title="Product">
+                        <div className="product_img d-table-cell">
+                          <img src={selectedDetail?.image || product.image} alt={product.name} />
+                        </div>
+                        <div className="product_details d-table-cell">
+                          <div className="product_title">
+                            <a href="product_list_detail.html">
+                              <h5 className="title_h5">{product.name}</h5>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="td border-bottom" data-title="Price">
+                        <p className="price">{price.toLocaleString("vi-VN")} VND</p>
+                      </div>
+                      <div className="td border-bottom" data-title="Quantity">
+                        <div className="form-group quantity_box d-inline-block">
+                          <div className="qty_number">
+                            <button
+                              type="button"
+                              onClick={() => handleDecrease(product.id)}
+                              style={{ padding: "5px 10px", cursor: "pointer" }}
+                            >
+                              -
+                            </button>
+                            <input type="text" value={quantity} readOnly />
+                            <button
+                              type="button"
+                              onClick={() => handleIncrease(product.id)}
+                              style={{ padding: "5px 10px", cursor: "pointer" }}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="td border-bottom" data-title="Options">
+                        <div className="wishlist_variant">
+                          <div className="options">
+                            <label htmlFor="sizes" className="title_h5">Size:</label>
+                            <select
+                              className="form-control chon"
+                              onChange={(e) => {
+                                const newDetail = product.details.find((d) => d.size === e.target.value);
+                                if (newDetail) handleVariantChange(product.id, newDetail);
+                              }}
+                            >
+                              {product.details.map((detail) => (
+                                <option key={detail.id} value={detail.size}>{detail.size}</option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="options">
+                            <label htmlFor="colors" className="title_h5">Màu:</label>
+                            <select
+                              className="form-control chon"
+                              onChange={(e) => {
+                                const newDetail = product.details.find((d) => d.color === e.target.value);
+                                if (newDetail) handleVariantChange(product.id, newDetail);
+                              }}
+                            >
+                              {product.details.map((detail) => (
+                                <option key={detail.id} value={detail.color}>{detail.color}</option>
+                              ))}
+                            </select>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="td cart_bag border-bottom" data-title="Add To Bag">
+                        <a
+                          type="button"
+                          onClick={() => {
+                            if (!selectedDetail) {
+                              alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
+                              return;
+                            }
+                            handleAddToCart(product.id, Number(selectedDetail.id), quantity);
+                          }}
+                        >
+                          <i className="flaticon-shopping-bag"></i>
+                        </a>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
-          <div className="tbody">
-           
-           {wishlistProducts.map((product)=>(
-             <div className="tr">
-             <div className="td border-bottom" data-title="Product">
-               <div className="product_img d-table-cell">
-                 <img src={product.image} className="vertical_middle img-fluid" alt="Product" />
-               </div>
-               <div className="product_details d-table-cell">
-                 <div className="product_title">
-                   <a href="product_list_detail.html">
-                     <h5 className="title_h5">{product.name}</h5>
-                   </a>
-                 </div>
-               </div>
-             </div>
-             <div className="td border-bottom" data-title="Price">{product.price}</div>
-             <div className="td border-bottom" data-title="Quantity">
-               <div className="form-group quantity_box d-inline-block">
-                 <div className="qty_number">
-                   <input type="text" value="1" />
-                   <div className="inc button"><span>+</span></div>
-                   <div className="dec button"><span>-</span></div>
-                 </div>
-               </div>
-             </div>
-             <div className="td border-bottom" data-title="Options">
-               <div className="wishlist_variant">
-                 <div className="options">
-                   <form>
-                     <div className="form-group">
-                       <label htmlFor="sizes" className="title_h5">Size:</label>
-                       <select className="form-control" id="sizes" name="sizes">
-                         <option>S</option>
-                       </select>
-                     </div>
-                   </form>
-                 </div>
-                 <div className="options">
-                   <form>
-                     <div className="form-group">
-                       <label htmlFor="show" className="title_h5">Color:</label>
-                       <select className="form-control" id="show" name="show">
-                         <option>Red</option>
-                       </select>
-                     </div>
-                   </form>
-                 </div>
-               </div>
-             </div>
-             <div className="td cart_bag border-bottom" data-title="Add To Bag">
-               <a href="cart.html">
-                 <i className="flaticon-shopping-bag"></i>
-               </a>
-             </div>
-             <div className="td remove_cart border-bottom text-right" data-title="Remove">
-               <a href="javascript:void(0);">
-                 <i className="flaticon-close"></i>
-               </a>
-             </div>
-           </div>
-           ))}
-          </div>
+        )}
+         
         </div>
+        </section>
       </div>
-    </div>
-  </section>
-  {/* END Wishlist Section */}
 </div>
+    </>
+  );
+};
 
-   </>
-  )
-}
-
-export default Wishlist
+export default Wishlist;
