@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use App\Models\CartItem;
 use App\Models\Order;
 use App\Models\OrderDetail;
@@ -105,8 +107,8 @@ class OnlineCheckOutController extends Controller
                 'user_id' => $user->id,
                 'voucher_id' => $voucher->id ?? null,
                 'status' => 'waiting_for_confirmation',
-                'payment_status' => 'pending',
-                'payment_method' => 'paypal',
+                'payment_status' => 'paid',
+                'payment_method' => 'momo',
                 'note' => $request->note,
                 'deliver_fee' => $deliverFee,
                 'total_price' => $total_price,
@@ -123,56 +125,65 @@ class OnlineCheckOutController extends Controller
                     'price' => $price,
                     'total_price' => $price * $item->quantity,
                 ]);
+                $productDetail->decrement('quantity', $item->quantity);
+
             }
+            $cart->items()->whereIn('id', $selectedItemIds)->delete();
 
             DB::commit();
 
+            try {
+                Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail(  $order->load('order_details.productDetail.product')));
+            } catch (\Exception $e) {
+                Log::error('Lỗi gửi email xác nhận đơn hàng: ' . $e->getMessage());
+                // Không cần return lỗi, vẫn tiếp tục gửi response thành công
+            }
             // Gọi API MoMo
             $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
             $partnerCode = 'MOMOBKUN20180529';
             $accessKey = 'klm05TvNBzhg7h7j';
             $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
             $orderInfo = "Thanh toán đơn hàng #{$order->id} qua MoMo";
-            $redirectUrl = "http://localhost:5173/checkout-success?order_id={$order->id}";
+            $redirectUrl = "http://localhost:5173/";
             $ipnUrl = "https://your-ngrok-url.ngrok.io/api/momo/ipn"; // thay bằng URL thật nếu dùng ngrok
             $extraData = "orderId={$order->id}";
             $requestId = Str::uuid()->toString();
             $requestType = "payWithATM";
 
 
-          // Tạo orderId duy nhất cho MoMo
-$orderIdMomo = $order->id . '-' . Str::uuid();
+            // Tạo orderId duy nhất cho MoMo
+            $orderIdMomo = $order->id . '-' . Str::uuid();
 
-// Tạo chữ ký HMAC SHA256 với orderIdMomo
-$rawHash = "accessKey={$accessKey}"
-    . "&amount={$total_price}"
-    . "&extraData={$extraData}"
-    . "&ipnUrl={$ipnUrl}"
-    . "&orderId={$orderIdMomo}"
-    . "&orderInfo={$orderInfo}"
-    . "&partnerCode={$partnerCode}"
-    . "&redirectUrl={$redirectUrl}"
-    . "&requestId={$requestId}"
-    . "&requestType={$requestType}";
+            // Tạo chữ ký HMAC SHA256 với orderIdMomo
+            $rawHash = "accessKey={$accessKey}"
+                . "&amount={$total_price}"
+                . "&extraData={$extraData}"
+                . "&ipnUrl={$ipnUrl}"
+                . "&orderId={$orderIdMomo}"
+                . "&orderInfo={$orderInfo}"
+                . "&partnerCode={$partnerCode}"
+                . "&redirectUrl={$redirectUrl}"
+                . "&requestId={$requestId}"
+                . "&requestType={$requestType}";
 
-$signature = hash_hmac("sha256", $rawHash, $secretKey);
+            $signature = hash_hmac("sha256", $rawHash, $secretKey);
 
-// Gửi dữ liệu lên MoMo với đúng orderIdMomo đã ký
-$data = [
-    'partnerCode' => $partnerCode,
-    'partnerName' => "MoMoTest",
-    "storeId" => "MomoTestStore",
-    'requestId' => $requestId,
-    'amount' => $total_price,
-    'orderId' => $orderIdMomo, // ✅ Phải là orderIdMomo
-    'orderInfo' => $orderInfo,
-    'redirectUrl' => $redirectUrl,
-    'ipnUrl' => $ipnUrl,
-    'lang' => 'vi',
-    'extraData' => $extraData,
-    'requestType' => $requestType,
-    'signature' => $signature
-];
+            // Gửi dữ liệu lên MoMo với đúng orderIdMomo đã ký
+            $data = [
+                'partnerCode' => $partnerCode,
+                'partnerName' => "MoMoTest",
+                "storeId" => "MomoTestStore",
+                'requestId' => $requestId,
+                'amount' => $total_price,
+                'orderId' => $orderIdMomo, // ✅ Phải là orderIdMomo
+                'orderInfo' => $orderInfo,
+                'redirectUrl' => $redirectUrl,
+                'ipnUrl' => $ipnUrl,
+                'lang' => 'vi',
+                'extraData' => $extraData,
+                'requestType' => $requestType,
+                'signature' => $signature
+            ];
 
 
             $result = $this->execPostRequest($endpoint, json_encode($data));
