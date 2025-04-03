@@ -49,7 +49,15 @@ const ProductDetail = () => {
 
   const [productId, setProductId] = useState<Products>();
   const [selectedDetail, setSelectedDetail] = useState<any>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [totalAddedToCart, setTotalAddedToCart] = useState(0); // Tổng số lượng đã thêm vào giỏ hàng
   const { id } = useParams();
+  useEffect(() => {
+    if (selectedDetail) {
+      setTotalAddedToCart(0);
+    }
+  }, [selectedDetail]);
   useEffect(() => {
     if (!id) return;
     getProductDetail(id).then(({ data }) => {
@@ -60,6 +68,47 @@ const ProductDetail = () => {
   }, [id]);
   console.log("data", productId);
 
+  // const handleVariantClick = (detail: any) => {
+  //   if (detail) {
+  //     setSelectedDetail(detail);
+  //   } else {
+  //     setSelectedDetail(null);
+  //   }
+  // };
+  const colorSizeMap =
+    productId?.details?.reduce((acc, detail) => {
+      if (!acc[detail.color]) {
+        acc[detail.color] = [];
+      }
+      acc[detail.color].push(detail.size);
+      return acc;
+    }, {} as Record<string, string[]>) || {};
+
+  // Danh sách màu sắc không trùng lặp
+  const uniqueColors = Object.keys(colorSizeMap);
+
+  const getVariantImagesForColor = (color: string) => {
+    const colorDetails =
+      productId?.details.filter((detail) => detail.color === color) || [];
+    return colorDetails.flatMap((detail) => detail.image); // flatMap giúp kết hợp tất cả các ảnh vào một mảng
+  };
+  const handleColorSelect = (color: string) => {
+    setSelectedColor(color);
+    setSelectedSize(colorSizeMap[color][0]); // Chọn size đầu tiên của màu đó
+    const matchingDetail = productId?.details.find(
+      (d) => d.color === color && d.size === colorSizeMap[color][0]
+    );
+    setSelectedDetail(matchingDetail || null);
+  };
+
+  // Xử lý chọn size
+  const handleSizeSelect = (size: string) => {
+    setSelectedSize(size);
+    const matchingDetail = productId?.details.find(
+      (d) => d.color === selectedColor && d.size === size
+    );
+    setSelectedDetail(matchingDetail || null);
+  };
   const handleVariantClick = (detail: any) => {
     if (detail) {
       setSelectedDetail(detail);
@@ -68,20 +117,36 @@ const ProductDetail = () => {
     }
   };
 
-  function getColorFromText(colorText: any) {
+  function getColorFromText(colorText: string): string {
     switch (colorText.toLowerCase()) {
-      case "màu vàng":
-        return "#FFCC00"; // Mã màu vàng
+      case "màu trắng":
+        return "#FFFFFF"; // Trắng
+      case "màu đen":
+        return "#000000"; // Đen
       case "màu đỏ":
-        return "#FF0000"; // Mã màu đỏ
-      case "màu xanh":
-        return "#008000"; // Mã màu xanh
-      // Thêm các màu khác vào đây nếu cần
+        return "#FF0000"; // Đỏ
+      case "màu xanh dương":
+        return "#0000FF"; // Xanh dương
+      case "màu xanh lá":
+        return "#008000"; // Xanh lá
+      case "màu vàng":
+        return "#FFFF00"; // Vàng
+      case "màu cam":
+        return "#FFA500"; // Cam
+      case "màu tím":
+        return "#800080"; // Tím
+      case "màu hồng":
+        return "#FFC0CB"; // Hồng
+      case "màu nâu":
+        return "#A52A2A"; // Nâu
+      case "màu xám":
+        return "#808080"; // Xám
+      case "màu xanh ngọc":
+        return "#00CED1"; // Xanh ngọc
       default:
-        return "#000000"; // Màu mặc định nếu không tìm thấy
+        return "#000000"; // Mặc định là đen nếu không tìm thấy màu
     }
   }
-
   const [products, setProducts] = useState<Product[]>([]);
   useEffect(() => {
     getAllProduct().then(({ data }) => {
@@ -376,24 +441,7 @@ const ProductDetail = () => {
                       alt="Product"
                     />
                   </div>
-                  <div className="imageBienthe">
-                    <img
-                      src={productId.image}
-                      alt="Product main"
-                      style={{ cursor: "pointer", marginRight: "10px" }}
-                      onClick={() => handleVariantClick(null)} // Xử lý khi click vào ảnh chính
-                    />
-                    {/* Lặp qua chi tiết sản phẩm để hiển thị ảnh các variant */}
-                    {productId.details.map((detail, index) => (
-                      <img
-                        key={index}
-                        src={detail.image}
-                        alt={`Variant ${index}`}
-                        onClick={() => handleVariantClick(detail)} // Xử lý khi click vào variant
-                        style={{ cursor: "pointer", marginRight: "10px" }}
-                      />
-                    ))}
-                  </div>
+
                 </div>
                 <div className="main-right" data-wow-duration="1300ms">
                   <div className="product_content">
@@ -464,30 +512,25 @@ const ProductDetail = () => {
                       <div className="product_variant">
                         <div className="form-group color_box">
                           <label className="title_h5 text-capitalize">
-                            Color
+                            Màu sắc
                           </label>
 
                           {/* Màu sắc */}
-                          {productId.details.map((detail, index) => (
-                            <div
-                              key={index}
-                              className="radio text-uppercase text-center"
-                            >
+
+                          {uniqueColors.map((color, index) => (
+                            <div key={index} className="radio p-2">
                               <input
                                 type="radio"
-                                name="color11"
-                                id={`color${index + 1}`}
-                                checked={selectedDetail?.id === detail.id}
-                                onChange={() => handleVariantClick(detail)}
+                                name="color"
+                                id={`color${index}`}
+                                checked={selectedColor === color}
+                                onChange={() => handleColorSelect(color)}
                               />
                               <label
-                                htmlFor={`color${index + 1}`}
-                                className={`color${index + 1}`}
+                                htmlFor={`color${index}`}
                                 style={{
-                                  backgroundColor: getColorFromText(
-                                    detail.color
-                                  ),
-                                }}
+                                  backgroundColor: getColorFromText(color),
+                                }} // Dùng hàm getColorFromText để lấy mã màu
                               ></label>
                             </div>
                           ))}
@@ -497,11 +540,17 @@ const ProductDetail = () => {
                           <label className="title_h5 text-capitalize">
                             Kích thước
                           </label>
-                          <select className="form-control">
-                            <option>
-                              {selectedDetail?.size ||
-                                productId.details[0]?.size}
-                            </option>
+                          <select
+                            className="form-control"
+                            value={selectedSize || ""}
+                            onChange={(e) => handleSizeSelect(e.target.value)}
+                          >
+                            {selectedColor &&
+                              colorSizeMap[selectedColor].map((size, index) => (
+                                <option key={index} value={size}>
+                                  {size}
+                                </option>
+                              ))}
                           </select>
                         </div>
 
@@ -553,41 +602,66 @@ const ProductDetail = () => {
                         <button
                           type="button"
                           className="background-btn text-uppercase cart_btn"
-                          onClick={() => {
-                            // Kiểm tra nếu người dùng chưa đăng nhập
+                          onClick={async () => {
                             if (!isLoggedIn) {
-                              alert(
-                                "Vui lòng đăng nhập trước khi thêm vào giỏ hàng!"
-                              );
+                              alert("Vui lòng đăng nhập trước khi thêm vào giỏ hàng!");
                               nav("/login");
                               return;
                             }
 
-                            // Kiểm tra xem biến thể đã được chọn chưa
                             if (!selectedDetail) {
-                              alert(
-                                "Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!"
-                              );
+                              alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
                               return;
                             }
 
-                            // Thêm sản phẩm vào giỏ hàng
-                            addToCart(Number(selectedDetail.id), quantity);
-                            toast.success("Thêm vào giỏ hàng thành công");
+                            try {
+                              const originalQuantity = Number(selectedDetail.quantity);
 
-                            // Log dữ liệu gửi lên API
-                            console.log(
-                              "Dữ liệu gửi lên API:",
-                              JSON.stringify({
-                                product_detail_id: selectedDetail.id,
-                                quantity,
-                              })
-                            );
+                              if (quantity <= 0) {
+                                toast.error("Số lượng phải lớn hơn 0");
+                                return;
+                              }
+
+                              const newTotalAddedToCart = totalAddedToCart + quantity;
+
+                              if (newTotalAddedToCart > originalQuantity) {
+                                toast.error(
+                                  `Không thể thêm vào giỏ hàng. Tổng số lượng đã thêm (${newTotalAddedToCart}) vượt quá số lượng gốc (${originalQuantity}).`
+                                );
+                                return;
+                              }
+
+                              try {
+                               addToCart(Number(selectedDetail.id), quantity);
+                              } catch (error) {
+                                console.error("Lỗi từ addToCart:", error);
+                                toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng: ");
+                                return;
+                              }
+
+                              setTotalAddedToCart(newTotalAddedToCart);
+
+                              toast.success("Thêm vào giỏ hàng thành công");
+
+                              console.log(
+                                "Dữ liệu gửi lên API:",
+                                JSON.stringify({
+                                  product_detail_id: selectedDetail.id,
+                                  quantity,
+                                })
+                              );
+
+                              console.log("Số lượng gốc:", originalQuantity);
+                              console.log("Tổng số lượng đã thêm:", newTotalAddedToCart);
+                            } catch (error) {
+                              console.error("Lỗi:", error);
+                              toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng: ");
+                            }
                           }}
                         >
                           Add to cart
                         </button>
-                        <div className="product_share">
+                        {/* <div className="product_share">
                           <p>Share the love</p>
                           <ul className="social_icons">
                             <li className="text-center">
@@ -606,7 +680,7 @@ const ProductDetail = () => {
                               </a>
                             </li>
                           </ul>
-                        </div>
+                        </div> */}
                       </div>
                     </form>
                   </div>

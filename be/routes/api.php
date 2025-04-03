@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\CheckoutController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\Top10SPController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -50,11 +51,13 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/cart/add', [CartController::class, 'addToCart']);
     Route::post('/cart/sync', [CartController::class, 'syncCart']);
     Route::get('/checkout/init', [OrderController::class, 'getCart']);
+    Route::post('/checkout/preview', [OrderController::class, 'previewCheckout']);
     Route::post('/orders', [OrderController::class, 'placeOrder']);
     Route::get('/orders', [OrderController::class, 'listOrders']);
     Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
+    Route::post('/momo-payment-code', [OnlineCheckOutController::class, 'momo_payment_code']);
 });
 Route::apiResource('products', ProductController::class);
 Route::get('/latest-products', [ProductController::class, 'latestProducts']);
@@ -63,6 +66,7 @@ Route::get('/latest-products', [ProductController::class, 'latestProducts']);
 
 // Trang Home
 Route::get('/home', [HomeController::class, 'index']);
+// top 10 sp
 
 // Trang Danh Mục
 Route::get('/categories', [CategoryController::class, 'index']);
