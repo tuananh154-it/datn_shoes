@@ -76,14 +76,14 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'Người dùng đã được tạo thành công!');
     }
-    
+
     public function edit(User $user)
     {
         $roles = Role::all(); // Lấy tất cả các vai trò
         return view('users.edit', compact('user', 'roles')); // Truyền dữ liệu đến view
     }
 
- 
+
     public function update(Request $request, User $user)
     {
         // Validate chỉ các trường bắt buộc
@@ -92,39 +92,39 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,' . $user->id,
             'gender' => 'required|string|in:male,female,other',
         ]);
-    
+
         // Cập nhật thông tin người dùng
         $user->name = $validated['name'];
         $user->email = $validated['email'];
-    
+
         // Nếu có thay đổi mật khẩu, thì cập nhật mật khẩu mới
         if ($request->filled('password')) {
             $user->password = bcrypt($request->input('password'));
         }
-    
+
         // Cập nhật các trường bổ sung (không cần validate)
         if ($request->has('date_of_birth')) {
             $user->date_of_birth = $request->input('date_of_birth');
         }
-    
+
         if ($request->has('address')) {
             $user->address = $request->input('address');
         }
-    
+
         if ($request->has('phone_number')) {
             $user->phone_number = $request->input('phone_number');
         }
-    
+
         // Lưu lại thay đổi
         $user->save();
-    
+
         // Cập nhật vai trò cho người dùng (không cần validate)
         if ($request->has('roles')) {
             $user->syncRoles($request->input('roles'));
         } else {
             $user->syncRoles([]); // Xóa tất cả vai trò nếu không chọn vai trò nào
         }
-    
+
         // Chuyển hướng về danh sách người dùng và hiển thị thông báo thành công
         return redirect()->route('users.index')->with('success', 'Thông tin người dùng đã được cập nhật!');
     }
@@ -137,5 +137,15 @@ class UserController extends Controller
         // Chuyển hướng về danh sách người dùng và hiển thị thông báo thành công
         return redirect()->route('users.index')->with('success', 'Người dùng đã được xóa!');
     }
-   
+    public function show(User $user)
+    {
+        return view('users.show', compact('user'));
+    }
+    public function updateApi(Request $request, $user_id)
+    {
+        // Logic cập nhật người dùng thông qua API
+        $user = User::findOrFail($user_id);
+        $user->update($request->all()); // Cập nhật thông tin người dùng
+        return response()->json(['message' => 'User updated successfully']);
+    }
 }

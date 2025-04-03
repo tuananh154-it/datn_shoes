@@ -44,21 +44,16 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+
                             </table>
+                        <p><strong>Tổng Tiền:</strong> {{ number_format($total_product_value, 2) }} VND</p>
+
                         </div>
+
                     </div>
 
                     <!-- Tổng kết -->
-                    <div class="mb-4">
-                        <div class="bg-info p-3 rounded text-white">
-                            <h5><strong>Tổng Kết</strong></h5>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p><strong>Tổng Giá Trị Sản Phẩm:</strong> {{ number_format($total_product_value, 2) }} VND</p>
-                            {{-- <p><strong>Phí Vận Chuyển:</strong> {{ number_format($shipping_fee, 2) }} VND</p> --}}
-                            {{-- <p><strong class="text-danger">Tổng Tiền:</strong> <strong>{{ number_format($total_price, 2) }} VND</strong></p> --}}
-                        </div>
-                    </div>
+                
                 </div>
             </section>
         </div>
@@ -78,7 +73,7 @@
                         </div>
                         <div class="bg-white p-3 rounded shadow-sm">
                             <p><strong>Mã Đơn Hàng:</strong> {{ $order->id }}</p>
-                            <p><strong>Người Đặt:</strong> {{ $order->customer ? $order->customer->name : 'Không có thông tin' }}</p>
+                            <p><strong>Người Đặt:</strong> {{ $order->user ? $order->user->name : 'Không có thông tin' }}</p>
                             <p><strong>Ngày Đặt:</strong> {{ $order->created_at ? $order->created_at->format('d/m/Y') : 'N/A' }}</p>
                             <p><strong>Tổng Tiền:</strong> {{ number_format($order->total_price, 2) }} VND</p>
                             <p><strong>Phương Thức Thanh Toán:</strong>
@@ -155,7 +150,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('orders.index') }}" class="btn btn-primary">Quay lại danh sách đơn hàng</a>
+                    <a href="{{ route('orders.index') }}" class="btn btn-secondary ">Quay lại danh sách đơn hàng</a>
                 </div>
             </section>
         </div>

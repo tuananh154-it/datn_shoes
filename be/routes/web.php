@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Order;
 use App\Http\Controllers\CKEditorController;
 use App\Http\Controllers\ColorController;
 use App\Http\Controllers\OrderController;
@@ -40,6 +41,44 @@ Route::middleware(['auth'])->group(function () {
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/order/confirm/{id}', function ($id) {
+    $order = Order::find($id);
+
+    if (!$order) {
+        return view('order.notfound');
+    }
+
+    // Chỉ cho phép xác nhận khi đang ở trạng thái "chờ xác nhận"
+    if ($order->status !== 'waiting_for_confirmation') {
+        return view('order.already_confirmed');
+    }
+
+    // Cập nhật trạng thái
+    $order->status = 'waiting_for_pickup';
+    $order->save();
+
+    return view('order.confirm_success', ['order' => $order]);
+})->name('orders.confirm');
+
+Route::get('/order/cancel/{id}', function ($id) {
+    $order = Order::find($id);
+
+    if (!$order) {
+        return view('order.notfound');
+    }
+
+    if (in_array($order->status, ['cancelled', 'delivered'])) {
+        return view('order.already_cancelled');
+    }
+
+    // Chỉ được hủy khi chưa giao
+    $order->status = 'cancelled';
+    $order->save();
+
+    return view('order.cancel_success', ['order' => $order]);
+})->name('orders.cancel');
+
 
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', function () {
@@ -282,7 +321,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     //tim kiem (lọc )
     Route::get('/admin/dashboard/filter', [AdminController::class, 'filterRevenue']);
 
-    
+
     //thong ke tai khoan
     Route::get('admin/users', [AdminController::class, 'users'])->name('dashboards.users');
     Route::get('/admin/account-stats-data', [AdminController::class, 'getAccountStatsData'])->name('admin.accountStatsData');
@@ -332,10 +371,23 @@ Route::resource('profiles', ProfileController::class);
 //     Route::post('/profile', [ProfileController::class, 'store']);
 //     Route::get('/profile/{user_id}', [ProfileController::class, 'show']);
 // });
-Route::middleware(['auth'])->get('/profile/{user}', [ProfileController::class, 'show'])->name('profiles.show');
-Route::middleware(['auth'])->get('/profile/{user_id}/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
-Route::middleware(['auth'])->put('/profile/{user}', [ProfileController::class, 'update'])->name('profiles.update');
+// Route::middleware(['auth'])->get('/profile/{user}', [ProfileController::class, 'show'])->name('profiles.show');
+// Route::middleware(['auth'])->get('/profile/{user_id}/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
+// Route::middleware(['auth'])->put('/profile/{user}', [ProfileController::class, 'update'])->name('profiles.update');
+Route::middleware(['auth'])->group(function () {
+    // Hiển thị thông tin người dùng hiện tại
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profiles.show');
 
+    // Chỉnh sửa thông tin người dùng hiện tại
+    Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
+
+    // Cập nhật thông tin người dùng hiện tại
+    Route::put('/profile/{user_id}/update', [ProfileController::class, 'update'])->name('profiles.update');
+
+    // Tạo profile cho người dùng hiện tại
+    Route::get('/profile/create', [ProfileController::class, 'create'])->name('profiles.create');
+    Route::post('/profile', [ProfileController::class, 'store'])->name('profiles.store');
+});
 
 
 
