@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Order Realtime Test</title>
+  <script src="https://js.pusher.com/7.2/pusher.min.js"></script>
+</head>
+<body>
+  <h2>🔔 Listening for new orders...</h2>
+  <ul id="logs"></ul>
+
+  <script>
+    // Hàm log lên giao diện
+    const log = (msg) => {
+      const el = document.createElement('li');
+      el.textContent = msg;
+      document.getElementById('logs').appendChild(el);
+    }
+
+    // Thay bằng key và cluster thật của bạn
+    const pusher = new Pusher('ee494af10a7f4a6e48b6', {
+      cluster: 'mt1',
+      forceTLS: true
+    });
+
+    // Lắng nghe channel 'orders' và sự kiện 'order.placed'
+    const channel = pusher.subscribe('orders');
+    channel.bind('order.placed', function(data) {
+      log(`📦 New order from ${data.username} | Total: $${data.total_price} | At: ${data.created_at}`);
+    });
+
+    log('✅ Subscribed to channel "orders", waiting for events...');
+  </script>
+</body>
+</html>

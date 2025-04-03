@@ -76,6 +76,18 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->roles->first()?->name }}</td>
                             <td>
+
+
+                                {{-- <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        <i class="fa fa-trash-o"></i> Xóa
+                                    </button>
+                                </form> --}}
+                                {{-- <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary  btn-sm">
+                                    <i class="fa fa-pencil"></i>  --}}
+
                                 <!-- Sửa người dùng -->
                                 <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">
                                     <i class="fa fa-pencil"></i> Sửa

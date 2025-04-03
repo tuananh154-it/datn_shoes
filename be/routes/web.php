@@ -23,6 +23,7 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 
+
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
@@ -335,6 +336,10 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     // =======
     Route::get('dashboards', [AdminController::class, 'index'])->name('dashboards.index')->middleware('permission:show-dashboards');
     // >>>>>>> tuan-anh2
+
+    
+    
+    
 });
 
 
