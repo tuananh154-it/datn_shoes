@@ -25,93 +25,85 @@
 import { Outlet } from "react-router-dom"
 import Header from "./Header"
 import Footer from "./Footer"
-import { useEffect, useState } from "react"
-import { getAllOrders } from "../services/Orders"
 
-// Định nghĩa kiểu dữ liệu cho Order
-interface Order {
-  id: number;
-  username: string;
-  voucher_id: number | null;
-  status: string;
-  deliver_fee: string;
-  user_id: number;
-  payment_status: string;
-  payment_method: string;
-  address: string;
-  phone_number: string;
-  email: string;
-  total_price: string;
-  note: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
-  voucher: any;
-}
 
 const Layout = () => {
-  
-  const [order, setOrder] = useState<Order[]>([])
-  const [showNotification, setShowNotification] = useState<boolean>(false)
-
-  useEffect(() => {
-    getAllOrders().then(({ data }) => {
-      setOrder(data)
-    })
-
-    // Set up an interval or socket listener for new orders if required
-    const interval = setInterval(() => {
-      getAllOrders().then(({ data }) => {
-        if (data.length > order.length) {
-          const newOrder = data[data.length - 1]
-          setOrder(data)
-          setShowNotification(true) // Hiển thị thông báo khi có đơn hàng mới
-
-          // Tắt thông báo sau 5 giây
-          setTimeout(() => {
-            setShowNotification(false)
-          }, 5000)
-        }
-      })
-    }, 5000); // Check for new orders every 5 seconds
-
-    return () => clearInterval(interval) // Clean up the interval when the component is unmounted
-  }, [order])
-
-  // RealTimeNotification Component
-  const RealTimeNotification = ({ order }: { order: Order }) => {
-    return (
-      <div
-        style={{
-          position: 'fixed',
-          bottom: '20px',
-          left: '20px',
-          backgroundColor: '#FF9800',
-          color: 'white',
-          padding: '12px 20px',
-          borderRadius: '8px',
-          boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)',
-          zIndex: '1000',
-          minWidth: '250px',
-          fontSize: '14px',
-          animation: 'fadeIn 0.5s ease-out, fadeOut 0.5s ease-out 4.5s',
-        }}
-      >
-        <strong>{order.username}</strong><br />
-        Số điện thoại: {order.phone_number}<br />
-        Số tiền: {order.total_price} VNĐ
-      </div>
-    )
-  }
 
   return (
     <div>
       <Header />
       <Outlet />
-      {showNotification && order.length > 0 && <RealTimeNotification order={order[order.length - 1]} />}
       <Footer />
     </div>
   )
 }
 
 export default Layout;
+
+// import { useState } from "react";
+// import { Input } from "shadcn";
+// import { Button } from "shadcn";
+// import { Card, CardContent } from "shadcn";
+// import { Send, MessageCircle } from "lucide-react";
+// import { Outlet } from "react-router-dom";
+// import Header from "./Header";
+// import Footer from "./Footer";
+
+// const Chatbot = () => {
+//   const [messages, setMessages] = useState([
+//     { text: "Xin chào! Tôi có thể giúp gì cho bạn hôm nay?", sender: "bot" }
+//   ]);
+//   const [input, setInput] = useState("");
+//   const [isOpen, setIsOpen] = useState(false);
+
+//   const handleSendMessage = async () => {
+//     if (!input.trim()) return;
+    
+//     const newMessages = [...messages, { text: input, sender: "user" }];
+//     setMessages(newMessages);
+//     setInput("");
+
+//     // Giả lập phản hồi từ AI (cần thay bằng API thực tế)
+//     setTimeout(() => {
+//       setMessages([...newMessages, { text: "Để tôi tìm sản phẩm phù hợp cho bạn...", sender: "bot" }]);
+//     }, 1000);
+//   };
+
+//   return (
+//     <div className="fixed bottom-5 left-5">
+//       {!isOpen ? (
+//         <Button className="rounded-full p-3 shadow-lg" onClick={() => setIsOpen(true)}>
+//           <MessageCircle size={24} />
+//         </Button>
+//       ) : (
+//         <Card className="w-96 shadow-lg rounded-2xl overflow-hidden">
+//           <CardContent className="h-80 overflow-y-auto p-4 space-y-2">
+//             {messages.map((msg, index) => (
+//               <div key={index} className={`text-sm p-2 rounded-lg ${msg.sender === "bot" ? "bg-gray-200" : "bg-blue-500 text-white ml-auto"}`}> 
+//                 {msg.text}
+//               </div>
+//             ))}
+//           </CardContent>
+//           <div className="p-2 flex gap-2 border-t">
+//             <Input value={input} onChange={(e) => setInput(e.target.value)} placeholder="Nhập câu hỏi của bạn..." />
+//             <Button onClick={handleSendMessage}><Send size={16} /></Button>
+//           </div>
+//           <Button className="w-full border-t py-2 text-gray-500" onClick={() => setIsOpen(false)}>Đóng</Button>
+//         </Card>
+//       )}
+//     </div>
+//   );
+// };
+
+// const Layout = () => {
+//   return (
+//     <div>
+//       <Header />
+//       <Outlet />
+//       <Footer />
+//       <Chatbot />
+//     </div>
+//   );
+// };
+
+// export default Layout;

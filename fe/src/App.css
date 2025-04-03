@@ -50,6 +50,15 @@
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
 }
+.shoes_header {
+  position: fixed; 
+  top: 0;         
+  left: 0;         
+  width: 100%;     
+  z-index: 1000;   
+  background-color: #fff; 
+ 
+}
 .main{
   display: flex;
   margin: auto;
@@ -434,6 +443,32 @@
   height: 300px;
 }
 /* yeuthich */
+.yeuthich{
+ display: flex;
+ justify-content: center;
+ align-items: center;
+ text-align: center;
+ margin-top: -8px;
+}
+.imageblog img{
+  height: 230px;
+  background-color: #b8005e;
+}
+.category_list{
+  height: 600px;
+  width: 300px;
+  margin-left: -30px;
+}
+.loc{
+  height: 600px;
+  width: 300px;
+  margin-left: -30px;
+
+  /* background-color: #2ecc71; */
+}
+.shopProduct{
+  margin-top: -50px;
+}
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -640,7 +675,7 @@
   appearance: none;
   width: 16px;
   height: 16px;
-  border: 2px solid #007bff;
+  border: 2px solid #9ccaf9;
   border-radius: 4px;
   outline: none;
   cursor: pointer;

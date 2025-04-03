@@ -14,11 +14,14 @@ import "swiper/css/autoplay";
 import { getLatesProducts, topProduct } from "../services/product";
 import toast from "react-hot-toast";
 import QuickViewProduct from "./QuickViewProduct";
+import { Article, getArticles } from "../services/articles";
 // import { getAllProduct } from "../services/product";
 
 const HomePages = () => {
   const [product, setProduct] = useState<TopProductResponse | null>(null);
   const [lastProduct, getlatesProducts] = useState<Product[]>([]);
+  const [articles, setArticles] = useState<Article[]>([]);
+
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null
   );
@@ -29,7 +32,8 @@ const HomePages = () => {
       setProduct(data);
     });
   }, []);
-  console.log("top 10 sản phẩm", product);
+  // console.log("Lastproduct",lastProduct)
+  // console.log("top 10 sản phẩm", product);
 
   useEffect(() => {
     getLatesProducts().then(({ data }) => {
@@ -38,8 +42,20 @@ const HomePages = () => {
       getlatesProducts(data.data);
     });
   }, []);
+
   useEffect(() => {
-    // Nếu bạn đang sử dụng thư viện như Revolution Slider, khởi tạo slider ở đây nếu cần.
+    getArticles()
+      .then(({ data }) => {
+        setArticles(data);
+      })
+      .catch(() => toast.error("Lỗi không hiển thị bài viết"));
+  }, []);
+  const latestArticles = articles
+    .sort((a, b) => b.id - a.id) // Sắp xếp theo id
+    .slice(0, 2);
+  console.log("bài viết", latestArticles);
+
+  useEffect(() => {
     const script = document.createElement("script");
     script.src = "path_to_revolution_slider.js"; // Thêm đường dẫn script của slider nếu cần
     script.async = true;
@@ -53,30 +69,8 @@ const HomePages = () => {
     });
   }, []);
 
-  // const toggleWishlist = (product: Product) => {
-  //   const user = JSON.parse(localStorage.getItem("user") || "null");
-
-  //   if (!user) {
-  //     alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
-  //     return;
-  //   }
-
-  //   let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-
-  //   // Lưu ID sản phẩm thay vì object
-  //   const index = wishlist.indexOf(product.id);
-
-  //   if (index !== -1) {
-  //     wishlist.splice(index, 1);
-  //   } else {
-  //     wishlist.push(product.id);
-  //   }
-  //   toast.success("Đã thêm sản phẩm yêu thích");
-  //   localStorage.setItem("wishlist", JSON.stringify(wishlist));
-  // };
-
   const toggleWishlist = (product: Product) => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
+    // const user = JSON.parse(localStorage.getItem("user") || "null");
 
     // if (!user) {
     //   alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
@@ -194,7 +188,7 @@ const HomePages = () => {
                   <div className="featured_content">
                     <div className="featured_img_content position-relative">
                       <img
-                        src={`http://localhost:8000/storage/product_images/${lastproduct.image}`}
+                        src={lastproduct.image}
                         className="img-product"
                         alt="shoes_product"
                       />
@@ -242,13 +236,13 @@ const HomePages = () => {
                         </a>
                         <a
                           href="#"
-                          className="heart yeuthich rounded-circle text-center d-block"
+                          className="heart rounded-circle text-center d-block"
                           onClick={(e) => {
                             e.preventDefault();
                             toggleWishlist(lastproduct);
                           }}
                         >
-                          <i className="flaticon-heart"></i>
+                          <i className="flaticon-heart yeuthich"></i>
                         </a>
                       </div>
                       <div className="product-label rounded-circle  newProduct">
@@ -258,7 +252,9 @@ const HomePages = () => {
                     <div className="featured_detail_content position-relative">
                       <a href={`/product_detail/${lastproduct.id}`}>
                         <p className="featured_title  text-capitalize  ">
-                          {lastproduct.name}
+                        {lastproduct.name.length > 35
+                              ? lastproduct.name.slice(0, 35) + "..."
+                              : lastproduct.name}
                         </p>
                       </a>
                       <p className="featured_price title_h5 ">
@@ -311,16 +307,6 @@ const HomePages = () => {
                             />
                           </svg>
                         </a>
-                        {/* <a
-                          href="#"
-                          className="heart yeuthich rounded-circle text-center d-block"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            toggleWishlist(product);
-                          }}
-                        >
-                          <i className="flaticon-heart"></i>
-                        </a> */}
                       </div>
                     </div>
                   </div>
@@ -345,7 +331,7 @@ const HomePages = () => {
                 KHUYẾN MẠI GIẢM GIÁ 50%
               </h2>
               <a
-                href="product_list_with_sidebar.html"
+                href="/shop"
                 className="background-btn text-uppercase position-relative"
               >
                 MUA NGAY
@@ -382,24 +368,6 @@ const HomePages = () => {
                         alt="shoes_product"
                       />
                       <div className="featured_btn vertical_middle">
-                        {/* <a
-                          href="/cart"
-                          className="text-uppercase add_to_bag_btn rounded-circle d-block"
-                        >
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="21"
-                            viewBox="0 0 18 21"
-                          >
-                            <path
-                              fill="#000"
-                              data-name="Bag Icon copy"
-                              className="cls-1"
-                              d="M18,18.2L16.7,4.58a0.543,0.543,0,0,0-.56-0.474H13.411A4.278,4.278,0,0,0,9,0,4.278,4.278,0,0,0,4.588,4.106H1.856a0.549,0.549,0,0,0-.56.474L0,18.2v0.048A3.089,3.089,0,0,0,3.334,21H14.666A3.089,3.089,0,0,0,18,18.247V18.2ZM9,1.041a3.191,3.191,0,0,1,3.292,3.065H5.707A3.191,3.191,0,0,1,9,1.041Zm5.666,18.91H3.334a2.02,2.02,0,0,1-2.215-1.687L2.369,5.149h2.22v1.83a0.561,0.561,0,0,0,1.119,0V5.149h6.584v1.83a0.561,0.561,0,0,0,1.119,0V5.149h2.22l1.25,13.119A2.02,2.02,0,0,1,14.666,19.951Z"
-                            />
-                          </svg>
-                        </a> */}
                         <Link
                           to="#"
                           className="text-uppercase add_to_bag_btn rounded-circle d-block"
@@ -443,26 +411,22 @@ const HomePages = () => {
                         </a>
                         <a
                           href="#"
-                          className="heart yeuthich rounded-circle text-center d-block"
+                          className="heart  rounded-circle text-center d-block"
                           onClick={(e) => {
                             e.preventDefault();
                             toggleWishlist(product);
                           }}
                         >
-                          <i className="flaticon-heart"></i>
+                          <i className="flaticon-heart yeuthich"></i>
                         </a>
-                        {/* <button
-                                                    onClick={() => handleAddToWishlist} // Gọi hàm khi nhấn vào nút yêu thích
-                                                    className="heart rounded-circle text-center rounded-circle d-block"
-                                                >
-                                                    <i className="flaticon-heart"></i>
-                                                </button> */}
                       </div>
                     </div>
                     <div className="featured_detail_content">
                       <a href={`/product_detail/${product.id}`}>
                         <p className="featured_title  text-capitalize  ">
-                          {product.name}
+                        {product.name.length > 35
+                              ? product.name.slice(0, 35) + "..."
+                              : product.name}
                         </p>
                       </a>
                       <p className="featured_price title_h5  ">
@@ -514,16 +478,6 @@ const HomePages = () => {
                             />
                           </svg>
                         </a>
-                        {/* <a
-                                                    href="#"
-                                                    className="heart yeuthich rounded-circle text-center d-block"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        toggleWishlist(product);
-                                                    }}
-                                                >
-                                                    <i className="flaticon-heart"></i>
-                                                </a> */}
                       </div>
                     </div>
                   </div>
@@ -544,90 +498,57 @@ const HomePages = () => {
               </p>
             </div>
             <div className="row">
-              <div
-                className="col-md-6 wow fadeInLeft"
-                data-wow-duration="1300ms"
-              >
-                <div className="blog_content">
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <a href="blog_list_detail.html">
-                        <img
-                          src="src/images/shoes_blog1.png"
-                          alt="blog"
-                          className="img-fluid"
-                        />
-                      </a>
-                    </div>
-                    <div className="col-lg-6">
-                      <span className="article__date">
-                        March 21, 2018 | Posted By Admin
-                      </span>
-                      <a href="blog_list_detail.html">
-                        <h5 className="article__title title_h5">
-                          Sed ut perspiciatis unde omnisiste natus error sit
-                        </h5>
-                      </a>
-                      <p>
-                        There are many variations of passages of Lorem Ipsum
-                        available but the majority have...
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                className="col-md-6 wow fadeInRight"
-                data-wow-duration="1300ms"
-              >
-                <div className="blog_content">
-                  <div className="row">
-                    <div className="col-lg-6">
-                      <a href="blog_list_detail.html">
-                        <img
-                          src="src/images/shoes_blog2.png"
-                          alt="blog"
-                          className="img-fluid"
-                        />
-                      </a>
-                    </div>
-                    <div className="col-lg-6">
-                      <span className="article__date">
-                        March 21, 2018 | Posted By Admin
-                      </span>
-                      <a href="blog_list_detail.html">
-                        <h5 className="article__title title_h5">
-                          Voluptatem accusantium dolor emque laudantium
-                        </h5>
-                      </a>
-                      <p>
-                        Duis aute irure dolor in reprehenderit in voluptate
-                        velit esse cillum dolore eu fugiat...
-                      </p>
+              {latestArticles.map((blog) => (
+                <div
+                  className="col-md-6 wow fadeInLeft"
+                  data-wow-duration="1300ms"
+                >
+                  <div className="blog_content">
+                    <div className="row">
+                      <div className="col-lg-6">
+                        <a className="imageblog" href={`/blog/${blog.id}`}>
+                          <img
+                            src={blog.image}
+                            alt="blog"
+                          />
+                        </a>
+                      </div>
+                      <div className="col-lg-6">
+                        <span className="article__date">
+                          {blog.created_at.split("T")[0]} |  {blog.name.length > 100
+                              ? blog.name.slice(0, 100) + "..."
+                              : blog.name}
+                        </span>
+                        <a href={`/blog/${blog.id}`}>
+                          <h5 className="article__title title_h5">
+                            {blog.name.length > 50
+                              ? blog.name.slice(0, 50) + "..."
+                              : blog.name}
+                          </h5>
+                        </a>
+                        <p>
+                          {blog.content
+                            .replace(/<p>/g, "") 
+                            .replace(/<\/p>/g, "")
+                            .slice(0, 100) +
+                            (blog.content.length > 150 ? "..." : "")}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
         <section className="padding-top-60 padding-bottom-60 instagram_section shoes_instagram_section  wow animated">
-          <div className="container">
+          {/* <div className="container">
             <div className="row">
               <div
                 className="col-md-12 wow fadeInLeft"
                 data-wow-duration="1300ms"
               >
-                <div className="instagram_title text-center">
-                  <img src="src/images/ins_icon.png" alt="" />
-                  <h4 className="title_h4  text-uppercase">
-                    Follow Us On Instagram{" "}
-                  </h4>
-                  <p>
-                    Shop our favorites and share yours!{" "}
-                    <span>#Running Shoes Trending Style Sneakers</span>
-                  </p>
-                </div>
+                
               </div>
               <div
                 className="col-md-12 wow fadeInRight"
@@ -640,9 +561,9 @@ const HomePages = () => {
                 ></div>
               </div>
             </div>
-          </div>
+          </div> */}
         </section>
-        <div className="padding-top-60 brand_logo_section shoes_brand_logo_section wow fadeIn">
+        {/* <div className="padding-top-60 brand_logo_section shoes_brand_logo_section wow fadeIn">
           <div className="container">
             <div id="brand_slider" className="owl-carousel">
               <div className="item">
@@ -683,7 +604,7 @@ const HomePages = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

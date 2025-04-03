@@ -73,7 +73,7 @@ const Header = () => {
   };
   return (
     <>
-      <header className="shoes_header shoes_home_header">
+      <header className="shoes_header">
         <div className="header_logo col_4 visible-lg d-none">
           <a href="/">
             <img

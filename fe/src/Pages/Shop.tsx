@@ -186,16 +186,13 @@ const Shop = () => {
                       <i className="flaticon-close"></i>
                     </a>
                   </div>
-                  <div className="filter_content mCustomScrollbar">
+                  <div className="shopProduct">
                     {/* //giá// */}
-                    <div className="category_list">
-                      <div className="category_list_title">
-                        <h5 className="title_h5">Giá</h5>
-                        <span className="category_close_icon flaticon-down-arrow float-right"></span>
-                      </div>
+                    <div className="loc">
+                     
                       <div className="layer-filter">
                         <div>
-                          {/* <label>Khoảng giá: {priceRange[0].toLocaleString()} - {priceRange[1].toLocaleString()} VND</label> */}
+                          <h5>Giá</h5>
                           <div
                             style={{
                               display: "flex",
@@ -211,22 +208,14 @@ const Shop = () => {
                               step={10000}
                               value={priceRange}
                               onChange={handleChange}
-                              style={{ width: "150px", margin: "10px auto" }}
+                              style={{ width: "100px" }}
                             />
                             {priceRange[1].toLocaleString()}
                           </div>
                         </div>
-                      </div>
-                    </div>
-                    {/* //category// */}
-                    <div className="category_list">
-                      <div className="category_list_title">
-                        <h5 className="title_h5">Danh mục</h5>
-                        <span className="category_close_icon flaticon-down-arrow float-right"></span>
-                      </div>
-                      <div className="layer-filter">
-                        <ul>
-                          {categories.map((category) => (
+                        <div className="mt-4">
+                          <h5>Danh mục</h5>
+                        {categories.map((category) => (
                             <div className="checkbox">
                               <label
                                 key={category.id}
@@ -248,17 +237,9 @@ const Shop = () => {
                               </label>
                             </div>
                           ))}
-                        </ul>
-                      </div>
-                    </div>
-                    {/* //brand// */}
-                    <div className="category_list">
-                      <div className="category_list_title">
-                        <h5 className="title_h5">Thương hiệu</h5>
-                        <span className="category_close_icon flaticon-down-arrow float-right"></span>
-                      </div>
-                      <div className="layer-filter">
-                        <ul>
+                        </div>
+                        <div className="mt-4">
+                          <h5>Thương hiệu</h5>
                           {brands.map((brand) => (
                             <div className="checkbox">
                               <label
@@ -277,7 +258,7 @@ const Shop = () => {
                               </label>
                             </div>
                           ))}
-                        </ul>
+                        </div>
                       </div>
                     </div>
                   </div>

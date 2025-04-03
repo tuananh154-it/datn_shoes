@@ -277,7 +277,7 @@ const Cart = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = cart.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(cart.length / itemsPerPage);
-
+  console.log("cart",cart)
   return (
     <>
       <div className="menu_overlay"></div>
