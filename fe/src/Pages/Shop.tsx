@@ -153,6 +153,24 @@ const Shop = () => {
     // Phát sự kiện cập nhật để các component khác biết
     window.dispatchEvent(new Event("storage"));
   };
+  const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 9;
+
+// Tính toán số trang
+const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+// Cắt danh sách sản phẩm theo trang
+const paginatedProducts = filteredProducts.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
+
+// Chuyển trang
+const changePage = (newPage: number) => {
+  if (newPage >= 1 && newPage <= totalPages) {
+    setCurrentPage(newPage);
+  }
+};
   return (
     <>
       <div className="menu_overlay"></div>
@@ -264,7 +282,7 @@ const Shop = () => {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-9">
+              <div className="col-lg-9 shopProduct">
                 <div className="collection-sorting-row">
                   <div className="filter_menu hidden-lg ">
                     <a className="title_h5 text-capitalize">
@@ -370,111 +388,88 @@ const Shop = () => {
                   </div>
                 </div>
                 <div>
-                  {loading ? (
-                    <p>Đang tải...</p>
-                  ) : filteredProducts.length === 0 ? (
-                    <p className="text-center text-gray-500">
-                      Không có sản phẩm nào
-                    </p>
-                  ) : (
-                    <ul className="category-products wow fadeIn row">
-                      {filteredProducts.map((product) => (
-                        <li
-                          className="col-lg-3 col-md-4 col-6 column3 product wow fadeInLeft animated"
-                          data-wow-duration="1300ms"
-                          key={product.id}
-                        >
-                          <div className="featured_content">
-                            <div className="featured_img_content">
-                              <img
-                                src={product.image}
-                                alt="f_product"
-                                className="img-fluid11"
-                              />
-                              <div className="featured_btn vertical_middle">
-                                <Link
-                                  to="#"
-                                  className="text-uppercase background-btn add_to_bag_btn"
-                                  onClick={(e) => {
-                                    e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
-                                    setSelectedProductId(product.id);
-                                  }}
-                                >
-                                  Thêm vào giỏ hàng
-                                </Link>
-                                <Link
-                                  to={`/product_detail/${product.id}`}
-                                  className="text-uppercase border-btn popup_btn"
-                                  data-modal="#modalone"
-                                >
-                                  Xem chi tiết
-                                </Link>
-                              </div>
-                              <a
-                                href="#"
-                                className="heart yeuthich rounded-circle text-center d-block"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  toggleWishlist(product);
-                                }}
-                              >
-                                <i className="flaticon-heart"></i>
-                              </a>
-                            </div>
-                            <div className="featured_detail_content">
-                              <Link to={`/product_detail/${product.id}`}>
-                                <p className="featured_title text-capitalize text-center">
-                                  {product.name.slice(0, 25) + (product.name.length > 6 ? "..." : "")}
-                                </p>
-                              </Link>
-                              <p className="featured_price title_h5 text-center">
-                                {/* <span>{product.price.toLocaleString()}</span> */}
-                                <span className="text-color">
-                                  {product?.price
-                                    ? Number(
-                                        product.price
-                                          .replace(/,/g, "")
-                                          .replace(" VND", "")
-                                      ).toLocaleString("vi-VN") + " VND"
-                                    : "0 VND"}
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <div className="align-self-center">
-                  <ul className="pagination text-center justify-content-center">
-                    <li className="page-item">
-                      <a className="page-link" href="javascript:void(0);">
-                        <i className="flaticon-arrows-1"></i>
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="javascript:void(0);">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item active">
-                      <a className="page-link" href="javascript:void(0);">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="javascript:void(0);">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="javascript:void(0);">
-                        <i className="flaticon-arrows"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+  {loading ? (
+    <p>Đang tải...</p>
+  ) : paginatedProducts.length === 0 ? (
+    <p className="text-center text-gray-500">Không có sản phẩm nào</p>
+  ) : (
+    <ul className="category-products wow fadeIn row">
+      {paginatedProducts.map((product) => (
+        <li
+          className="col-lg-4 col-md-6 col-12 product wow fadeInLeft animated"
+          data-wow-duration="1300ms"
+          key={product.id}
+        >
+          <div className="featured_content">
+            <div className="featured_img_content">
+              <img src={product.image} alt="f_product" className="imageShop" />
+              <div className="featured_btn vertical_middle">
+                <Link
+                  to="#"
+                  className="text-uppercase background-btn add_to_bag_btn"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setSelectedProductId(product.id);
+                  }}
+                >
+                  Thêm vào giỏ hàng
+                </Link>
+                <Link
+                  to={`/product_detail/${product.id}`}
+                  className="text-uppercase border-btn popup_btn"
+                  data-modal="#modalone"
+                >
+                  Xem chi tiết
+                </Link>
+              </div>
+            </div>
+            <div className="featured_detail_content">
+              <Link to={`/product_detail/${product.id}`}>
+                <p className="featured_title text-capitalize text-center">
+                  {product.name.slice(0, 25) + (product.name.length > 6 ? "..." : "")}
+                </p>
+              </Link>
+              <p className="featured_price title_h5 text-center">
+                <span className="text-color">
+                  {product?.price
+                    ? Number(
+                        product.price.replace(/,/g, "").replace(" VND", "")
+                      ).toLocaleString("vi-VN") + " VND"
+                    : "0 VND"}
+                </span>
+              </p>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</div>
+
+{/* Phân trang */}
+<div className="pagination-container phantrang">
+  <ul className="pagination">
+    <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+      <button className="page-link" onClick={() => changePage(currentPage - 1)}>
+        &laquo;
+      </button>
+    </li>
+
+    {[...Array(totalPages)].map((_, index) => (
+      <li key={index} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
+        <button className="page-link" onClick={() => changePage(index + 1)}>
+          {index + 1}
+        </button>
+      </li>
+    ))}
+
+    <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+      <button className="page-link" onClick={() => changePage(currentPage + 1)}>
+        &raquo;
+      </button>
+    </li>
+  </ul>
+</div>
               </div>
             </div>
           </div>

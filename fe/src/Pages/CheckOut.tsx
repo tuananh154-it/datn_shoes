@@ -98,7 +98,10 @@ const CheckOut = () => {
       alert("Không có dữ liệu đơn hàng!");
       return;
     }
-  
+    if (paymentMethod === "momo" && !agreeTerms) {
+      setErrorMessage("⚠️ Bạn chưa chọn điều khoản thanh toán❌");
+      return;
+    }
     // Handle MoMo payment
     if (paymentMethod === "momo") {
       const uniqueOrderId = `ORDER_${new Date().getTime()}`;
@@ -301,6 +304,15 @@ useEffect(() => {
   const storedAddresses = JSON.parse(localStorage.getItem("savedAddresses") || "[]");
   setSavedAddresses(storedAddresses);
 }, []);
+
+const [agreeTerms, setAgreeTerms] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  // const handleOrder = () => {
+  //   if (paymentMethod === "momo" && !agreeTerms) {
+  //     setErrorMessage("Bạn chưa chọn điều khoản thanh toán.");
+  //     return;
+  //   }
+  // };
   return (
     <>
       <div className="menu_overlay"></div>
@@ -562,54 +574,6 @@ useEffect(() => {
         </div>
         <div className="checkout-right">
           <h2>Đơn hàng của bạn</h2>
-          {/* {checkout?.cart_items.map((item, index) => (
-            <div className="order-summary" key={index}>
-              <div className="product">
-                <img
-                  src={item.image}
-                  alt={item.product_name}
-                  className="product-image"
-                />
-                <div className="product-details">
-                  <p className="product-name">{item.product_name}</p>
-                  <p className="product-quantity">x{item.quantity}</p>
-                  <p className="product-price">
-                    {(parseFloat(item.price) * item.quantity).toLocaleString()}đ
-                  </p>
-                </div>
-              </div>
-              <hr />
-            </div>
-          ))} */}
-          {/* {checkout?.selected_items?.length > 0 ? (
-  checkout.selected_items.map((item, index) => {
-    // Assuming image is a JSON string that contains an array of image URLs.
-    const images = JSON.parse(item.image); // Parse image string to get an array of images
-    const productImage = images[0]; // You can pick the first image from the array
-
-    return (
-      <div className="order-summary" key={item.id}>
-        <div className="product">
-          <img
-            src={productImage}
-            alt={item.product_name}
-            className="product-image"
-          />
-          <div className="product-details">
-            <p className="product-name">{item.product_name}</p>
-            <p className="product-quantity">x{item.quantity}</p>
-            <p className="product-price">
-              {(parseFloat(item.price) * item.quantity).toLocaleString()}đ
-            </p>
-          </div>
-        </div>
-        <hr />
-      </div>
-    );
-  })
-) : (
-  <p>No items in the cart.</p>
-)} */}
 {(checkout?.selected_items && checkout.selected_items.length > 0) ? (
   checkout.selected_items.map((item) => {
     let images: string[] = [];
@@ -640,6 +604,26 @@ useEffect(() => {
           </div>
         </div>
         <hr />
+        <div className="voucher-section">
+  <label className="voucher-label">Mã giảm giá</label>
+  <div className="voucher-input-wrapper">
+    <input
+      type="text"
+      id="voucher"
+      value={checkout?.voucher || ""}
+      onChange={(e) =>
+        setCheckout((prev) =>
+          prev ? { ...prev, voucher: e.target.value } : null
+        )
+      }
+      className="voucher-input"
+      placeholder="Nhập mã giảm giá"
+    />
+    <button className="voucher-button">
+      Áp mã
+    </button>
+  </div>
+</div>
       </div>
     );
   })
@@ -660,18 +644,6 @@ useEffect(() => {
           </div>
 
           <div className="payment-method">
-          <label className={`payment-card ${paymentMethod === "credit_card" ? "active" : ""}`}>
-        <input
-            type="radio"
-            name="payment"
-            value="credit_card"
-            checked={paymentMethod === "credit_card"}
-            onChange={() => setPaymentMethod("credit_card")}
-        />
-        <FaCcVisa className="payment-icon visa" />
-        <span>Thanh toán bằng Visa/Master/JCB</span>
-    </label>
-
     <label className={`payment-card ${paymentMethod === "cash_on_delivery" ? "active" : ""}`}>
         <input
             type="radio"
@@ -685,18 +657,30 @@ useEffect(() => {
     </label>
 
     <label className={`payment-card ${paymentMethod === "momo" ? "active" : ""}`}>
-        <input
+    <input
             type="radio"
             name="payment"
             value="momo"
             checked={paymentMethod === "momo"}
             onChange={() => setPaymentMethod("momo")}
-        />
+          />
         <FaMobileAlt className="payment-icon momo" />
         <span>Thanh toán bằng Ví MoMo</span>
     </label>
+    {paymentMethod === "momo" && (
+          <div className="terms-and-conditions">
+            <label>
+              <input
+                type="checkbox"
+                checked={agreeTerms}
+                onChange={(e) => setAgreeTerms(e.target.checked)}
+              />
+              Tôi đồng ý với điều khoản thanh toán qua Ví MoMo.
+            </label>
           </div>
-
+        )}
+          </div>
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
           <button type="submit" className="order-button" onClick={handleOrder}>
             ĐẶT HÀNG
           </button>
