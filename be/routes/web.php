@@ -63,7 +63,7 @@ Route::get('/order/confirm/{id}', function ($id) {
 })->name('orders.confirm');
 
 Route::get('/order/cancel/{id}', function ($id) {
-    $order =Order::find($id);
+    $order = Order::find($id);
 
     if (!$order) {
         return view('order.notfound');
@@ -387,7 +387,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profiles.edit');
 
     // Cập nhật thông tin người dùng hiện tại
-    Route::put('/profile', [ProfileController::class, 'update'])->name('profiles.update');
+    Route::put('/profile/{user_id}/update', [ProfileController::class, 'update'])->name('profiles.update');
 
     // Tạo profile cho người dùng hiện tại
     Route::get('/profile/create', [ProfileController::class, 'create'])->name('profiles.create');

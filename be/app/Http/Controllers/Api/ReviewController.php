@@ -33,6 +33,7 @@ class ReviewController extends Controller
                     'number_of_likes' => $review->helpful_count,
                     'created_at' => $review->created_at->diffForHumans(),
                     'is_anonymous' => $review->is_anonymous,
+                    'rating' => $review->rating, // Thêm rating ở đây
                 ];
             });
 
