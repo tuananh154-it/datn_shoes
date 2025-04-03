@@ -14,13 +14,13 @@
             <header class="card-header">
                 Bảng màu sắc
             </header>
-            
+
             @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
             @endif
-           
+
             <div class="mb-3">
                 <form action="{{ route('colors.index') }}" method="GET">
                     <div class="row">
@@ -40,7 +40,7 @@
                     </div>
                 </form>
             </div>
-            
+
 
             <div class="mb-3">
                 <a href="{{ route('colors.create') }}" class="btn btn-success btn-sm">
@@ -71,16 +71,16 @@
                             </td>
                             <td>
                                 <a href="{{ route('colors.edit', $color->id) }}" class="btn btn-primary btn-sm">
-                                    <i class="fa fa-pencil"></i> 
+                                    <i class="fa fa-pencil"></i>
                                 </a>
 
-                                <form action="{{ route('colors.destroy', $color->id) }}" method="POST" style="display:inline;">
+                                {{-- <form action="{{ route('colors.destroy', $color->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-trash-o"></i> 
+                                        <i class="fa fa-trash-o"></i>
                                     </button>
-                                </form>
+                                </form> --}}
                             </td>
                         </tr>
                     @endforeach
