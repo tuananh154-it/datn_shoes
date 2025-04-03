@@ -12,7 +12,7 @@ class Voucher extends Model
     public $timestamps = true;
     protected $fillable = [
         'name', 'discount_amount', 'discount_percent', 'expiration_date', 
-        'min_purchase_amount', 'max_discount_amount', 'terms_and_conditions', 'status'
+        'min_purchase_amount', 'max_discount_amount', 'terms_and_conditions', 'status','quantity'
 
     ];
 
