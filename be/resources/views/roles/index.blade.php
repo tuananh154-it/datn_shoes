@@ -46,6 +46,11 @@
                             <td>{{ $role->name }}</td>
                             <td>
 
+                                
+
+                                @if (strtolower($role->name) === 'super-admin')
+                                    <span class="badge bg-secondary"></span>
+                                @else
                                 <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-primary "><i class="fa fa-pencil"></i></a>
             
                                 <!-- Delete form -->
@@ -54,22 +59,6 @@
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger"><i class="fa fa-trash-o"></i> </button>
                                 </form>
-
-                                @if (strtolower($role->name) === 'super-admin')
-                                    <span class="badge bg-secondary"></span>
-                                @else
-                                    <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning btn-sm">
-                                        <i class="fa fa-pencil"></i> Sửa
-                                    </a>
-
-                                    <!-- Delete form -->
-                                    <form action="{{ route('roles.destroy', $role->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="fa fa-trash-o"></i> Xóa
-                                        </button>
-                                    </form>
                                 @endif
 
                             </td>

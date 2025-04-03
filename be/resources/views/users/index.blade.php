@@ -74,7 +74,7 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->roles->first()?->name }}</td>
                             <td>
-<<<<<<< HEAD
+
                                 {{-- <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')

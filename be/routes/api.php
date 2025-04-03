@@ -22,6 +22,7 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\OnlineCheckOutController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ReviewController;
+use App\Http\Controllers\Api\Top10SPController;
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -55,6 +56,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
+    //
+    
 });
 Route::apiResource('products', ProductController::class);
 Route::get('/latest-products', [ProductController::class, 'latestProducts']);
@@ -63,9 +66,11 @@ Route::get('/latest-products', [ProductController::class, 'latestProducts']);
 
 // Trang Home
 Route::get('/home', [HomeController::class, 'index']);
+// top 10 sp
 
+Route::get('/top10', [Top10SPController::class, 'top10']);
 // Trang Danh Mục
-Route::get('/categories', [CategoryController::class, 'index']);
+Route::get('/categories', [CategoryController::class, '']);
 
 // Trang Thương Hiệu
 Route::get('/brands', [BrandController::class, 'index']);
@@ -73,6 +78,10 @@ Route::get('/brands', [BrandController::class, 'index']);
 // Trang Voucher
 Route::get('/vouchers', [VoucherController::class, 'index']);
 Route::get('/vouchers/{id}', [VoucherController::class, 'show']);
+
+//////test real time
+
+
 // Auth routes
 // Routes protected by JWT Middleware
 Route::middleware(['jwt.auth'])->group(function () {

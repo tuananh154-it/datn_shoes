@@ -13,158 +13,314 @@ use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use Illuminate\Support\Facades\DB;
+use App\Events\PaymentSuccess;
+use App\Events\OrderPlaced;
+
 
 class OrderController extends Controller
 {
-    public function placeOrder(Request $request)
-    {
+    // public function placeOrder(Request $request)
+    // {
         
-        if (!$request->user()) {
-            return response()->json(['message' => 'Bạn cần đăng nhập để đặt hàng'], 401);
-        }
+    //     if (!$request->user()) {
+    //         return response()->json(['message' => 'Bạn cần đăng nhập để đặt hàng'], 401);
+    //     }
     
-        $request->validate([
-            'username' => 'required|string',
-            'email' => 'required|email',
-            'phone_number' => 'required|string',
-            'address' => 'required|string',
-            'payment_method' => 'required|in:credit_card,cash_on_delivery,paypal',
-            'voucher_id' => 'nullable|exists:vouchers,id',
-            'note' => 'nullable|string',
-            'selected_items' => 'required|array|min:1',
-            'selected_items.*' => 'integer|exists:cart_items,id',
-        ]);
+    //     $request->validate([
+    //         'username' => 'required|string',
+    //         'email' => 'required|email',
+    //         'phone_number' => 'required|string',
+    //         'address' => 'required|string',
+    //         'payment_method' => 'required|in:credit_card,cash_on_delivery,paypal',
+    //         'voucher_id' => 'nullable|exists:vouchers,id',
+    //         'note' => 'nullable|string',
+    //         'selected_items' => 'required|array|min:1',
+    //         'selected_items.*' => 'integer|exists:cart_items,id',
+    //     ]);
     
-        $user = $request->user();
-        $selectedItemIds = $request->selected_items;
+    //     $user = $request->user();
+    //     $selectedItemIds = $request->selected_items;
     
-        $validItemCount = CartItem::whereIn('id', $selectedItemIds)
-            ->whereHas('cart', function($q) use ($user) {
-                $q->where('user_id', $user->id);
-            })->count();
+    //     $validItemCount = CartItem::whereIn('id', $selectedItemIds)
+    //         ->whereHas('cart', function($q) use ($user) {
+    //             $q->where('user_id', $user->id);
+    //         })->count();
     
-        if ($validItemCount !== count($selectedItemIds)) {
-            return response()->json(['message' => 'Có sản phẩm không hợp lệ hoặc không thuộc quyền sở hữu'], 403);
-        }
+    //     if ($validItemCount !== count($selectedItemIds)) {
+    //         return response()->json(['message' => 'Có sản phẩm không hợp lệ hoặc không thuộc quyền sở hữu'], 403);
+    //     }
     
-        $cart = Cart::with(['items' => function ($query) use ($selectedItemIds) {
-            $query->whereIn('id', $selectedItemIds);
-        }, 'items.productDetail.product'])->where('user_id', $user->id)->first();
+    //     $cart = Cart::with(['items' => function ($query) use ($selectedItemIds) {
+    //         $query->whereIn('id', $selectedItemIds);
+    //     }, 'items.productDetail.product'])->where('user_id', $user->id)->first();
     
-        if (!$cart || $cart->items->isEmpty()) {
-            return response()->json(['message' => 'Không có sản phẩm nào được chọn để đặt hàng'], 400);
-        }
+    //     if (!$cart || $cart->items->isEmpty()) {
+    //         return response()->json(['message' => 'Không có sản phẩm nào được chọn để đặt hàng'], 400);
+    //     }
     
-        DB::beginTransaction();
+    //     DB::beginTransaction();
     
-        try {
-            $total = 0;
-            $deliverFee = 30000;
-            $discount = 0;
+    //     try {
+    //         $total = 0;
+    //         $deliverFee = 30000;
+    //         $discount = 0;
     
-            foreach ($cart->items as $item) {
-                $productDetail = $item->productDetail;
-                $price = $productDetail->discount_price ?? $productDetail->default_price;
+    //         foreach ($cart->items as $item) {
+    //             $productDetail = $item->productDetail;
+    //             $price = $productDetail->discount_price ?? $productDetail->default_price;
     
-                if ($productDetail->quantity < $item->quantity) {
-                    return response()->json([
-                        'message' => 'Sản phẩm "' . $productDetail->product->name . '" không đủ số lượng'
-                    ], 400);
-                }
-                // if ($productDetail->quantity < $item->quantity) {
-                //     throw new \Exception('Sản phẩm "' . $productDetail->product->name . '" không đủ số lượng');
-                // }
+    //             if ($productDetail->quantity < $item->quantity) {
+    //                 return response()->json([
+    //                     'message' => 'Sản phẩm "' . $productDetail->product->name . '" không đủ số lượng'
+    //                 ], 400);
+    //             }
+    //             // if ($productDetail->quantity < $item->quantity) {
+    //             //     throw new \Exception('Sản phẩm "' . $productDetail->product->name . '" không đủ số lượng');
+    //             // }
     
-                $total += $price * $item->quantity;
-            }
+    //             $total += $price * $item->quantity;
+    //         }
     
-            $voucher = null;
+    //         $voucher = null;
     
-            if ($request->voucher_id) {
-                $voucher = Voucher::where('id', $request->voucher_id)
-                    ->where('status', 'active')
-                    ->where('expiration_date', '>=', now())
-                    ->first();
+    //         if ($request->voucher_id) {
+    //             $voucher = Voucher::where('id', $request->voucher_id)
+    //                 ->where('status', 'active')
+    //                 ->where('expiration_date', '>=', now())
+    //                 ->first();
     
-                if (!$voucher) {
-                    return response()->json(['message' => 'Voucher không hợp lệ'], 400);
-                }
+    //             if (!$voucher) {
+    //                 return response()->json(['message' => 'Voucher không hợp lệ'], 400);
+    //             }
     
-                if ($total < $voucher->min_purchase_amount) {
-                    return response()->json(['message' => 'Không đủ điều kiện áp dụng voucher'], 400);
-                }
+    //             if ($total < $voucher->min_purchase_amount) {
+    //                 return response()->json(['message' => 'Không đủ điều kiện áp dụng voucher'], 400);
+    //             }
     
-                if ($voucher->discount_percent) {
-                    $discount = $total * ($voucher->discount_percent / 100);
-                } elseif ($voucher->discount_amount) {
-                    $discount = $voucher->discount_amount;
-                }
+    //             if ($voucher->discount_percent) {
+    //                 $discount = $total * ($voucher->discount_percent / 100);
+    //             } elseif ($voucher->discount_amount) {
+    //                 $discount = $voucher->discount_amount;
+    //             }
     
-                if ($discount > $voucher->max_discount_amount) {
-                    $discount = $voucher->max_discount_amount;
-                }
+    //             if ($discount > $voucher->max_discount_amount) {
+    //                 $discount = $voucher->max_discount_amount;
+    //             }
     
-                $total -= $discount;
-            }
+    //             $total -= $discount;
+    //         }
     
-            $total_price = $total + $deliverFee;
+    //         $total_price = $total + $deliverFee;
     
-            $order = Order::create([
-                'username' => $request->username,
-                'email' => $request->email,
-                'phone_number' => $request->phone_number,
-                'address' => $request->address,
-                'user_id' => $user->id,
-                'voucher_id' => $voucher->id ?? null,
-                'status' => 'waiting_for_confirmation',
-                'payment_status' => 'unpaid',
-                'payment_method' => $request->payment_method,
-                'note' => $request->note,
-                'deliver_fee' => $deliverFee,
-                'total_price' => $total_price,
-            ]);
+    //         $order = Order::create([
+    //             'username' => $request->username,
+    //             'email' => $request->email,
+    //             'phone_number' => $request->phone_number,
+    //             'address' => $request->address,
+    //             'user_id' => $user->id,
+    //             'voucher_id' => $voucher->id ?? null,
+    //             'status' => 'waiting_for_confirmation',
+    //             'payment_status' => 'unpaid',
+    //             'payment_method' => $request->payment_method,
+    //             'note' => $request->note,
+    //             'deliver_fee' => $deliverFee,
+    //             'total_price' => $total_price,
+    //         ]);
     
-            foreach ($cart->items as $item) {
-                $productDetail = $item->productDetail;
-                $price = $productDetail->discount_price ?? $productDetail->default_price;
-                $quantity = $item->quantity;
+    //         foreach ($cart->items as $item) {
+    //             $productDetail = $item->productDetail;
+    //             $price = $productDetail->discount_price ?? $productDetail->default_price;
+    //             $quantity = $item->quantity;
     
-                OrderDetail::create([
-                    'order_id' => $order->id,
-                    'product_detail_id' => $item->product_detail_id,
-                    'quantity' => $quantity,
-                    'price' => $price,
-                    'total_price' => $price * $quantity,
-                ]);
+    //             OrderDetail::create([
+    //                 'order_id' => $order->id,
+    //                 'product_detail_id' => $item->product_detail_id,
+    //                 'quantity' => $quantity,
+    //                 'price' => $price,
+    //                 'total_price' => $price * $quantity,
+    //             ]);
     
-                $productDetail->decrement('quantity', $quantity);
-            }
+    //             $productDetail->decrement('quantity', $quantity);
+    //         }
     
-            $cart->items()->whereIn('id', $selectedItemIds)->delete();
+    //         $cart->items()->whereIn('id', $selectedItemIds)->delete();
     
-            DB::commit();
+    //         DB::commit();
+    // try {
+    //     Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail(  $order->load('order_details.productDetail.product')));
+    // } catch (\Exception $e) {
+    //     Log::error('Lỗi gửi email xác nhận đơn hàng: ' . $e->getMessage());
+    //     // Không cần return lỗi, vẫn tiếp tục gửi response thành công
+    // }
+    //         return response()->json([
+    //             'message' => 'Đặt hàng thành công',
+    //             'order_id' => $order->id,
+    //             'total' => $total_price,
+    //             'discount' => $discount
+    //         ], 201);
+    
+    //     } catch (\Exception $e) {
+    //         DB::rollback();
+    //         return response()->json([
+    //             'message' => 'Lỗi đặt hàng',
+    //             'error' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
+    
+
+     // Import sự kiện
+
+public function placeOrder(Request $request)
+{
+    if (!$request->user()) {
+        return response()->json(['message' => 'Bạn cần đăng nhập để đặt hàng'], 401);
+    }
+
+    $request->validate([
+        'username' => 'required|string',
+        'email' => 'required|email',
+        'phone_number' => 'required|string',
+        'address' => 'required|string',
+        'payment_method' => 'required|in:credit_card,cash_on_delivery,paypal',
+        'voucher_id' => 'nullable|exists:vouchers,id',
+        'note' => 'nullable|string',
+        'selected_items' => 'required|array|min:1',
+        'selected_items.*' => 'integer|exists:cart_items,id',
+    ]);
+
+    $user = $request->user();
+    $selectedItemIds = $request->selected_items;
+
+    $validItemCount = CartItem::whereIn('id', $selectedItemIds)
+        ->whereHas('cart', function ($q) use ($user) {
+            $q->where('user_id', $user->id);
+        })->count();
+
+    if ($validItemCount !== count($selectedItemIds)) {
+        return response()->json(['message' => 'Có sản phẩm không hợp lệ hoặc không thuộc quyền sở hữu'], 403);
+    }
+
+    $cart = Cart::with(['items' => function ($query) use ($selectedItemIds) {
+        $query->whereIn('id', $selectedItemIds);
+    }, 'items.productDetail.product'])->where('user_id', $user->id)->first();
+
+    if (!$cart || $cart->items->isEmpty()) {
+        return response()->json(['message' => 'Không có sản phẩm nào được chọn để đặt hàng'], 400);
+    }
+
+    DB::beginTransaction();
+
     try {
-        Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail(  $order->load('order_details.productDetail.product')));
-    } catch (\Exception $e) {
-        Log::error('Lỗi gửi email xác nhận đơn hàng: ' . $e->getMessage());
-        // Không cần return lỗi, vẫn tiếp tục gửi response thành công
-    }
-            return response()->json([
-                'message' => 'Đặt hàng thành công',
-                'order_id' => $order->id,
-                'total' => $total_price,
-                'discount' => $discount
-            ], 201);
-    
-        } catch (\Exception $e) {
-            DB::rollback();
-            return response()->json([
-                'message' => 'Lỗi đặt hàng',
-                'error' => $e->getMessage()
-            ], 500);
+        $total = 0;
+        $deliverFee = 30000;
+        $discount = 0;
+
+        foreach ($cart->items as $item) {
+            $productDetail = $item->productDetail;
+            $price = $productDetail->discount_price ?? $productDetail->default_price;
+
+            if ($productDetail->quantity < $item->quantity) {
+                return response()->json([
+                    'message' => 'Sản phẩm "' . $productDetail->product->name . '" không đủ số lượng'
+                ], 400);
+            }
+
+            $total += $price * $item->quantity;
         }
+
+        $voucher = null;
+
+        if ($request->voucher_id) {
+            $voucher = Voucher::where('id', $request->voucher_id)
+                ->where('status', 'active')
+                ->where('expiration_date', '>=', now())
+                ->first();
+
+            if (!$voucher) {
+                return response()->json(['message' => 'Voucher không hợp lệ'], 400);
+            }
+
+            if ($total < $voucher->min_purchase_amount) {
+                return response()->json(['message' => 'Không đủ điều kiện áp dụng voucher'], 400);
+            }
+
+            if ($voucher->discount_percent) {
+                $discount = $total * ($voucher->discount_percent / 100);
+            } elseif ($voucher->discount_amount) {
+                $discount = $voucher->discount_amount;
+            }
+
+            if ($discount > $voucher->max_discount_amount) {
+                $discount = $voucher->max_discount_amount;
+            }
+
+            $total -= $discount;
+        }
+
+        $total_price = $total + $deliverFee;
+
+        $order = Order::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'phone_number' => $request->phone_number,
+            'address' => $request->address,
+            'user_id' => $user->id,
+            'voucher_id' => $voucher->id ?? null,
+            'status' => 'waiting_for_confirmation',
+            'payment_status' => 'unpaid',
+            'payment_method' => $request->payment_method,
+            'note' => $request->note,
+            'deliver_fee' => $deliverFee,
+            'total_price' => $total_price,
+        ]);
+
+        foreach ($cart->items as $item) {
+            $productDetail = $item->productDetail;
+            $price = $productDetail->discount_price ?? $productDetail->default_price;
+            $quantity = $item->quantity;
+
+            OrderDetail::create([
+                'order_id' => $order->id,
+                'product_detail_id' => $item->product_detail_id,
+                'quantity' => $quantity,
+                'price' => $price,
+                'total_price' => $price * $quantity,
+            ]);
+
+            $productDetail->decrement('quantity', $quantity);
+        }
+
+        $cart->items()->whereIn('id', $selectedItemIds)->delete();
+
+        // Gửi email xác nhận đơn hàng
+        try {
+            Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail($order->load('order_details.productDetail.product')));
+        } catch (\Exception $e) {
+            Log::error('Lỗi gửi email xác nhận đơn hàng: ' . $e->getMessage());
+        }
+
+        DB::commit();
+
+        // **Phát sự kiện real-time sau khi đặt hàng thành công**
+        broadcast(new OrderPlaced($order))->toOthers();
+
+        return response()->json([
+            'message' => 'Đặt hàng thành công',
+            'order_id' => $order->id,
+            'total' => $total_price,
+            'discount' => $discount
+        ], 201);
+
+    } catch (\Exception $e) {
+        DB::rollback();
+        return response()->json([
+            'message' => 'Lỗi đặt hàng',
+            'error' => $e->getMessage()
+        ], 500);
     }
-    
+}
+
     public function listOrders(Request $request)
 {
     $user = $request->user();
@@ -304,6 +460,7 @@ public function cancelOrder($id, Request $request)
         'total' => $total
     ]);
 }
+///
 
 
 }

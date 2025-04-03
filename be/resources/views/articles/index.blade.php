@@ -56,7 +56,7 @@
                                 @else
                                     <span class="text-muted">Không có ảnh</span>
                                 @endif
-                            </td>
+                            </td> 
                             <td>
                                 <a class="btn btn-warning  btn-sm" href="{{ route('articles.show', $item->id) }}"><i class="fa fa-eye"></i></a>
                                 <a class="btn btn-primary  btn-sm" href="{{ route('articles.edit', $item->id) }}"><i class="fa fa-pencil "></i></a>

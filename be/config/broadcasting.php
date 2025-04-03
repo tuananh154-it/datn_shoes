@@ -27,6 +27,14 @@ return [
     | each available type of connection are provided inside this array.
     |
     */
+    'pusher' => [
+    'driver' => 'pusher',
+    'key' => env('PUSHER_APP_KEY'),
+    'secret' => env('PUSHER_APP_SECRET'),
+    'app_id' => env('PUSHER_APP_ID'),
+    'cluster' => env('PUSHER_APP_CLUSTER'),
+    'encrypted' => true,
+],
 
     'connections' => [
 
