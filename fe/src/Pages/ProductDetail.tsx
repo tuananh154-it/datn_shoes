@@ -13,9 +13,24 @@ import { getComments } from "../services/comments";
 
 const ProductDetail = () => {
   const { addToCart } = useCart();
-  const isLoggedIn = localStorage.getItem('token') ? true : false;
+  const isLoggedIn = localStorage.getItem("token") ? true : false;
+
   const nav = useNavigate();
   const [quantity, setQuantity] = useState<number>(1);
+
+  const formatPrice = (price: string | number | undefined) => {
+    if (typeof price === "number") {
+      return price.toLocaleString("vi-VN") + " VND";
+    }
+    if (typeof price === "string") {
+      return (
+        Number(price.replace(/,/g, "").replace(" VND", "")).toLocaleString(
+          "vi-VN"
+        ) + " VND"
+      );
+    }
+    return "0 VND";
+  };
   const handleIncrease = () => {
     setQuantity(quantity + 1);
   };
@@ -29,6 +44,8 @@ const ProductDetail = () => {
 
   const [productId, setProductId] = useState<Products>();
   const [selectedDetail, setSelectedDetail] = useState<any>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const { id } = useParams();
   useEffect(() => {
     if (!id) return;
@@ -39,7 +56,41 @@ const ProductDetail = () => {
     });
   }, [id]);
   console.log("data", productId);
+  // Nhóm size theo từng màu
+  const colorSizeMap =
+    productId?.details?.reduce((acc, detail) => {
+      if (!acc[detail.color]) {
+        acc[detail.color] = [];
+      }
+      acc[detail.color].push(detail.size);
+      return acc;
+    }, {} as Record<string, string[]>) || {};
 
+  // Danh sách màu sắc không trùng lặp
+  const uniqueColors = Object.keys(colorSizeMap);
+
+  const getVariantImagesForColor = (color: string) => {
+    const colorDetails =
+      productId?.details.filter((detail) => detail.color === color) || [];
+    return colorDetails.flatMap((detail) => detail.image); // flatMap giúp kết hợp tất cả các ảnh vào một mảng
+  };
+  const handleColorSelect = (color: string) => {
+    setSelectedColor(color);
+    setSelectedSize(colorSizeMap[color][0]); // Chọn size đầu tiên của màu đó
+    const matchingDetail = productId?.details.find(
+      (d) => d.color === color && d.size === colorSizeMap[color][0]
+    );
+    setSelectedDetail(matchingDetail || null);
+  };
+
+  // Xử lý chọn size
+  const handleSizeSelect = (size: string) => {
+    setSelectedSize(size);
+    const matchingDetail = productId?.details.find(
+      (d) => d.color === selectedColor && d.size === size
+    );
+    setSelectedDetail(matchingDetail || null);
+  };
   const handleVariantClick = (detail: any) => {
     if (detail) {
       setSelectedDetail(detail);
@@ -48,12 +99,12 @@ const ProductDetail = () => {
     }
   };
 
-  function getColorFromText(colorText: any) {
+  function getColorFromText(colorText: string): string {
     switch (colorText.toLowerCase()) {
-      case "màu vàng":
-        return "#FFCC00"; // Mã màu vàng
-      case "màu đỏ":
-        return "#FF0000"; // Mã màu đỏ
+      case "màu trắng":
+        return "#FFFFFF"; // Mã màu trắng
+      case "màu đen":
+        return "#000000"; // Mã màu đen
       case "màu xanh":
         return "#008000"; // Mã màu xanh
       // Thêm các màu khác vào đây nếu cần
@@ -64,10 +115,9 @@ const ProductDetail = () => {
 
   const [products, setProducts] = useState<Product[]>([]);
   useEffect(() => {
-    getAllProduct()
-      .then(({ data }) => {
-        setProducts(data.data);
-      })
+    getAllProduct().then(({ data }) => {
+      setProducts(data.data);
+    });
   }, []);
 
   const [comments, setComments] = useState<Comment[]>([]);
@@ -77,10 +127,11 @@ const ProductDetail = () => {
     if (!newComment.trim()) return;
     getComments()
       .then(({ data }) => {
-        setComments(data)
+        setComments(data);
       })
-      .catch(() => toast.error("Loi lay comments"))
+      .catch(() => toast.error("Loi lay comments"));
   };
+
   return (
     <>
       <div className="menu_overlay"></div>
@@ -114,28 +165,11 @@ const ProductDetail = () => {
                 {/* Phần bên trái với ảnh chính */}
                 <div className="main-left" data-wow-duration="1300ms">
                   <div className="imageProduct">
+                    {/* Hiển thị ảnh chính */}
                     <img
-                      src={selectedDetail?.image || productId.image}
+                      src={selectedDetail?.image?.[0] || productId.image}
                       alt="Product"
                     />
-                  </div>
-                  <div className="imageBienthe">
-                    <img
-                      src={productId.image}
-                      alt="Product main"
-                      style={{ cursor: "pointer", marginRight: "10px" }}
-                      onClick={() => handleVariantClick(null)} // Xử lý khi click vào ảnh chính
-                    />
-                    {/* Lặp qua chi tiết sản phẩm để hiển thị ảnh các variant */}
-                    {productId.details.map((detail, index) => (
-                      <img
-                        key={index}
-                        src={detail.image}
-                        alt={`Variant ${index}`}
-                        onClick={() => handleVariantClick(detail)} // Xử lý khi click vào variant
-                        style={{ cursor: "pointer", marginRight: "10px" }}
-                      />
-                    ))}
                   </div>
                 </div>
                 <div className="main-right" data-wow-duration="1300ms">
@@ -151,31 +185,43 @@ const ProductDetail = () => {
                         Thương hiệu:{" "}
                         <a className="font-bold">{productId.brand}</a>
                       </p>
-
-                      {/* Giá sản phẩm */}
-                      {/* <p className="text-color title_h4">
-                          {selectedDetail?.discount_price ||
-                            selectedDetail?.price ||
-                            productId.price}
-                        </p> */}
                       <p className="text-color title_h4">
-                        {selectedDetail?.discount_price ? (
+                        {selectedDetail?.default_price ? (
                           <>
                             <span className="original-price">
-                              {selectedDetail?.default_price}
+                              {selectedDetail?.default_price
+                                ? Number(
+                                    selectedDetail.default_price
+                                      .replace(/,/g, "")
+                                      .replace(" VND", "")
+                                  ).toLocaleString("vi-VN") + " VND"
+                                : "0 VND"}
                             </span>{" "}
                             {/* Giá gốc */}
                             <span className="discount-price">
-                              {selectedDetail?.discount_price}
+                              {selectedDetail?.discount_price
+                                ? Number(
+                                    selectedDetail.discount_price
+                                      .replace(/,/g, "")
+                                      .replace(" VND", "")
+                                  ).toLocaleString("vi-VN") + " VND"
+                                : "0 VND"}
                             </span>{" "}
                             {/* Giá khuyến mại */}
                           </>
                         ) : (
-                          selectedDetail?.default_price || productId.price
+                          <span className="default-price">
+                            {formatPrice(
+                              selectedDetail?.discount_price || productId?.price
+                            )}
+                          </span>
                         )}
                       </p>
 
-                      <p>Số lượng: {selectedDetail?.quantity}</p>
+                      {selectedDetail?.quantity !== undefined &&
+                        selectedDetail?.quantity > 0 && (
+                          <p>Số lượng: {selectedDetail.quantity}</p>
+                        )}
                       {/* Đánh giá */}
                       <div className="star">
                         <img
@@ -195,26 +241,21 @@ const ProductDetail = () => {
                           </label>
 
                           {/* Màu sắc */}
-                          {productId.details.map((detail, index) => (
-                            <div
-                              key={index}
-                              className="radio text-uppercase text-center"
-                            >
+
+                          {uniqueColors.map((color, index) => (
+                            <div key={index} className="radio p-2">
                               <input
                                 type="radio"
-                                name="color11"
-                                id={`color${index + 1}`}
-                                checked={selectedDetail?.id === detail.id}
-                                onChange={() => handleVariantClick(detail)}
+                                name="color"
+                                id={`color${index}`}
+                                checked={selectedColor === color}
+                                onChange={() => handleColorSelect(color)}
                               />
                               <label
-                                htmlFor={`color${index + 1}`}
-                                className={`color${index + 1}`}
+                                htmlFor={`color${index}`}
                                 style={{
-                                  backgroundColor: getColorFromText(
-                                    detail.color
-                                  ),
-                                }}
+                                  backgroundColor: getColorFromText(color),
+                                }} // Dùng hàm getColorFromText để lấy mã màu
                               ></label>
                             </div>
                           ))}
@@ -224,11 +265,17 @@ const ProductDetail = () => {
                           <label className="title_h5 text-capitalize">
                             Kích thước
                           </label>
-                          <select className="form-control">
-                            <option>
-                              {selectedDetail?.size ||
-                                productId.details[0]?.size}
-                            </option>
+                          <select
+                            className="form-control"
+                            value={selectedSize || ""}
+                            onChange={(e) => handleSizeSelect(e.target.value)}
+                          >
+                            {selectedColor &&
+                              colorSizeMap[selectedColor].map((size, index) => (
+                                <option key={index} value={size}>
+                                  {size}
+                                </option>
+                              ))}
                           </select>
                         </div>
 
@@ -283,14 +330,18 @@ const ProductDetail = () => {
                           onClick={() => {
                             // Kiểm tra nếu người dùng chưa đăng nhập
                             if (!isLoggedIn) {
-                              alert("Vui lòng đăng nhập trước khi thêm vào giỏ hàng!");
-                              nav("/login")
+                              alert(
+                                "Vui lòng đăng nhập trước khi thêm vào giỏ hàng!"
+                              );
+                              nav("/login");
                               return;
                             }
 
                             // Kiểm tra xem biến thể đã được chọn chưa
                             if (!selectedDetail) {
-                              alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
+                              alert(
+                                "Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!"
+                              );
                               return;
                             }
 
@@ -299,10 +350,13 @@ const ProductDetail = () => {
                             toast.success("Thêm vào giỏ hàng thành công");
 
                             // Log dữ liệu gửi lên API
-                            console.log("Dữ liệu gửi lên API:", JSON.stringify({
-                              product_detail_id: selectedDetail.id,
-                              quantity
-                            }));
+                            console.log(
+                              "Dữ liệu gửi lên API:",
+                              JSON.stringify({
+                                product_detail_id: selectedDetail.id,
+                                quantity,
+                              })
+                            );
                           }}
                         >
                           Add to cart
@@ -349,28 +403,22 @@ const ProductDetail = () => {
                       Giao hàng nhanh, mọi lúc ,mọi nơi
                     </h5>
                     <p>
-                      Nhằm mang đến trải nghiệm mua sắm thuận tiện nhất, chúng tôi cung cấp dịch vụ giao hàng nhanh chóng,
-                       an toàn và linh hoạt trên toàn quốc.
-
-                      Thời gian giao hàng:
-
-                      Giao hàng tiêu chuẩn: 2-5 ngày làm việc.
-
-                      Giao hàng nhanh: 24-48 giờ (áp dụng tại các thành phố lớn).
-
-                      Giao hàng hỏa tốc: Nhận hàng trong ngày (chỉ áp dụng tại một số khu vực).
-
-                      Đối tác vận chuyển:
-                      Chúng tôi hợp tác với các đơn vị giao hàng uy tín như GHN, GHTK, Viettel Post, J&T Express… 
-                      nhằm đảm bảo đơn hàng được giao đúng thời gian, đúng địa điểm và trong tình trạng nguyên vẹn.
-
-                      Chính sách kiểm tra hàng trước khi nhận:
-                      Khách hàng có thể kiểm tra sản phẩm trước khi thanh toán. Nếu có bất kỳ lỗi sản xuất hoặc sai sót trong đơn hàng,
-                       chúng tôi cam kết hỗ trợ đổi trả nhanh chóng mà không mất thêm phí.
-
-                      Miễn phí vận chuyển:
-                      Chúng tôi hỗ trợ miễn phí vận chuyển cho các đơn hàng từ [số tiền cụ thể] trở lên, 
-                      giúp khách hàng tiết kiệm chi phí khi mua sắm.
+                      Nhằm mang đến trải nghiệm mua sắm thuận tiện nhất, chúng
+                      tôi cung cấp dịch vụ giao hàng nhanh chóng, an toàn và
+                      linh hoạt trên toàn quốc. Thời gian giao hàng: Giao hàng
+                      tiêu chuẩn: 2-5 ngày làm việc. Giao hàng nhanh: 24-48 giờ
+                      (áp dụng tại các thành phố lớn). Giao hàng hỏa tốc: Nhận
+                      hàng trong ngày (chỉ áp dụng tại một số khu vực). Đối tác
+                      vận chuyển: Chúng tôi hợp tác với các đơn vị giao hàng uy
+                      tín như GHN, GHTK, Viettel Post, J&T Express… nhằm đảm bảo
+                      đơn hàng được giao đúng thời gian, đúng địa điểm và trong
+                      tình trạng nguyên vẹn. Chính sách kiểm tra hàng trước khi
+                      nhận: Khách hàng có thể kiểm tra sản phẩm trước khi thanh
+                      toán. Nếu có bất kỳ lỗi sản xuất hoặc sai sót trong đơn
+                      hàng, chúng tôi cam kết hỗ trợ đổi trả nhanh chóng mà
+                      không mất thêm phí. Miễn phí vận chuyển: Chúng tôi hỗ trợ
+                      miễn phí vận chuyển cho các đơn hàng từ [số tiền cụ thể]
+                      trở lên, giúp khách hàng tiết kiệm chi phí khi mua sắm.
                     </p>
                   </div>
                   <div
@@ -418,15 +466,25 @@ const ProductDetail = () => {
                             </button>
                           </h5>
                         </div>
-                        <div id="collapseOne" className="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div
+                          id="collapseOne"
+                          className="collapse"
+                          aria-labelledby="headingOne"
+                          data-parent="#accordion"
+                        >
                           <div className="card-body">
                             {/* Hiển thị danh sách bình luận */}
                             {comments.length > 0 ? (
                               <ul className="comment-list">
-                                {comments.map(comment => (
+                                {comments.map((comment) => (
                                   <li key={comment.id} className="comment-item">
-                                    <strong>{comment.user}:</strong> {comment.content}
-                                    <span className="comment-date">{new Date(comment.created_at).toLocaleString()}</span>
+                                    <strong>{comment.user}:</strong>{" "}
+                                    {comment.content}
+                                    <span className="comment-date">
+                                      {new Date(
+                                        comment.created_at
+                                      ).toLocaleString()}
+                                    </span>
                                   </li>
                                 ))}
                               </ul>
@@ -443,7 +501,10 @@ const ProductDetail = () => {
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                               />
-                              <button className="btn btn-primary" onClick={handleAddComment}>
+                              <button
+                                className="btn btn-primary"
+                                onClick={handleAddComment}
+                              >
                                 Gửi
                               </button>
                             </div>
@@ -515,7 +576,6 @@ const ProductDetail = () => {
                                   className="img-fluid"
                                   alt="star"
                                 />{" "}
-
                                 Dựa trên 1 đánh giá
                               </div>
                               <a
@@ -539,10 +599,11 @@ const ProductDetail = () => {
                                   April 5, 2018
                                 </span>
                                 <p>
-                                  🔥 "Chất lượng tuyệt vời!"
-                                  Mình đã sử dụng đôi này hơn 6 tháng, đi rất êm chân và không bị đau dù mang cả ngày.
-                                  Thiết kế đơn giản nhưng cực kỳ phong cách, dễ phối đồ. Đế giày bám tốt, không bị trơn trượt.
-                                  Rất đáng tiền!.{" "}
+                                  🔥 "Chất lượng tuyệt vời!" Mình đã sử dụng đôi
+                                  này hơn 6 tháng, đi rất êm chân và không bị
+                                  đau dù mang cả ngày. Thiết kế đơn giản nhưng
+                                  cực kỳ phong cách, dễ phối đồ. Đế giày bám
+                                  tốt, không bị trơn trượt. Rất đáng tiền!.{" "}
                                 </p>
                               </div>
                             </div>
@@ -577,23 +638,42 @@ const ProductDetail = () => {
                             className="img-product_detail"
                           />
                           <div className="featured_btn vertical_middle">
-                            <a href="cart.html" className="text-uppercase background-btn add_to_bag_btn">
+                            <a
+                              href="cart.html"
+                              className="text-uppercase background-btn add_to_bag_btn"
+                            >
                               Thêm vào giỏ hàng
                             </a>
-                            <a href={`/product_detail/${product.id}`} className="text-uppercase border-btn popup_btn">
+                            <a
+                              href={`/product_detail/${product.id}`}
+                              className="text-uppercase border-btn popup_btn"
+                            >
                               Xem chi tiết
                             </a>
                           </div>
-                          <a href="javascript:void(0);" className="heart rounded-circle text-center">
+                          <a
+                            href="javascript:void(0);"
+                            className="heart rounded-circle text-center"
+                          >
                             <i className="flaticon-heart vertical_middle"></i>
                           </a>
                         </div>
                         <div className="featured_detail_content">
                           <a href={`/product_detail/${product.id}`}>
-                            <p className="featured_title text-capitalize text-center">{product.name}</p>
+                            <p className="featured_title text-capitalize text-center">
+                              {product.name}
+                            </p>
                           </a>
                           <p className="featured_price title_h5 text-center">
-                            <span>{product.price}</span>
+                            <span className="text-color">
+                              {product?.price
+                                ? Number(
+                                    product.price
+                                      .replace(/,/g, "")
+                                      .replace(" VND", "")
+                                  ).toLocaleString("vi-VN") + " VND"
+                                : "0 VND"}
+                            </span>
                           </p>
                         </div>
                       </div>

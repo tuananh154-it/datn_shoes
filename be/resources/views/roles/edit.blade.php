@@ -2,12 +2,15 @@
 
 @section('content')
     <div class="container">
-        <h1>Create Role</h1>
-        <form action="{{ route('roles.store') }}" method="POST">
+        <h1>Edit Role</h1>
+        <form action="{{ route('roles.update', $role->id) }}" method="POST">
             @csrf
+            @method('PUT') <!-- Để Laravel biết đây là form update -->
+
             <div class="mb-3">
                 <label for="name" class="form-label">Role Name</label>
-                <input type="text" name="name" id="name" class="form-control" placeholder="Enter role name" required>
+                <input type="text" name="name" id="name" class="form-control" placeholder="Enter role name"
+                    value="{{ old('name', $role->name) }}" required>
             </div>
 
             <div class="mb-3">
@@ -18,63 +21,58 @@
                             <th>STT</th>
                             <th>Chức năng</th>
                             <th>
-                                <input type="checkbox" id="select-all-show" class="form-check-input"
-                                    onclick="toggleSelect('show')">
+                                <input type="checkbox" id="select-all-show" class="form-check-input" onclick="toggleSelect('show')">
                                 Xem
                             </th>
                             <th>
-                                <input type="checkbox" id="select-all-create" class="form-check-input"
-                                    onclick="toggleSelect('create')">
+                                <input type="checkbox" id="select-all-create" class="form-check-input" onclick="toggleSelect('create')">
                                 Thêm
                             </th>
                             <th>
-                                <input type="checkbox" id="select-all-edit" class="form-check-input"
-                                    onclick="toggleSelect('edit')">
+                                <input type="checkbox" id="select-all-edit" class="form-check-input" onclick="toggleSelect('edit')">
                                 Sửa
                             </th>
                             <th>
-                                <input type="checkbox" id="select-all-delete" class="form-check-input"
-                                    onclick="toggleSelect('delete')">
+                                <input type="checkbox" id="select-all-delete" class="form-check-input" onclick="toggleSelect('delete')">
                                 Xóa
                             </th>
-                            <th>
-                                <input type="checkbox" id="select-all-approve" class="form-check-input"
-                                    onclick="toggleSelect('approve')">
+                            {{-- <th>
+                                <input type="checkbox" id="select-all-approve" class="form-check-input" onclick="toggleSelect('approve')">
                                 Duyệt
-                            </th>
+                            </th> --}}
                         </tr>
                     </thead>
                     <tbody class="text-center">
                         @php $stt = 1; @endphp
                         @foreach ($groupedPermissions as $group => $permissions)
-                                        <tr>
-                                            <td>{{ $stt++ }}</td>
-                                            <td>{{ ucwords(str_replace('_', ' ', $group)) }}</td>
+                            <tr>
+                                <td class="text-center">{{ $stt++ }}</td>
+                                <td>{{ ucwords(str_replace('_', ' ', $group)) }}</td>
 
-                                            @foreach (['show', 'create', 'edit', 'delete', 'approve'] as $action)
-                                                                @php
-                                                                    // Lấy phần sau dấu ":" trong group, ví dụ: "role:products" => "products"
-                                                                    $groupName = str_replace('role:', '', $group);
-                                                                    // Tạo tên quyền theo dạng action-groupName, ví dụ: show-products, create-products
-                                                                    $permissionName = "{$action}-{$groupName}";
-                                                                    $permission = $permissions->firstWhere('name', $permissionName);
-                                                                @endphp
-                                                                <td>
-                                                                    @if ($permission)
-                                                                        <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
-                                                                            class="form-check-input permission-checkbox {{ $action }}-checkbox">
-                                                                    @else
-                                                                        <span class="text-muted">Không có quyền</span>
-                                                                    @endif
-                                                                </td>
-                                            @endforeach
-                                        </tr>
+                                @foreach (['show', 'create', 'edit', 'delete'] as $action)
+                                    @php
+                                        $groupName = str_replace('role:', '', $group);
+                                        $permissionName = "{$action}-{$groupName}";
+                                        $permission = $permissions->firstWhere('name', $permissionName);
+                                        // Kiểm tra xem permission đã được gán cho role chưa
+                                        $hasPermission = $role->permissions->contains($permission);
+                                    @endphp
+                                    <td class="text-center">
+                                        @if ($permission)
+                                            <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
+                                                class="form-check-input permission-checkbox {{ $action }}-checkbox" {{ $hasPermission ? 'checked' : '' }}>
+                                        @else
+                                            <span class="text-muted">Không có quyền</span>
+                                        @endif
+                                    </td>
+                                @endforeach
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
             </div>
 
-            <button type="submit" class="btn btn-success">Thêm mới</button>
+            <button type="submit" class="btn btn-success">Cập nhật</button>
         </form>
     </div>
 

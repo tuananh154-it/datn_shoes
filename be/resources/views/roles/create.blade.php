@@ -17,11 +17,31 @@
                         <tr>
                             <th>STT</th>
                             <th>Chức năng</th>
-                            <th>Xem</th>
-                            <th>Thêm</th>
-                            <th>Sửa</th>
-                            <th>Xóa</th>
-                            <th>Duyệt</th>
+                            <th>
+                                <input type="checkbox" id="select-all-show" class="form-check-input"
+                                    onclick="toggleSelect('show')">
+                                Xem
+                            </th>
+                            <th>
+                                <input type="checkbox" id="select-all-create" class="form-check-input"
+                                    onclick="toggleSelect('create')">
+                                Thêm
+                            </th>
+                            <th>
+                                <input type="checkbox" id="select-all-edit" class="form-check-input"
+                                    onclick="toggleSelect('edit')">
+                                Sửa
+                            </th>
+                            <th>
+                                <input type="checkbox" id="select-all-delete" class="form-check-input"
+                                    onclick="toggleSelect('delete')">
+                                Xóa
+                            </th>
+                            {{-- <th>
+                                <input type="checkbox" id="select-all-approve" class="form-check-input"
+                                    onclick="toggleSelect('approve')">
+                                Duyệt
+                            </th> --}}
                         </tr>
                     </thead>
                     <tbody class="text-center">
@@ -31,7 +51,7 @@
                                             <td>{{ $stt++ }}</td>
                                             <td>{{ ucwords(str_replace('_', ' ', $group)) }}</td>
 
-                                            @foreach (['show', 'create', 'edit', 'delete', 'approve'] as $action)
+                                            @foreach (['show', 'create', 'edit', 'delete'] as $action)
                                                                 @php
                                                                     // Lấy phần sau dấu ":" trong group, ví dụ: "role:products" => "products"
                                                                     $groupName = str_replace('role:', '', $group);
@@ -42,7 +62,7 @@
                                                                 <td>
                                                                     @if ($permission)
                                                                         <input type="checkbox" name="permissions[]" value="{{ $permission->id }}"
-                                                                            class="form-check-input">
+                                                                            class="form-check-input permission-checkbox {{ $action }}-checkbox">
                                                                     @else
                                                                         <span class="text-muted">Không có quyền</span>
                                                                     @endif
@@ -50,9 +70,6 @@
                                             @endforeach
                                         </tr>
                         @endforeach
-
-
-
                     </tbody>
                 </table>
             </div>
@@ -60,4 +77,17 @@
             <button type="submit" class="btn btn-success">Thêm mới</button>
         </form>
     </div>
+
+    <script>
+        function toggleSelect(action) {
+            // Lấy tất cả checkbox trong cột tương ứng
+            const checkboxes = document.querySelectorAll(`.${action}-checkbox`);
+            const selectAll = document.getElementById(`select-all-${action}`);
+
+            // Nếu checkbox "Chọn tất cả" được chọn, thì chọn tất cả checkbox trong cột
+            checkboxes.forEach((checkbox) => {
+                checkbox.checked = selectAll.checked;
+            });
+        }
+    </script>
 @endsection

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const MegaMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
-    console.log("MegaMenu isOpen:", isOpen); // Kiểm tra xem state có thay đổi không
+    // console.log("MegaMenu isOpen:", isOpen); // Kiểm tra xem state có thay đổi không
     return (
         <li
             className="nav-item dropdown mega-dropdown relative"
@@ -54,3 +54,5 @@ const MegaMenu = () => {
 };
 
 export default MegaMenu;
+
+
