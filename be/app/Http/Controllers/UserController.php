@@ -141,4 +141,11 @@ class UserController extends Controller
     {
         return view('users.show', compact('user'));
     }
+    public function updateApi(Request $request, $user_id)
+    {
+        // Logic cập nhật người dùng thông qua API
+        $user = User::findOrFail($user_id);
+        $user->update($request->all()); // Cập nhật thông tin người dùng
+        return response()->json(['message' => 'User updated successfully']);
+    }
 }

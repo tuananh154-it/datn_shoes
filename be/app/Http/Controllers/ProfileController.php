@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class ProfileController extends Controller
 {
@@ -30,15 +31,19 @@ class ProfileController extends Controller
 
     public function update(Request $request, $user_id)
     {
+
         $validated = $request->validate([
-            'phone' => 'nullable|string',
+            'name' => 'required|string|max:255',
+            'phone_number' => 'nullable|string',
             'address' => 'nullable|string',
-            'avatar' => 'nullable|string',
+            'gender' => 'nullable|string',
+            'date_of_birth' => 'nullable|date',
         ]);
 
-        $profile = Profile::where('user_id', $user_id)->first();
-        $profile->update($validated);
+        $user = User::findOrFail($user_id);
+        $user->update($validated);
 
-        return redirect()->route('profiles.show', $user_id);
+
+        return redirect()->route('profiles.show', $user->id)->with('success', 'Thông tin người dùng đã được cập nhật.');
     }
 }
