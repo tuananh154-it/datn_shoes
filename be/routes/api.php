@@ -107,7 +107,8 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-// =======
+// top 19 sp 
+Route::get('/top10', [Top10SPController::class, 'top10']);
 
 Route::post('login', [AuthController::class, 'login']);
 // >>>>>>> tuan-anh2

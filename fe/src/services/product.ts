@@ -11,6 +11,9 @@ export interface Product{
 export const getAllProduct = ()  =>{
     return api.get('/products') 
 }
+export const topProduct = ()  =>{
+    return api.get('/top10') 
+}
 export const getProductDetail = (id:string)  =>{
     return api.get(`/products/${id}`) 
 }
