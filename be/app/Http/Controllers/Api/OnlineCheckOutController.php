@@ -108,7 +108,7 @@ class OnlineCheckOutController extends Controller
                 'voucher_id' => $voucher->id ?? null,
                 'status' => 'waiting_for_confirmation',
                 'payment_status' => 'paid',
-                'payment_method' => 'momo',
+                'payment_method' => 'paypal',
                 'note' => $request->note,
                 'deliver_fee' => $deliverFee,
                 'total_price' => $total_price,
@@ -144,7 +144,7 @@ class OnlineCheckOutController extends Controller
             $accessKey = 'klm05TvNBzhg7h7j';
             $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
             $orderInfo = "Thanh toán đơn hàng #{$order->id} qua MoMo";
-            $redirectUrl = "http://localhost:5173/";
+            $redirectUrl = "http://localhost:5173/myaccout";
             $ipnUrl = "https://your-ngrok-url.ngrok.io/api/momo/ipn"; // thay bằng URL thật nếu dùng ngrok
             $extraData = "orderId={$order->id}";
             $requestId = Str::uuid()->toString();
