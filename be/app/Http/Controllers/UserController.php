@@ -76,7 +76,6 @@ class UserController extends Controller
 
         return redirect()->route('users.index')->with('success', 'Người dùng đã được tạo thành công!');
     }
-
     public function edit(User $user)
     {
         $roles = Role::all(); // Lấy tất cả các vai trò

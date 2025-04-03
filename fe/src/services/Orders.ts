@@ -1,6 +1,14 @@
 
 import { api } from "../config/axios";
-
+// interface Color {
+//     id: number;
+//     name: string;
+//   }
+  
+//   interface Size {
+//     id: number;
+//     name: string;
+//   }
 export interface ProductDetail {
     id: number;
     image: string; // Chuỗi JSON, cần parse thành mảng khi dùng
@@ -27,6 +35,8 @@ export interface OrdersDetail {
     updated_at: string;
     deleted_at: string | null;
     product_detail: ProductDetail; // API trả về object `product_detail`
+    color: string; // String trực tiếp trong order_detail
+    size: string;  // String trực tiếp trong order_detail
 }
 
 export interface Order {

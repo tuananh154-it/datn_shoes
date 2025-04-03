@@ -19,7 +19,6 @@ class CommentController extends Controller
     public function index($productId)
     {
         try {
-
             $allComments = Comment::where('product_id', $productId)->get();
 
             $commentsWithoutParent = Comment::where('product_id', $productId)
@@ -55,7 +54,6 @@ class CommentController extends Controller
     }
 
     // Lấy chi tiết một bình luận (bao gồm bình luận con)
-    // Show các bình luận con phía dưới giống như Facebook
     public function show($commentId)
     {
         try {
@@ -130,14 +128,31 @@ class CommentController extends Controller
                 'is_anonymous' => $data['is_anonymous'] ?? false, // Mặc định là false nếu không có
             ]);
 
-            // Trả về bình luận vừa tạo
-            return response()->json(['data' => $comment, 'message' => 'Bình luận thành công'], 201);
+            // Lấy thông tin người dùng liên quan đến bình luận
+            $comment->load('user'); // Tải quan hệ user
+
+            // Chuẩn bị dữ liệu trả về
+            $commentData = [
+                'id' => $comment->id,
+                'user_name' => $comment->is_anonymous ? 'Ẩn danh' : $comment->user->name, // Nếu ẩn danh thì hiển thị "Ẩn danh"
+                'user_role' => $comment->user->role,
+                'content' => $comment->content,
+                'number_of_likes' => $comment->number_of_likes,
+                'created_at' => $comment->created_at->diffForHumans(),
+                'is_anonymous' => $comment->is_anonymous,
+                'is_edited' => $comment->is_edited,
+            ];
+
+            // Trả về bình luận vừa tạo với thông tin đầy đủ
+            return response()->json(['data' => $commentData, 'message' => 'Bình luận thành công'], 201);
+
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có
             return response()->json(['error' => 'Bình luận thất bại', 'message' => $e->getMessage()], 500);
         }
     }
 
+    // Tạo bình luận trả lời
     public function reply(Request $request, $parentId)
     {
         // Xác thực dữ liệu đầu vào cho bình luận trả lời
@@ -171,8 +186,24 @@ class CommentController extends Controller
                 'is_anonymous' => $data['is_anonymous'] ?? false, // Mặc định là false nếu không có
             ]);
 
-            // Trả về bình luận vừa tạo
-            return response()->json(['data' => $comment, 'message' => 'Trả lời bình luận thành công'], 201);
+            // Lấy thông tin người dùng liên quan đến bình luận
+            $comment->load('user'); // Tải quan hệ user
+
+            // Chuẩn bị dữ liệu trả về
+            $commentData = [
+                'id' => $comment->id,
+                'user_name' => $comment->is_anonymous ? 'Ẩn danh' : $comment->user->name, // Nếu ẩn danh thì hiển thị "Ẩn danh"
+                'user_role' => $comment->user->role,
+                'content' => $comment->content,
+                'number_of_likes' => $comment->number_of_likes,
+                'created_at' => $comment->created_at->diffForHumans(),
+                'is_anonymous' => $comment->is_anonymous,
+                'is_edited' => $comment->is_edited,
+            ];
+
+            // Trả về bình luận vừa tạo với thông tin đầy đủ
+            return response()->json(['data' => $commentData, 'message' => 'Trả lời bình luận thành công'], 201);
+
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có
             return response()->json(['error' => 'Trả lời bình luận thất bại', 'message' => $e->getMessage()], 500);
@@ -219,6 +250,7 @@ class CommentController extends Controller
 
             // Trả về bình luận đã cập nhật
             return response()->json(['data' => $comment, 'message' => 'Bình luận đã được cập nhật'], 200);
+
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có
             return response()->json(['error' => 'Cập nhật bình luận thất bại', 'message' => $e->getMessage()], 500);
@@ -284,7 +316,6 @@ class CommentController extends Controller
 
         return response()->json(['message' => 'Bình luận đã được báo cáo']);
     }
-
 
     // Xóa bình luận (soft delete)
     public function destroy($commentId)

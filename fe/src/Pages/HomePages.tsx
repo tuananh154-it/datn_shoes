@@ -194,7 +194,7 @@ const HomePages = () => {
                   <div className="featured_content">
                     <div className="featured_img_content position-relative">
                       <img
-                        src={`http://localhost:8000/storage/product_images/${lastproduct.image}`}
+                        src={`${lastproduct.image}`}
                         className="img-product"
                         alt="shoes_product"
                       />

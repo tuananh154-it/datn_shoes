@@ -6,7 +6,7 @@
     'debug' => true,
     'url' => 'http://localhost',
     'asset_url' => NULL,
-    'timezone' => 'Asia/Ho_Chi_Minh',
+    'timezone' => 'UTC',
     'locale' => 'en',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
@@ -203,8 +203,8 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\framework/cache/data',
-        'lock_path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\framework/cache/data',
+        'path' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\framework/cache/data',
+        'lock_path' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -287,7 +287,7 @@
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'datn_2',
+        'database' => 'footvibe_wd30',
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
@@ -297,7 +297,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'datn_2',
+        'database' => 'footvibe_wd30',
         'username' => 'root',
         'password' => '',
         'unix_socket' => '',
@@ -317,7 +317,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'datn_2',
+        'database' => 'footvibe_wd30',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -332,7 +332,7 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'datn_2',
+        'database' => 'footvibe_wd30',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -377,13 +377,13 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\app',
+        'root' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\app',
         'throw' => false,
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\app/public',
+        'root' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\app/public',
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
         'throw' => false,
@@ -403,7 +403,7 @@
     ),
     'links' => 
     array (
-      'C:\\laragon\\www\\datn_shoes\\be\\public\\storage' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\app/public',
+      'C:\\xampp\\htdocs\\datn_shoes\\be\\public\\storage' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\app/public',
     ),
   ),
   'hashing' => 
@@ -444,14 +444,14 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\logs/laravel.log',
         'level' => 'debug',
         'replace_placeholders' => true,
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
         'replace_placeholders' => true,
@@ -516,7 +516,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -532,8 +532,8 @@
         'host' => 'smtp.gmail.com',
         'port' => '587',
         'encryption' => 'tls',
-        'username' => 'vinhnsph31417@fpt.edu.vn',
-        'password' => 'itccopqsikdpriqd',
+        'username' => 'nguyenquangkiet123aa@gmail.com',
+        'password' => 'fjohdnzqoronrjlt',
         'timeout' => NULL,
         'local_domain' => NULL,
       ),
@@ -584,15 +584,15 @@
     ),
     'from' => 
     array (
-      'address' => 'vinhnsph31417@fpt.edu.vn',
-      'name' => 'Foot Vibe',
+      'address' => 'nguyenquangkiet123aa@gmail.com',
+      'name' => 'Laravel',
     ),
     'markdown' => 
     array (
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\laragon\\www\\datn_shoes\\be\\resources\\views/vendor/mail',
+        0 => 'C:\\xampp\\htdocs\\datn_shoes\\be\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -630,23 +630,9 @@
     'cache' => 
     array (
       'expiration_time' => 
-      DateInterval::__set_state(array(
-         'y' => 0,
-         'm' => 0,
-         'd' => 0,
-         'h' => 24,
-         'i' => 0,
-         's' => 0,
-         'f' => 0.0,
-         'weekday' => 0,
-         'weekday_behavior' => 0,
-         'first_last_day_of' => 0,
-         'invert' => 0,
-         'days' => false,
-         'special_type' => 0,
-         'special_amount' => 0,
-         'have_weekday_relative' => 0,
-         'have_special_relative' => 0,
+      \DateInterval::__set_state(array(
+         'from_string' => true,
+         'date_string' => '24 hours',
       )),
       'key' => 'spatie.permission.cache',
       'store' => 'default',
@@ -761,7 +747,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\framework/sessions',
+    'files' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -782,9 +768,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\laragon\\www\\datn_shoes\\be\\resources\\views',
+      0 => 'C:\\xampp\\htdocs\\datn_shoes\\be\\resources\\views',
     ),
-    'compiled' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\framework\\views',
+    'compiled' => 'C:\\xampp\\htdocs\\datn_shoes\\be\\storage\\framework\\views',
   ),
   'flare' => 
   array (
@@ -870,7 +856,7 @@
     array (
     ),
     'enable_runnable_solutions' => NULL,
-    'remote_sites_path' => 'C:\\laragon\\www\\datn_shoes\\be',
+    'remote_sites_path' => 'C:\\xampp\\htdocs\\datn_shoes\\be',
     'local_sites_path' => '',
     'housekeeping_endpoint_prefix' => '_ignition',
     'settings_file_path' => '',
