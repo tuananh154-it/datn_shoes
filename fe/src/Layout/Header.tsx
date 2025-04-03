@@ -112,7 +112,7 @@ const Header = () => {
             </div>
           </nav>
         </div>
-        <div className="col_3 visible-lg d-none">
+        <div className=" visible-lg d-none">
           <ul className="social_icons float-md-right">
             <li className="login_icon drop">
               {userId?.id ? (
@@ -136,7 +136,7 @@ const Header = () => {
                     )}
                     <Link to="/myaccout" className="p-2">Trang cá nhân</Link>
                     
-                    <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
+                    <button className="btn btn-danger mt-3" onClick={handleLogout}>Logout</button>
                   </nav>
                 </div>
               )}

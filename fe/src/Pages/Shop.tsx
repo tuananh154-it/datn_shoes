@@ -16,7 +16,7 @@ const Shop = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [sortBy, setSortBy] = useState<"asc" | "dsc" | "">("");
+  // const [sortBy, setSortBy] = useState<"asc" | "dsc" | "">("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
@@ -29,7 +29,7 @@ const Shop = () => {
       })
       .finally(() => setLoading(false));
   }, []);
-  
+  console.log("product",products)
   const location = useLocation();
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -72,10 +72,12 @@ const Shop = () => {
     // Lọc theo từ khóa tìm kiếm
     if (searchTerm) {
       const lowerSearchTerm = searchTerm.toLowerCase();
+      const searchWords = lowerSearchTerm.split(" "); // Tách từ khóa tìm kiếm thành từng từ
+    
       updatedProducts = updatedProducts.filter((product) => {
         const productName = product.name.toLowerCase();
-        // Kiểm tra xem tên sản phẩm có chứa từ khóa tìm kiếm không
-        return productName.includes(lowerSearchTerm);
+        // Kiểm tra xem TẤT CẢ từ trong searchTerm có xuất hiện trong tên sản phẩm không
+        return searchWords.every((word) => productName.includes(word));
       });
     }
 

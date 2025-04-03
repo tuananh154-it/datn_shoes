@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Product } from "../types/Product";
+import { Product, TopProductResponse } from "../types/Product";
 import { Link } from "react-router-dom";
 
 import { Banner, getBanners } from "../services/banners";
@@ -11,24 +11,26 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/autoplay";
-import { getAllProduct, getLatesProducts } from "../services/product";
+import { getLatesProducts, topProduct } from "../services/product";
 import toast from "react-hot-toast";
 import QuickViewProduct from "./QuickViewProduct";
 // import { getAllProduct } from "../services/product";
 
 const HomePages = () => {
-  const [product, setProduct] = useState<Product[]>([]);
+  const [product, setProduct] = useState<TopProductResponse | null>(null);
   const [lastProduct, getlatesProducts] = useState<Product[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null
   );
   useEffect(() => {
-    getAllProduct().then(({ data }) => {
+    topProduct().then(({ data }) => {
       // setProduct(response.data);
       console.log("data", data);
-      setProduct(data.data);
+      setProduct(data);
     });
   }, []);
+  console.log("top 10 sản phẩm", product);
+
   useEffect(() => {
     getLatesProducts().then(({ data }) => {
       // setProduct(response.data);
@@ -36,7 +38,6 @@ const HomePages = () => {
       getlatesProducts(data.data);
     });
   }, []);
-  console.log("product", product);
   useEffect(() => {
     // Nếu bạn đang sử dụng thư viện như Revolution Slider, khởi tạo slider ở đây nếu cần.
     const script = document.createElement("script");
@@ -77,10 +78,10 @@ const HomePages = () => {
   const toggleWishlist = (product: Product) => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
 
-    if (!user) {
-      alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
-      return;
-    }
+    // if (!user) {
+    //   alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
+    //   return;
+    // }
 
     let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
 
@@ -368,7 +369,7 @@ const HomePages = () => {
               </p>
             </div>
             <div className="row">
-              {product.map((product) => (
+              {product?.top_selling_products?.map((product) => (
                 <div
                   className="col-lg-3 col-md-4 col-6 wow fadeInLeft animated"
                   data-wow-duration="1300ms"

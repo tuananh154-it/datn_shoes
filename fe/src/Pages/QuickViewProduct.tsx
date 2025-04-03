@@ -89,7 +89,7 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string, onClose: 
                                                 onClick={() => {
                                                     // Kiểm tra nếu người dùng chưa đăng nhập
                                                     if (!isLoggedIn) {
-                                                        alert("Vui lòng đăng nhập trước khi thêm vào giỏ hàng!");
+                                                        toast.error("Vui lòng đăng nhập trước khi thêm vào giỏ hàng!");
                                                         nav("/login")
                                                         return;
                                                     }

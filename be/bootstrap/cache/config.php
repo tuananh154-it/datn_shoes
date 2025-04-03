@@ -137,6 +137,7 @@
   ),
   'broadcasting' => 
   array (
+
     'default' => 'pusher',
     'pusher' => 
     array (
@@ -147,14 +148,19 @@
       'cluster' => 'mt1',
       'encrypted' => true,
     ),
+
+    
+
     'connections' => 
     array (
       'pusher' => 
       array (
         'driver' => 'pusher',
+
         'key' => 'ee494af10a7f4a6e48b6',
         'secret' => '8c0adc9566f679647349',
         'app_id' => '1968340',
+
         'options' => 
         array (
           'cluster' => 'mt1',
@@ -212,8 +218,10 @@
       'file' => 
       array (
         'driver' => 'file',
+
         'path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\framework/cache/data',
         'lock_path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\framework/cache/data',
+
       ),
       'memcached' => 
       array (
@@ -296,7 +304,9 @@
       array (
         'driver' => 'sqlite',
         'url' => NULL,
+
         'database' => 'footvibe_wd30',
+
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
@@ -306,7 +316,9 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
+
         'database' => 'footvibe_wd30',
+
         'username' => 'root',
         'password' => '',
         'unix_socket' => '',
@@ -326,7 +338,9 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
+
         'database' => 'footvibe_wd30',
+
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -341,7 +355,9 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
+
         'database' => 'footvibe_wd30',
+
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
@@ -386,13 +402,17 @@
       'local' => 
       array (
         'driver' => 'local',
+
         'root' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\app',
+
         'throw' => false,
       ),
       'public' => 
       array (
         'driver' => 'local',
+
         'root' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\app/public',
+
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
         'throw' => false,
@@ -412,7 +432,9 @@
     ),
     'links' => 
     array (
+
       'C:\\laragon\\www\\datn_shoes\\be\\public\\storage' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\app/public',
+
     ),
   ),
   'hashing' => 
@@ -453,14 +475,18 @@
       'single' => 
       array (
         'driver' => 'single',
+
         'path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\logs/laravel.log',
+
         'level' => 'debug',
         'replace_placeholders' => true,
       ),
       'daily' => 
       array (
         'driver' => 'daily',
+
         'path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\logs/laravel.log',
+
         'level' => 'debug',
         'days' => 14,
         'replace_placeholders' => true,
@@ -525,7 +551,9 @@
       ),
       'emergency' => 
       array (
+
         'path' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\logs/laravel.log',
+
       ),
     ),
   ),
@@ -601,7 +629,9 @@
       'theme' => 'default',
       'paths' => 
       array (
+
         0 => 'C:\\laragon\\www\\datn_shoes\\be\\resources\\views/vendor/mail',
+
       ),
     ),
   ),
@@ -756,7 +786,9 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
+
     'files' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\framework/sessions',
+
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -777,9 +809,11 @@
   array (
     'paths' => 
     array (
+
       0 => 'C:\\laragon\\www\\datn_shoes\\be\\resources\\views',
     ),
     'compiled' => 'C:\\laragon\\www\\datn_shoes\\be\\storage\\framework\\views',
+
   ),
   'flare' => 
   array (
@@ -865,7 +899,9 @@
     array (
     ),
     'enable_runnable_solutions' => NULL,
+
     'remote_sites_path' => 'C:\\laragon\\www\\datn_shoes\\be',
+
     'local_sites_path' => '',
     'housekeeping_endpoint_prefix' => '_ignition',
     'settings_file_path' => '',

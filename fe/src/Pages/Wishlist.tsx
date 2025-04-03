@@ -181,7 +181,7 @@ import { useCart } from "../context/CartContext";
 import { Productyeuthich, Detail } from "../types/Product";
 import { getProductDetail } from "../services/product";
 import toast from "react-hot-toast";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Wishlist = () => {
   const { addToCart } = useCart();
@@ -237,12 +237,19 @@ const Wishlist = () => {
   const handleVariantChange = (productId: number, detail: Detail) => {
     setSelectedDetails((prev) => ({ ...prev, [productId]: detail }));
   };
-
+ const nav = useNavigate()
   const handleAddToCart = (
     productId: number,
     detailId: number,
     quantity: number
   ) => {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+
+    if (!user) {
+      alert("Bạn cần đăng nhập để thêm sản phẩm vào trong giỏ hàng!");
+  nav("/login")
+      return;
+    }
     addToCart(detailId, quantity);
     toast.success("Thêm vào giỏ hàng thành công");
   
