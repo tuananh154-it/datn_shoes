@@ -30,6 +30,11 @@ class VoucherController extends Controller
 
     // Hiển thị form tạo voucher mới
    
+    public function create()
+{
+    return view('vouchers.create'); // Tạo file view vouchers/create.blade.php nếu chưa có
+}
+
     public function store(Request $request)
     {
         // Validate dữ liệu từ người dùng
