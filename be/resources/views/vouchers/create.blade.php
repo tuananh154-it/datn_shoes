@@ -33,21 +33,12 @@
 
                     {{-- Tên voucher --}}
                     <div class="form-group mb-3">
-                        <label for="name">Tên Voucher</label>
+                        <label for="name">Tên mã giảm giá </label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{ old('name') }}">
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Số tiền giảm
-                    <div class="form-group mb-3">
-                        <label for="discount_amount">Số tiền giảm</label>
-                        <input type="number" class="form-control @error('discount_amount') is-invalid @enderror" name="discount_amount" id="discount_amount" value="{{ old('discount_amount') }}">
-                        @error('discount_amount')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div> --}}
 
                     {{-- Phần trăm giảm giá --}}
                     <div class="form-group mb-3">
@@ -85,12 +76,21 @@
                         @enderror
                     </div>
 
+                    {{-- Số lượng voucher --}}
+                    <div class="form-group mb-3">
+                        <label for="quantity">Số lượng mã giảm giá</label>
+                        <input type="number" class="form-control @error('quantity') is-invalid @enderror" name="quantity" id="quantity" value="{{ old('quantity') }}">
+                        @error('quantity')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- Trạng thái --}}
                     <div class="form-group mb-3">
                         <label class="form-label" for="status">Trạng thái</label>
                         <select name="status" id="status" class="form-control @error('status') is-invalid @enderror">
-                            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Hoạt động </option>
+                            <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Không hoạt động </option>
                         </select>
                         @error('status')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -98,11 +98,9 @@
                     </div>
 
                     {{-- Hành động --}}
-                    <div class="d-flex gap-2">
-                        <a href="{{ route('vouchers.index') }}" class="btn btn-secondary btn-lg">Quay lại</a>
-                        <button type="reset" class="btn btn-warning btn-lg">Reset</button>
-                        <button type="submit" class="btn btn-primary btn-lg">Thêm Mới</button>
-                    </div>
+                    <a href="{{ route('vouchers.index') }}" class="btn btn-secondary">Quay lại</a>
+                    <button type="reset" class="btn btn-primary">Reset</button>
+                    <button type="submit" class="btn btn-success">Thêm Mới</button>
                 </form>
             </div>
         </section>

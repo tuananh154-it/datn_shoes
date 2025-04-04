@@ -76,11 +76,11 @@
                         </div>
 
                         <!-- Các nút điều hướng -->
-                        <div class="mb-3 d-flex">
-                            <a href="{{ route('articles.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
-                            <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
-                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Cập nhật</button>
-                        </div>
+                        
+                            <a href="{{ route('articles.index') }}" class="btn btn-secondary ">Quay lại</a>
+                            <button type="reset" class="btn btn-warning ">Reset</button>
+                            <button type="submit" class="btn btn-primary ">Cập nhật</button>
+                        
                     </form>
                 </div>
             </div>

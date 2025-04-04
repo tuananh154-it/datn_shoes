@@ -12,50 +12,62 @@ use Illuminate\Support\Facades\Auth;
 class CartController extends Controller
 {
     public function index(Request $request)
-    {
-        $user = $request->user();
+{
+    $user = $request->user();
 
-        if (!$user) {
-            return response()->json(['error' => 'User not authenticated'], 401);
-        }
-
-        $cart = Cart::where('user_id', $user->id)->with('items.productDetail.product')->first();
-
-        if (!$cart || $cart->items->isEmpty()) {
-            return response()->json(['message' => 'Giỏ hàng trống'], 200);
-        }
-
-        return response()->json([
-            'cart' => $cart->items->map(function ($item) {
-                return [
-                    'id_cart_item' => $item->id,
-                    'product_name' => $item->productDetail->product->name ?? 'N/A',
-                    'color' => $item->productDetail->color->name ?? 'N/A',
-                    'size' => $item->productDetail->size->name ?? 'N/A',
-                    'quantity' => $item->quantity,
-                    'default_price' => $item->productDetail->default_price,
-                    'discount_price' => $item->productDetail->discount_price ?? $item->productDetail->default_price,
-                    'final_price' => ($item->productDetail->discount_price ?? $item->productDetail->default_price) * $item->quantity,
-                    'image' => $this->getImageAsBase64($item->product->image), // Chuyển ảnh thành base64
-                    // 'image' =>$item->product->image,
-                ];
-            }),
-            'total_price' => $cart->items->sum(fn($item) => $item->quantity * ($item->productDetail->discount_price ?? $item->productDetail->default_price)),
-        ]);
-    }
-    private function getImageAsBase64($imagePath)
-    {
-        if (!$imagePath || !file_exists(storage_path('app/public/' . $imagePath))) {
-            return null;
-        }
-
-        $imageFullPath = storage_path('app/public/' . $imagePath);
-        $imageData = file_get_contents($imageFullPath);
-        $mimeType = mime_content_type($imageFullPath);
-
-        return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+    if (!$user) {
+        return response()->json(['error' => 'User not authenticated'], 401);
     }
 
+    $cart = Cart::where('user_id', $user->id)->with('items.productDetail.product')->first();
+
+    if (!$cart || $cart->items->isEmpty()) {
+        return response()->json(['message' => 'Giỏ hàng trống'], 200);
+    }
+
+    return response()->json([
+        'cart' => $cart->items->map(function ($item) {
+            // Phân tích chuỗi JSON trong image của ProductDetail
+            $imagePath = $item->productDetail->image ? json_decode($item->productDetail->image, true)[0] : null;
+
+            return [
+                'id_cart_item' => $item->id,
+                'product_name' => $item->productDetail->product->name ?? 'N/A',
+                'color' => $item->productDetail->color->name ?? 'N/A',
+                'size' => $item->productDetail->size->name ?? 'N/A',
+                'quantity' => $item->quantity,
+                'default_price' => $item->productDetail->default_price,
+                'discount_price' => $item->productDetail->discount_price ?? $item->productDetail->default_price,
+                'final_price' => ($item->productDetail->discount_price ?? $item->productDetail->default_price) * $item->quantity,
+                'image' => $this->getImageAsBase64($imagePath), // Truyền đường dẫn ảnh đã phân tích
+            ];
+        }),
+        'total_price' => $cart->items->sum(fn($item) => $item->quantity * ($item->productDetail->discount_price ?? $item->productDetail->default_price)),
+    ]);
+}
+
+private function getImageAsBase64($imagePath)
+{
+    // Nếu không có đường dẫn ảnh, trả về null
+    if (!$imagePath) {
+        return null;
+    }
+
+    // Tạo đường dẫn đầy đủ đến file ảnh
+    $imageFullPath = storage_path('app/public/' . $imagePath);
+
+    // Kiểm tra file có tồn tại không
+    if (!file_exists($imageFullPath)) {
+        // \Log::error("File ảnh không tồn tại: " . $imageFullPath); // Ghi log để debug
+        return null;
+    }
+
+    // Đọc nội dung file và chuyển thành base64
+    $imageData = file_get_contents($imageFullPath);
+    $mimeType = mime_content_type($imageFullPath);
+
+    return 'data:' . $mimeType . ';base64,' . base64_encode($imageData);
+}
 
 
     // Thêm sản phẩm vào giỏ hàng

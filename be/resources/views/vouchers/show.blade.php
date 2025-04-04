@@ -34,7 +34,7 @@
         <div class="col-12"> <!-- Đảm bảo chiếm hết màn hình -->
             <div class="card shadow-sm w-100"> <!-- Thêm w-100 để mở rộng -->
                 <header class="card-header">
-                    Chi tiết Voucher
+                    Chi tiết mã giảm giá 
                 </header>
 
                 <div class="card mt-3">
@@ -45,6 +45,7 @@
                         <p><strong>Ngày hết hạn:</strong> {{ $voucher->expiration_date }}</p>
                         <p><strong>Giá trị tối thiểu:</strong> {{ $voucher->min_purchase_amount ?? 'N/A' }} VNĐ</p>
                         <p><strong>Giảm tối đa:</strong> {{ $voucher->max_discount_amount ?? 'N/A' }} VNĐ</p>
+                        <p><strong>Số lượng:</strong> {{ $voucher->quantity ?? 'N/A' }}</p> <!-- Thêm dòng này để hiển thị số lượng -->
                         <p><strong>Ngày tạo:</strong> {{ $voucher->created_at ? $voucher->created_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : 'Không xác định' }}</p>
                         <p><strong>Ngày cập nhật:</strong> {{ $voucher->updated_at ? $voucher->updated_at->timezone('Asia/Ho_Chi_Minh')->format('d/m/Y H:i') : 'Không xác định' }}</p>                        
                         <p><strong>Điều khoản:</strong> {!! nl2br(e($voucher->terms_and_conditions ?? 'Không có')) !!}</p>

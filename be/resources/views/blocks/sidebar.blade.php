@@ -101,7 +101,7 @@
             <li>
                 <a href="{{ route('vouchers.index') }}">
                     <i class="fa fa-ticket"></i>
-                    <span>Quản lý Voucher</span>
+                    <span>Quản lý mã giảm giá </span>
                 </a>
             </li>
             @endcan

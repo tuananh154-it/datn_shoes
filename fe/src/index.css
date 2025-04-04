@@ -18,6 +18,7 @@
   .dropdown-menu.megamenu_full_screen li {
     display: block !important;
   }
+  
  
 /* style.css */
 .container {
@@ -49,6 +50,8 @@
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-height: 600px; /* Giới hạn chiều cao */
+  overflow: auto;
 }
 
 .profile-section {
@@ -128,6 +131,35 @@
 .form-group {
   margin-bottom: 15px;
 }
+/* Định dạng cho radio-group */
+.radio-group {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Định dạng cho từng label chứa radio button */
+.radio-group label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+
+/* Định dạng cho radio button */
+.radio-group input[type="radio"] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  /* accent-color: #86ca30;  */
+}
+
+/* Đảm bảo radio button và text thẳng hàng */
+.radio-group label input[type="radio"] {
+  vertical-align: middle;
+}
 
 .form-group label {
   display: block;
@@ -141,7 +173,6 @@
   border: 1px solid #ddd;
   border-radius: 4px;
 }
-
 .btn-save {
   background: #86ca30;
   color: white;
@@ -157,15 +188,18 @@
 /* Orders Tab */
 
 .order-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  flex-grow: 1; /* Cho phép danh sách mở rộng hết không gian còn lại */
+  overflow-y: auto; /* Cho phép cuộn dọc khi nội dung quá dài */
+  max-height: 100%; /* Chắc chắn không vượt quá .card */
+  padding-right: 10px; /* Tránh bị che bởi thanh cuộn */
+
 }
 
 .order-card {
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 16px;
+  max-height: 500px; /* Giới hạn chiều cao của thẻ */
 }
 
 .order-header {
@@ -227,6 +261,7 @@
 .order-content {
   border-top: 1px solid #e5e7eb;
   padding-top: 16px;
+ 
 }
 
 .order-items {
@@ -480,9 +515,10 @@
 /* OrderDetail.css */
 .order-detail {
   max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
+  /* margin: 20px auto;
+  padding: 20px; */
   background: #fff;
+  /* display: block !important; Đảm bảo hiển thị */
 }
 
 h2, h3 {
@@ -657,7 +693,6 @@ h2, h3 {
 
 /* Căn chỉnh ngày đăng */
 .article__date {
-
   background: #e0e0e0;
   padding: 5px 10px;
   border-radius: 5px;
@@ -689,4 +724,248 @@ h2, h3 {
   align-items: center; /* Căn giữa dọc */
   height: 100%; /* Chiều cao full để căn giữa dọc */
   margin-left: 50px;
+}
+/* binh luan danh gia */
+.comment-section {
+  max-width: 600px; 
+  margin: 0; /* Xóa căn giữa */
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.comment-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 10px;
+  justify-content: flex-start; /* Đẩy hết sang trái */
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.comment-content {
+  background: #f0f2f5;
+  padding: 10px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 500px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #65676b;
+}
+
+.user-name {
+  font-weight: bold;
+  color: #050505;
+}
+
+.comment-text {
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.comment-input {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.form-control {
+  flex-grow: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.btn-primary {
+  padding: 8px 15px;
+  border: none;
+  background: #1877f2;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.quickview-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+/* Định dạng main_section để hiển thị nội dung */
+.quickview-overlay .main_section {
+  position: relative;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 900px;
+  width: 100%;
+  overflow-y: auto; /* Cho phép cuộn nếu nội dung quá dài */
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  max-height: 700px;
+}
+
+/* Định dạng nút đóng */
+.quickview-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #333;
+}
+
+.quickview-close:hover {
+  color: red;
+}
+
+.back-button {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  margin-bottom: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  width: 120px;
+}
+.back-button:hover {
+  background-color:#86ca30;
+}
+
+/* danh giagia */
+.review_title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.review_content {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.user_img {
+  width: 50px;
+  height: 50px;
+  margin-right: 15px;
+}
+
+.user_detail {
+  flex: 1;
+}
+
+.review__date {
+  color: #888;
+  font-size: 0.9em;
+}
+
+.write_review_text {
+  color: #007bff;
+  cursor: pointer;
+}
+
+.write_review_text:hover {
+  text-decoration: underline;
+}
+
+/* Modal styles */
+.review-modal {
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 500px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.review-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.review-form label {
+  font-weight: bold;
+}
+
+.review-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.submit-btn {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+.cancel-btn {
+  background-color: #ccc;
+  color: black;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-btn:hover {
+  background-color: #aaa;
+}
+
+/* Tùy chỉnh sao trong form */
+.review-form span {
+  margin-right: 5px;
 }
