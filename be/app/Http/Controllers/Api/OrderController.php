@@ -247,7 +247,7 @@ public function cancelOrder($id, Request $request)
         $price = $productDetail->discount_price ?? $productDetail->default_price;
         $lineTotal = $price * $item->quantity;
         $subtotal += $lineTotal;
-
+        
         return [
             'id' => $item->id, // ✅ Quan trọng cho FE & đặt hàng
             'product_name' => $productDetail->product->name,

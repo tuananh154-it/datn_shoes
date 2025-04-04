@@ -26,28 +26,8 @@ import { Outlet } from "react-router-dom"
 import Header from "./Header"
 import Footer from "./Footer"
 import { useEffect, useState } from "react"
-import { getAllOrders } from "../services/Orders"
+import { getAllOrders, Order } from "../services/Orders"
 
-// Định nghĩa kiểu dữ liệu cho Order
-interface Order {
-  id: number;
-  username: string;
-  voucher_id: number | null;
-  status: string;
-  deliver_fee: string;
-  user_id: number;
-  payment_status: string;
-  payment_method: string;
-  address: string;
-  phone_number: string;
-  email: string;
-  total_price: string;
-  note: string;
-  created_at: string;
-  updated_at: string;
-  deleted_at: string | null;
-  voucher: any;
-}
 
 const Layout = () => {
   
@@ -98,8 +78,8 @@ const Layout = () => {
         }}
       >
         <strong>{order.username}</strong><br />
-        Số điện thoại: {order.phone_number}<br />
-        Số tiền: {order.total_price} VNĐ
+        Đơn hàng #{order.id} của {order.username} vừa được đặt với tổng giá trị{" "}
+        {parseFloat(order.total_price).toLocaleString()} VND
       </div>
     )
   }
