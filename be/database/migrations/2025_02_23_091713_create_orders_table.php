@@ -23,7 +23,7 @@ return new class extends Migration
                 'returned',
                 'cancelled'
             ]);
-            $table->decimal('deliver_fee', 15, 2);
+            $table->decimal('deliver_fee', 15, 2)->nullable();
             // $table->foreignId('customer_id')->constrained('customers');
             $table->foreignId('user_id')->constrained('users');
             $table->enum('payment_status', ['paid', 'unpaid', 'pending', 'failed'])->default('unpaid');
