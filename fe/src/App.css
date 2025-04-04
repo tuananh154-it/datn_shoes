@@ -74,7 +74,7 @@
   margin-left: 30px;
 }
 .main-left .imageProduct{
-  height: 700px;
+  height: 500px;
   width: 100%;
   /* background-color: beige; */
   /* margin-top: 30px; */
@@ -87,7 +87,34 @@
   width: 100%;
   height: 150px;
   margin-top: 20px;
+  /* background-color: #2ecc71; */
 }
+.imageBienthe {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none; /* Firefox */
+}
+.imageBienthe::-webkit-scrollbar {
+  display: none; /* Chrome */
+}
+
+.nav-button {
+  position: absolute;
+  top: 35%;
+}
+
+.nav-button.left {
+  left: -12px;
+  font-size: 45px;
+  cursor: pointer;
+}
+
+.nav-button.right {
+  right: -12px;
+  cursor: pointer;
+  font-size: 45px;
+}
+
 .main-left .imageBienthe img{
   width: 150px;
   height: 100%;

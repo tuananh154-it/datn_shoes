@@ -31,4 +31,3 @@ export const Momopayment = async (data: { orderId: string; redirectUrl: string }
     throw error;
   }
 };
-

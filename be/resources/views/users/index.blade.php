@@ -5,13 +5,20 @@
     .row {
         padding-top: 60px;
     }
+    .mb-3 {
+        margin-bottom: 1.5rem;
+    }
+    .btn-sm {
+        padding: 5px 10px;
+        font-size: 12px;
+    }
 </style>
 
 <div class="row">
     <div class="col-lg-12">
         <section class="card">
             <header class="card-header">
-                Bảng sản người dùng
+                Bảng người dùng
             </header>
 
             @if(session('success'))
@@ -20,10 +27,7 @@
                 </div>
             @endif
 
-          
-
-            </div>
-
+            <!-- Form tìm kiếm -->
             <div class="mb-3">
                 <form action="{{ route('users.index') }}" method="GET">
                     <div class="row">
@@ -48,23 +52,21 @@
                 </form>
             </div>
 
-            {{-- them moi  --}}
+            <!-- Thêm người dùng -->
             <div class="mb-3">
                 <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
-                    <i class="fa fa-plus"></i> Thêm người dùng  
+                    <i class="fa fa-plus"></i> Thêm người dùng
                 </a>
             </div>
 
-
-
-
+            <!-- Bảng người dùng -->
             <table class="table table-striped table-advance table-hover">
                 <thead>
                     <tr>
-                        <th><i class=""></i> Tên</th>
-                        <th><i class=""></i> Email</th>
-                        <th><i class=""></i> Vai trò</th>
-                        <th><i class=""></i> Hành động</th>
+                        <th><i class="fa fa-user"></i> Tên</th>
+                        <th><i class="fa fa-envelope"></i> Email</th>
+                        <th><i class="fa fa-cogs"></i> Vai trò</th>
+                        <th><i class="fa fa-gear"></i> Hành động</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -74,7 +76,8 @@
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->roles->first()?->name }}</td>
                             <td>
-<<<<<<< HEAD
+
+
                                 {{-- <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -82,13 +85,17 @@
                                         <i class="fa fa-trash-o"></i> Xóa
                                     </button>
                                 </form> --}}
-                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary  btn-sm">
-                                    <i class="fa fa-pencil"></i> 
+                                {{-- <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary  btn-sm">
+                                    <i class="fa fa-pencil"></i>  --}}
 
-                                <!-- Mắt Xem -->
-           
+                                <!-- Sửa người dùng -->
+                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-pencil"></i> Sửa
+                                </a>
+
+                                <!-- Xem người dùng -->
                                 <a href="{{ route('users.show', $user->id) }}" class="btn btn-danger btn-sm">
-                                    <i class="fa fa-eye"></i>
+                                    <i class="fa fa-eye"></i> Xem
                                 </a>
                             </td>
                         </tr>

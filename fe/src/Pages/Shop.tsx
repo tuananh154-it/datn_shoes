@@ -422,6 +422,16 @@ const changePage = (newPage: number) => {
                   Xem chi tiết
                 </Link>
               </div>
+              <a
+                                href="#"
+                                className="heart yeuthich rounded-circle text-center d-block"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  toggleWishlist(product);
+                                }}
+                              >
+                                <i className="flaticon-heart"></i>
+                              </a>
             </div>
             <div className="featured_detail_content">
               <Link to={`/product_detail/${product.id}`}>

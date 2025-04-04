@@ -1,10 +1,8 @@
-
 @extends('master')
 
 @section('content')
 <style>
-
-    .row{
+    .row {
         padding-top: 60px;
     }
 </style>
@@ -15,8 +13,7 @@
                 Danh sách mã giảm giá
             </header>
            
-           
-            {{-- tim kiem ,loc voucher --}}
+            {{-- Tìm kiếm, lọc voucher --}}
             <div class="mb-3">
                 <form action="{{ route('vouchers.index') }}" method="GET">
                     <div class="row">
@@ -30,85 +27,58 @@
                                 <option value="inactive" {{ request()->status == 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
                             </select>
                         </div>
-                       
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                         </div>
-                        {{-- <div class="col-md-2">
-                            <a href="{{route("vouchers.index")}}" class="btn btn-success btn-sm">Quay lai danh sach</a>
-                        </div> --}}
                     </div>
-
                 </form>
             </div>
-            {{-- them moi  --}}
+
+            {{-- Thêm mới --}}
             <div class="mb-3">
                 <a href="{{ route('vouchers.create') }}" class="btn btn-success btn-sm">
                     <i class="fa fa-plus"></i> Thêm mã giảm giá 
                 </a>
             </div>
+
             <table class="table table-striped table-advance table-hover">
                 <thead>
                     <tr>
-                        <th>Mã giảm giá  </th>
-                        <th>Tên mã giảm giá  </th>
-                        {{-- <th> Số tiền giảm</th> --}}
-                        <th> Phần trăm giảm giá</th>
-                        {{-- <th>Ngày hết hạn </th>
-                        <th>Số tiền mua tối thiểu </th>
-                        <th>Mức giảm tối đa </th>
-                        <th> Điều khoản và điều kiện sử dụng </th>
-                        
-                        <th>Thời gian tạo</th>
-                        <th>Thời gian cập nhật</th> --}}
-                        <th>Trạng thái </th>
+                        <th>#</th>
+                        <th>Tên mã giảm giá</th>
+                        <th>Phần trăm giảm giá</th>
+                        <th>Số lượng</th> {{-- Thêm cột số lượng --}}
+                        <th>Trạng thái</th>
                         <th>Hành động</th>
                     </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($vouchers as $voucher)
-                    <tr>
-                        <td>{{$loop->index+1}}</td>
-                        <td>{{$voucher->name}}</td>
-                        {{-- <td>{{ $voucher->discount_amount }}</td> --}}
-                        {{-- <td>{{ $voucher->discount_percent }}</td>
-                        <td>{{ date('d-m-Y', strtotime($voucher->expiration_date)) }}</td>
-                        <td>{{ $voucher->min_purchase_amount }}</td>
-                        <td>{{ $voucher->max_discount_amount }}</td>
-                        <td>{{ $voucher->terms_and_conditions }}</td> --}}
-                        {{-- <td><span class="badge badge-info label-mini">{{ $voucher->status }}</span></td> --}}
-                        <td>{{ $voucher->discount_percent }} %</td>
-                        <td>
-                            @if ($voucher->status == 'active')
-                                <span class="badge badge-info">Hoạt động </span>
-                            @else
-                                <span class="badge badge-danger">Không hoạt động </span>
-                            @endif
-                        </td>
-                        
-                       
-                      
-                        <td>
-                            {{-- <button class="btn btn-success btn-sm"><i class="fa fa-check"></i></button> --}}
-                            {{-- <a class="btn btn-success btn-sm" href="{{ route('vouchers.show ', $voucher->id) }}"><i class="fa fa-check"></i></a> --}}
-                            <a class="btn btn-warning  btn-sm" href="{{route('vouchers.show',$voucher->id)}}"><i class="fa fa-eye"></i></a>
-                            <a class="btn btn-primary  btn-sm" href="{{ route('vouchers.edit', $voucher->id) }}"><i class="fa fa-pencil"></i></a> 
-                            {{-- <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Ban co chac chan muon xoa voucher?');">
-                                @csrf
-                                @method('DELETE')
-                                <button class="btn btn-danger btn-sm" type="submit"><i class="fa fa-trash-o "></i></button>
-                            </form> --}}
-                        </td>
-                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($vouchers as $voucher)
+                        <tr>
+                            <td>{{ $loop->index + 1 }}</td>
+                            <td>{{ $voucher->name }}</td>
+                            <td>{{ $voucher->discount_percent }} %</td>
+                            <td>{{ $voucher->quantity }}</td> {{-- Hiển thị số lượng voucher --}}
+                            <td>
+                                @if ($voucher->status == 'active')
+                                    <span class="badge badge-info">Hoạt động</span>
+                                @else
+                                    <span class="badge badge-danger">Không hoạt động</span>
+                                @endif
+                            </td>
+                            <td>
+                                <a class="btn btn-warning btn-sm" href="{{ route('vouchers.show', $voucher->id) }}"><i class="fa fa-eye"></i></a>
+                                <a class="btn btn-primary btn-sm" href="{{ route('vouchers.edit', $voucher->id) }}"><i class="fa fa-pencil"></i></a>
+                            </td>
+                        </tr>
                     @endforeach
-                    </tbody>
+                </tbody>
             </table>
+
             <div class="d-flex justify-content-center">
                 {!! $vouchers->links() !!}
             </div>
         </section>
     </div>
 </div>
-
-
 @endsection

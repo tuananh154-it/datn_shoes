@@ -23,6 +23,7 @@ use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\OnlineCheckOutController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\ReviewController;
+
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -57,7 +58,9 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
+
     Route::post('/momo-payment-code', [OnlineCheckOutController::class, 'momo_payment_code']);
+
 });
 Route::apiResource('products', ProductController::class);
 Route::get('/latest-products', [ProductController::class, 'latestProducts']);
@@ -68,7 +71,6 @@ Route::get('/latest-products', [ProductController::class, 'latestProducts']);
 Route::get('/home', [HomeController::class, 'index']);
 // top 10 sp
 
-Route::get('/top10', [Top10SPController::class, 'top10']);
 // Trang Danh Mục
 Route::get('/categories', [CategoryController::class, 'index']);
 
@@ -78,6 +80,10 @@ Route::get('/brands', [BrandController::class, 'index']);
 // Trang Voucher
 Route::get('/vouchers', [VoucherController::class, 'index']);
 Route::get('/vouchers/{id}', [VoucherController::class, 'show']);
+
+//////test real time
+
+
 // Auth routes
 // Routes protected by JWT Middleware
 Route::middleware(['jwt.auth'])->group(function () {
@@ -100,8 +106,7 @@ Route::get('/users', [UserController::class, 'index'])->name('api.users.index');
 Route::post('/users', [UserController::class, 'store'])->name('api.users.store');
 
 // Route để chỉnh sửa thông tin người dùng (API)
-Route::put('/users/{user}', [UserController::class, 'update'])->name('api.users.update');
-
+Route::put('/users/{user}', [UserController::class, 'updateApi'])->middleware('auth:api');
 // Route để xóa người dùng (API)
 Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('api.users.destroy');
 Route::post('register', [AuthController::class, 'register']);
@@ -109,7 +114,8 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-// =======
+// top 19 sp 
+Route::get('/top10', [Top10SPController::class, 'top10']);
 
 Route::post('login', [AuthController::class, 'login']);
 // >>>>>>> tuan-anh2
