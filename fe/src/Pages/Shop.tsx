@@ -127,6 +127,7 @@ const Shop = () => {
     }
   };
   const navigator = useNavigate();
+ 
   const toggleWishlist = (product: Product) => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
   
@@ -152,6 +153,7 @@ const Shop = () => {
   
     // Phát sự kiện cập nhật để các component khác biết
     window.dispatchEvent(new Event("storage"));
+    
   };
   const [currentPage, setCurrentPage] = useState(1);
 const itemsPerPage = 9;
@@ -283,7 +285,7 @@ const changePage = (newPage: number) => {
                 </div>
               </div>
               <div className="col-lg-9 shopProduct">
-                <div className="collection-sorting-row">
+                {/* <div className="collection-sorting-row">
                   <div className="filter_menu hidden-lg ">
                     <a className="title_h5 text-capitalize">
                       <svg
@@ -386,7 +388,7 @@ const changePage = (newPage: number) => {
                       </div>
                     </form>
                   </div>
-                </div>
+                </div> */}
                 <div>
   {loading ? (
     <p>Đang tải...</p>
@@ -394,64 +396,45 @@ const changePage = (newPage: number) => {
     <p className="text-center text-gray-500">Không có sản phẩm nào</p>
   ) : (
     <ul className="category-products wow fadeIn row">
-      {paginatedProducts.map((product) => (
-        <li
-          className="col-lg-4 col-md-6 col-12 product wow fadeInLeft animated"
-          data-wow-duration="1300ms"
-          key={product.id}
-        >
-          <div className="featured_content">
-            <div className="featured_img_content">
-              <img src={product.image} alt="f_product" className="imageShop" />
-              <div className="featured_btn vertical_middle">
-                <Link
-                  to="#"
-                  className="text-uppercase background-btn add_to_bag_btn"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setSelectedProductId(product.id);
-                  }}
-                >
-                  Thêm vào giỏ hàng
-                </Link>
-                <Link
-                  to={`/product_detail/${product.id}`}
-                  className="text-uppercase border-btn popup_btn"
-                  data-modal="#modalone"
-                >
-                  Xem chi tiết
-                </Link>
+     {paginatedProducts.map((last) => (
+            <div className="product-card" key={last.id}>
+              {/* <div className="label new">Mới</div> */}
+              <a href={`/product_detail/${last.id}`}>
+              <img className="product-image" src={last.image} alt="Product 1" loading="lazy"/>
+              </a>
+              <div className="product-name">{last.name}</div>
+              <div className="product-price">
+                <strong>{last.price}</strong>
               </div>
-              <a
-                                href="#"
-                                className="heart yeuthich rounded-circle text-center d-block"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  toggleWishlist(product);
-                                }}
-                              >
-                                <i className="flaticon-heart"></i>
-                              </a>
+              <div className="rating">★★★★☆</div>
+              <div className="product-actions">
+              <Link
+                          to="#"
+                          className="text-uppercase add_to_bag_btn rounded-circle d-block"
+                          onClick={(e) => {
+                            e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
+                            setSelectedProductId(last.id);
+                          }}
+                        >
+                <button>Thêm giỏ hàng</button>
+                          </Link>
+                <div className="icons">
+                  <i className="fas fa-search"></i>
+                  <a
+                    href="#"
+                    className="heart rounded-circle text-center d-block"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleWishlist(last);
+                    }}
+                  >
+                    <i className="flaticon-heart yeuthich"></i>
+                  </a>
+                  <i className="fas fa-sync-alt"></i>
+                </div>
+              </div>
             </div>
-            <div className="featured_detail_content">
-              <Link to={`/product_detail/${product.id}`}>
-                <p className="featured_title text-capitalize text-center">
-                  {product.name.slice(0, 25) + (product.name.length > 6 ? "..." : "")}
-                </p>
-              </Link>
-              <p className="featured_price title_h5 text-center">
-                <span className="text-color">
-                  {product?.price
-                    ? Number(
-                        product.price.replace(/,/g, "").replace(" VND", "")
-                      ).toLocaleString("vi-VN") + " VND"
-                    : "0 VND"}
-                </span>
-              </p>
-            </div>
-          </div>
-        </li>
-      ))}
+          ))}
     </ul>
   )}
 </div>

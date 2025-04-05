@@ -72,7 +72,7 @@ const ProductDetail = () => {
       // setSelectedDetail(data.data.details[0]);
     });
   }, [id]);
-  console.log("data", productId);
+  // console.log("data", productId);
 
   // const handleVariantClick = (detail: any) => {
   //   if (detail) {
@@ -219,10 +219,10 @@ const handleScroll = (direction: 'left' | 'right') => {
         setLoading(true);
         setError(null);
         const response = await getCommentsByProductId(productIdNumber);
-        console.log('Dữ liệu bình luận:', response.data);
+        // console.log('Dữ liệu bình luận:', response.data);
         setComments(response.data.comments);
         setTotalComments(response.data.total_comments); // Lưu tổng số đánh giá
-        console.log("Danh sách bình luận:", comments);
+        // console.log("Danh sách bình luận:", comments);
       } catch (error: any) {
         console.error('Lỗi khi lấy bình luận:', error);
         setError(error.response?.data?.message || 'Không thể tải bình luận. Vui lòng thử lại sau.');
@@ -244,7 +244,7 @@ const handleScroll = (direction: 'left' | 'right') => {
     }
 
     if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
-      console.error('productID không hợp lệ:', productIdNumber);
+      // console.error('productID không hợp lệ:', productIdNumber);
       alert('productID không hợp lệ. Vui lòng kiểm tra lại.');
       return;
     }
@@ -255,7 +255,7 @@ const handleScroll = (direction: 'left' | 'right') => {
       setComments([...comments, response.data.data]);
       setNewComment('');
     } catch (error: any) {
-      console.error('Lỗi khi đăng bình luận:', error);
+      // console.error('Lỗi khi đăng bình luận:', error);
       alert(error.response?.data?.message || 'Lỗi khi đăng bình luận!');
     }
   };
@@ -300,11 +300,11 @@ const handleScroll = (direction: 'left' | 'right') => {
         console.log('Dữ liệu đánh giá:', response.data);
         setReviews(response.data.reviews);
         setTotalReviews(response.data.total_reviews); // Lưu tổng số đánh giá
-        console.log("tong review:", totalReviews);
+        // console.log("tong review:", totalReviews);
 
-        console.log("Danh sách đánh giá:", reviews);
+        // console.log("Danh sách đánh giá:", reviews);
       } catch (error: any) {
-        console.error('Lỗi khi lấy đánh giá:', error);
+        // console.error('Lỗi khi lấy đánh giá:', error);
         setError(error.response?.data?.message || 'Không thể tải đánh giá. Vui lòng thử lại sau.');
       } finally {
         setLoading(false);
@@ -324,14 +324,14 @@ const handleScroll = (direction: 'left' | 'right') => {
         // 1️⃣ Lấy danh sách đơn hàng
         const response = await getAllOrders();
         const orders: Order[] = response.data;
-        console.log("Danh sách đơn hàng:", orders);
+        // console.log("Danh sách đơn hàng:", orders);
 
         // 2️⃣ Lọc đơn hàng có trạng thái 'delivered'
         const deliveredOrders = orders.filter(order => order.status === "delivered");
-        console.log("Đơn hàng có trạng thái 'delivered':", deliveredOrders);
+        // console.log("Đơn hàng có trạng thái 'delivered':", deliveredOrders);
 
         if (deliveredOrders.length === 0) {
-          console.log("Không có đơn hàng nào được giao.");
+          // console.log("Không có đơn hàng nào được giao.");
           setEligibleOrderId(null);
           setLoading(false);
           return;
@@ -341,11 +341,11 @@ const handleScroll = (direction: 'left' | 'right') => {
         const orderDetailsResponses = await Promise.all(
           deliveredOrders.map(async (order) => {
             try {
-              console.log(`Gọi API getDetailOrder với order.id = ${order.id}`);
+              // console.log(`Gọi API getDetailOrder với order.id = ${order.id}`);
               const res = await getDetailOrder(order.id);
               return { orderId: order.id, data: res.data }; // Lưu cả orderId
             } catch (error) {
-              console.error(`Lỗi khi gọi API getDetailOrder(${order.id}):`, error);
+              // console.error(`Lỗi khi gọi API getDetailOrder(${order.id}):`, error);
               return null;
             }
           })
@@ -354,7 +354,7 @@ const handleScroll = (direction: 'left' | 'right') => {
         // 4️⃣ Loại bỏ các response null (có lỗi 404)
         const validOrders = orderDetailsResponses.filter(item => item !== null);
         if (validOrders.length === 0) {
-          console.log("Không có đơn hàng hợp lệ sau khi gọi API getDetailOrder.");
+          // console.log("Không có đơn hàng hợp lệ sau khi gọi API getDetailOrder.");
           setEligibleOrderId(null);
           setLoading(false);
           return;
@@ -366,7 +366,7 @@ const handleScroll = (direction: 'left' | 'right') => {
           const productIds = order.data.order_details
             .map((detail: OrdersDetail) => detail.product_detail?.product_id)
             .filter(id => id !== undefined);
-          console.log(`Danh sách product_id trong đơn hàng ${order.orderId}:`, productIds);
+          // console.log(`Danh sách product_id trong đơn hàng ${order.orderId}:`, productIds);
 
           if (productIds.includes(productIdNumber)) {
             eligibleOrderId = order.orderId.toString(); // Lưu orderId thực sự
@@ -378,7 +378,7 @@ const handleScroll = (direction: 'left' | 'right') => {
         setEligibleOrderId(eligibleOrderId);
 
       } catch (err) {
-        console.error("Lỗi khi lấy danh sách đơn hàng:", err);
+        // console.error("Lỗi khi lấy danh sách đơn hàng:", err);
         setError('Không thể tải danh sách đơn hàng');
       } finally {
         setLoading(false);
@@ -423,7 +423,7 @@ const handleScroll = (direction: 'left' | 'right') => {
         eligibleOrderId,
         reviewData
       );
-      console.log("New Review Response:", newReviewResponse); // In dữ liệu trả về
+      // console.log("New Review Response:", newReviewResponse); // In dữ liệu trả về
       setReviews((prev) => [...prev, newReviewResponse]); // Tối ưu cập nhật state
       toast.success("Đánh giá của bạn đã được đăng thành công!");
       setNewReview('');
@@ -440,7 +440,7 @@ const handleScroll = (direction: 'left' | 'right') => {
   // Bind Modal với root element (cần cho accessibility)
   Modal.setAppElement('#root');
   useEffect(() => {
-    console.log("Trạng thái modal:", isModalOpen);
+    // console.log("Trạng thái modal:", isModalOpen);
   }, [isModalOpen]);
   return (
     <>
@@ -589,9 +589,9 @@ const handleScroll = (direction: 'left' | 'right') => {
                             </span>{" "}
                             {/* Giá gốc */}
                             <span className="discount-price">
-                              {selectedDetail?.default_price
+                              {selectedDetail?.discount_price
                                 ? Number(
-                                  selectedDetail.default_price
+                                  selectedDetail.discount_price
                                     .replace(/,/g, "")
                                     .replace(" VND", "")
                                 ).toLocaleString("vi-VN") + " VND"

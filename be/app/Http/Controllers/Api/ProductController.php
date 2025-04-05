@@ -96,7 +96,7 @@ class ProductController extends Controller
     {
         $products = Product::where('status', 'active')
             ->orderBy('created_at', 'desc')
-            ->take(3)
+            ->take(10)
             ->with(['category', 'brand'])
             ->get();
 
