@@ -299,8 +299,8 @@ class OrderController extends Controller
             }
         }
 
-        $deliverFee = 30000;
-        $total = $subtotal - $discount + $deliverFee;
+        // $deliverFee = 30000;
+        $total = $subtotal - $discount ;
 
         return response()->json([
             'user' => [
@@ -316,7 +316,7 @@ class OrderController extends Controller
             'subtotal' => $subtotal,
             'discount' => $discount,
             'voucher' => $voucherInfo,
-            'deliver_fee' => $deliverFee,
+            // 'deliver_fee' => $deliverFee,
             'total' => $total
         ]);
     }
@@ -391,8 +391,8 @@ class OrderController extends Controller
             }
         }
 
-        $deliverFee = 30000;
-        $total = $subtotal - $discount + $deliverFee;
+        // $deliverFee = 30000;
+        $total = $subtotal - $discount;
 
         return response()->json([
             'user' => [
@@ -408,7 +408,7 @@ class OrderController extends Controller
             'subtotal' => $subtotal,
             'discount' => $discount,
             'voucher' => $voucherInfo,
-            'deliver_fee' => $deliverFee,
+            // 'deliver_fee' => $deliverFee,
             'total' => $total,
         ]);
     }
