@@ -916,7 +916,10 @@ input[type="range"] {
 .product-card:hover {
   transform: translateY(-5px);
 }
-
+.search1{
+  display: flex;
+  justify-content: space-between;
+}
 .label {
   position: absolute;
   /* top: -20px; */

@@ -225,7 +225,7 @@ const HomePages = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="big-banner">
-                <a href="#">
+                <a href="/shop">
                   <img
                     src="https://lambanner.com/wp-content/uploads/2022/10/MNT-DESIGN-BANNER-GIAY-07.jpg"
                     alt=""
@@ -261,9 +261,26 @@ const HomePages = () => {
           ))}
         </div>
       </div>
+      <div className="another-banner-area">
+        <div className="container">
+          <div className="row">
+            <div className="col-md-12">
+              <div className="big-banner">
+                <a href="/shop">
+                  <img
+                    src="https://intphcm.com/data/upload/poster-giay-den.jpg"
+                    alt=""
+                  />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* <section className="padding-top-60 wow fadeIn">
           <div className="container">
-            <div className="promoton_collection_section text-center wow fadeInUp position-relative">
+            <img src="https://intphcm.com/data/upload/poster-giay-den.jpg"/>
+            <div className=" text-center wow fadeInUp position-relative">
               <p className="position-relative">MÙA HÈ BẮT ĐẦU</p>
               <h2 className="title_h2 text-capitalize position-relative">
                 KHUYẾN MẠI GIẢM GIÁ 50%
@@ -278,6 +295,7 @@ const HomePages = () => {
             </div>
           </div>
         </section> */}
+        {/* <img src="https://tse4.mm.bing.net/th?id=OIP.C0b3zlLfZ0GD-5txQXOkzQHaE8&pid=Api&P=0&h=180"/> */}
     </>
   );
 };

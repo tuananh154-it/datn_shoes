@@ -777,7 +777,7 @@ const CheckOut = () => {
 
   const [checkout, setCheckout] = useState<CheckoutData | null>(null);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
-  console.log("checkout", checkout);
+  // console.log("checkout", checkout);
   useEffect(() => {
     const storedSelectedItems = localStorage.getItem("selectedItems");
     if (storedSelectedItems) {
@@ -785,7 +785,7 @@ const CheckOut = () => {
       setSelectedItems(parsedItems);
     }
   }, []);
-  console.log("checkout", checkout);
+  // console.log("checkout", checkout);
 
   // Fetch checkout data when selectedItems are updated
   useEffect(() => {

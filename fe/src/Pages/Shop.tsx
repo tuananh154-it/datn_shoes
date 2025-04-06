@@ -29,7 +29,18 @@ const Shop = () => {
       })
       .finally(() => setLoading(false));
   }, []);
-  console.log("product",products)
+    const navigate = useNavigate();
+  
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      // Thực hiện tìm kiếm và điều hướng
+      navigate(`/shop?search=${encodeURIComponent(searchTerm)}`);
+
+      // Tắt thanh tìm kiếm sau khi tìm kiếm xong
+      // setIsOpen(false);
+    }
+  };
+  // console.log("product",products)
   const location = useLocation();
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -156,7 +167,7 @@ const Shop = () => {
     
   };
   const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 9;
+const itemsPerPage = 12;
 
 // Tính toán số trang
 const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
@@ -209,31 +220,9 @@ const changePage = (newPage: number) => {
                   <div className="shopProduct">
                     {/* //giá// */}
                     <div className="loc">
-                     
+                      
                       <div className="layer-filter">
                         <div>
-                          <h5>Giá</h5>
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "10px",
-                            }}
-                          >
-                            {priceRange[0].toLocaleString()}
-                            <Slider
-                              range
-                              min={0}
-                              max={3000000}
-                              step={10000}
-                              value={priceRange}
-                              onChange={handleChange}
-                              style={{ width: "100px" }}
-                            />
-                            {priceRange[1].toLocaleString()}
-                          </div>
-                        </div>
-                        <div className="mt-4">
                           <h5>Danh mục</h5>
                         {categories.map((category) => (
                             <div className="checkbox">
@@ -278,6 +267,34 @@ const changePage = (newPage: number) => {
                               </label>
                             </div>
                           ))}
+                        </div> 
+                        <div className="mt-4">
+                          <h5>Giá</h5>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            {priceRange[0].toLocaleString()}
+                            <Slider
+                              range
+                              min={0}
+                              max={3000000}
+                              step={10000}
+                              value={priceRange}
+                              onChange={handleChange}
+                              style={{ width: "150px" }}
+                            />
+                            {priceRange[1].toLocaleString()}
+                          </div>
+                        </div>
+                        <div>
+                        
+                        </div>
+                        <div className="mt-4">
+                          <img src="https://htmldemo.net/james/james/img/product/banner_left.jpg"/>
                         </div>
                       </div>
                     </div>
@@ -390,6 +407,36 @@ const changePage = (newPage: number) => {
                   </div>
                 </div> */}
                 <div>
+                <div className="search1">
+                          {/* <h5>Tìm kiếm sản phẩm</h5> */}
+                <input
+                  type="text"
+                  placeholder="Tìm kiếm..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()} // Tìm kiếm khi nhấn Enter
+                /> 
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            {priceRange[0].toLocaleString()}
+                            <Slider
+                              range
+                              min={0}
+                              max={3000000}
+                              step={10000}
+                              value={priceRange}
+                              onChange={handleChange}
+                              style={{ width: "150px" }}
+                            />
+                            {priceRange[1].toLocaleString()}
+                          </div>
+                Tổng:{paginatedProducts.length}
+              </div>
   {loading ? (
     <p>Đang tải...</p>
   ) : paginatedProducts.length === 0 ? (
@@ -404,7 +451,13 @@ const changePage = (newPage: number) => {
               </a>
               <div className="product-name">{last.name}</div>
               <div className="product-price">
-                <strong>{last.price}</strong>
+                <strong>{last?.price
+                            ? Number(
+                                last.price
+                                  .replace(/,/g, "")
+                                  .replace(" VND", "")
+                              ).toLocaleString("vi-VN") + " VND"
+                            : "0 VND"}</strong>
               </div>
               <div className="rating">★★★★☆</div>
               <div className="product-actions">
