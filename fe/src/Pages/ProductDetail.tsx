@@ -10,13 +10,22 @@ import { Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import { getCommentsByProductId, postComment } from "../services/comments";
-import { getReviewsByProductId, postReview, Review, ReviewPayload } from "../services/reviews";
-import { getAllOrders, getDetailOrder, Order, OrdersDetail } from "../services/orders";
-import Modal from 'react-modal';
+import {
+  getReviewsByProductId,
+  postReview,
+  Review,
+  ReviewPayload,
+} from "../services/reviews";
+import {
+  getAllOrders,
+  getDetailOrder,
+  Order,
+  OrdersDetail,
+} from "../services/orders";
+import Modal from "react-modal";
 
-const ProductDetail = () => {
+  const ProductDetail = () => {
   const { addToCart } = useCart();
-
 
   const isLoggedIn = localStorage.getItem("token") ? true : false;
 
@@ -46,12 +55,12 @@ const ProductDetail = () => {
       setQuantity(quantity - 1);
     }
   };
- const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  const value = e.target.value;
-  if (/^\d*$/.test(value)) {
-    setQuantity(value === "" ? "" : parseInt(value, 10));
-  }
-};
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setQuantity(value === "" ? "" : parseInt(value, 10));
+    }
+  };
 
   const [productId, setProductId] = useState<Products>();
   const [selectedDetail, setSelectedDetail] = useState<any>(null);
@@ -69,18 +78,8 @@ const ProductDetail = () => {
     getProductDetail(id).then(({ data }) => {
       console.log("data", data);
       setProductId(data.data);
-      // setSelectedDetail(data.data.details[0]);
     });
   }, [id]);
-  // console.log("data", productId);
-
-  // const handleVariantClick = (detail: any) => {
-  //   if (detail) {
-  //     setSelectedDetail(detail);
-  //   } else {
-  //     setSelectedDetail(null);
-  //   }
-  // };
   const colorSizeMap =
     productId?.details?.reduce((acc, detail) => {
       if (!acc[detail.color]) {
@@ -90,39 +89,42 @@ const ProductDetail = () => {
       return acc;
     }, {} as Record<string, string[]>) || {};
 
-   // Lấy danh sách ảnh từ biến thể
-   const detailImages: string[] = productId?.details
-   ?.map(detail => detail.image?.[0])
-   .filter((img): img is string => typeof img === 'string') || [];
+  // Lấy danh sách ảnh từ biến thể
+  const detailImages: string[] =
+    productId?.details
+      ?.map((detail) => detail.image?.[0])
+      .filter((img): img is string => typeof img === "string") || [];
 
-// Kiểm tra và thêm ảnh chính nếu chưa có trong biến thể
-const allImages = [...detailImages];
-if (productId?.image && !detailImages.includes(productId.image)) {
-  allImages.unshift(productId.image);
-}
-
-// Lọc ảnh không trùng nhau
-const uniqueImages = Array.from(new Set(allImages)).map(img => {
-  return productId?.details.find(detail => detail.image[0] === img) || {
-    image: [img], // ảnh chính không có detail nên tạo object giả
-    size: '',
-    color: '',
-  };
-});
-
-// State điều hướng slider
-const scrollRef = useRef<HTMLDivElement>(null);
-
-const handleScroll = (direction: 'left' | 'right') => {
-  const scrollContainer = scrollRef.current;
-  if (scrollContainer) {
-    const scrollAmount = 120; // px mỗi lần scroll
-    scrollContainer.scrollBy({
-      left: direction === 'right' ? scrollAmount : -scrollAmount,
-      behavior: 'smooth',
-    });
+  // Kiểm tra và thêm ảnh chính nếu chưa có trong biến thể
+  const allImages = [...detailImages];
+  if (productId?.image && !detailImages.includes(productId.image)) {
+    allImages.unshift(productId.image);
   }
-};
+
+  // Lọc ảnh không trùng nhau
+  const uniqueImages = Array.from(new Set(allImages)).map((img) => {
+    return (
+      productId?.details.find((detail) => detail.image[0] === img) || {
+        image: [img], // ảnh chính không có detail nên tạo object giả
+        size: "",
+        color: "",
+      }
+    );
+  });
+
+  // State điều hướng slider
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = (direction: "left" | "right") => {
+    const scrollContainer = scrollRef.current;
+    if (scrollContainer) {
+      const scrollAmount = 120; // px mỗi lần scroll
+      scrollContainer.scrollBy({
+        left: direction === "right" ? scrollAmount : -scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
   // Danh sách màu sắc không trùng lặp
   const uniqueColors = Object.keys(colorSizeMap);
 
@@ -155,7 +157,14 @@ const handleScroll = (direction: 'left' | 'right') => {
       setSelectedDetail(null);
     }
   };
-
+  useEffect(() => {
+    if (productId?.details?.length) {
+      const firstDetail = productId.details[0];
+      setSelectedDetail(firstDetail);
+      setSelectedColor(firstDetail.color);
+      setSelectedSize(firstDetail.size);
+    }
+  }, [productId]);
   function getColorFromText(colorText: string): string {
     switch (colorText.toLowerCase()) {
       case "màu trắng":
@@ -193,9 +202,9 @@ const handleScroll = (direction: 'left' | 'right') => {
     });
   }, []);
 
-  // Bình luận 
+  // Bình luận
   const [comments, setComments] = useState<Comment[]>([]);
-  const [newComment, setNewComment] = useState<string>(''); // Sửa thành chuỗi
+  const [newComment, setNewComment] = useState<string>(""); // Sửa thành chuỗi
   const [totalComments, setTotalComments] = useState(0);
   // const [replyContent, setReplyContent] = useState<{ [key: number]: string }>({});
   // const [editContent, setEditContent] = useState<{ [key: number]: string }>({});
@@ -204,13 +213,15 @@ const handleScroll = (direction: 'left' | 'right') => {
   const [error, setError] = useState<string | null>(null);
 
   // Lấy productId từ products
-  const productIdNumber = products.find(product => product.id === parseInt(id || '0', 10))?.id || parseInt(id || '0', 10);
+  const productIdNumber =
+    products.find((product) => product.id === parseInt(id || "0", 10))?.id ||
+    parseInt(id || "0", 10);
 
   // Lấy danh sách bình luận
   useEffect(() => {
     const fetchComments = async () => {
       if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
-        setError('Không có productID hợp lệ.');
+        setError("Không có productID hợp lệ.");
         setLoading(false);
         return;
       }
@@ -224,14 +235,18 @@ const handleScroll = (direction: 'left' | 'right') => {
         setTotalComments(response.data.total_comments); // Lưu tổng số đánh giá
         // console.log("Danh sách bình luận:", comments);
       } catch (error: any) {
-        console.error('Lỗi khi lấy bình luận:', error);
-        setError(error.response?.data?.message || 'Không thể tải bình luận. Vui lòng thử lại sau.');
+        console.error("Lỗi khi lấy bình luận:", error);
+        setError(
+          error.response?.data?.message ||
+            "Không thể tải bình luận. Vui lòng thử lại sau."
+        );
       } finally {
         setLoading(false);
       }
     };
 
-    if (products.length > 0) { // Đảm bảo products đã được tải
+    if (products.length > 0) {
+      // Đảm bảo products đã được tải
       fetchComments();
     }
   }, [productIdNumber, products]);
@@ -239,33 +254,33 @@ const handleScroll = (direction: 'left' | 'right') => {
   // Đăng bình luận mới
   const handlePostComment = async () => {
     if (!newComment.trim()) {
-      alert('Vui lòng nhập nội dung bình luận!');
+      alert("Vui lòng nhập nội dung bình luận!");
       return;
     }
 
     if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
       // console.error('productID không hợp lệ:', productIdNumber);
-      alert('productID không hợp lệ. Vui lòng kiểm tra lại.');
+      alert("productID không hợp lệ. Vui lòng kiểm tra lại.");
       return;
     }
 
     try {
       const response = await postComment(productIdNumber, newComment);
-      console.log('Bình luận mới:', response.data);
+      console.log("Bình luận mới:", response.data);
       setComments([...comments, response.data.data]);
-      setNewComment('');
+      setNewComment("");
     } catch (error: any) {
       // console.error('Lỗi khi đăng bình luận:', error);
-      alert(error.response?.data?.message || 'Lỗi khi đăng bình luận!');
+      alert(error.response?.data?.message || "Lỗi khi đăng bình luận!");
     }
   };
   // đánh giá sản phẩm
   const [reviews, setReviews] = useState<Review[]>([]);
   const [totalReviews, setTotalReviews] = useState(0);
-  const [newReview, setNewReview] = useState<string>(''); // Sửa thành chuỗi
+  const [newReview, setNewReview] = useState<string>(""); // Sửa thành chuỗi
   const [eligibleOrderId, setEligibleOrderId] = useState<string | null>(null); // OrderId hợp lệ
-  const [rating, setRating] = useState<number>(0);       // Rating từ 1-5
-  const [isModalOpen, setIsModalOpen] = useState(false);      // Trạng thái modal
+  const [rating, setRating] = useState<number>(0); // Rating từ 1-5
+  const [isModalOpen, setIsModalOpen] = useState(false); // Trạng thái modal
   const [hasReviewed, setHasReviewed] = useState(false);
   // sao đánh giá
   // Hàm render sao (hiển thị và cho phép bấm trong form)
@@ -274,9 +289,9 @@ const handleScroll = (direction: 'left' | 'right') => {
       <span
         key={index}
         style={{
-          color: index < rating ? 'gold' : 'gray',
-          cursor: editable ? 'pointer' : 'default',
-          fontSize: '24px', // Tùy chỉnh kích thước sao
+          color: index < rating ? "gold" : "gray",
+          cursor: editable ? "pointer" : "default",
+          fontSize: "24px", // Tùy chỉnh kích thước sao
         }}
         onClick={editable ? () => setRating(index + 1) : undefined} // Bấm để chọn rating
       >
@@ -288,7 +303,7 @@ const handleScroll = (direction: 'left' | 'right') => {
   useEffect(() => {
     const fetchReviews = async () => {
       if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
-        setError('Không có productID hợp lệ.');
+        setError("Không có productID hợp lệ.");
         setLoading(false);
         return;
       }
@@ -297,7 +312,7 @@ const handleScroll = (direction: 'left' | 'right') => {
         setLoading(true);
         setError(null);
         const response = await getReviewsByProductId(productIdNumber);
-        console.log('Dữ liệu đánh giá:', response.data);
+        console.log("Dữ liệu đánh giá:", response.data);
         setReviews(response.data.reviews);
         setTotalReviews(response.data.total_reviews); // Lưu tổng số đánh giá
         // console.log("tong review:", totalReviews);
@@ -305,13 +320,17 @@ const handleScroll = (direction: 'left' | 'right') => {
         // console.log("Danh sách đánh giá:", reviews);
       } catch (error: any) {
         // console.error('Lỗi khi lấy đánh giá:', error);
-        setError(error.response?.data?.message || 'Không thể tải đánh giá. Vui lòng thử lại sau.');
+        setError(
+          error.response?.data?.message ||
+            "Không thể tải đánh giá. Vui lòng thử lại sau."
+        );
       } finally {
         setLoading(false);
       }
     };
 
-    if (products.length > 0) { // Đảm bảo products đã được tải
+    if (products.length > 0) {
+      // Đảm bảo products đã được tải
       fetchReviews();
     }
   }, [productIdNumber, products]);
@@ -327,7 +346,9 @@ const handleScroll = (direction: 'left' | 'right') => {
         // console.log("Danh sách đơn hàng:", orders);
 
         // 2️⃣ Lọc đơn hàng có trạng thái 'delivered'
-        const deliveredOrders = orders.filter(order => order.status === "delivered");
+        const deliveredOrders = orders.filter(
+          (order) => order.status === "delivered"
+        );
         // console.log("Đơn hàng có trạng thái 'delivered':", deliveredOrders);
 
         if (deliveredOrders.length === 0) {
@@ -352,7 +373,9 @@ const handleScroll = (direction: 'left' | 'right') => {
         );
 
         // 4️⃣ Loại bỏ các response null (có lỗi 404)
-        const validOrders = orderDetailsResponses.filter(item => item !== null);
+        const validOrders = orderDetailsResponses.filter(
+          (item) => item !== null
+        );
         if (validOrders.length === 0) {
           // console.log("Không có đơn hàng hợp lệ sau khi gọi API getDetailOrder.");
           setEligibleOrderId(null);
@@ -365,7 +388,7 @@ const handleScroll = (direction: 'left' | 'right') => {
         for (const order of validOrders) {
           const productIds = order.data.order_details
             .map((detail: OrdersDetail) => detail.product_detail?.product_id)
-            .filter(id => id !== undefined);
+            .filter((id) => id !== undefined);
           // console.log(`Danh sách product_id trong đơn hàng ${order.orderId}:`, productIds);
 
           if (productIds.includes(productIdNumber)) {
@@ -376,10 +399,9 @@ const handleScroll = (direction: 'left' | 'right') => {
 
         console.log("Eligible Order ID:", eligibleOrderId);
         setEligibleOrderId(eligibleOrderId);
-
       } catch (err) {
         // console.error("Lỗi khi lấy danh sách đơn hàng:", err);
-        setError('Không thể tải danh sách đơn hàng');
+        setError("Không thể tải danh sách đơn hàng");
       } finally {
         setLoading(false);
       }
@@ -388,27 +410,24 @@ const handleScroll = (direction: 'left' | 'right') => {
     fetchOrders();
   }, [productIdNumber]);
 
-
-
-
   console.log("id cua san pham", productIdNumber);
 
   const handlePostReview = async () => {
     // Kiểm tra nhanh các điều kiện đầu vào
     if (!newReview.trim()) {
-      alert('Vui lòng nhập nội dung bình luận!');
+      alert("Vui lòng nhập nội dung bình luận!");
       return;
     }
     if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
-      alert('productID không hợp lệ!');
+      alert("productID không hợp lệ!");
       return;
     }
     if (!eligibleOrderId) {
-      alert('Bạn chưa mua sản phẩm này hoặc đơn hàng chưa được giao.');
+      alert("Bạn chưa mua sản phẩm này hoặc đơn hàng chưa được giao.");
       return;
     }
     if (rating === 0) {
-      alert('Vui lòng chọn số sao!');
+      alert("Vui lòng chọn số sao!");
       return;
     }
 
@@ -423,24 +442,18 @@ const handleScroll = (direction: 'left' | 'right') => {
         eligibleOrderId,
         reviewData
       );
-      // console.log("New Review Response:", newReviewResponse); // In dữ liệu trả về
       setReviews((prev) => [...prev, newReviewResponse]); // Tối ưu cập nhật state
       toast.success("Đánh giá của bạn đã được đăng thành công!");
-      setNewReview('');
+      setNewReview("");
       setRating(0);
       setHasReviewed(true);
       setIsModalOpen(false);
     } catch (error: any) {
-      alert(error.message || 'Lỗi khi đăng đánh giá!');
+      alert(error.message || "Lỗi khi đăng đánh giá!");
     }
   };
-
-  // if (loading) return <div>Đang kiểm tra đơn hàng...</div>;
-  // if (error) return <div>{error}</div>;
-  // Bind Modal với root element (cần cho accessibility)
-  Modal.setAppElement('#root');
+  Modal.setAppElement("#root");
   useEffect(() => {
-    // console.log("Trạng thái modal:", isModalOpen);
   }, [isModalOpen]);
   return (
     <>
@@ -468,93 +481,59 @@ const handleScroll = (direction: 'left' | 'right') => {
             </h1>
           </div>
         </section>
-        <section className="padding-top-text-60 padding-bottom-60 product_detail_section">
+        <section className=" padding-bottom-60 product_detail_section">
           {productId ? (
             <div className="container">
               <div className="main">
-                {/* Phần bên trái với ảnh chính */}
-                {/* <div className="main-left" data-wow-duration="1300ms">
+                <div className="main-left" data-wow-duration="1300ms">
+                  {/* Ảnh chính */}
                   <div className="imageProduct">
                     <img
-                      src={selectedDetail?.image || productId.image}
+                      src={selectedDetail?.image[0] || productId.image}
                       alt="Product"
                     />
                   </div>
-                  <div className="imageBienthe">
-                  {productId.details.map((image)=>(
-                      <img src={image.image}/>
-                  ))}
+                  <div
+                    className="imageBienthe-wrapper"
+                    style={{ position: "relative" }}
+                  >
+                    {/* Nút chuyển trái */}
+                    {uniqueImages.length > 2 && (
+                      <a
+                        className="nav-button left"
+                        onClick={() => handleScroll("left")}
+                      >
+                        ‹
+                      </a>
+                    )}
+
+                    <div
+                      ref={scrollRef}
+                      className="imageBienthe overflow-x-auto whitespace-nowrap no-scrollbar"
+                      style={{ scrollBehavior: "smooth" }}
+                    >
+                      {uniqueImages.map((detail, index) => (
+                        <img
+                          key={index}
+                          src={detail.image[0]}
+                          alt={`Variant ${index}`}
+                          className="inline-block w-24 h-24 object-cover mx-1 cursor-pointer rounded variant-thumb"
+                          onClick={() => setSelectedDetail(detail)}
+                        />
+                      ))}
                     </div>
-                </div> */}
-                <div className="main-left" data-wow-duration="1300ms">
-    {/* Ảnh chính */}
-    <div className="imageProduct">
-      <img
-        src={selectedDetail?.image[0] || productId.image}
-        alt="Product"
-      />
-    </div>
 
-    {/* Ảnh biến thể */}
-    {/* <div className="imageBienthe">
-  {uniqueImages.length > visibleCount && (
-    <button className="nav-button" onClick={handlePrev} disabled={currentIndex === 0}>
-      ‹
-    </button>
-  )}
-
-  {visibleImages.map((detail, index) => (
-    <img
-      key={index}
-      src={detail.image[0]}
-      alt={`Variant ${index}`}
-      className="variant-thumb"
-      onClick={() => setSelectedDetail(detail)}
-    />
-  ))}
-
-  {uniqueImages.length > visibleCount && (
-    <button
-      className="nav-button"
-      onClick={handleNext}
-      disabled={currentIndex + visibleCount >= uniqueImages.length}
-    >
-      ›
-    </button>
-  )}
-</div> */}
-<div className="imageBienthe-wrapper" style={{ position: 'relative' }}>
-  {/* Nút chuyển trái */}
-  {uniqueImages.length > 2 && (
-    <a className="nav-button left" onClick={() => handleScroll('left')}>
-      ‹
-    </a>
-  )}
-
-  <div
-    ref={scrollRef}
-    className="imageBienthe overflow-x-auto whitespace-nowrap no-scrollbar"
-    style={{ scrollBehavior: 'smooth' }}
-  >
-    {uniqueImages.map((detail, index) => (
-      <img
-        key={index}
-        src={detail.image[0]}
-        alt={`Variant ${index}`}
-        className="inline-block w-24 h-24 object-cover mx-1 cursor-pointer rounded variant-thumb"
-        onClick={() => setSelectedDetail(detail)}
-      />
-    ))}
-  </div>
-
-  {/* Nút chuyển phải */}
-  {uniqueImages.length > 2 && (
-    <a className="nav-button right" onClick={() => handleScroll('right')}>
-      ›
-    </a>
-  )}
-</div>
-  </div>
+                    {/* Nút chuyển phải */}
+                    {uniqueImages.length > 2 && (
+                      <a
+                        className="nav-button right"
+                        onClick={() => handleScroll("right")}
+                      >
+                        ›
+                      </a>
+                    )}
+                  </div>
+                </div>
                 <div className="main-right" data-wow-duration="1300ms">
                   <div className="product_content">
                     <div className="product_title">
@@ -569,32 +548,26 @@ const handleScroll = (direction: 'left' | 'right') => {
                         <a className="font-bold">{productId.brand}</a>
                       </p>
 
-                      {/* Giá sản phẩm */}
-                      {/* <p className="text-color title_h4">
-                          {selectedDetail?.discount_price ||
-                            selectedDetail?.price ||
-                            productId.price}
-                        </p> */}
                       <p className="text-color title_h4">
                         {selectedDetail?.discount_price ? (
                           <>
                             <span className="original-price">
                               {selectedDetail?.default_price
                                 ? Number(
-                                  selectedDetail.default_price
-                                    .replace(/,/g, "")
-                                    .replace(" VND", "")
-                                ).toLocaleString("vi-VN") + " VND"
+                                    selectedDetail.default_price
+                                      .replace(/,/g, "")
+                                      .replace(" VND", "")
+                                  ).toLocaleString("vi-VN") + " VND"
                                 : "0 VND"}
                             </span>{" "}
                             {/* Giá gốc */}
                             <span className="discount-price">
                               {selectedDetail?.discount_price
                                 ? Number(
-                                  selectedDetail.discount_price
-                                    .replace(/,/g, "")
-                                    .replace(" VND", "")
-                                ).toLocaleString("vi-VN") + " VND"
+                                    selectedDetail.discount_price
+                                      .replace(/,/g, "")
+                                      .replace(" VND", "")
+                                  ).toLocaleString("vi-VN") + " VND"
                                 : "0 VND"}
                             </span>{" "}
                             {/* Giá khuyến mại */}
@@ -608,7 +581,10 @@ const handleScroll = (direction: 'left' | 'right') => {
                         )}
                       </p>
 
-                      <p>Số lượng: {selectedDetail?.quantity}</p>
+                      {/* <p>Số lượng: {selectedDetail?.quantity}</p> */}
+                      {selectedDetail?.quantity > 0 && (
+                        <p>Số lượng: {selectedDetail.quantity}</p>
+                      )}
                       {/* Đánh giá */}
                       <div className="star">
                         <img
@@ -682,7 +658,11 @@ const handleScroll = (direction: 'left' | 'right') => {
                               -
                             </button>
 
-                            <input type="text" value={quantity} onChange={handleChange}/>
+                            <input
+                              type="text"
+                              value={quantity}
+                              onChange={handleChange}
+                            />
                             <button
                               type="button"
                               onClick={handleIncrease}
@@ -716,25 +696,32 @@ const handleScroll = (direction: 'left' | 'right') => {
                           className="background-btn text-uppercase cart_btn"
                           onClick={async () => {
                             if (!isLoggedIn) {
-                              alert("Vui lòng đăng nhập trước khi thêm vào giỏ hàng!");
+                              alert(
+                                "Vui lòng đăng nhập trước khi thêm vào giỏ hàng!"
+                              );
                               nav("/login");
                               return;
                             }
 
                             if (!selectedDetail) {
-                              alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
+                              alert(
+                                "Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!"
+                              );
                               return;
                             }
 
                             try {
-                              const originalQuantity = Number(selectedDetail.quantity);
+                              const originalQuantity = Number(
+                                selectedDetail.quantity
+                              );
 
                               if (quantity <= 0) {
                                 toast.error("Số lượng phải lớn hơn 0");
                                 return;
                               }
 
-                              const newTotalAddedToCart = totalAddedToCart + quantity;
+                              const newTotalAddedToCart =
+                                totalAddedToCart + quantity;
 
                               if (newTotalAddedToCart > originalQuantity) {
                                 toast.error(
@@ -744,10 +731,12 @@ const handleScroll = (direction: 'left' | 'right') => {
                               }
 
                               try {
-                               addToCart(Number(selectedDetail.id), quantity);
+                                addToCart(Number(selectedDetail.id), quantity);
                               } catch (error) {
                                 console.error("Lỗi từ addToCart:", error);
-                                toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng: ");
+                                toast.error(
+                                  "Có lỗi xảy ra khi thêm vào giỏ hàng: "
+                                );
                                 return;
                               }
 
@@ -764,10 +753,15 @@ const handleScroll = (direction: 'left' | 'right') => {
                               );
 
                               console.log("Số lượng gốc:", originalQuantity);
-                              console.log("Tổng số lượng đã thêm:", newTotalAddedToCart);
+                              console.log(
+                                "Tổng số lượng đã thêm:",
+                                newTotalAddedToCart
+                              );
                             } catch (error) {
                               console.error("Lỗi:", error);
-                              toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng: ");
+                              toast.error(
+                                "Có lỗi xảy ra khi thêm vào giỏ hàng: "
+                              );
                             }
                           }}
                         >
@@ -815,28 +809,22 @@ const handleScroll = (direction: 'left' | 'right') => {
                       Giao hàng nhanh, mọi lúc ,mọi nơi
                     </h5>
                     <p>
-                      Nhằm mang đến trải nghiệm mua sắm thuận tiện nhất, chúng tôi cung cấp dịch vụ giao hàng nhanh chóng,
-                      an toàn và linh hoạt trên toàn quốc.
-
-                      Thời gian giao hàng:
-
-                      Giao hàng tiêu chuẩn: 2-5 ngày làm việc.
-
-                      Giao hàng nhanh: 24-48 giờ (áp dụng tại các thành phố lớn).
-
-                      Giao hàng hỏa tốc: Nhận hàng trong ngày (chỉ áp dụng tại một số khu vực).
-
-                      Đối tác vận chuyển:
-                      Chúng tôi hợp tác với các đơn vị giao hàng uy tín như GHN, GHTK, Viettel Post, J&T Express…
-                      nhằm đảm bảo đơn hàng được giao đúng thời gian, đúng địa điểm và trong tình trạng nguyên vẹn.
-
-                      Chính sách kiểm tra hàng trước khi nhận:
-                      Khách hàng có thể kiểm tra sản phẩm trước khi thanh toán. Nếu có bất kỳ lỗi sản xuất hoặc sai sót trong đơn hàng,
-                      chúng tôi cam kết hỗ trợ đổi trả nhanh chóng mà không mất thêm phí.
-
-                      Miễn phí vận chuyển:
-                      Chúng tôi hỗ trợ miễn phí vận chuyển cho các đơn hàng từ [số tiền cụ thể] trở lên,
-                      giúp khách hàng tiết kiệm chi phí khi mua sắm.
+                      Nhằm mang đến trải nghiệm mua sắm thuận tiện nhất, chúng
+                      tôi cung cấp dịch vụ giao hàng nhanh chóng, an toàn và
+                      linh hoạt trên toàn quốc. Thời gian giao hàng: Giao hàng
+                      tiêu chuẩn: 2-5 ngày làm việc. Giao hàng nhanh: 24-48 giờ
+                      (áp dụng tại các thành phố lớn). Giao hàng hỏa tốc: Nhận
+                      hàng trong ngày (chỉ áp dụng tại một số khu vực). Đối tác
+                      vận chuyển: Chúng tôi hợp tác với các đơn vị giao hàng uy
+                      tín như GHN, GHTK, Viettel Post, J&T Express… nhằm đảm bảo
+                      đơn hàng được giao đúng thời gian, đúng địa điểm và trong
+                      tình trạng nguyên vẹn. Chính sách kiểm tra hàng trước khi
+                      nhận: Khách hàng có thể kiểm tra sản phẩm trước khi thanh
+                      toán. Nếu có bất kỳ lỗi sản xuất hoặc sai sót trong đơn
+                      hàng, chúng tôi cam kết hỗ trợ đổi trả nhanh chóng mà
+                      không mất thêm phí. Miễn phí vận chuyển: Chúng tôi hỗ trợ
+                      miễn phí vận chuyển cho các đơn hàng từ [số tiền cụ thể]
+                      trở lên, giúp khách hàng tiết kiệm chi phí khi mua sắm.
                     </p>
                   </div>
                   <div
@@ -884,7 +872,12 @@ const handleScroll = (direction: 'left' | 'right') => {
                             </button>
                           </h5>
                         </div>
-                        <div id="collapseOne" className="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div
+                          id="collapseOne"
+                          className="collapse"
+                          aria-labelledby="headingOne"
+                          data-parent="#accordion"
+                        >
                           {/* <div className="card-body">
                             
                             {comments.length > 0 ? (
@@ -925,24 +918,30 @@ const handleScroll = (direction: 'left' | 'right') => {
                             {comments.length > 0 ? (
                               <div className="comment-section">
                                 {comments.map((comment) => (
-                                  <div key={comment.id} className="comment-container">
+                                  <div
+                                    key={comment.id}
+                                    className="comment-container"
+                                  >
                                     <img
-                                      src="../src/images/reivew_user.png "// Nếu không có avatar, dùng ảnh mặc định
+                                      src="../src/images/reivew_user.png " // Nếu không có avatar, dùng ảnh mặc định
                                       alt="User Avatar"
                                       className="avatar"
                                     />
 
                                     <div className="comment-content">
                                       <strong className="user-name">
-                                        {comment.is_anonymous ? 'Ẩn danh' : comment.user_name}
+                                        {comment.is_anonymous
+                                          ? "Ẩn danh"
+                                          : comment.user_name}
                                       </strong>
-                                      <p className="comment-text">{comment.content}</p>
+                                      <p className="comment-text">
+                                        {comment.content}
+                                      </p>
                                       <div className="comment-header">
                                         <span className="comment-time">
                                           {comment.created_at}
                                         </span>
                                       </div>
-
                                     </div>
                                   </div>
                                 ))}
@@ -960,7 +959,10 @@ const handleScroll = (direction: 'left' | 'right') => {
                                 value={newComment}
                                 onChange={(e) => setNewComment(e.target.value)}
                               />
-                              <button className="btn btn-primary" onClick={handlePostComment}>
+                              <button
+                                className="btn btn-primary"
+                                onClick={handlePostComment}
+                              >
                                 Gửi
                               </button>
                             </div>
@@ -1027,7 +1029,11 @@ const handleScroll = (direction: 'left' | 'right') => {
                             <div className="review_title">
                               <h4 className="title_h4">Khách hàng đánh giá</h4>
                               <div className="star">
-                                <img src="../src/images/star.png" className="img-fluid" alt="star" />
+                                <img
+                                  src="../src/images/star.png"
+                                  className="img-fluid"
+                                  alt="star"
+                                />
                                 Dựa trên {totalReviews} đánh giá
                               </div>
                               <Link
@@ -1057,9 +1063,13 @@ const handleScroll = (direction: 'left' | 'right') => {
                                   />
                                 </div>
                                 <div className="user_detail">
-                                  <h5 className="title_h5">{review.user_name}</h5>
+                                  <h5 className="title_h5">
+                                    {review.user_name}
+                                  </h5>
                                   <p>{renderStars(review.rating)}</p>
-                                  <span className="review__date">{review.created_at}</span>
+                                  <span className="review__date">
+                                    {review.created_at}
+                                  </span>
                                   <p>{review.content}</p>
                                 </div>
                               </div>
@@ -1074,7 +1084,9 @@ const handleScroll = (direction: 'left' | 'right') => {
                             >
                               <h2>Thêm đánh giá của bạn</h2>
                               {!eligibleOrderId ? (
-                                <p>Bạn cần mua và nhận sản phẩm này để đánh giá.</p>
+                                <p>
+                                  Bạn cần mua và nhận sản phẩm này để đánh giá.
+                                </p>
                               ) : (
                                 <div className="review-form">
                                   <label>Đánh giá (1-5 sao):</label>
@@ -1082,14 +1094,26 @@ const handleScroll = (direction: 'left' | 'right') => {
                                   <label>Nội dung đánh giá:</label>
                                   <textarea
                                     value={newReview}
-                                    onChange={(e) => setNewReview(e.target.value)}
+                                    onChange={(e) =>
+                                      setNewReview(e.target.value)
+                                    }
                                     maxLength={500}
                                     placeholder="Viết đánh giá của bạn..."
                                     rows={4}
                                   />
                                   <div className="modal-buttons">
-                                    <button onClick={handlePostReview} className="submit-btn">Gửi</button>
-                                    <button onClick={() => setIsModalOpen(false)} className="cancel-btn">Hủy</button>
+                                    <button
+                                      onClick={handlePostReview}
+                                      className="submit-btn"
+                                    >
+                                      Gửi
+                                    </button>
+                                    <button
+                                      onClick={() => setIsModalOpen(false)}
+                                      className="cancel-btn"
+                                    >
+                                      Hủy
+                                    </button>
                                   </div>
                                 </div>
                               )}
@@ -1155,10 +1179,10 @@ const handleScroll = (direction: 'left' | 'right') => {
                             <span className="text-color">
                               {product?.price
                                 ? Number(
-                                  product.price
-                                    .replace(/,/g, "")
-                                    .replace(" VND", "")
-                                ).toLocaleString("vi-VN") + " VND"
+                                    product.price
+                                      .replace(/,/g, "")
+                                      .replace(" VND", "")
+                                  ).toLocaleString("vi-VN") + " VND"
                                 : "0 VND"}
                             </span>
                           </p>

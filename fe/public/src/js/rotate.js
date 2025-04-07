@@ -20,11 +20,11 @@
 
 
 		// Load images
-		for (var i = 0; i <= options.count; ++i) {
-			var img = new Image();
-			img.src = options.source + i + options.ext;
-			images.push(img);
-		}
+		// for (var i = 0; i <= options.count; ++i) {
+		// 	var img = new Image();
+		// 	img.src = options.source + i + options.ext;
+		// 	images.push(img);
+		// }
 
 		// Move
 

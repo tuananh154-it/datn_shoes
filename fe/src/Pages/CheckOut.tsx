@@ -1013,7 +1013,8 @@ const CheckOut = () => {
         });
     } // Đặt hàng sau khi thanh toán MoMo thành công
   }, []);
-
+  const [editingAddress, setEditingAddress] = useState(false);
+  const [showMoMoTerms, setShowMoMoTerms] = useState(false);
   useEffect(() => {
     fetch(`https://vn-public-apis.fpo.vn/provinces/getAll?limit=-1`)
       .then((res) => res.json())
@@ -1167,41 +1168,58 @@ const CheckOut = () => {
               }
             />
 
-           
-            <label>Tỉnh/Thành phố *</label>
-            <select
-              value={selectedProvince}
-              onChange={(e) => {
-                setSelectedProvince(e.target.value);
-                updateAddress();
-              }}
-            >
-              <option value="">Chọn tỉnh/thành phố</option>
-              {provinces?.map((p) => (
-                <option key={p.code} value={p.code}>
-                  {p.name}
-                </option>
-              ))}
-            </select>
+{!editingAddress ? (
+  <>
+    <label>Địa chỉ đầy đủ *</label>
+    <input
+      type="text"
+      id="address"
+      value={checkout?.user.address || ""}
+      readOnly
+    />
+    <button
+      type="button"
+      className="change-address-btn"
+      onClick={() => setEditingAddress(true)}
+    >
+      Đổi địa chỉ
+    </button>
+  </>
+) : (
+  <>
+    <label>Tỉnh/Thành phố *</label>
+    <select
+      value={selectedProvince}
+      onChange={(e) => {
+        setSelectedProvince(e.target.value);
+        updateAddress();
+      }}
+    >
+      <option value="">Chọn tỉnh/thành phố</option>
+      {provinces?.map((p) => (
+        <option key={p.code} value={p.code}>
+          {p.name}
+        </option>
+      ))}
+    </select>
 
-            <label>Quận/Huyện *</label>
-            <select
-              value={selectedDistrict}
-              onChange={(e) => {
-                setSelectedDistrict(e.target.value);
-                updateAddress();
-              }}
-              disabled={!selectedProvince}
-            >
-              <option value="">Chọn quận/huyện</option>
-              {districts?.map((d) => (
-                <option key={d.code} value={d.code}>
-                  {d.name}
-                </option>
-              ))}
-            </select>
-
-            <label>Phường/Xã *</label>
+    <label>Quận/Huyện *</label>
+    <select
+      value={selectedDistrict}
+      onChange={(e) => {
+        setSelectedDistrict(e.target.value);
+        updateAddress();
+      }}
+      disabled={!selectedProvince}
+    >
+      <option value="">Chọn quận/huyện</option>
+      {districts?.map((d) => (
+        <option key={d.code} value={d.code}>
+          {d.name}
+        </option>
+      ))}
+    </select>
+    <label>Phường/Xã *</label>
             <select
               value={selectedWard}
               onChange={(e) => {
@@ -1218,18 +1236,17 @@ const CheckOut = () => {
               ))}
             </select>
 
-            <label>Địa chỉ cụ thể *</label>
-            <input
-              type="text"
-              placeholder="Nhập số nhà, tên đường..."
-              value={specificAddress}
-              onChange={(e) => {
-                setSpecificAddress(e.target.value); // Giữ nguyên chuỗi người dùng nhập
-                updateAddress(e.target.value); // Cập nhật lại địa chỉ đầy đủ
-              }}
-            />
-
-            <label>Địa chỉ đầy đủ *</label>
+    <label>Địa chỉ cụ thể *</label>
+    <input
+      type="text"
+      placeholder="Nhập số nhà, tên đường..."
+      value={specificAddress}
+      onChange={(e) => {
+        setSpecificAddress(e.target.value);
+        updateAddress(e.target.value);
+      }}
+    />
+       <label>Địa chỉ đầy đủ *</label>
             <input
               type="text"
               id="address"
@@ -1245,6 +1262,16 @@ const CheckOut = () => {
                 )
               }
             />
+    <button
+      type="button"
+      className="cancel-edit-btn"
+      onClick={() => setEditingAddress(false)}
+    >
+      Huỷ
+    </button>
+  </>
+)}
+
             {savedAddresses.length > 0 && (
               <div style={{ marginTop: "5px" }}>
                 {savedAddresses.length > 0 && (
@@ -1330,7 +1357,13 @@ const CheckOut = () => {
                     </div>
                   </div>
                   <hr />
-                  <div className="voucher-section">
+                </div>
+              );
+            })
+          ) : (
+            <p>No items in the cart.</p>
+          )}
+           <div className="voucher-section">
                     <label className="voucher-label">Mã giảm giá</label>
                     <div className="voucher-input-wrapper">
                       <input
@@ -1348,13 +1381,6 @@ const CheckOut = () => {
                       <button className="voucher-button" onClick={applyVoucher}>Áp mã</button>
                     </div>
                   </div>
-                </div>
-              );
-            })
-          ) : (
-            <p>No items in the cart.</p>
-          )}
-
           <div className="price-details">
             <p>
               Tổng: <span>{checkout?.subtotal?.toLocaleString()}đ</span>
@@ -1390,12 +1416,15 @@ const CheckOut = () => {
               }`}
             >
               <input
-                type="radio"
-                name="payment"
-                value="momo"
-                checked={paymentMethod === "momo"}
-                onChange={() => setPaymentMethod("momo")}
-              />
+  type="radio"
+  name="payment"
+  value="momo"
+  checked={paymentMethod === "momo"}
+  onChange={() => {
+    setPaymentMethod("momo");
+    setShowMoMoTerms(true); // ← hiện điều khoản khi chọn
+  }}
+/>
               <FaMobileAlt className="payment-icon momo" />
               <span>Thanh toán bằng Ví MoMo</span>
             </label>
@@ -1414,6 +1443,38 @@ const CheckOut = () => {
                 )}
               </div>
             )}
+            {showMoMoTerms && (
+ <div className="momo-modal_dieukhoan">
+   <div className="momo-modal-overlay">
+    <div className="momo-modal">
+      <button className="close-btn" onClick={() => setShowMoMoTerms(false)}>×</button>
+      <h3>🔒 Điều Khoản Thanh Toán Qua MoMo</h3>
+      <p><strong>1. Phương thức thanh toán</strong><br />
+      Khách hàng có thể thanh toán đơn hàng thông qua Ví MoMo bằng cách quét mã QR hoặc thanh toán trực tiếp trên ứng dụng MoMo. Giao dịch được xử lý qua cổng thanh toán MoMo tích hợp trên website và đảm bảo an toàn theo quy trình bảo mật của MoMo.
+      </p>
+      <p><strong>2. Phí giao dịch</strong><br />
+      Chúng tôi không thu bất kỳ khoản phí nào khi khách hàng thanh toán bằng MoMo. Tuy nhiên, khách hàng cần đảm bảo số dư trong ví MoMo đủ để thực hiện thanh toán.
+      </p>
+      <p><strong>3. Xác nhận giao dịch</strong><br />
+      Sau khi hoàn tất thanh toán, đơn hàng sẽ được ghi nhận tự động. Hệ thống sẽ gửi xác nhận qua email hoặc giao diện đặt hàng trên website. Nếu giao dịch không thành công, đơn hàng sẽ không được xử lý.
+      </p>
+      <p><strong>4. Bảo mật thông tin</strong><br />
+      Thông tin thanh toán của khách hàng được xử lý hoàn toàn bởi hệ thống của MoMo. Chúng tôi không lưu trữ bất kỳ thông tin nào liên quan đến ví điện tử, tài khoản ngân hàng hay mã OTP của khách hàng.
+      </p>
+      <p><strong>5. Chính sách hủy đơn & hoàn tiền</strong><br />
+      Đơn hàng thanh toán bằng MoMo sẽ không được hoàn tiền dưới bất kỳ hình thức nào.
+      </p>
+      <p>Quý khách vui lòng kiểm tra kỹ thông tin đơn hàng và xác nhận trước khi tiến hành thanh toán.</p>
+      <p>Trong trường hợp đơn hàng bị hủy (bởi khách hàng hoặc vì lý do khác), số tiền đã thanh toán sẽ không được hoàn lại, do hệ thống không liên kết với ví MoMo để xử lý hoàn tiền tự động.</p>
+      <p><strong>6. Hỗ trợ và khiếu nại</strong><br />
+      <p>Mọi thắc mắc hoặc sự cố liên quan đến thanh toán qua MoMo, vui lòng liên hệ bộ phận hỗ trợ khách hàng của chúng tôi qua:</p>
+        📧 Email: [email hỗ trợ]<br />
+        📞 Hotline: [số điện thoại]
+      </p>
+    </div>
+  </div>
+ </div>
+)}
           </div>
 
           <button type="submit" className="order-button" onClick={handleOrder}>
