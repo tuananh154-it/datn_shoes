@@ -40,6 +40,7 @@ class ReviewController extends Controller
                     'number_of_likes' => $review->helpful_count,
                     'created_at' => $review->created_at->diffForHumans(),
                     'is_anonymous' => $review->is_anonymous,
+                    'rating' => $review->rating, // Thêm rating ở đây
                 ];
             });
 
@@ -279,6 +280,7 @@ class ReviewController extends Controller
             ]);
 
             return response()->json(['message' => 'Phản hồi đánh giá thành công', 'review' => $review]);
+
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể phản hồi đánh giá', 'message' => $e->getMessage()], 500);
         }
@@ -336,6 +338,7 @@ class ReviewController extends Controller
             $review->update($updatedData);
 
             return response()->json(['message' => 'Cập nhật đánh giá thành công', 'review' => $review]);
+
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể cập nhật đánh giá', 'message' => $e->getMessage()], 500);
         }
@@ -425,8 +428,11 @@ class ReviewController extends Controller
                 'message' => $review->is_anonymous ? 'Đánh giá đã được chuyển thành ẩn danh' : 'Đánh giá đã không còn ẩn danh',
                 'review' => $review
             ]);
+
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể thay đổi trạng thái ẩn danh', 'message' => $e->getMessage()], 500);
         }
     }
+
+    // riêng cái này đéo cho xóa nhé
 }

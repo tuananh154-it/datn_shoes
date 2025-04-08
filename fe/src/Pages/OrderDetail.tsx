@@ -60,8 +60,8 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
                         product_detail: {
                             ...detail.product_detail,
                             product_name: productInfo.name || "Không xác định",
-                            color: detail.product_detail?.color || "Không xác định",
-                            size: detail.product_detail?.size || "Không xác định"
+                            // color: detail.product_detail?.color || "Không xác định",
+                            // size: detail.product_detail?.size || "Không xác định"
                         }
                     };
                 });
@@ -111,7 +111,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
 
     return (
         <div className="order-detail">
-            <h2>Chi tiết đơn hàng</h2>
+           <h2>Chi Tiết Đơn Hàng #{order.id}</h2>
             <table className="order-table">
                 <tbody>
                     <tr><td><strong>Mã đơn hàng:</strong></td><td>{order.id}</td></tr>
@@ -147,8 +147,8 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
                             <td>{item.product_detail.product_name}</td>
                             <td>{parseFloat(item.price).toLocaleString()}đ</td>
                             <td>{item.quantity}</td>
-                            <td>{item.product_detail.color_id}</td>
-                            <td>{item.product_detail.size_id}</td>
+                            <td>{item.color}</td>
+                            <td>{item.size}</td>
                             <td>{parseFloat(item.total_price).toLocaleString()}đ</td>
                         </tr>
                     ))}
@@ -161,6 +161,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
                     <tr><td><strong>Địa chỉ:</strong></td><td>{order.address}</td></tr>
                     <tr><td><strong>Điện thoại:</strong></td><td>{order.phone_number}</td></tr>
                     <tr><td><strong>Email:</strong></td><td>{order.email}</td></tr>
+                    <tr><td><strong>Phí giao hàng:</strong></td><td>{parseFloat(order.deliver_fee).toLocaleString()}đ</td></tr>
                 </tbody>
             </table>
 

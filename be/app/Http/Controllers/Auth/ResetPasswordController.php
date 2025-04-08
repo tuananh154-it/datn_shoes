@@ -28,7 +28,7 @@ class ResetPasswordController extends Controller
         }
 
         // Checking token
-        $resetToken = DB::table('password_resets_tokens')
+        $resetToken = DB::table('password_reset_tokens')
             ->where('email', $request->email)
             ->where('token', $request->token)
             ->first();
@@ -46,7 +46,7 @@ class ResetPasswordController extends Controller
         ]);
 
         // Xóa token sau khi sử dụng
-        DB::table('password_resets_tokens')->where('email', $request->email)->delete();
+        DB::table('password_reset_tokens')->where('email', $request->email)->delete();
 
         return response()->json([
             'message' => 'Mật khẩu của bạn đã được đặt lại thành công!'

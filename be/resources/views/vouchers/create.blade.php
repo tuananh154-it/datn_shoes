@@ -40,15 +40,6 @@
                         @enderror
                     </div>
 
-                    {{-- Số tiền giảm
-                    <div class="form-group mb-3">
-                        <label for="discount_amount">Số tiền giảm</label>
-                        <input type="number" class="form-control @error('discount_amount') is-invalid @enderror" name="discount_amount" id="discount_amount" value="{{ old('discount_amount') }}">
-                        @error('discount_amount')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div> --}}
-
                     {{-- Phần trăm giảm giá --}}
                     <div class="form-group mb-3">
                         <label for="discount_percent">Phần trăm giảm giá</label>
@@ -85,6 +76,15 @@
                         @enderror
                     </div>
 
+                    {{-- Số lượng voucher --}}
+                    <div class="form-group mb-3">
+                        <label for="quantity">Số lượng mã giảm giá</label>
+                        <input type="number" class="form-control @error('quantity') is-invalid @enderror" name="quantity" id="quantity" value="{{ old('quantity') }}">
+                        @error('quantity')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- Trạng thái --}}
                     <div class="form-group mb-3">
                         <label class="form-label" for="status">Trạng thái</label>
@@ -98,11 +98,9 @@
                     </div>
 
                     {{-- Hành động --}}
-                   
-                        <a href="{{ route('vouchers.index') }}" class="btn btn-secondary gitgit">Quay lại</a>
-                        <button type="reset" class="btn btn-primary  ">Reset</button>
-                        <button type="submit" class="btn btn-success  ">Thêm Mới</button>
-                    
+                    <a href="{{ route('vouchers.index') }}" class="btn btn-secondary">Quay lại</a>
+                    <button type="reset" class="btn btn-primary">Reset</button>
+                    <button type="submit" class="btn btn-success">Thêm Mới</button>
                 </form>
             </div>
         </section>
