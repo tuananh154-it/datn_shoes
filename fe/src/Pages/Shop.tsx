@@ -167,7 +167,7 @@ const Shop = () => {
     
   };
   const [currentPage, setCurrentPage] = useState(1);
-const itemsPerPage = 12;
+const itemsPerPage = 9;
 
 // Tính toán số trang
 const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
@@ -406,10 +406,10 @@ const changePage = (newPage: number) => {
                     </form>
                   </div>
                 </div> */}
-                <div>
+                <div> 
                 <div className="search1">
                           {/* <h5>Tìm kiếm sản phẩm</h5> */}
-                <input
+                <input className="search2"
                   type="text"
                   placeholder="Tìm kiếm..."
                   value={searchTerm}
@@ -423,7 +423,7 @@ const changePage = (newPage: number) => {
                               gap: "10px",
                             }}
                           >
-                            {priceRange[0].toLocaleString()}
+                            {/* {priceRange[0].toLocaleString()}
                             <Slider
                               range
                               min={0}
@@ -433,7 +433,7 @@ const changePage = (newPage: number) => {
                               onChange={handleChange}
                               style={{ width: "150px" }}
                             />
-                            {priceRange[1].toLocaleString()}
+                            {priceRange[1].toLocaleString()} */}
                           </div>
                 Tổng:{paginatedProducts.length}
               </div>
@@ -442,12 +442,13 @@ const changePage = (newPage: number) => {
   ) : paginatedProducts.length === 0 ? (
     <p className="text-center text-gray-500">Không có sản phẩm nào</p>
   ) : (
-    <ul className="category-products wow fadeIn row">
+     <div className="container">
+      <ul className="category-products wow fadeIn row">
      {paginatedProducts.map((last) => (
-            <div className="product-card" key={last.id}>
+            <div className="product-card1" key={last.id}>
               {/* <div className="label new">Mới</div> */}
               <a href={`/product_detail/${last.id}`}>
-              <img className="product-image" src={last.image} alt="Product 1" loading="lazy"/>
+              <img className="product-image1" src={last.image} alt="Product 1" loading="lazy"/>
               </a>
               <div className="product-name">{last.name}</div>
               <div className="product-price">
@@ -489,6 +490,7 @@ const changePage = (newPage: number) => {
             </div>
           ))}
     </ul>
+    </div>
   )}
 </div>
 

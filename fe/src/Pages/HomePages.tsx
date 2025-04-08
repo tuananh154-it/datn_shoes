@@ -108,17 +108,18 @@ const HomePages = () => {
           ))}
         </Swiper>
       </div>
-      <section className="products-section">
-      <h2 className="section-title">
+      <section className="bestseller">
+     <div className="container">
+     <h2 className="section-title">
           <span>Sản phẩm mới</span>
         </h2>
 
-        <div className="products-grid">
+        <div className="products">
           {lastProduct.map((last) => (
             <div className="product-card" key={last.id}>
               <div className="label new">Mới</div>
               <a href={`/product_detail/${last.id}`}>
-              <img className="product-image" src={last.image} alt="Product 1" loading="lazy"/>
+              <img className="product-image1" src={last.image} alt="Product 1" loading="lazy"/>
               </a>
               <div className="product-name">{last.name}</div>
               <div className="product-price">
@@ -160,6 +161,7 @@ const HomePages = () => {
             </div>
           ))}
         </div>
+     </div>
       </section>
 
       <section className="bestseller">
@@ -173,7 +175,7 @@ const HomePages = () => {
                <div className="product-card">
                <div className="label">SALE</div>
                <img
-                 className="product-image"
+                 className="product-image1"
                  src={product.image}
                  alt="Product 4"
                />
