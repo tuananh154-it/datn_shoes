@@ -10,11 +10,12 @@ import { getUser, updateUser, Users } from "../services/user";
 const MyAccount = () => {
     const [activeTab, setActiveTab] = useState("profile");
     const [orders, setOrders] = useState<Order[]>([]);
-    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+    const [selectedOrder, setSelectedOrder] = useState<Order | null>(null); // Lưu chi tiết đơn hàng đang xem
     const [page, setPage] = useState(1);
     const limit = 5; // Giới hạn 5 đơn hàng mỗi trang
     const [hasMore, setHasMore] = useState(true);
     const [isLoading, setIsLoading] = useState(false);
+    const [isDetailLoading, setIsDetailLoading] = useState(false); // Trạng thái tải chi tiết đơn hàng
 
     // Cache dùng localStorage
     const getCachedData = (key: string) => JSON.parse(localStorage.getItem(key) || "{}");
@@ -95,9 +96,25 @@ const MyAccount = () => {
         fetchOrders();
     }, [page]);
 
-    const toggleOrderDetails = (orderId: number) => {
-        setSelectedOrderId(String(orderId));
-        setActiveTab("orderDetail");
+    // Xử lý khi nhấn vào nút "Chi tiết"
+    const handleViewOrderDetails = async (orderId: number) => {
+        setIsDetailLoading(true);
+        try {
+            const response = await getDetailOrder(orderId);
+            const orderDetails = response.data;
+
+            // Cập nhật chi tiết đơn hàng đang xem
+            setSelectedOrder({
+                ...orders.find(order => order.id === orderId)!,
+                order_details: orderDetails.order_details,
+            });
+            setActiveTab("orderDetail");
+        } catch (error) {
+            console.error("Lỗi khi lấy chi tiết đơn hàng:", error);
+            toast.error("Không thể tải chi tiết đơn hàng.");
+        } finally {
+            setIsDetailLoading(false);
+        }
     };
 
     const [user, setUser] = useState<Users | null>(null);
@@ -319,35 +336,19 @@ const MyAccount = () => {
                                                                 >
                                                                     {getStatusLabel(order.status)}
                                                                 </span>
-                                                                <button className="order-details" onClick={() => toggleOrderDetails(order.id)}>
-                                                                    Chi tiết
+                                                                <button
+                                                                    className="order-details"
+                                                                    onClick={() => handleViewOrderDetails(order.id)}
+                                                                >
+                                                                    {isDetailLoading && selectedOrder?.id === order.id
+                                                                        ? "Đang tải..."
+                                                                        : "Chi tiết"}
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                        <div className="order-content">
-                                                            <div className="order-items">
-                                                                {order.order_details?.length > 0 ? (
-                                                                    order.order_details.map((item) => (
-                                                                        <div key={item.id} className="order-item">
-                                                                            <div>
-                                                                                <span className="item-name">
-                                                                                    {item.product_detail.product_name || "Tên sản phẩm không có"}
-                                                                                </span>
-                                                                                <span className="item-quantity"> x{item.quantity}</span>
-                                                                            </div>
-                                                                            <span className="item-price">
-                                                                                {parseFloat(item.price).toLocaleString()} VND
-                                                                            </span>
-                                                                        </div>
-                                                                    ))
-                                                                ) : (
-                                                                    <div>Đang tải chi tiết...</div>
-                                                                )}
-                                                            </div>
-                                                            <div className="order-total">
-                                                                <span>Tổng</span>
-                                                                <span>{parseFloat(order.total_price).toLocaleString()} VND</span>
-                                                            </div>
+                                                        <div className="order-total">
+                                                            <span>Tổng</span>
+                                                            <span>{parseFloat(order.total_price).toLocaleString()} VND</span>
                                                         </div>
                                                     </div>
                                                 ))}
@@ -428,12 +429,31 @@ const MyAccount = () => {
                                         <button className="btn-logout">Logout</button>
                                     </div>
                                 )}
-                                {activeTab === "orderDetail" && selectedOrderId && (
+                                {activeTab === "orderDetail" && selectedOrder && (
                                     <div className="card">
                                         <button className="back-button" onClick={() => setActiveTab("orders")}>
                                             ⬅ Quay lại
                                         </button>
-                                        <OrderDetail orderId={selectedOrderId} />
+                                        <h2>Chi tiết đơn hàng #{selectedOrder.id}</h2>
+                                        <div className="order-details">
+                                            {selectedOrder.order_details?.map(item => (
+                                                <div key={item.id} className="order-item">
+                                                    <div>
+                                                        <span className="item-name">
+                                                            {item.product_detail.product_name || "Tên sản phẩm không có"}
+                                                        </span>
+                                                        <span className="item-quantity"> x{item.quantity}</span>
+                                                    </div>
+                                                    <span className="item-price">
+                                                        {parseFloat(item.price).toLocaleString()} VND
+                                                    </span>
+                                                </div>
+                                            ))}
+                                        </div>
+                                        <div className="order-total">
+                                            <span>Tổng</span>
+                                            <span>{parseFloat(selectedOrder.total_price).toLocaleString()} VND</span>
+                                        </div>
                                     </div>
                                 )}
                             </div>
