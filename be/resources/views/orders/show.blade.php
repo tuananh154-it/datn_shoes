@@ -93,28 +93,38 @@
                             </p>
                             <p><strong>Trạng Thái Đơn Hàng:</strong>
                                 @switch($order->status)
-                                    @case('waiting_for_confirmation')
+                                    @case('pending')
                                         <span class="badge bg-warning text-dark">Chờ xác nhận</span>
                                         @break
-                                    @case('waiting_for_pickup')
-                                        <span class="badge bg-primary text-white">Chờ lấy hàng</span>
+                                    @case('confirmed')
+                                        <span class="badge bg-primary text-white">Đã xác nhận</span>
                                         @break
-                                    @case('waiting_for_delivery')
-                                        <span class="badge bg-info text-white">Chờ giao hàng</span>
+                                    @case('processing')
+                                        <span class="badge bg-secondary text-white">Đang xử lý</span>
+                                        @break
+                                    @case('shipping')
+                                        <span class="badge bg-info text-white">Đang giao hàng</span>
                                         @break
                                     @case('delivered')
                                         <span class="badge bg-success text-white">Đã giao</span>
                                         @break
+                                    @case('completed')
+                                        <span class="badge bg-dark text-white">Hoàn tất</span>
+                                        @break
                                     @case('returned')
-                                        <span class="badge bg-secondary text-white">Đã trả lại</span>
+                                        <span class="badge bg-light text-dark">Trả hàng</span>
+                                        @break
+                                    @case('refunded')
+                                        <span class="badge bg-danger text-white">Hoàn tiền</span>
                                         @break
                                     @case('cancelled')
                                         <span class="badge bg-danger text-white">Đã hủy</span>
                                         @break
                                     @default
-                                        N/A
+                                        <span class="badge bg-secondary">Không xác định</span>
                                 @endswitch
                             </p>
+                            
                             <p><strong>Trạng Thái Thanh Toán:</strong>
                                 @switch($order->payment_status)
                                     @case('paid')
