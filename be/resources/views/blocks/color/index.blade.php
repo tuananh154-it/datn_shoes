@@ -54,7 +54,7 @@
                         <th><i class=""></i> ID</th>
                         <th class="hidden-phone"><i class=""></i> Tên</th>
                         <th><i class=""></i> Trang thái</th>
-                        <th></th>
+                        <th>Hành động </th>
                     </tr>
                 </thead>
                 <tbody>

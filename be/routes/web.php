@@ -330,6 +330,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('admin/product', [AdminController::class, 'products'])->name('dashboards.product');
     //top 10 sp
     Route::get('admin/top10', [AdminController::class, 'top10'])->name('dashboards.top10');
+    //thống kê trạng thái đơn hàng 
+    Route::get('/dashboards/orders', [AdminController::class, 'orderStatus'])->name('dashboards.orders');
 
 
 

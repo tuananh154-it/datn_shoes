@@ -463,7 +463,7 @@ const ProductDetail = () => {
                             selectedDetail?.price ||
                             productId.price}
                         </p> */}
-                      <p className="text-color title_h4">
+                     <p className="text-color title_h4">
                         {selectedDetail?.discount_price ? (
                           <>
                             <span className="original-price">
