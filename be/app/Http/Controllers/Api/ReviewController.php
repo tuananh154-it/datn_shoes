@@ -17,12 +17,19 @@ Carbon::setLocale('vi');
 
 class ReviewController extends Controller
 {
-    public function index($productId)
+    public function index(Request $request, $productId)
     {
         try {
+            $perPage = $request->input('per_page', 10);
+
             $allReviews = Review::where('product_id', $productId)
                 ->with('user') // Lấy thông tin user
-                ->get();
+                ->paginate($perPage);
+
+            // Kiểm tra nếu không có đánh giá nào
+            if ($allReviews->isEmpty()) {
+                return response()->json(['message' => 'Không có đánh giá nào cho sản phẩm này'], 404);
+            }
 
             $reviewsData = $allReviews->map(function ($review) {
                 return [
@@ -39,21 +46,34 @@ class ReviewController extends Controller
             return response()->json([
                 'reviews' => $reviewsData,
                 'total_reviews' => $allReviews->count(),
+                'pagination' => [
+                    'total' => $allReviews->total(),
+                    'per_page' => $allReviews->perPage(),
+                    'current_page' => $allReviews->currentPage(),
+                    'last_page' => $allReviews->lastPage(),
+                ]
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể truy vấn reviews', 'message' => $e->getMessage()], 500);
         }
     }
 
-    public function myReviews()
+    public function myReviews(Request $request)
     {
         try {
             $user = Auth::user();
 
+            $perPage = $request->input('per_page', 10);
+
             $reviews = Review::where('user_id', $user->id)
                 ->with(['product']) // Load thông tin sản phẩm đã đánh giá
                 ->orderBy('created_at', 'desc')
-                ->get();
+                ->paginate($perPage);
+
+            // Kiểm tra nếu không có đánh giá nào
+            if ($reviews->isEmpty()) {
+                return response()->json(['message' => 'Bạn chưa có đánh giá nào'], 404);
+            }
 
             $reviewsData = $reviews->map(function ($review) {
                 return [
@@ -72,6 +92,12 @@ class ReviewController extends Controller
             return response()->json([
                 'my_reviews' => $reviewsData,
                 'total_reviews' => $reviews->count(),
+                'pagination' => [
+                    'total' => $reviews->total(),
+                    'per_page' => $reviews->perPage(),
+                    'current_page' => $reviews->currentPage(),
+                    'last_page' => $reviews->lastPage(),
+                ]
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể lấy danh sách đánh giá', 'message' => $e->getMessage()], 500);
@@ -86,6 +112,13 @@ class ReviewController extends Controller
             // Lấy đánh giá theo ID, kèm sản phẩm liên quan
             $review = Review::with('product')->find($reviewId);
 
+            $orderDetail = OrderDetail::where('order_id', $review->order_id)
+                ->whereHas('productDetail', function ($query) use ($review) {
+                    $query->where('product_id', $review->product_id);
+                })
+                ->with('productDetail')
+                ->first();
+
             // Kiểm tra nếu đánh giá không tồn tại
             if (!$review) {
                 return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
@@ -98,8 +131,6 @@ class ReviewController extends Controller
 
             // Chuẩn bị dữ liệu trả về
             $reviewData = [
-                'product_name' => $review->product->name,
-                'product_id' => $review->product_id,
                 'rating' => $review->rating,
                 'content' => $review->content,
                 'reply' => $review->reply, // Phản hồi từ Admin (nếu có)
@@ -114,7 +145,20 @@ class ReviewController extends Controller
                 'is_reported' => $review->is_reported
             ];
 
-            return response()->json(['review' => $reviewData]);
+            return response()->json([
+                'product' => [
+                    'product_id' => $review->product_id,
+                    'product_name' => $review->product->name,
+                    'product_image' => $review->product->image,
+                    'size' => $orderDetail->productDetail->size->name,
+                    'color' => $orderDetail->productDetail->color->name,
+                    'product_price' => $orderDetail->price,
+                    'quantity' => $orderDetail->quantity,
+                    'total_price' => $orderDetail->total_price,
+
+                ],
+                'review' => $reviewData
+            ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể lấy chi tiết đánh giá', 'message' => $e->getMessage()], 500);
         }
@@ -124,6 +168,11 @@ class ReviewController extends Controller
     {
         try {
             $userId = Auth::id();
+
+            $order = Order::where('user_id', $userId)->first();
+            if (!$order) {
+                return response()->json(['message' => 'Bạn không phải chủ nhân của đơn hàng này'], 404);
+            }
 
             // Kiểm tra xem đơn hàng có tồn tại và đã giao hàng chưa
             $order = Order::where('id', $orderId)

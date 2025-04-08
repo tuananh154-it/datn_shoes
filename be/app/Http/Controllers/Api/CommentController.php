@@ -16,9 +16,10 @@ Carbon::setLocale('vi');
 class CommentController extends Controller
 {
     // Lấy danh sách bình luận cho sản phẩm
-    public function index($productId)
+    public function index(Request $request, $productId)
     {
         try {
+            $perPage = $request->input('per_page', 10);
 
             $allComments = Comment::where('product_id', $productId)->get();
 
@@ -27,7 +28,12 @@ class CommentController extends Controller
                 ->withCount('children') // Đếm số lượng bình luận con (phản hồi)
                 ->withCount('reports') // Đếm số lượng báo cáo
                 ->with('user') // Tải thông tin người dùng
-                ->get();
+                ->paginate($perPage); // Phân trang
+
+            // Kiểm tra nếu không có bình luận nào
+            if ($commentsWithoutParent->isEmpty()) {
+                return response()->json(['message' => 'Không có bình luận nào'], 404);
+            }
 
             // Duyệt qua từng bình luận và trả về thông tin cần thiết
             $commentsData = $commentsWithoutParent->map(function ($comment) {
@@ -48,6 +54,12 @@ class CommentController extends Controller
             return response()->json([
                 'comments' => $commentsData,
                 'total_comments' => $allComments->count(),
+                'pagination' => [
+                    'total' => $commentsWithoutParent->total(),
+                    'per_page' => $commentsWithoutParent->perPage(),
+                    'current_page' => $commentsWithoutParent->currentPage(),
+                    'last_page' => $commentsWithoutParent->lastPage(),
+                ]
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể truy vấn tới bảng Comments', 'message' => $e->getMessage()], 500);

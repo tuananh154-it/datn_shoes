@@ -31,7 +31,7 @@ class UserController extends Controller
         }
 
         // Lấy danh sách người dùng sau khi lọc
-        $users = $users->get();
+        $users = $users->paginate(40)->appends($request->all());
 
         // Trả về view danh sách người dùng
         return view('users.index', compact('users'));
