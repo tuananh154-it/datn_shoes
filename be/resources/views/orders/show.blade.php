@@ -84,8 +84,8 @@
                                     @case('cash_on_delivery')
                                         Thanh toán khi nhận hàng
                                         @break
-                                    @case('paypal')
-                                        PayPal
+                                    @case('momo')
+                                        Momo
                                         @break
                                     @default
                                         N/A

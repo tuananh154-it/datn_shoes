@@ -86,7 +86,6 @@ const Layout = () => {
       </div>
     );
   };
-
   return (
     <div>
       <Header />

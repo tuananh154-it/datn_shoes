@@ -27,6 +27,7 @@ use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\UserController;
 
 
@@ -114,7 +115,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-// top 19 sp 
+// top 19 sp
 Route::get('/top10', [Top10SPController::class, 'top10']);
 
 Route::post('login', [AuthController::class, 'login']);
@@ -147,3 +148,5 @@ Route::put('review/{reviewId}/edit', [ReviewController::class, 'update'])->middl
 Route::put('review/{reviewId}/like', [ReviewController::class, 'like'])->middleware('auth:api'); // Like đánh giá
 Route::put('review/{reviewId}/report', [ReviewController::class, 'report'])->middleware('auth:api'); // Báo cáo đánh giá
 Route::put('review/{reviewId}/anonymous', [ReviewController::class, 'toggleAnonymous'])->middleware('auth:api'); // ẩn danh đánh giá
+
+

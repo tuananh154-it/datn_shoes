@@ -66,7 +66,7 @@
                                 @switch($order->payment_method)
                                     @case('credit_card') Thẻ tín dụng @break
                                     @case('cash_on_delivery') Thanh toán khi nhận hàng @break
-                                    @case('paypal') PayPal @break
+                                    @case('momo') Momo @break
                                     @default N/A
                                 @endswitch
                             </td>
