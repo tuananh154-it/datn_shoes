@@ -28,6 +28,8 @@ export interface OrdersDetail {
     id: number;
     order_id: number;
     product_detail_id: number;
+    product_id:number;
+    product_name:string;
     price: string; // API trả về dạng string
     quantity: number;
     total_price: string; // API dùng `total_price`, không phải `total`
@@ -37,6 +39,7 @@ export interface OrdersDetail {
     product_detail: ProductDetail; // API trả về object `product_detail`
     color: string; // String trực tiếp trong order_detail
     size: string;  // String trực tiếp trong order_detail
+    image:string;
 }
 
 export interface Order {

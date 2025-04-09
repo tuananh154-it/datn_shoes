@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\OrderPlaced;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Mail;
@@ -54,7 +55,6 @@ class OnlineCheckOutController extends Controller
         }
 
         DB::beginTransaction();
-
         try {
             $total = 0;
             $deliverFee = 30000;
@@ -131,7 +131,7 @@ class OnlineCheckOutController extends Controller
             $cart->items()->whereIn('id', $selectedItemIds)->delete();
 
             DB::commit();
-
+            // broadcast(new OrderPlaced($order))->toOthers();
             try {
                 Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail(  $order->load('order_details.productDetail.product')));
             } catch (\Exception $e) {

@@ -29,7 +29,18 @@ const Shop = () => {
       })
       .finally(() => setLoading(false));
   }, []);
-  console.log("product",products)
+    const navigate = useNavigate();
+  
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      // Thực hiện tìm kiếm và điều hướng
+      navigate(`/shop?search=${encodeURIComponent(searchTerm)}`);
+
+      // Tắt thanh tìm kiếm sau khi tìm kiếm xong
+      // setIsOpen(false);
+    }
+  };
+  // console.log("product",products)
   const location = useLocation();
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -127,6 +138,7 @@ const Shop = () => {
     }
   };
   const navigator = useNavigate();
+ 
   const toggleWishlist = (product: Product) => {
     const user = JSON.parse(localStorage.getItem("user") || "null");
   
@@ -152,7 +164,26 @@ const Shop = () => {
   
     // Phát sự kiện cập nhật để các component khác biết
     window.dispatchEvent(new Event("storage"));
+    
   };
+  const [currentPage, setCurrentPage] = useState(1);
+const itemsPerPage = 9;
+
+// Tính toán số trang
+const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+
+// Cắt danh sách sản phẩm theo trang
+const paginatedProducts = filteredProducts.slice(
+  (currentPage - 1) * itemsPerPage,
+  currentPage * itemsPerPage
+);
+
+// Chuyển trang
+const changePage = (newPage: number) => {
+  if (newPage >= 1 && newPage <= totalPages) {
+    setCurrentPage(newPage);
+  }
+};
   return (
     <>
       <div className="menu_overlay"></div>
@@ -186,47 +217,14 @@ const Shop = () => {
                       <i className="flaticon-close"></i>
                     </a>
                   </div>
-                  <div className="filter_content mCustomScrollbar">
+                  <div className="shopProduct">
                     {/* //giá// */}
-                    <div className="category_list">
-                      <div className="category_list_title">
-                        <h5 className="title_h5">Giá</h5>
-                        <span className="category_close_icon flaticon-down-arrow float-right"></span>
-                      </div>
+                    <div className="loc">
+                      
                       <div className="layer-filter">
                         <div>
-                          {/* <label>Khoảng giá: {priceRange[0].toLocaleString()} - {priceRange[1].toLocaleString()} VND</label> */}
-                          <div
-                            style={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: "10px",
-                            }}
-                          >
-                            {priceRange[0].toLocaleString()}
-                            <Slider
-                              range
-                              min={0}
-                              max={3000000}
-                              step={10000}
-                              value={priceRange}
-                              onChange={handleChange}
-                              style={{ width: "150px", margin: "10px auto" }}
-                            />
-                            {priceRange[1].toLocaleString()}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    {/* //category// */}
-                    <div className="category_list">
-                      <div className="category_list_title">
-                        <h5 className="title_h5">Danh mục</h5>
-                        <span className="category_close_icon flaticon-down-arrow float-right"></span>
-                      </div>
-                      <div className="layer-filter">
-                        <ul>
-                          {categories.map((category) => (
+                          <h5>Danh mục</h5>
+                        {categories.map((category) => (
                             <div className="checkbox">
                               <label
                                 key={category.id}
@@ -248,17 +246,9 @@ const Shop = () => {
                               </label>
                             </div>
                           ))}
-                        </ul>
-                      </div>
-                    </div>
-                    {/* //brand// */}
-                    <div className="category_list">
-                      <div className="category_list_title">
-                        <h5 className="title_h5">Thương hiệu</h5>
-                        <span className="category_close_icon flaticon-down-arrow float-right"></span>
-                      </div>
-                      <div className="layer-filter">
-                        <ul>
+                        </div>
+                        <div className="mt-4">
+                          <h5>Thương hiệu</h5>
                           {brands.map((brand) => (
                             <div className="checkbox">
                               <label
@@ -277,14 +267,42 @@ const Shop = () => {
                               </label>
                             </div>
                           ))}
-                        </ul>
+                        </div> 
+                        <div className="mt-4">
+                          <h5>Giá</h5>
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            {priceRange[0].toLocaleString()}
+                            <Slider
+                              range
+                              min={0}
+                              max={3000000}
+                              step={10000}
+                              value={priceRange}
+                              onChange={handleChange}
+                              style={{ width: "150px" }}
+                            />
+                            {priceRange[1].toLocaleString()}
+                          </div>
+                        </div>
+                        <div>
+                        
+                        </div>
+                        <div className="mt-4">
+                          <img src="https://htmldemo.net/james/james/img/product/banner_left.jpg"/>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-lg-9">
-                <div className="collection-sorting-row">
+              <div className="col-lg-9 shopProduct">
+                {/* <div className="collection-sorting-row">
                   <div className="filter_menu hidden-lg ">
                     <a className="title_h5 text-capitalize">
                       <svg
@@ -387,113 +405,121 @@ const Shop = () => {
                       </div>
                     </form>
                   </div>
-                </div>
-                <div>
-                  {loading ? (
-                    <p>Đang tải...</p>
-                  ) : filteredProducts.length === 0 ? (
-                    <p className="text-center text-gray-500">
-                      Không có sản phẩm nào
-                    </p>
-                  ) : (
-                    <ul className="category-products wow fadeIn row">
-                      {filteredProducts.map((product) => (
-                        <li
-                          className="col-lg-3 col-md-4 col-6 column3 product wow fadeInLeft animated"
-                          data-wow-duration="1300ms"
-                          key={product.id}
-                        >
-                          <div className="featured_content">
-                            <div className="featured_img_content">
-                              <img
-                                src={product.image}
-                                alt="f_product"
-                                className="img-fluid11"
-                              />
-                              <div className="featured_btn vertical_middle">
-                                <Link
-                                  to="#"
-                                  className="text-uppercase background-btn add_to_bag_btn"
-                                  onClick={(e) => {
-                                    e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
-                                    setSelectedProductId(product.id);
-                                  }}
-                                >
-                                  Thêm vào giỏ hàng
-                                </Link>
-                                <Link
-                                  to={`/product_detail/${product.id}`}
-                                  className="text-uppercase border-btn popup_btn"
-                                  data-modal="#modalone"
-                                >
-                                  Xem chi tiết
-                                </Link>
-                              </div>
-                              <a
-                                href="#"
-                                className="heart yeuthich rounded-circle text-center d-block"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  toggleWishlist(product);
-                                }}
-                              >
-                                <i className="flaticon-heart"></i>
-                              </a>
-                            </div>
-                            <div className="featured_detail_content">
-                              <Link to={`/product_detail/${product.id}`}>
-                                <p className="featured_title text-capitalize text-center">
-                                  {product.name.slice(0, 25) + (product.name.length > 6 ? "..." : "")}
-                                </p>
-                              </Link>
-                              <p className="featured_price title_h5 text-center">
-                                {/* <span>{product.price.toLocaleString()}</span> */}
-                                <span className="text-color">
-                                  {product?.price
-                                    ? Number(
-                                        product.price
-                                          .replace(/,/g, "")
-                                          .replace(" VND", "")
-                                      ).toLocaleString("vi-VN") + " VND"
-                                    : "0 VND"}
-                                </span>
-                              </p>
-                            </div>
+                </div> */}
+                <div> 
+                <div className="search1">
+                          {/* <h5>Tìm kiếm sản phẩm</h5> */}
+                <input className="search2"
+                  type="text"
+                  placeholder="Tìm kiếm..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearch()} // Tìm kiếm khi nhấn Enter
+                /> 
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            {/* {priceRange[0].toLocaleString()}
+                            <Slider
+                              range
+                              min={0}
+                              max={3000000}
+                              step={10000}
+                              value={priceRange}
+                              onChange={handleChange}
+                              style={{ width: "150px" }}
+                            />
+                            {priceRange[1].toLocaleString()} */}
                           </div>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-                <div className="align-self-center">
-                  <ul className="pagination text-center justify-content-center">
-                    <li className="page-item">
-                      <a className="page-link" href="javascript:void(0);">
-                        <i className="flaticon-arrows-1"></i>
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="javascript:void(0);">
-                        1
-                      </a>
-                    </li>
-                    <li className="page-item active">
-                      <a className="page-link" href="javascript:void(0);">
-                        2
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="javascript:void(0);">
-                        3
-                      </a>
-                    </li>
-                    <li className="page-item">
-                      <a className="page-link" href="javascript:void(0);">
-                        <i className="flaticon-arrows"></i>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                Tổng:{paginatedProducts.length}
+              </div>
+  {loading ? (
+    <p>Đang tải...</p>
+  ) : paginatedProducts.length === 0 ? (
+    <p className="text-center text-gray-500">Không có sản phẩm nào</p>
+  ) : (
+    <div className="container">
+    <ul className=" wow fadeIn row">
+   {paginatedProducts.map((last) => (
+          <div className="product-card1" key={last.id}>
+            {/* <div className="label new">Mới</div> */}
+            <a href={`/product_detail/${last.id}`}>
+            <img className="product-image1" src={last.image} alt="Product 1" loading="lazy"/>
+            </a>
+            <div className="product-name">{last.name
+              .slice(0, 20) + (last.name.length > 20 ? "..." : "")
+              }</div>
+            <div className="product-price">
+              <strong>{last?.price
+                          ? Number(
+                              last.price
+                                .replace(/,/g, "")
+                                .replace(" VND", "")
+                            ).toLocaleString("vi-VN") + " VND"
+                          : "0 VND"}</strong>
+            </div>
+            <div className="rating">★★★★☆</div>
+            <div className="product-actions">
+            <Link
+                        to="#"
+                        className="text-uppercase add_to_bag_btn rounded-circle d-block"
+                        onClick={(e) => {
+                          e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
+                          setSelectedProductId(last.id);
+                        }}
+                      >
+              <button>Thêm giỏ hàng</button>
+                        </Link>
+              <div className="icons">
+                <i className="fas fa-search"></i>
+                <a
+                  href="#"
+                  className="heart rounded-circle text-center d-block"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleWishlist(last);
+                  }}
+                >
+                  <i className="flaticon-heart yeuthich"></i>
+                </a>
+                <i className="fas fa-sync-alt"></i>
+              </div>
+            </div>
+          </div>
+        ))}
+  </ul>
+  </div>
+  )}
+</div>
+
+{/* Phân trang */}
+<div className="pagination-container phantrang">
+  <ul className="pagination">
+    <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+      <button className="page-link" onClick={() => changePage(currentPage - 1)}>
+        &laquo;
+      </button>
+    </li>
+
+    {[...Array(totalPages)].map((_, index) => (
+      <li key={index} className={`page-item ${currentPage === index + 1 ? "active" : ""}`}>
+        <button className="page-link" onClick={() => changePage(index + 1)}>
+          {index + 1}
+        </button>
+      </li>
+    ))}
+
+    <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+      <button className="page-link" onClick={() => changePage(currentPage + 1)}>
+        &raquo;
+      </button>
+    </li>
+  </ul>
+</div>
               </div>
             </div>
           </div>

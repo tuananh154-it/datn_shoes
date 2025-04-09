@@ -1,99 +1,80 @@
 import { User, Package, Home, CreditCard, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import OrderDetail from "./OrderDetail";
-import { getAllOrders, getDetailOrder, getStatusLabel, Order, OrdersDetail } from "../services/Orders";
+import { getAllOrders, getStatusLabel, Order } from "../services/Orders";
 import toast from "react-hot-toast";
-import { getProductDetail } from "../services/product";
 import { getUser, updateUser, Users } from "../services/user";
-
+import Pagination from "./Pagination";
+import styles from './MyAccount.module.css'; // Import CSS Modules
 const MyAccount = () => {
-    const [activeTab, setActiveTab] = useState("profile");
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const tab = queryParams.get("tab");
+    const orderId = queryParams.get("orderId");
+
+    const validTabs = ["profile", "orders", "orderDetail", "addresses", "payment", "settings"];
+    const [activeTab, setActiveTab] = useState(() => {
+        return validTabs.includes(tab) ? tab : "profile";
+    });
+    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(orderId || null);
+
+    // State cho phân trang và danh sách đơn hàng
     const [orders, setOrders] = useState<Order[]>([]);
-    const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
-    const [page, setPage] = useState(1);
-    const limit = 5; // Giới hạn 5 đơn hàng mỗi trang
-    const [hasMore, setHasMore] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [itemsPerPage] = useState(3);
     const [isLoading, setIsLoading] = useState(false);
+    const [orderError, setOrderError] = useState<string | null>(null);
 
-    // Cache dùng localStorage
-    const getCachedData = (key: string) => JSON.parse(localStorage.getItem(key) || "{}");
-    const setCachedData = (key: string, data: any) => localStorage.setItem(key, JSON.stringify(data));
+    // State cho tab trạng thái đơn hàng
+    const [orderStatusTab, setOrderStatusTab] = useState("all"); // Tab trạng thái: all, pending, processing, delivered, cancelled, returned
+    const [searchQuery, setSearchQuery] = useState(""); // State cho tìm kiếm
 
-    const orderCache = getCachedData("orderCache");
-    const productCache = getCachedData("productCache");
-
-    // Lấy danh sách đơn hàng cơ bản
     useEffect(() => {
         const fetchOrders = async () => {
             setIsLoading(true);
             try {
-                const response = await getAllOrders(page, limit); // Giả sử API hỗ trợ phân trang
-                const newOrders = response.data;
+                const { data } = await getAllOrders();
+                let filteredOrders = data;
 
-                // Kiểm tra cache để gán chi tiết nếu có
-                const ordersWithCachedDetails = newOrders.map(order => ({
-                    ...order,
-                    order_details: orderCache[order.id] || []
-                }));
+                // Lọc theo trạng thái đơn hàng
+                if (orderStatusTab !== "all") {
+                    filteredOrders = data.filter((order) => order.status.toLowerCase() === orderStatusTab);
+                }
 
-                setOrders(prev => [...prev, ...ordersWithCachedDetails]);
-                setHasMore(newOrders.length === limit);
-
-                // Tải chi tiết cho các đơn hàng chưa có trong cache
-                const uncachedOrders = newOrders.filter(order => !orderCache[order.id]);
-                if (uncachedOrders.length > 0) {
-                    const detailsPromises = uncachedOrders.map(async order => {
-                        const detailResponse = await getDetailOrder(order.id);
-                        const details = detailResponse.data.order_details;
-
-                        // Lấy product_ids
-                        const productIds = [
-                            ...new Set(details.map((d: OrdersDetail) => d.product_detail.product_id))
-                        ];
-
-                        // Lấy chi tiết sản phẩm
-                        const productPromises = productIds.map(async id => {
-                            if (productCache[id]) return productCache[id];
-                            const productResponse = await getProductDetail(id);
-                            const productData = productResponse.data.data;
-                            productCache[id] = productData;
-                            setCachedData("productCache", productCache);
-                            return productData;
-                        });
-
-                        const products = await Promise.all(productPromises);
-                        const productMap = new Map(products.map(p => [p.id, p.name]));
-
-                        const enrichedDetails = details.map((detail: OrdersDetail) => ({
-                            ...detail,
-                            product_detail: {
-                                ...detail.product_detail,
-                                product_name: productMap.get(detail.product_detail.product_id) || "Không xác định"
-                            }
-                        }));
-
-                        orderCache[order.id] = enrichedDetails;
-                        setCachedData("orderCache", orderCache);
-
-                        return { ...order, order_details: enrichedDetails };
-                    });
-
-                    const enrichedOrders = await Promise.all(detailsPromises);
-                    setOrders(prev =>
-                        prev.map(o => enrichedOrders.find(e => e.id === o.id) || o)
+                // Lọc theo tìm kiếm
+                if (searchQuery) {
+                    filteredOrders = filteredOrders.filter((order) =>
+                        order.order_details.some((item) =>
+                            item.product_name.toLowerCase().includes(searchQuery.toLowerCase())
+                        )
                     );
                 }
+
+                const totalItems = filteredOrders.length;
+                setTotalPages(Math.ceil(totalItems / itemsPerPage));
+
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = startIndex + itemsPerPage;
+                const paginatedOrders = filteredOrders.slice(startIndex, endIndex);
+
+                setOrders(paginatedOrders);
             } catch (error) {
                 console.error("Lỗi khi lấy đơn hàng:", error);
-                toast.error("Lỗi khi lấy đơn hàng");
+                setOrderError("Không thể tải danh sách đơn hàng. Vui lòng thử lại sau.");
+                toast.error("Lỗi khi tải đơn hàng!");
             } finally {
                 setIsLoading(false);
             }
         };
 
         fetchOrders();
-    }, [page]);
+    }, [currentPage, orderStatusTab, searchQuery]);
+
+    const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+    };
 
     const toggleOrderDetails = (orderId: number) => {
         setSelectedOrderId(String(orderId));
@@ -124,7 +105,7 @@ const MyAccount = () => {
                 }
                 setLoading(false);
             })
-            .catch(err => {
+            .catch((err) => {
                 setError("Lỗi khi lấy thông tin user");
                 setLoading(false);
             });
@@ -169,14 +150,13 @@ const MyAccount = () => {
         }
     };
 
-    if (loading) return <div className="nav">Đang tải...</div>;
     if (error) return <div>{error}</div>;
 
     return (
         <>
             <div className="menu_overlay"></div>
             <div className="main_section">
-                <section className="breadcrumb_section nav">
+            <section className="breadcrumb_section nav">
                     <div className="container">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb">
@@ -189,7 +169,6 @@ const MyAccount = () => {
                         <h1 className="title_h1 font-weight-normal text-capitalize">Trang cá nhân</h1>
                     </div>
                 </section>
-
                 <section className="wishlist_section padding-top-60 padding-bottom-60">
                     <main className="container">
                         <div className="grid-container">
@@ -203,166 +182,254 @@ const MyAccount = () => {
                                         <p className="profile-email">{user?.email}</p>
                                     </div>
                                     <nav className="nav-menu">
-                                        <button onClick={() => setActiveTab("profile")} className={activeTab === "profile" ? "active" : ""}>
+                                        <button
+                                            onClick={() => setActiveTab("profile")}
+                                            className={activeTab === "profile" ? "active" : ""}
+                                        >
                                             <User className="icon" /> Thông tin cá nhân
                                         </button>
                                         <button
                                             onClick={() => setActiveTab("orders")}
-                                            className={activeTab === "orders" || activeTab === "orderDetail" ? "active" : ""}
+                                            className={
+                                                activeTab === "orders" || activeTab === "orderDetail"
+                                                    ? "active"
+                                                    : ""
+                                            }
                                         >
                                             <Package className="icon" /> Đơn mua
                                         </button>
-                                        <button onClick={() => setActiveTab("addresses")} className={activeTab === "addresses" ? "active" : ""}>
+                                        <button
+                                            onClick={() => setActiveTab("addresses")}
+                                            className={activeTab === "addresses" ? "active" : ""}
+                                        >
                                             <Home className="icon" /> Địa chỉ
                                         </button>
-                                        <button onClick={() => setActiveTab("payment")} className={activeTab === "payment" ? "active" : ""}>
+                                        <button
+                                            onClick={() => setActiveTab("payment")}
+                                            className={activeTab === "payment" ? "active" : ""}
+                                        >
                                             <CreditCard className="icon" /> Phương thức thanh toán
                                         </button>
-                                        <button onClick={() => setActiveTab("settings")} className={activeTab === "settings" ? "active" : ""}>
+                                        <button
+                                            onClick={() => setActiveTab("settings")}
+                                            className={activeTab === "settings" ? "active" : ""}
+                                        >
                                             <Settings className="icon" /> Cài đặt
                                         </button>
                                     </nav>
                                 </div>
                             </aside>
                             <div className="content">
-                                {activeTab === "profile" && (
-                                    <div className="card">
-                                        <h2 className="section-title">Thông tin cá nhân</h2>
-                                        <div className="form-group">
-                                            <label>Họ Tên</label>
-                                            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Email</label>
-                                            <input type="text" defaultValue={user?.email} disabled />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Số điện thoại</label>
-                                            <input type="tel" value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Giới tính:</label>
-                                            <div className="radio-group">
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        name="gender"
-                                                        value="Nam"
-                                                        checked={gender === "Nam"}
-                                                        onChange={(e) => setGender(e.target.value)}
-                                                    />
-                                                    Nam
-                                                </label>
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        name="gender"
-                                                        value="Nữ"
-                                                        checked={gender === "Nữ"}
-                                                        onChange={(e) => setGender(e.target.value)}
-                                                    />
-                                                    Nữ
-                                                </label>
-                                                <label>
-                                                    <input
-                                                        type="radio"
-                                                        name="gender"
-                                                        value="Khác"
-                                                        checked={gender === "Khác"}
-                                                        onChange={(e) => setGender(e.target.value)}
-                                                    />
-                                                    Khác
-                                                </label>
-                                            </div>
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Ngày sinh</label>
-                                            <input type="date" value={dateOfBirth} onChange={(e) => setDateOfBirth(e.target.value)} />
-                                        </div>
-                                        <h3 className="section-title">Thay đổi mật khẩu</h3>
-                                        <div className="form-group">
-                                            <label htmlFor="password">Mật khẩu</label>
-                                            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="password">Mật khẩu mới</label>
-                                            <input type="password" value={newPassword} onChange={(e) => setNewPassword(e.target.value)} />
-                                        </div>
-                                        <div className="form-group">
-                                            <label htmlFor="password">Xác nhận mật khẩu</label>
-                                            <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} />
-                                        </div>
-                                        <button className="btn-save" onClick={handleUpdate}>Lưu thay đổi</button>
-                                    </div>
-                                )}
                                 {activeTab === "orders" && (
                                     <div className="card">
-                                        <h2 className="section-title">Lịch sử mua hàng</h2>
+                                        {/* <h2 className="section-title">Đơn mua</h2> */}
+                                        {/* Thanh tìm kiếm */}
+                                        <div className="order-search">
+                                            <input
+                                                type="text"
+                                                placeholder="Bạn có thể tìm kiếm theo Tên Shop, ID đơn hàng hoặc Tên Sản phẩm"
+                                                value={searchQuery}
+                                                onChange={(e) => setSearchQuery(e.target.value)}
+                                            />
+                                        </div>
+                                        {/* Tabs trạng thái đơn hàng */}
+                                        <div className="order-status-tabs">
+                                            <button
+                                                className={orderStatusTab === "all" ? "active" : ""}
+                                                onClick={() => setOrderStatusTab("all")}
+                                            >
+                                                Tất cả
+                                            </button>
+                                            <button
+                                                className={orderStatusTab === "waiting_for_confirmation" ? "active" : ""}
+                                                onClick={() => setOrderStatusTab("waiting_for_confirmation")}
+                                            >
+                                                Chờ xác nhận
+                                            </button>
+                                            <button
+                                                className={orderStatusTab === "waiting_for_pickup" ? "active" : ""}
+                                                onClick={() => setOrderStatusTab("waiting_for_pickup")}
+                                            >
+                                                Chờ lấy hàng
+                                            </button>
+                                            <button
+                                                className={orderStatusTab === "waiting_for_deliver" ? "active" : ""}
+                                                onClick={() => setOrderStatusTab("waiting_for_deliver")}
+                                            >
+                                                Đang giao hàng
+                                            </button>
+                                            <button
+                                                className={orderStatusTab === "delivered" ? "active" : ""}
+                                                onClick={() => setOrderStatusTab("delivered")}
+                                            >
+                                                Đã giao hàng
+                                            </button>
+                                            <button
+                                                className={orderStatusTab === "cancelled" ? "active" : ""}
+                                                onClick={() => setOrderStatusTab("cancelled")}
+                                            >
+                                                Đã hủy
+                                            </button>
+                                            <button
+                                                className={orderStatusTab === "returned" ? "active" : ""}
+                                                onClick={() => setOrderStatusTab("returned")}
+                                            >
+                                                Trả hàng/Hoàn tiền
+                                            </button>
+                                        </div>
                                         {isLoading && <div>Đang tải...</div>}
-                                        {orders.length > 0 ? (
-                                            <div className="order-list">
-                                                {orders.map((order) => (
-                                                    <div key={order.id} className="order-card">
-                                                        <div className="order-header">
-                                                            <div>
-                                                                <h3 className="order-id">Đơn #{order.id}</h3>
-                                                                <p className="order-date">Ngày mua {new Date(order.created_at).toLocaleDateString()}</p>
+                                        {orderError && <div>{orderError}</div>}
+                                        {!isLoading && !orderError && orders.length > 0 ? (
+                                            <>
+                                                <div className="order-list">
+                                                    {orders.map((order) => (
+                                                        <div key={order.id} className="order-card">
+                                                            <div className="order-header">
+                                                                <div className="order-shop">
+                                                                    {/* <span className="shop-label">Yêu thích</span> */}
+
+                                                                    <button className="chat-btn">Mã đơn:#FV-HN-{order.id}</button>
+                                                                    <button className="view-shop-btn">Ngày đặt:{new Date(order.created_at).toLocaleDateString()}</button>
+                                                                </div>
+                                                                <div className="order-status-wrapper">
+                                                                    <span
+                                                                        className={`order-status ${order.status === "delivered"
+                                                                            ? "delivered"
+                                                                            : order.status === "waiting_for_confirmation"
+                                                                                ? "choxacnhan"
+                                                                                : order.status === "waiting_for_pickup"
+                                                                                ? "cholayhang"
+                                                                                :order.status === "waiting_for_delivery"
+                                                                                ?"danggiaohang"
+                                                                                :order.status === "cancelled"
+                                                                                ?"dahuy"
+                                                                                :order.status === "returned"
+                                                                                ?"hoanhang"
+                                                                                :"pending"
+                                                                            }`}
+                                                                    >
+                                                                        {getStatusLabel(order.status)}
+                                                                    </span>
+                                                                     {/* <span
+                                                                     
+                                                                                        style={{
+                                                                                            color:
+                                                                                                order.status === "cancelled"
+                                                                                                    ? "#FF0000"
+                                                                                                    : order.status === "delivered"
+                                                                                                    ? "#28A745"
+                                                                                                    : order.status === "waiting_for_confirmation"
+                                                                                                    ? "#FFA500"
+                                                                                                    : order.status === "waiting_for_pickup"
+                                                                                                    ? "#FFC107"
+                                                                                                    : order.status === "waiting_for_delivery"
+                                                                                                    ? "#007BFF"
+                                                                                                    : order.status === "returned"
+                                                                                                    ? "#6F42C1"
+                                                                                                    : "black",
+                                                                                        }}
+                                                                                    >
+                                                                                        {getStatusLabel(order.status)}
+                                                                                    </span> */}
+                                                                </div>
                                                             </div>
-                                                            <div className="order-status-wrapper">
-                                                                <span
-                                                                    className={`order-status ${order.status === "Delivered"
-                                                                        ? "delivered"
-                                                                        : order.status === "Processing"
-                                                                            ? "processing"
-                                                                            : "pending"
-                                                                        }`}
-                                                                >
-                                                                    {getStatusLabel(order.status)}
-                                                                </span>
-                                                                <button className="order-details" onClick={() => toggleOrderDetails(order.id)}>
-                                                                    Chi tiết
-                                                                </button>
-                                                            </div>
-                                                        </div>
-                                                        <div className="order-content">
-                                                            <div className="order-items">
-                                                                {order.order_details?.length > 0 ? (
-                                                                    order.order_details.map((item) => (
-                                                                        <div key={item.id} className="order-item">
-                                                                            <div>
-                                                                                <span className="item-name">
-                                                                                    {item.product_detail.product_name || "Tên sản phẩm không có"}
-                                                                                </span>
-                                                                                <span className="item-quantity"> x{item.quantity}</span>
+                                                            <div className="order-content">
+                                                                <div className="order-items">
+                                                                    {order.order_details?.length > 0 ? (
+                                                                        order.order_details.map((item, index) => (
+                                                                            <div key={index} className="order-item">
+                                                                                <img
+                                                                                    src={item.image} // Thay bằng URL hình ảnh sản phẩm thực tế
+                                                                                    alt={item.product_name}
+                                                                                    className="item-image"
+                                                                                />
+                                                                                <div className="item-details">
+                                                                                    <span className="item-name">
+                                                                                        {item.product_name ||
+                                                                                            "Tên sản phẩm không có"}
+                                                                                    </span>
+                                                                                    <span className="item-quantity">
+                                                                                        x{item.quantity}
+                                                                                    </span>
+                                                                                    <span className="item-price">
+                                                                                        {parseFloat(
+                                                                                            item.price
+                                                                                        ).toLocaleString()}{" "}
+                                                                                        VND
+                                                                                    </span>
+                                                                                </div>
+                                                                                {/* <div>
+                                                                                    {order.status.toLowerCase() === "delivered" && (
+                                                                                        <Link
+                                                                                            to={`/product_detail/${item.product_id}`}
+                                                                                            className="action-btn buy-again" 
+                                                                                        >
+                                                                                            Đánh giá
+                                                                                        </Link>
+                                                                                    )}
+                                                                                </div> */}
                                                                             </div>
-                                                                            <span className="item-price">
-                                                                                {parseFloat(item.price).toLocaleString()} VND
-                                                                            </span>
-                                                                        </div>
-                                                                    ))
-                                                                ) : (
-                                                                    <div>Đang tải chi tiết...</div>
-                                                                )}
-                                                            </div>
-                                                            <div className="order-total">
-                                                                <span>Tổng</span>
-                                                                <span>{parseFloat(order.total_price).toLocaleString()} VND</span>
+                                                                        ))
+                                                                    ) : (
+                                                                        <div>Không có chi tiết đơn hàng</div>
+                                                                    )}
+                                                                </div>
+                                                                <div className="order-footer">
+                                                                    <div className="order-total">
+                                                                        <span>Thành tiền:</span>
+                                                                        <span className="total-price">
+                                                                            {parseFloat(
+                                                                                order.total_price
+                                                                            ).toLocaleString()}{" "}
+                                                                            VND
+                                                                        </span>
+                                                                    </div>
+                                                                    <div className="order-actions">
+                                                                        {/* <button className="action-btn buy-again">
+                                                                            Đánh giá ngay
+                                                                        </button> */}
+                                                                        {/* {order.status.toLowerCase() === "delivered" && (
+                                                                            <Link
+                                                                                to={`/product_detail/${order.order_details[0].product_id}`}
+                                                                                className="action-btn buy-again" // Giữ className để style giống button
+                                                                            >
+                                                                                Đánh giá
+                                                                            </Link>
+                                                                        )} */}
+                                                                        <button
+                                                                            className="action-btn view-cancel"
+                                                                            onClick={() => toggleOrderDetails(order.id)}
+                                                                        >
+                                                                            Xem chi tiết
+                                                                        </button>
+                                                                        {/* <button className="action-btn contact-seller">
+                                                                            Liên hệ người bán
+                                                                        </button> */}
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                         </div>
-                                                    </div>
-                                                ))}
-                                                {hasMore && !isLoading && (
-                                                    <button onClick={() => setPage(prev => prev + 1)} className="load-more-btn">
-                                                        Xem thêm
-                                                    </button>
-                                                )}
-                                            </div>
+                                                    ))}
+                                                </div>
+                                                <div className="pagination-container" style={{ marginTop: '15px' }}>
+                                                    <Pagination
+                                                        currentPage={currentPage}
+                                                        totalPages={totalPages}
+                                                        onPageChange={handlePageChange}
+                                                    />
+                                                </div>
+                                            </>
                                         ) : (
-                                            !isLoading && (
+                                            !isLoading &&
+                                            !orderError && (
                                                 <div className="order-empty">
                                                     <Package className="order-empty-icon" />
-                                                    <h3 className="order-empty-title">Chưa có đơn hàng nào</h3>
-                                                    <p className="order-empty-text">Bạn chưa có đơn hàng nào.</p>
+                                                    <h3 className="order-empty-title">
+                                                        Chưa có đơn hàng nào
+                                                    </h3>
+                                                    <p className="order-empty-text">
+                                                        Bạn chưa có đơn hàng nào.
+                                                    </p>
                                                     <Link to="/shop" className="order-empty-link">
                                                         Tiếp tục mua sắm
                                                     </Link>
@@ -370,6 +437,237 @@ const MyAccount = () => {
                                             )
                                         )}
                                     </div>
+                                )}
+                                {/* Các tab khác giữ nguyên */}
+                                {activeTab === "profile" && (
+                                    // <div className="card">
+                                    //     <h2 className="section-title">Thông tin cá nhân</h2>
+                                    //     <div className="form-group_profile">
+                                    //         <label>Họ Tên</label>
+                                    //         <input
+                                    //             type="text"
+                                    //             value={name}
+                                    //             onChange={(e) => setName(e.target.value)}
+                                    //             autoComplete="off"
+                                    //         />
+                                    //     </div>
+                                    //     <div className="form-group_profile">
+                                    //         <label>Email</label>
+                                    //         <input type="text" defaultValue={user?.email} disabled />
+
+                                    //     </div>
+                                    //     <div className="form-group_profile">
+                                    //         <label>Số điện thoại</label>
+                                    //         <input
+                                    //             type="tel"
+                                    //             value={phoneNumber}
+                                    //             onChange={(e) => setPhoneNumber(e.target.value)}
+                                    //             autoComplete="off"
+                                    //         />
+                                    //     </div>
+                                    //     <div className="form-group_profile">
+                                    //         <label>Giới tính:</label>
+                                    //         <div className="radio-group">
+                                    //             <label>
+                                    //                 <input
+                                    //                     type="radio"
+                                    //                     name="gender"
+                                    //                     value="Nam"
+                                    //                     checked={gender === "Nam"}
+                                    //                     onChange={(e) => setGender(e.target.value)}
+                                    //                     autoComplete="off"
+                                    //                 />
+                                    //                 Nam
+                                    //             </label>
+                                    //             <label>
+                                    //                 <input
+                                    //                     type="radio"
+                                    //                     name="gender"
+                                    //                     value="Nữ"
+                                    //                     checked={gender === "Nữ"}
+                                    //                     onChange={(e) => setGender(e.target.value)}
+                                    //                     autoComplete="off"
+                                    //                 />
+                                    //                 Nữ
+                                    //             </label>
+                                    //             <label>
+                                    //                 <input
+                                    //                     type="radio"
+                                    //                     name="gender"
+                                    //                     value="Khác"
+                                    //                     checked={gender === "Khác"}
+                                    //                     onChange={(e) => setGender(e.target.value)}
+                                    //                     autoComplete="off"
+                                    //                 />
+                                    //                 Khác
+                                    //             </label>
+                                    //         </div>
+                                    //     </div>
+                                    //     <div className="form-group_profile">
+                                    //         <label>Ngày sinh</label>
+                                    //         <input
+                                    //             type="date"
+                                    //             value={dateOfBirth}
+                                    //             onChange={(e) => setDateOfBirth(e.target.value)}
+                                    //             autoComplete="off"
+                                    //         />
+                                    //     </div>
+                                    //     <h3 className="section-title">Thay đổi mật khẩu</h3>
+                                    //     <div className="form-group_profile">
+                                    //         <label htmlFor="password">Mật khẩu</label>
+                                    //         <input
+                                    //             type="password"
+                                    //             value={password}
+                                    //             onChange={(e) => setPassword(e.target.value)}
+                                    //             autoComplete="off"
+                                    //         />
+                                    //     </div>
+                                    //     <div className="form-group_profile">
+                                    //         <label htmlFor="password">Mật khẩu mới</label>
+                                    //         <input
+                                    //             type="password"
+                                    //             value={newPassword}
+                                    //             onChange={(e) => setNewPassword(e.target.value)}
+                                    //             autoComplete="off"
+                                    //         />
+                                    //     </div>
+                                    //     <div className="form-group_profile">
+                                    //         <label htmlFor="password">Xác nhận mật khẩu</label>
+                                    //         <input
+                                    //             type="password"
+                                    //             value={confirmPassword}
+                                    //             onChange={(e) => setConfirmPassword(e.target.value)}
+                                    //             autoComplete="off"
+                                    //         />
+                                    //     </div>
+                                    //     <button className="btn-save_proflie" onClick={handleUpdate}>
+                                    //         Lưu thay đổi
+                                    //     </button>
+                                    // </div>
+                                    <div className="card">
+                                    <div className={styles.profileForm}>
+                                      {/* Cột 1: Thông tin cá nhân */}
+                                      <div className={styles.profileFormContent}>
+                                        <h2 className={styles.sectionTitle}>Thông tin cá nhân</h2>
+                                        <div className={styles.formGroupProfile}>
+                                          <label htmlFor="name">Họ Tên</label>
+                                          <input
+                                            type="text"
+                                            id="name"
+                                            value={name}
+                                            onChange={(e) => setName(e.target.value)}
+                                            autoComplete="off"
+                                          />
+                                        </div>
+                                        <div className={styles.formGroupProfile}>
+                                          <label htmlFor="email">Email</label>
+                                          <input
+                                            type="text"
+                                            id="email"
+                                            defaultValue={user?.email}
+                                            disabled
+                                          />
+                                        </div>
+                                        <div className={styles.formGroupProfile}>
+                                          <label htmlFor="phoneNumber">Số điện thoại</label>
+                                          <input
+                                            type="tel"
+                                            id="phoneNumber"
+                                            value={phoneNumber}
+                                            onChange={(e) => setPhoneNumber(e.target.value)}
+                                            autoComplete="off"
+                                          />
+                                        </div>
+                                        <div className={styles.formGroupProfile}>
+                                          <label>Giới tính:</label>
+                                          <div className={styles.radioGroup}>
+                                            <label>
+                                              <input
+                                                type="radio"
+                                                name="gender"
+                                                value="Nam"
+                                                checked={gender === "Nam"}
+                                                onChange={(e) => setGender(e.target.value)}
+                                                autoComplete="off"
+                                              />
+                                              Nam
+                                            </label>
+                                            <label>
+                                              <input
+                                                type="radio"
+                                                name="gender"
+                                                value="Nữ"
+                                                checked={gender === "Nữ"}
+                                                onChange={(e) => setGender(e.target.value)}
+                                                autoComplete="off"
+                                              />
+                                              Nữ
+                                            </label>
+                                            <label>
+                                              <input
+                                                type="radio"
+                                                name="gender"
+                                                value="Khác"
+                                                checked={gender === "Khác"}
+                                                onChange={(e) => setGender(e.target.value)}
+                                                autoComplete="off"
+                                              />
+                                              Khác
+                                            </label>
+                                          </div>
+                                        </div>
+                                        <div className={styles.formGroupProfile}>
+                                          <label htmlFor="dateOfBirth">Ngày sinh</label>
+                                          <input
+                                            type="date"
+                                            id="dateOfBirth"
+                                            value={dateOfBirth}
+                                            onChange={(e) => setDateOfBirth(e.target.value)}
+                                            autoComplete="off"
+                                          />
+                                        </div>
+                                      </div>
+                                  
+                                      {/* Cột 2: Thay đổi mật khẩu */}
+                                      <div className={styles.profileFormContent}>
+                                        {/* <h3 className={styles.sectionTitle}>Thay đổi mật khẩu</h3> */}
+                                        <div className={styles.formGroupProfile}>
+                                          <label htmlFor="password">Mật khẩu hiện tại</label>
+                                          <input
+                                            type="password"
+                                            id="password"
+                                            value={password}
+                                            onChange={(e) => setPassword(e.target.value)}
+                                            autoComplete="off"
+                                          />
+                                        </div>
+                                        <div className={styles.formGroupProfile}>
+                                          <label htmlFor="newPassword">Mật khẩu mới</label>
+                                          <input
+                                            type="password"
+                                            id="newPassword"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                            autoComplete="off"
+                                          />
+                                        </div>
+                                        <div className={styles.formGroupProfile}>
+                                          <label htmlFor="confirmPassword">Xác nhận mật khẩu</label>
+                                          <input
+                                            type="password"
+                                            id="confirmPassword"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                            autoComplete="off"
+                                          />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  
+                                    <button className={styles.btnSaveProflie} onClick={handleUpdate}>
+                                      Lưu thay đổi
+                                    </button>
+                                  </div>
                                 )}
                                 {activeTab === "addresses" && (
                                     <div className="card">
@@ -416,7 +714,8 @@ const MyAccount = () => {
                                             </div>
                                             <div className="add-payment-card">
                                                 <button className="add-payment-btn">
-                                                    <span className="plus-icon">+</span> Thêm phương thức thanh toán mới
+                                                    <span className="plus-ic on">+</span> Thêm phương thức
+                                                    thanh toán mới
                                                 </button>
                                             </div>
                                         </div>
@@ -430,10 +729,31 @@ const MyAccount = () => {
                                 )}
                                 {activeTab === "orderDetail" && selectedOrderId && (
                                     <div className="card">
-                                        <button className="back-button" onClick={() => setActiveTab("orders")}>
-                                            ⬅ Quay lại
-                                        </button>
-                                        <OrderDetail orderId={selectedOrderId} />
+
+                                        {isLoading ? (
+                                            <div>Đang tải...</div>
+                                        ) : orders.find((o) => String(o.id) === selectedOrderId) ? (
+                                            <OrderDetail
+                                                order={
+                                                    orders.find((o) => String(o.id) === selectedOrderId) ||
+                                                    ({} as Order)
+                                                }
+                                            />
+                                        ) : (
+                                            <div>Không tìm thấy đơn hàng với ID: {selectedOrderId}</div>
+                                        )}
+                                        {/* <button
+                                            className="back-button"
+                                            onClick={() => setActiveTab("orders")}
+                                        >
+                                            quay lại trang đơn hàng
+                                        </button> */}
+                                        <div
+                                            className="back-link"
+                                            onClick={() => setActiveTab("orders")}
+                                        >
+                                            &lt;&lt; Quay lại đơn hàng của tôi
+                                        </div>
                                     </div>
                                 )}
                             </div>

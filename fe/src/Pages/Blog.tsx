@@ -40,12 +40,12 @@ const Blog = () => {
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item text-capitalize">
-                  <a href="/">Home</a> <i className="flaticon-arrows-4"></i>
+                  <a href="/">Trang chủ</a> <i className="flaticon-arrows-4"></i>
                 </li>
-                <li className="breadcrumb-item active text-capitalize">Blog</li>
+                <li className="breadcrumb-item active text-capitalize">Bài viết</li>
               </ol>
             </nav>
-            <h1 className="title_h1 font-weight-normal text-capitalize">Blog</h1>
+            <h1 className="title_h1 font-weight-normal text-capitalize">Bài viết</h1>
           </div>
         </section>
 
@@ -66,7 +66,7 @@ const Blog = () => {
                       </a>
                       <p>{article.title}</p>
                       <span className="article__date">
-                        Ngày đăng | {article.created_at} <span className="diamond_shape"></span>
+                        Ngày đăng | {new Date(article.created_at).toLocaleDateString('vi-VN')} <span className="diamond_shape"></span>
                       </span>
                     </div>
                   ))}
@@ -78,7 +78,7 @@ const Blog = () => {
                   <div className="featured_posts">
                     <h4  style={{fontSize:30,color:"red",width:400}}>Danh sách Voucher</h4>
                     {vouchers.length === 0 ? (
-                      <p>Đang hiển thị danh sách vouchers</p>
+                      <p>Hiện tại chưa có vouchers nào</p>
                     ) : (
                       vouchers.map((voucher) => (
                         <div key={voucher.id} className="featured_posts_content relative flex w-[800px] bg-white shadow-lg rounded-lg border" style={{width:400,height:140}} >
@@ -88,9 +88,9 @@ const Blog = () => {
                           <div className="featured_posts_text" style={{marginTop:5,lineHeight:2}}>
                             <h6 className="title_h5" >Giảm {voucher.discount_percent}% Giảm tối đa {voucher.max_discount_amount}k Đơn tối thiểu {voucher.min_purchase_amount}k</h6>
                             <p>Ngày hết hạn: {voucher.expiration_date}</p>
-                            <a href={`/vouchers/${voucher.id}`}>
+                            {/* <a href={`/vouchers/${voucher.id}`}> */}
                             <p style={{color: "#60A5FA", textDecoration: "underline"}}>Nhận mã:{voucher.name}</p>
-                            </a>
+                            {/* </a> */}
                           </div>
                         </div>
                       ))
@@ -109,3 +109,7 @@ const Blog = () => {
 };
 
 export default Blog;
+
+
+
+

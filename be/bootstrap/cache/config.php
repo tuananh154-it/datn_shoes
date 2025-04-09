@@ -6,7 +6,7 @@
     'debug' => true,
     'url' => 'http://localhost',
     'asset_url' => NULL,
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Ho_Chi_Minh',
     'locale' => 'en',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
@@ -137,15 +137,24 @@
   ),
   'broadcasting' => 
   array (
-    'default' => 'log',
+    'default' => 'pusher',
+    'pusher' => 
+    array (
+      'driver' => 'pusher',
+      'key' => 'ee494af10a7f4a6e48b6',
+      'secret' => '8c0adc9566f679647349',
+      'app_id' => '1968340',
+      'cluster' => 'mt1',
+      'encrypted' => true,
+    ),
     'connections' => 
     array (
       'pusher' => 
       array (
         'driver' => 'pusher',
-        'key' => '',
-        'secret' => '',
-        'app_id' => '',
+        'key' => 'ee494af10a7f4a6e48b6',
+        'secret' => '8c0adc9566f679647349',
+        'app_id' => '1968340',
         'options' => 
         array (
           'cluster' => 'mt1',

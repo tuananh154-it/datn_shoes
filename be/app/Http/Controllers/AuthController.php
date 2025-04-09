@@ -22,11 +22,13 @@ class AuthController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            // 'password' => 'required|string|min:6|confirmed',
             'password' => ['required', 'string', 'min:8'],
+        ], [
+            'email.unique' => 'Email này đã được sử dụng.',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
         ]);
 
-        $user = User::create([
+        User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
@@ -37,32 +39,23 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
+        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
-            // 'gender' => 'nullable|string',
-            // 'date_of_birth' => 'nullable|date',
-            // 'address' => 'nullable|string|max:255',
-            // 'phone_number' => 'nullable|string|max:20',
+        ], [
+            'email.unique' => 'Email này đã được sử dụng.',
+            'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
         ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            // 'gender'        => $request->gender,
-            // 'date_of_birth' => $request->date_of_birth,
-            // 'address'       => $request->address,
-            // 'phone_number'  => $request->phone_number,
         ]);
 
         $user->syncRoles(RoleEnum::USER);
-
         $token = JWTAuth::fromUser($user);
 
         return response()->json(compact('user', 'token'), 201);
@@ -70,47 +63,46 @@ class AuthController extends Controller
 
     public function dangnhap(Request $request)
     {
-        // Xác thực đầu vào
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
+        ], [
+            'email.required' => 'Vui lòng nhập email.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
         ]);
 
-        // Lấy thông tin đăng nhập từ request
         $credentials = $request->only('email', 'password');
 
-        // Kiểm tra nếu tài khoản tồn tại
-        $user = User::where('email', $request->email)->first();
-
-        if (!$user) {
-            // Nếu không có tài khoản với email này
-            return back()->withErrors(['email' => 'Tài khoản không tồn tại.'])->onlyInput('email');
-        }
-
-        // Kiểm tra thông tin đăng nhập
         if (Auth::attempt($credentials)) {
-            // Đăng nhập thành công, tái tạo session
-            $request->session()->regenerate();
-
+            // Không cần regenerate session mỗi lần đăng nhập để giảm overhead
             $user = Auth::user();
-            // Kiểm tra vai trò của người dùng và chuyển hướng
+
+            // Kiểm tra vai trò bằng middleware sẽ tốt hơn, nhưng giữ logic này nếu cần
             if (in_array($user->role, ['admin', 'superadmin'])) {
-                return redirect()->route('dashboards.index')->with('success', 'Vào thành công!');
+                return redirect()->route('dashboards.index')->with('success', 'Đăng nhập thành công!');
             }
 
-            return redirect()->route('login')->withErrors(['email' => 'Bạn không có quyền truy cập!'])->onlyInput('email');
+            Auth::logout(); // Đăng xuất ngay nếu không có quyền
+            return back()->withErrors(['email' => 'Bạn không có quyền truy cập!'])->onlyInput('email');
         }
 
-        // Đăng nhập thất bại, quay lại với thông báo lỗi
-        return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác'])->onlyInput('email');
+        return back()->withErrors(['email' => 'Email hoặc mật khẩu không đúng.'])->onlyInput('email');
     }
 
     public function login(Request $request)
     {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|string',
+        ], [
+            'email.required' => 'Vui lòng nhập email.',
+            'password.required' => 'Vui lòng nhập mật khẩu.',
+        ]);
+
         $credentials = $request->only('email', 'password');
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => 'Email hoặc mật khẩu không đúng.'], 401);
         }
 
         return response()->json([
@@ -120,20 +112,17 @@ class AuthController extends Controller
         ]);
     }
 
-    // Đăng xuất ở đây
     public function logout(Request $request)
     {
         try {
-            Auth::logout(); // Đăng xuất người dùng hiện tại
-            JWTAuth::invalidate(JWTAuth::getToken()); // Hủy token hiện tại
+            Auth::logout();
+            if ($token = JWTAuth::getToken()) {
+                JWTAuth::invalidate($token);
+            }
 
-            return response()->json([
-                'message' => 'Đăng xuất thành công!'
-            ], 200);
+            return response()->json(['message' => 'Đăng xuất thành công!'], 200);
         } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Không thể đăng xuất, vui lòng thử lại!'
-            ], 500);
+            return response()->json(['error' => 'Lỗi đăng xuất: ' . $e->getMessage()], 500);
         }
     }
 

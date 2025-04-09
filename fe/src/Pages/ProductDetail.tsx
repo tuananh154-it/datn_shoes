@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Product, Products } from "../types/Product";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getAllProduct, getProductDetail } from "../services/product";
@@ -13,7 +13,7 @@ import { getCommentsByProductId, postComment } from "../services/comments";
 import { getReviewsByProductId, postReview, Review, ReviewPayload } from "../services/reviews";
 import { getAllOrders, getDetailOrder, Order, OrdersDetail } from "../services/orders";
 import Modal from 'react-modal';
-
+import DOMPurify from 'dompurify';
 const ProductDetail = () => {
   const { addToCart } = useCart();
 
@@ -44,6 +44,12 @@ const ProductDetail = () => {
   const handleDecrease = () => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
+    }
+  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      setQuantity(value === "" ? "" : parseInt(value, 10));
     }
   };
 
@@ -84,6 +90,39 @@ const ProductDetail = () => {
       return acc;
     }, {} as Record<string, string[]>) || {};
 
+  // Lấy danh sách ảnh từ biến thể
+  const detailImages: string[] = productId?.details
+    ?.map(detail => detail.image?.[0])
+    .filter((img): img is string => typeof img === 'string') || [];
+
+  // Kiểm tra và thêm ảnh chính nếu chưa có trong biến thể
+  const allImages = [...detailImages];
+  if (productId?.image && !detailImages.includes(productId.image)) {
+    allImages.unshift(productId.image);
+  }
+
+  // Lọc ảnh không trùng nhau
+  const uniqueImages = Array.from(new Set(allImages)).map(img => {
+    return productId?.details.find(detail => detail.image[0] === img) || {
+      image: [img], // ảnh chính không có detail nên tạo object giả
+      size: '',
+      color: '',
+    };
+  });
+
+  // State điều hướng slider
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    const scrollContainer = scrollRef.current;
+    if (scrollContainer) {
+      const scrollAmount = 120; // px mỗi lần scroll
+      scrollContainer.scrollBy({
+        left: direction === 'right' ? scrollAmount : -scrollAmount,
+        behavior: 'smooth',
+      });
+    }
+  };
   // Danh sách màu sắc không trùng lặp
   const uniqueColors = Object.keys(colorSizeMap);
 
@@ -434,14 +473,87 @@ const ProductDetail = () => {
             <div className="container">
               <div className="main">
                 {/* Phần bên trái với ảnh chính */}
-                <div className="main-left" data-wow-duration="1300ms">
+                {/* <div className="main-left" data-wow-duration="1300ms">
                   <div className="imageProduct">
                     <img
                       src={selectedDetail?.image || productId.image}
                       alt="Product"
                     />
                   </div>
+                  <div className="imageBienthe">
+                  {productId.details.map((image)=>(
+                      <img src={image.image}/>
+                  ))}
+                    </div>
+                </div> */}
+                <div className="main-left" data-wow-duration="1300ms">
+                  {/* Ảnh chính */}
+                  <div className="imageProduct">
+                    <img
+                      src={selectedDetail?.image[0] || productId.image}
+                      alt="Product"
+                    />
+                  </div>
 
+                  {/* Ảnh biến thể */}
+                  {/* <div className="imageBienthe">
+  {uniqueImages.length > visibleCount && (
+    <button className="nav-button" onClick={handlePrev} disabled={currentIndex === 0}>
+      ‹
+    </button>
+  )}
+
+  {visibleImages.map((detail, index) => (
+    <img
+      key={index}
+      src={detail.image[0]}
+      alt={`Variant ${index}`}
+      className="variant-thumb"
+      onClick={() => setSelectedDetail(detail)}
+    />
+  ))}
+
+  {uniqueImages.length > visibleCount && (
+    <button
+      className="nav-button"
+      onClick={handleNext}
+      disabled={currentIndex + visibleCount >= uniqueImages.length}
+    >
+      ›
+    </button>
+  )}
+</div> */}
+                  <div className="imageBienthe-wrapper" style={{ position: 'relative' }}>
+                    {/* Nút chuyển trái */}
+                    {uniqueImages.length > 2 && (
+                      <a className="nav-button left" onClick={() => handleScroll('left')}>
+                        ‹
+                      </a>
+                    )}
+
+                    <div
+                      ref={scrollRef}
+                      className="imageBienthe overflow-x-auto whitespace-nowrap no-scrollbar"
+                      style={{ scrollBehavior: 'smooth' }}
+                    >
+                      {uniqueImages.map((detail, index) => (
+                        <img
+                          key={index}
+                          src={detail.image[0]}
+                          alt={`Variant ${index}`}
+                          className="inline-block w-24 h-24 object-cover mx-1 cursor-pointer rounded variant-thumb"
+                          onClick={() => setSelectedDetail(detail)}
+                        />
+                      ))}
+                    </div>
+
+                    {/* Nút chuyển phải */}
+                    {uniqueImages.length > 2 && (
+                      <a className="nav-button right" onClick={() => handleScroll('right')}>
+                        ›
+                      </a>
+                    )}
+                  </div>
                 </div>
                 <div className="main-right" data-wow-duration="1300ms">
                   <div className="product_content">
@@ -570,7 +682,7 @@ const ProductDetail = () => {
                               -
                             </button>
 
-                            <input type="text" value={quantity} />
+                            <input type="text" value={quantity} onChange={handleChange} />
                             <button
                               type="button"
                               onClick={handleIncrease}
@@ -632,7 +744,7 @@ const ProductDetail = () => {
                               }
 
                               try {
-                               addToCart(Number(selectedDetail.id), quantity);
+                                addToCart(Number(selectedDetail.id), quantity);
                               } catch (error) {
                                 console.error("Lỗi từ addToCart:", error);
                                 toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng: ");
@@ -686,14 +798,15 @@ const ProductDetail = () => {
                   </div>
                 </div>
               </div>
-              <div className="product_description padding-top-60">
+              <div className="product_description">
                 <div className="row">
                   <div
                     className="col-md-6 wow fadeInRight"
                     data-wow-duration="1300ms"
                   >
                     <h5 className="title_h5 text-capitalize">Mô tả sản phẩm</h5>
-                    <p>{productId.description}</p>
+                    {/* <p>{productId.description}</p> */}
+                      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(productId.description || "") }} />
                   </div>
                   <div
                     className="col-md-6 wow fadeInRight"
@@ -913,26 +1026,23 @@ const ProductDetail = () => {
                         >
                           <div className="card-body">
                             <div className="review_title">
-                              <h4 className="title_h4">Khách hàng đánh giá</h4>
-                              <div className="star">
+                              <h4 className="title_h4">Đánh giá của khách hàng</h4>
+                              {/* <div className="star">
                                 <img src="../src/images/star.png" className="img-fluid" alt="star" />
                                 Dựa trên {totalReviews} đánh giá
-                              </div>
-                              <Link
+                              </div> */}
+                              {/* <Link
                                 to="#"
                                 className="write_review_text"
                                 onClick={(e) => {
                                   e.preventDefault();
-                                  // if (!hasReviewed) {
-                                  //   toast.error("Bạn đã đánh giá sản phẩm này rồi. Tiếp tục mua hàng để đánh giá thêm.");
-                                  //   return;
-                                  // }
+                                 
                                   console.log("Mở modal");
                                   setIsModalOpen(true);
                                 }}
                               >
                                 Thêm đánh giá
-                              </Link>
+                              </Link> */}
                             </div>
 
                             {reviews.map((review) => (
@@ -947,7 +1057,8 @@ const ProductDetail = () => {
                                 <div className="user_detail">
                                   <h5 className="title_h5">{review.user_name}</h5>
                                   <p>{renderStars(review.rating)}</p>
-                                  <span className="review__date">{review.created_at}</span>
+                                  <p>Phân loại hàng:</p>
+                                  <p className="review__date">{review.created_at}</p>
                                   <p>{review.content}</p>
                                 </div>
                               </div>

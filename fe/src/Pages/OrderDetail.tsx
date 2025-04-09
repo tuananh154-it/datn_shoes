@@ -1,92 +1,129 @@
-import React, { useEffect, useState } from "react";
-import { CancellOrder, getDetailOrder, getPaymentStatusInVietnamese, getStatusLabel, Order } from "../services/orders"; // Import API
-import { getProductDetail } from "../services/product";
+import React, { useState, useEffect } from "react";
+import { CancellOrder, getPaymentStatusInVietnamese, getStatusLabel, Order, OrdersDetail } from "../services/orders";
+import { Link } from "react-router-dom";
+import Modal from 'react-modal';
+import { postReview, ReviewPayload, getMyReviews } from "../services/reviews";
+import toast from "react-hot-toast";
 
 interface OrderDetailProps {
-    orderId: number; // Nhận ID của đơn hàng
+    order: Order;
 }
 
-const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
-    const [order, setOrder] = useState<Order | null>(null);
-    const [loading, setLoading] = useState(true);
+const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
+    const [currentOrder, setCurrentOrder] = useState<Order>(order);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+    const [rating, setRating] = useState<number>(0);
+    const [newReview, setNewReview] = useState<string>('');
+    const [hasReviewed, setHasReviewed] = useState<{ [key: number]: boolean }>({});
+    const [reviewUpdated, setReviewUpdated] = useState<number>(0);
 
-    // useEffect(() => {
-    //     const fetchOrderDetail = async () => {
-    //         try {
-    //             const response = await getDetailOrder(orderId);
-    //             setOrder(response.data); // Lưu đơn hàng vào state
-    //         } catch (error) {
-    //             console.error("Lỗi khi lấy chi tiết đơn hàng:", error);
-    //         } finally {
-    //             setLoading(false);
-    //         }
-    //     };
+    const canCancel = currentOrder.status === "waiting_for_confirmation";
 
-    //     fetchOrderDetail();
-    // }, [orderId]); // Gọi lại khi orderId thay đổi
+    Modal.setAppElement('#root');
+
+    const renderStars = (rating: number, editable: boolean = false) => {
+        return Array.from({ length: 5 }, (_, index) => (
+            <span
+                key={index}
+                style={{
+                    color: index < rating ? 'gold' : 'gray',
+                    cursor: editable ? 'pointer' : 'default',
+                    fontSize: '24px',
+                }}
+                onClick={editable ? () => setRating(index + 1) : undefined}
+            >
+                ★
+            </span>
+        ));
+    };
+
     useEffect(() => {
-        const fetchOrderDetail = async () => {
+        const checkReviews = async () => {
             try {
-                setLoading(true);
+                const response = await getMyReviews();
+                console.log("Dữ liệu từ API /reviews:", response.data);
 
-                // 1️⃣ Lấy chi tiết đơn hàng
-                const response = await getDetailOrder(orderId);
-                const orderData = response.data;
-                if (!orderData) throw new Error("API không trả về dữ liệu hợp lệ");
+                // Kiểm tra cấu trúc dữ liệu trả về
+                let reviews = [];
+                if (response.data && Array.isArray(response.data.my_reviews)) {
+                    reviews = response.data.my_reviews; // Truy cập my_reviews
+                } else {
+                    console.error("Dữ liệu từ API không chứa mảng my_reviews:", response.data);
+                    reviews = [];
+                }
 
-                // 2️⃣ Lọc danh sách `product_id`
-                const productIds = [...new Set(
-                    orderData.order_details.map(detail => detail.product_detail?.product_id)
-                )];
-
-                // 3️⃣ Gọi API lấy thông tin sản phẩm
-                const productResponses = await Promise.all(
-                    productIds.map(id => getProductDetail(id))
-                );
-
-                // 4️⃣ Lưu thông tin sản phẩm vào `Map`
-                const productMap = new Map();
-                productResponses.forEach(response => {
-                    if (response?.data?.data) {
-                        productMap.set(response.data.data.id, response.data.data);
-                    }
+                const reviewedProducts: { [key: number]: boolean } = {};
+                currentOrder.order_details.forEach((item) => {
+                    const hasReviewed = reviews.some((review: any) =>
+                        review.product_id === item.product_id &&
+                        review.order_id === currentOrder.id
+                    );
+                    reviewedProducts[item.product_id] = hasReviewed;
                 });
 
-                // 5️⃣ Cập nhật lại `order_details` với thông tin sản phẩm
-                const updatedOrderDetails = orderData.order_details.map(detail => {
-                    const productInfo = productMap.get(detail.product_detail?.product_id) || {};
-                    return {
-                        ...detail,
-                        product_detail: {
-                            ...detail.product_detail,
-                            product_name: productInfo.name || "Không xác định",
-                            // color: detail.product_detail?.color || "Không xác định",
-                            // size: detail.product_detail?.size || "Không xác định"
-                        }
-                    };
-                });
-
-                // 6️⃣ Cập nhật state
-                setOrder({
-                    ...orderData,
-                    order_details: updatedOrderDetails
-                });
-
+                console.log("Reviewed products:", reviewedProducts);
+                setHasReviewed(reviewedProducts);
             } catch (error) {
-                console.error("Lỗi khi lấy chi tiết đơn hàng:", error);
-            } finally {
-                setLoading(false);
+                console.error("Lỗi khi kiểm tra đánh giá:", error);
+                const reviewedProducts: { [key: number]: boolean } = {};
+                currentOrder.order_details.forEach((item) => {
+                    reviewedProducts[item.product_id] = false;
+                });
+                setHasReviewed(reviewedProducts);
             }
         };
 
-        fetchOrderDetail();
-    }, [orderId]); // Gọi lại khi orderId thay đổi
+        if (currentOrder.status === "delivered") {
+            checkReviews();
+        }
+    }, [currentOrder, reviewUpdated]);
 
+    const handleOpenReviewModal = (productId: number) => {
+        if (hasReviewed[productId]) {
+            toast.error("Bạn đã đánh giá sản phẩm này rồi.");
+            return;
+        }
+        setSelectedProductId(productId);
+        setRating(0);
+        setNewReview('');
+        setIsModalOpen(true);
+    };
 
-    if (loading) return <p>Đang tải chi tiết đơn hàng...</p>;
-    if (!order) return <p>Không tìm thấy đơn hàng.</p>;
+    const handlePostReview = async () => {
+        if (!newReview.trim()) {
+            alert('Vui lòng nhập nội dung đánh giá!');
+            return;
+        }
+        if (!selectedProductId) {
+            alert('Không có sản phẩm được chọn để đánh giá!');
+            return;
+        }
+        if (rating === 0) {
+            alert('Vui lòng chọn số sao!');
+            return;
+        }
 
-    const canCancel = order.status === "waiting_for_confirmation";
+        const reviewData: ReviewPayload = {
+            rating,
+            content: newReview,
+        };
+
+        try {
+            await postReview(
+                selectedProductId.toString(),
+                currentOrder.id.toString(),
+                reviewData
+            );
+            toast.success("Đánh giá của bạn đã được đăng thành công!");
+            setNewReview('');
+            setRating(0);
+            setIsModalOpen(false);
+            setReviewUpdated((prev) => prev + 1);
+        } catch (error: any) {
+            alert(error.message || 'Lỗi khi đăng đánh giá!');
+        }
+    };
 
     const handleCancelOrder = async () => {
         const reason = prompt("Vui lòng nhập lý do hủy đơn hàng:");
@@ -98,84 +135,161 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
         const isConfirmed = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
         if (!isConfirmed) return;
 
-
         try {
-            await CancellOrder(order.id);
+            await CancellOrder(currentOrder.id);
             alert("Đơn hàng đã được hủy thành công!");
-            setOrder({ ...order, status: "cancelled" }); // Cập nhật UI
+            setCurrentOrder({ ...currentOrder, status: "cancelled" });
         } catch (error) {
             alert("Lỗi khi hủy đơn hàng, vui lòng thử lại!");
             console.error("Lỗi khi hủy đơn:", error);
         }
     };
 
+    if (!currentOrder) return <p>Không tìm thấy đơn hàng.</p>;
+
     return (
-        <div className="order-detail">
-           <h2>Chi Tiết Đơn Hàng #{order.id}</h2>
-            <table className="order-table">
-                <tbody>
-                    <tr><td><strong>Mã đơn hàng:</strong></td><td>{order.id}</td></tr>
-                    <tr><td><strong>Khách hàng:</strong></td><td>{order.username}</td></tr>
-                    <tr><td><strong>Ngày đặt hàng:</strong></td><td>{new Date(order.created_at).toLocaleDateString()}</td></tr>
-                    <tr>
-                        <td><strong>Trạng thái:</strong></td>
-                        <td style={{ color: order.status === "cancelled" ? "red" : "black" }}>
-                            {getStatusLabel(order.status)}
-                        </td>
-                    </tr>
-                    <tr><td><strong>Thanh toán:</strong></td><td>{getPaymentStatusInVietnamese(order.payment_status)}</td></tr>
-                </tbody>
-            </table>
+        <div className="order-detail-container">
+            <h2>
+                Chi tiết đơn hàng #FV-HN-{currentOrder.id} -
+                <span
+                    style={{
+                        color:
+                            currentOrder.status === "cancelled"
+                                ? "#FF0000"
+                                : currentOrder.status === "delivered"
+                                ? "#28A745"
+                                : currentOrder.status === "waiting_for_confirmation"
+                                ? "#FFA500"
+                                : currentOrder.status === "waiting_for_pickup"
+                                ? "#FFC107"
+                                : currentOrder.status === "waiting_for_delivery"
+                                ? "#007BFF"
+                                : currentOrder.status === "returned"
+                                ? "#6F42C1"
+                                : "black",
+                    }}
+                >
+                    {getStatusLabel(currentOrder.status)}
+                </span>
+            </h2>
+            <p className="order-date">Ngày đặt hàng: {new Date(currentOrder.created_at).toLocaleDateString("vi-VN")}</p>
+
+            <div className="order-info-grid">
+                <div className="info-section">
+                    <h3>Địa chỉ người nhận</h3>
+                    <p><strong>{currentOrder.username}</strong></p>
+                    <p>Địa chỉ: {currentOrder.address}</p>
+                    <p>Điện thoại: {currentOrder.phone_number}</p>
+                </div>
+                <div className="info-section">
+                    <h3>Hình thức giao hàng</h3>
+                    <p>FAST - Giao tiết kiệm</p>
+                    <p>Phí vận chuyển: {parseFloat(currentOrder.deliver_fee).toLocaleString()}đ</p>
+                </div>
+                <div className="info-section">
+                    <h3>Hình thức thanh toán</h3>
+                    <p>{getPaymentStatusInVietnamese(currentOrder.payment_status)}</p>
+                </div>
+            </div>
 
             <h3>Sản phẩm</h3>
-            <table className="order-table">
+            <table className="product-table">
                 <thead>
                     <tr>
-                        <th>Hình ảnh</th>
-                        <th>Tên sản phẩm</th>
+                        <th>Sản phẩm</th>
                         <th>Giá</th>
                         <th>Số lượng</th>
-                        <th>Màu</th>
-                        <th>Kích cỡ</th>
+                        <th>Giảm giá</th>
                         <th>Thành tiền</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {order.order_details.map((item) => (
-                        <tr key={item.id}>
-                            <td><img src={JSON.parse(item.product_detail.image)[0]} alt="Sản phẩm" width="50" /></td>
-                            <td>{item.product_detail.product_name}</td>
-                            <td>{parseFloat(item.price).toLocaleString()}đ</td>
-                            <td>{item.quantity}</td>
-                            <td>{item.color}</td>
-                            <td>{item.size}</td>
-                            <td>{parseFloat(item.total_price).toLocaleString()}đ</td>
-                        </tr>
-                    ))}
+                    {currentOrder.order_details.map((item, index) => {
+                        const key = `${item.product_name}-${item.color}-${item.size}-${index}`;
+                        let imageSrc = "/default.jpg";
+
+                        if (typeof item.image === "string") {
+                            try {
+                                const parsed = JSON.parse(item.image);
+                                imageSrc = parsed[0] || "/default.jpg";
+                            } catch {
+                                imageSrc = item.image;
+                            }
+                        }
+
+                        return (
+                            <tr key={key}>
+                                <td>
+                                    <div className="product-item">
+                                        <img src={imageSrc} alt="Sản phẩm" onError={(e) => (e.currentTarget.src = "/default.jpg")} />
+                                        <div className="product-info">
+                                            <p>{item.product_name}</p>
+                                            <p>Màu: {item.color || "Không có"}</p>
+                                            <p>Kích cỡ: {item.size || "Không có"}</p>
+                                            <div className="product-actions">
+                                                {order.status.toLowerCase() === "delivered" && (
+                                                    hasReviewed[item.product_id] ? (
+                                                        <span className="action-btn disabled">Đã đánh giá</span>
+                                                    ) : (
+                                                        <button
+                                                            className="action-btn buy-again"
+                                                            onClick={() => handleOpenReviewModal(item.product_id)}
+                                                        >
+                                                            Đánh giá
+                                                        </button>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{parseFloat(item.price).toLocaleString()}đ</td>
+                                <td>{item.quantity}</td>
+                                <td>{currentOrder.voucher ? `${parseFloat(currentOrder.voucher).toLocaleString()}đ` : "0đ"}</td>
+                                <td>{parseFloat(item.total_price).toLocaleString()}đ</td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
 
-            <h3>Thông tin giao hàng</h3>
-            <table className="order-table">
-                <tbody>
-                    <tr><td><strong>Địa chỉ:</strong></td><td>{order.address}</td></tr>
-                    <tr><td><strong>Điện thoại:</strong></td><td>{order.phone_number}</td></tr>
-                    <tr><td><strong>Email:</strong></td><td>{order.email}</td></tr>
-                    <tr><td><strong>Phí giao hàng:</strong></td><td>{parseFloat(order.deliver_fee).toLocaleString()}đ</td></tr>
-                </tbody>
-            </table>
+            <div className="order-summary">
+                <p>Tạm tính: {(parseFloat(currentOrder.total_price) - parseFloat(currentOrder.deliver_fee)).toLocaleString()}đ</p>
+                <p>Phí vận chuyển: {parseFloat(currentOrder.deliver_fee).toLocaleString()}đ</p>
+                <p>Giảm giá: {currentOrder.voucher ? `${parseFloat(currentOrder.voucher).toLocaleString()}đ` : "0đ"}</p>
+                <p className="total">Tổng cộng: {parseFloat(currentOrder.total_price).toLocaleString()}đ</p>
+            </div>
 
-            <div className="order-total">
-                <span className="total-label">Tổng cộng:</span>
-                <span className="total-price">{parseFloat(order.total_price).toLocaleString()}đ</span>
-                <button
-                    className="cancel-button"
-                    onClick={handleCancelOrder}
-                    disabled={!canCancel}
-                >
+            {canCancel && (
+                <button className="cancel-button" onClick={handleCancelOrder}>
                     Hủy đơn
                 </button>
-            </div>
+            )}
+
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                className="review-modal"
+                overlayClassName="review-modal-overlay"
+            >
+                <h2>Thêm đánh giá của bạn</h2>
+                <div className="review-form">
+                    <label>Đánh giá (1-5 sao):</label>
+                    <div>{renderStars(rating, true)}</div>
+                    <label>Nội dung đánh giá:</label>
+                    <textarea
+                        value={newReview}
+                        onChange={(e) => setNewReview(e.target.value)}
+                        maxLength={500}
+                        placeholder="Viết đánh giá của bạn..."
+                        rows={4}
+                    />
+                    <div className="modal-buttons">
+                        <button onClick={handlePostReview} className="submit-btn">Gửi</button>
+                        <button onClick={() => setIsModalOpen(false)} className="cancel-btn">Hủy</button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 };

@@ -176,29 +176,48 @@ class ProductController extends Controller
     }
 
     public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'price' => 'required|numeric',
-            'description' => 'nullable|string',
-            'status' => 'required|in:active,inactive',
-            'category_id' => 'required|exists:categories,id',
-            'brand_id' => 'required|exists:brands,id',
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255|unique:products,name,' . $id,
+        'price' => 'required|numeric',
+        'description' => 'nullable|string',
+        'status' => 'required|in:active,inactive',
+        'category_id' => 'required|exists:categories,id',
+        'brand_id' => 'required|exists:brands,id',
+        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // validate thêm ảnh nếu có
+    ],
+    [
+        'name.unique' => 'Tên sản phẩm đã tồn tại. Vui lòng chọn tên khác.'
+    ]);
+    
 
-        $product = Product::findOrFail($id);
+    $product = Product::findOrFail($id);
 
-        $product->update([
-            'name' => $request->name,
-            'price' => $request->price,
-            'description' => $request->description,
-            'status' => $request->status,
-            'category_id' => $request->category_id,
-            'brand_id' => $request->brand_id,
-        ]);
+    // Xử lý ảnh nếu có upload ảnh mới
+    if ($request->hasFile('image')) {
+        // Xoá ảnh cũ nếu tồn tại
+        if ($product->image && Storage::exists('public/' . $product->image)) {
+            Storage::delete('public/' . $product->image);
+        }
 
-        return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
+        // Lưu ảnh mới
+        $path = $request->file('image')->store('products', 'public');
+        $product->image = $path;
     }
+
+    // Cập nhật thông tin sản phẩm
+    $product->update([
+        'name' => $request->name,
+        'price' => $request->price,
+        'description' => $request->description,
+        'status' => $request->status,
+        'category_id' => $request->category_id,
+        'brand_id' => $request->brand_id,
+        'image' => $product->image, // cập nhật ảnh nếu có
+    ]);
+
+    return redirect()->route('products.index')->with('success', 'Sản phẩm đã được cập nhật thành công!');
+}
 
     public function destroy(string $id)
     {
