@@ -44,21 +44,16 @@
                                         </tr>
                                     @endforeach
                                 </tbody>
+
                             </table>
+                        <p><strong>Tổng Tiền:</strong> {{ number_format($total_product_value, 2) }} VND</p>
+
                         </div>
+
                     </div>
 
                     <!-- Tổng kết -->
-                    <div class="mb-4">
-                        <div class="bg-info p-3 rounded text-white">
-                            <h5><strong>Tổng Kết</strong></h5>
-                        </div>
-                        <div class="bg-white p-3 rounded shadow-sm">
-                            <p><strong>Tổng Giá Trị Sản Phẩm:</strong> {{ number_format($total_product_value, 2) }} VND</p>
-                            {{-- <p><strong>Phí Vận Chuyển:</strong> {{ number_format($shipping_fee, 2) }} VND</p> --}}
-                            {{-- <p><strong class="text-danger">Tổng Tiền:</strong> <strong>{{ number_format($total_price, 2) }} VND</strong></p> --}}
-                        </div>
-                    </div>
+                
                 </div>
             </section>
         </div>
@@ -78,7 +73,7 @@
                         </div>
                         <div class="bg-white p-3 rounded shadow-sm">
                             <p><strong>Mã Đơn Hàng:</strong> {{ $order->id }}</p>
-                            <p><strong>Người Đặt:</strong> {{ $order->customer ? $order->customer->name : 'Không có thông tin' }}</p>
+                            <p><strong>Người Đặt:</strong> {{ $order->user ? $order->user->name : 'Không có thông tin' }}</p>
                             <p><strong>Ngày Đặt:</strong> {{ $order->created_at ? $order->created_at->format('d/m/Y') : 'N/A' }}</p>
                             <p><strong>Tổng Tiền:</strong> {{ number_format($order->total_price, 2) }} VND</p>
                             <p><strong>Phương Thức Thanh Toán:</strong>
@@ -98,28 +93,38 @@
                             </p>
                             <p><strong>Trạng Thái Đơn Hàng:</strong>
                                 @switch($order->status)
-                                    @case('waiting_for_confirmation')
+                                    @case('pending')
                                         <span class="badge bg-warning text-dark">Chờ xác nhận</span>
                                         @break
-                                    @case('waiting_for_pickup')
-                                        <span class="badge bg-primary text-white">Chờ lấy hàng</span>
+                                    @case('confirmed')
+                                        <span class="badge bg-primary text-white">Đã xác nhận</span>
                                         @break
-                                    @case('waiting_for_delivery')
-                                        <span class="badge bg-info text-white">Chờ giao hàng</span>
+                                    @case('processing')
+                                        <span class="badge bg-secondary text-white">Đang xử lý</span>
+                                        @break
+                                    @case('shipping')
+                                        <span class="badge bg-info text-white">Đang giao hàng</span>
                                         @break
                                     @case('delivered')
                                         <span class="badge bg-success text-white">Đã giao</span>
                                         @break
+                                    @case('completed')
+                                        <span class="badge bg-dark text-white">Hoàn tất</span>
+                                        @break
                                     @case('returned')
-                                        <span class="badge bg-secondary text-white">Đã trả lại</span>
+                                        <span class="badge bg-light text-dark">Trả hàng</span>
+                                        @break
+                                    @case('refunded')
+                                        <span class="badge bg-danger text-white">Hoàn tiền</span>
                                         @break
                                     @case('cancelled')
                                         <span class="badge bg-danger text-white">Đã hủy</span>
                                         @break
                                     @default
-                                        N/A
+                                        <span class="badge bg-secondary">Không xác định</span>
                                 @endswitch
                             </p>
+                            
                             <p><strong>Trạng Thái Thanh Toán:</strong>
                                 @switch($order->payment_status)
                                     @case('paid')
@@ -155,7 +160,7 @@
                         </div>
                     </div>
 
-                    <a href="{{ route('orders.index') }}" class="btn btn-primary">Quay lại danh sách đơn hàng</a>
+                    <a href="{{ route('orders.index') }}" class="btn btn-secondary ">Quay lại danh sách đơn hàng</a>
                 </div>
             </section>
         </div>

@@ -43,7 +43,7 @@
                         </div>
 
                         <!-- Nút cập nhật quyền -->
-                        <button type="submit" class="btn btn-primary">Cập nhật quyền</button>
+                        <button type="submit" class="btn btn-warning ">Cập nhật quyền</button>
                     </form>
                 </div>
             </section>

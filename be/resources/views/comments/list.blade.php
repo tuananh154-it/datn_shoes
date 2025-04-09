@@ -87,8 +87,7 @@
                             @else
                                 @foreach ($comments as $item)
                                     <tr>
-                                        <td>{{ $item->id }}</td>
-
+                                        <td>{{ $item->user->name }}</td>
                                         <td class="text-truncate">{{ $item->product->name }}</td>
                                         <td class="text-truncate" style="max-width: 300px;">{{ $item->comment }}</td>
                                         <td>
@@ -112,7 +111,7 @@
                                                 <form action="{{ route('comments.destroy', $item->id) }}" method="POST" class="d-inline-block">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa bình luận này?')">
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn tắt bình luận này?')">
                                                         <i class="fa fa-trash-o"></i>
                                                     </button>
                                                 </form>

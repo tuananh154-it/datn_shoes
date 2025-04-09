@@ -9,7 +9,7 @@ const Footer = () => {
                   <a href="shoes.html">
                     <img src="../src/images/logo_footvibe_01.png" alt="logo" className="logo"/>
                   </a>
-                  <p>Đồng hành trên mọi hành trình, nâng niu từng bước chân...</p>
+                  <p>Đồng hành trên mọi hành trình, nâng niu từng bước chân của các bạn</p>
                 </div>
               </div>
               <div className="col-lg-3 col-sm-6  wow fadeInUp">

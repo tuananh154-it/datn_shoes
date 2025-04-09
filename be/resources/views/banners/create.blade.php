@@ -3,10 +3,11 @@
 @section('content')
 <div class="row">
     <div class="col-sm-12">
-            <div class="card shadow-sm">
-                <header class="card-header">
-                    <div class="d-flex flex-column flex-sm-row justify-content-sm-between align-items-sm-center">
-                        <h1 class="flex-grow-1 fs-3 fw-semibold my-2 my-sm-3">Thêm Banner</h1>
+            <div class="card shadow-sm mb-4 ">
+                
+                        <header class="card-header ">
+                            Thêm thương hiệu mới 
+                        </header>
                         <nav class="flex-shrink-0 my-2 my-sm-0 ms-sm-3" aria-label="breadcrumb">
                             <ol class="breadcrumb">
                                 <li class="breadcrumb-item">
@@ -16,7 +17,7 @@
                             </ol>
                         </nav>
                     </div>
-                </header>
+                
 
                 <div class="card-body">
 
@@ -44,12 +45,12 @@
 
                         </div>
 
-                        <div class="mb-3 d-flex">
+                        {{-- hành động  --}}
                             <a href="{{ route('banners.index') }}"
-                                class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
-                            <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
-                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Thêm Mới</button>
-                        </div>
+                                class="btn btn-secondary ">Quay lại</a>
+                            <button type="reset" class="btn btn-warning ">Reset</button>
+                            <button type="submit" class="btn btn-primary ">Thêm Mới</button>
+                        
                     </form>
                 </div>
             </div>

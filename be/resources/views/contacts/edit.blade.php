@@ -85,8 +85,8 @@
 
                         <div class="mb-3 d-flex">
                             <a href="{{route('contacts.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay lại</a>
-                            <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
-                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Cập nhật</button>
+                            <button type="reset" class="btn btn-primary  btn-lg flex-fill me-1">Reset</button>
+                            <button type="submit" class="btn btn-warning  btn-lg flex-fill">Cập nhật</button>
                         </div>
                     </form>
                 </div>

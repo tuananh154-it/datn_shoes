@@ -1,26 +1,25 @@
-<style>
-
-    .row{
-        padding-top: 60px;
-    }
-    select {
-    border-radius: 8px; /* Bo tròn viền */
-    padding: 5px 10px;
-    appearance: none; /* Loại bỏ giao diện mặc định */
- }
- .site-footer{
-    margin: 1000px
- }
-
-</style>
 @extends('master')
 
 @section('content')
+<style>
+    .row {
+        padding-top: 60px;
+    }
+    select {
+        border-radius: 8px; /* Bo tròn viền */
+        padding: 5px 10px;
+        appearance: none; /* Loại bỏ giao diện mặc định */
+    }
+    .site-footer {
+        margin: 1000px;
+    }
+</style>
+
 <div class="row">
     <div class="col-lg-12">
         <section class="card">
             <header class="card-header">
-                Cập nhật Voucherr
+                Cập nhật Voucher
             </header>
             <div class="card-body">
                 @if ($errors->any())
@@ -32,27 +31,20 @@
                         </ul>
                     </div>
                 @endif
-                <!-- Form gửi đến route vouchers.store với phương thức POST -->
+
+                <!-- Form gửi đến route vouchers.update với phương thức PUT -->
                 <form action="{{ route('vouchers.update', $voucher->id) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+
                     {{-- Tên voucher --}}
                     <div class="form-group mb-3">
-                        <label for="name">Tên Voucher</label>
+                        <label for="name">Tên Mã giảm giá</label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" id="name" value="{{ old('name', $voucher->name) }}">
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- Số tiền giảm
-                    <div class="form-group mb-3">
-                        <label for="discount_amount">Số tiền giảm</label>
-                        <input type="number" class="form-control @error('discount_amount') is-invalid @enderror" name="discount_amount" id="discount_amount" value="{{ old('discount_amount', $voucher->discount_amount) }}">
-                        @error('discount_amount')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div> --}}
 
                     {{-- Phần trăm giảm giá --}}
                     <div class="form-group mb-3">
@@ -90,23 +82,29 @@
                         @enderror
                     </div>
 
+                    {{-- Số lượng voucher --}}
+                    <div class="form-group mb-3">
+                        <label for="quantity">Số lượng</label>
+                        <input type="number" class="form-control @error('quantity') is-invalid @enderror" name="quantity" id="quantity" value="{{ old('quantity', $voucher->quantity) }}">
+                        @error('quantity')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
                     {{-- Trạng thái --}}
                     <div class="form-group mb-3">
                         <label class="form-label" for="status">Trạng thái</label>
                         <select name="status" id="status" class="form-control @error('status') is-invalid @enderror">
-                            <option value="active" {{ old('status', $voucher->status) == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ old('status', $voucher->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="active" {{ old('status', $voucher->status) == 'active' ? 'selected' : '' }}>Hoạt động</option>
+                            <option value="inactive" {{ old('status', $voucher->status) == 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
                         </select>
                         @error('status')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                        {{-- hanh dong --}}
-
-                        <div class="mb-3 d-flex">
-                            <button type="submit" class="btn btn-warning btn-lg flex-fill">Cập nhập</button>
-                        </div>
+                    {{-- Hành động --}}
+                    <button type="submit" class="btn btn-warning">Cập nhật</button>
                 </form>
             </div>
         </section>

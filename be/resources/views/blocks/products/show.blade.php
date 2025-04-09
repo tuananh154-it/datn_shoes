@@ -119,13 +119,13 @@
                                                 <i class="fa fa-pencil"></i>
                                             </a>
             
-                                            <form action="{{ route('product-details.destroy', $detail->id) }}" method="POST" style="display:inline;">
+                                            {{-- <form action="{{ route('product-details.destroy', $detail->id) }}" method="POST" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn xóa chi tiết sản phẩm này?');">
                                                     <i class="fa fa-trash-o"></i>
                                                 </button>
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach

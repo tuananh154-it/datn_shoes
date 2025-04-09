@@ -16,8 +16,8 @@ import Contact from "./Pages/Contact";
 import BlogDetail from "./Pages/BlogDetail";
 import { Toaster } from "react-hot-toast";
 import MyAccount from "./Pages/MyAccout";
-import OrderDetail from "./Pages/OrderDetail";
-
+import ResetPassword from "./Pages/ReserPassword";
+ 
 
 function App() {
 
@@ -32,11 +32,11 @@ function App() {
             {path:"/contacts",element:<Contact/>},
             {path:"/wishlist",element:<Wishlist/>},
             {path:"/product_detail/:id",element:<ProductDetail/>},
-            {path:"/order_detail",element:<OrderDetail/>},
             {path:"/login",element:<Login/>},
             {path:"/register",element:<Register/>},
             {path:"/checkout",element:<CheckOut/>},
-            {path:"/quenmatkhau",element:<ForgotPassword/>}
+            {path:"/quenmatkhau",element:<ForgotPassword/>},
+            {path:"/reset-password",element:<ResetPassword/>}
         ]}
     ]
     const routerLig = useRoutes(router);

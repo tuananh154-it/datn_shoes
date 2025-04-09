@@ -13,7 +13,13 @@ class Product extends Model
     public $timestamps = true;
 
     protected $fillable = [
-        'name', 'description', 'category_id', 'brand_id', 'price', 'image', 'status'
+        'name',
+        'description',
+        'category_id',
+        'brand_id',
+        'price',
+        'image',
+        'status'
     ];
 
     public function productdetails()
@@ -33,5 +39,16 @@ class Product extends Model
     public function order_details()
     {
         return $this->hasMany(OrderDetail::class);
+    }
+
+    // Bình luận + Đánh giá
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

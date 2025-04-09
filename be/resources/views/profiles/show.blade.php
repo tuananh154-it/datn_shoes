@@ -12,9 +12,10 @@
 
     /* Căn giữa nội dung */
     .row {
-        padding-top: 60px;
+        padding-top: 10%;
         display: flex;
         justify-content: center;
+        margin-left:28%;
     }
 
     /* Card profile */

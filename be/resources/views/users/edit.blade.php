@@ -97,7 +97,7 @@
                             </div>
                         </div>
                         <!-- Nút cập nhật -->
-                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                        <button type="submit" class="btn btn-warning ">Cập nhật</button>
                     </form>
                 </div>
             </section>

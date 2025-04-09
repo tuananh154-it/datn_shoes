@@ -45,7 +45,6 @@
                 <a href="{{ route('brands.create') }}" class="btn btn-success btn-sm">
                     <i class="fa fa-plus"></i> Thêm thương hiệu 
                 </a>
-               
             </div>
 
             <table class="table table-striped table-advance table-hover">
@@ -64,21 +63,21 @@
                         <td>{{ $brand->name }}</td>
                         <td>
                             @if ($brand->status == 'active')
-                                <span class="badge badge-info">Active</span>
+                                <span class="badge badge-info">Hoạt Động </span>
                             @else
-                                <span class="badge badge-danger">Inactive</span>
+                                <span class="badge badge-danger">Không hoạt động </span>
                             @endif
                         </td>
                        
                       
                         <td>
                            
-                            <a class="btn btn-success btn-sm" href="{{ route('brands.edit', $brand->id) }}"><i class="fa fa-pencil"></i></a> 
-                            <form action="{{ route('brands.destroy', $brand->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thương hiệu?');">
+                            <a class="btn btn-primary  btn-sm" href="{{ route('brands.edit', $brand->id) }}"><i class="fa fa-pencil"></i></a> 
+                            {{-- <form action="{{ route('brands.destroy', $brand->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thương hiệu?');">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-danger btn-sm" type="submit"><i class="fa fa-trash-o "></i></button>
-                            </form>
+                            </form> --}}
                         </td>
                     </tr>
                     @endforeach

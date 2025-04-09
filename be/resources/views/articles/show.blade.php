@@ -63,10 +63,10 @@
                             <textarea name="content" id="content" class="form-control">{!! $article->content !!}</textarea>
                         </div>
 
-                        <div class="d-flex">
+                        
                             <a href="{{ route('articles.index') }}" class="btn btn-secondary flex-fill me-1">Quay lại</a>
                             <a href="{{ route('articles.edit', $article->id) }}" class="btn btn-warning flex-fill me-1">Chỉnh sửa</a>
-                        </div>
+                        
                     </form>
                 </div>
             </div>

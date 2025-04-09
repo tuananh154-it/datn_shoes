@@ -52,9 +52,9 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'name'          => $request->name,
-            'email'         => $request->email,
-            'password'      => Hash::make($request->password),
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
             // 'gender'        => $request->gender,
             // 'date_of_birth' => $request->date_of_birth,
             // 'address'       => $request->address,
@@ -94,7 +94,7 @@ class AuthController extends Controller
 
             $user = Auth::user();
             // Kiểm tra vai trò của người dùng và chuyển hướng
-            if (in_array($user->role, ['admin', 'superadmin'])) {
+            if (in_array($user->role, ['admin', 'superadmin', 'user'])) {
                 return redirect()->route('dashboards.index')->with('success', 'Vào thành công!');
             }
 
@@ -118,6 +118,23 @@ class AuthController extends Controller
             'token' => $token,
             'user' => Auth::user(),
         ]);
+    }
+
+    // Đăng xuất ở đây
+    public function logout(Request $request)
+    {
+        try {
+            Auth::logout(); // Đăng xuất người dùng hiện tại
+            JWTAuth::invalidate(JWTAuth::getToken()); // Hủy token hiện tại
+
+            return response()->json([
+                'message' => 'Đăng xuất thành công!'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Không thể đăng xuất, vui lòng thử lại!'
+            ], 500);
+        }
     }
 
     public function user(Request $request)

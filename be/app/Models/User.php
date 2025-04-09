@@ -112,4 +112,14 @@ class User extends Authenticatable implements JWTSubject  // Implement JWTSubjec
     //     return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id');
     // }
 
+    // Bình luận + Đánh giá
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }

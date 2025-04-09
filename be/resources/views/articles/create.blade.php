@@ -92,10 +92,10 @@
                         </div>
 
                         <div class="mb-3 d-flex">
-                            <a href="{{ route('articles.index') }}" class="btn btn-secondary btn-lg flex-fill me-1">Quay
+                            <a href="{{ route('articles.index') }}" class="btn btn-secondary ">Quay
                                 lại</a>
-                            <button type="reset" class="btn btn-warning btn-lg flex-fill me-1">Reset</button>
-                            <button type="submit" class="btn btn-primary btn-lg flex-fill">Thêm Mới</button>
+                            <button type="reset" class="btn btn-primary  ">Reset</button>
+                            <button type="submit" class="btn btn-success  ">Thêm Mới</button>
                         </div>
                     </form>
                 </div>

@@ -147,7 +147,11 @@
                       </a>
                       <ul class="dropdown-menu extended logout dropdown-menu-right">
                         <div class="log-arrow-up"></div>
-                        <li><a href="{{ route('profiles.index', Auth::user()->id) }}">Profile</a></li>
+                        {{-- <li><a href="{{ route('profiles.index', Auth::user()->id) }}">Profile</a></li> --}}
+                        {{-- <li><a href="{{ route('profiles.show') }}">Profile</a></li> --}}
+                        <li><a href="{{ route('profiles.show') }}"><i class="fa fa-user"></i> Profile</a></li>
+
+
                         <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
                         <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
 
@@ -155,8 +159,8 @@
                         <li>
                             <form action="{{ route('logout') }}" method="POST" style="display: inline;">
                                 @csrf
-                                <button type="submit" style="background: none; border: none; color: inherit; padding: 0;">
-                                    <i class="fa fa-key"></i> Log Out
+                                <button type="submit" style="background: none; border: none; color: inherit; padding: 10px;">
+                                    <i class="fa fa-key"></i> Đăng Xuất
                                 </button>
                             </form>
                         </li>

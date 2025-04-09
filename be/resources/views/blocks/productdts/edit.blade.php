@@ -115,7 +115,7 @@
                     </div>
 
                     <!-- Nút cập nhật -->
-                    <button type="submit" class="btn btn-primary">Cập nhật chi tiết sản phẩm</button>
+                    <button type="submit" class="btn btn-warning ">Cập nhật chi tiết sản phẩm</button>
                     <a href="{{ route('products.show', $detail->product_id) }}" class="btn btn-secondary">Hủy</a>
                 </form>
             </div>

@@ -1,18 +1,25 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Category, getAllCategory } from "../services/category";
 import { Brand, getBrand } from "../services/brand";
 import { Product } from "../types/Product";
 import { getAllProduct } from "../services/product";
 
+import Slider from "rc-slider";
+import "rc-slider/assets/index.css";
+
+import QuickViewProduct from "./QuickViewProduct";
+import toast from "react-hot-toast";
+
+
 const Shop = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [sortBy, setSortBy] = useState<"asc" | "dsc" | "">("");
+  // const [sortBy, setSortBy] = useState<"asc" | "dsc" | "">("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
-
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
   useEffect(() => {
     setLoading(true);
     getAllProduct()
@@ -22,57 +29,37 @@ const Shop = () => {
       })
       .finally(() => setLoading(false));
   }, []);
-
-  // useEffect(() => {
-  //   let updatedProducts = [...products];
-
-  //   if (selectedCategories.length) {
-  //     updatedProducts = updatedProducts.filter((product) =>
-  //       selectedCategories.includes(product.category)
-  //     );
-  //   }
-
-  //   if (selectedBrands.length) {
-  //     updatedProducts = updatedProducts.filter((product) =>
-  //       selectedBrands.includes(product.brand)
-  //     );
-  //   }
-
-  //   if (sortBy) {
-  //     updatedProducts.sort((a, b) => {
-  //       const priceA =
-  //         typeof a.price === "string"
-  //           ? Number(a.price.replace(" VND", ""))
-  //           : a.price;
-  //       const priceB =
-  //         typeof b.price === "string"
-  //           ? Number(b.price.replace(" VND", ""))
-  //           : b.price;
-  //       return sortBy === "asc" ? priceA - priceB : priceB - priceA;
-  //     });
-  //   }
-
-  //   setFilteredProducts(updatedProducts);
-  // }, [sortBy, selectedCategories, selectedBrands, products]);
-  const [priceRange, setPriceRange] = useState<[number, number] | null>(null);
+  console.log("product",products)
+  const location = useLocation();
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 3000000]);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const search = queryParams.get("search");
+    if (search) {
+      setSearchTerm(search);
+    }
+  }, [location]);
   useEffect(() => {
     let updatedProducts = [...products];
 
+    // Lọc theo thể loại
     if (selectedCategories.length) {
       updatedProducts = updatedProducts.filter((product) =>
         selectedCategories.includes(product.category)
       );
     }
 
+    // Lọc theo nhãn hiệu
     if (selectedBrands.length) {
       updatedProducts = updatedProducts.filter((product) =>
         selectedBrands.includes(product.brand)
       );
     }
 
+    // Lọc theo khoảng giá
     if (priceRange) {
       updatedProducts = updatedProducts.filter((product) => {
-        // Chuyển `price` từ chuỗi thành số đúng
         const price =
           typeof product.price === "string"
             ? Number(product.price.replace(/,/g, "").replace(" VND", ""))
@@ -82,8 +69,37 @@ const Shop = () => {
       });
     }
 
+    // Lọc theo từ khóa tìm kiếm
+    if (searchTerm) {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+      const searchWords = lowerSearchTerm.split(" "); // Tách từ khóa tìm kiếm thành từng từ
+    
+      updatedProducts = updatedProducts.filter((product) => {
+        const productName = product.name.toLowerCase();
+        // Kiểm tra xem TẤT CẢ từ trong searchTerm có xuất hiện trong tên sản phẩm không
+        return searchWords.every((word) => productName.includes(word));
+      });
+    }
+
+    // Cập nhật danh sách sản phẩm đã lọc
     setFilteredProducts(updatedProducts);
-  }, [selectedCategories, selectedBrands, priceRange, products]);
+  }, [
+    selectedCategories,
+    selectedBrands,
+    priceRange,
+    products,
+    searchTerm, // Thêm searchTerm vào dependencies
+  ]);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      // Fetch dữ liệu sản phẩm từ API (giả sử bạn có hàm fetch)
+      const response = await fetch('/api/products');
+      const data = await response.json();
+      setProducts(data);
+    };
+
+    fetchProducts();
+  }, []);
   const handleCategoryChange = (category: string) => {
     setSelectedCategories((prev) =>
       prev.includes(category)
@@ -105,10 +121,38 @@ const Shop = () => {
     getAllCategory().then(({ data }) => setCategories(data));
     getBrand().then(({ data }) => setBrands(data));
   }, []);
-  // const [colors, setColors] = useState<Color[]>([]);
-
-  // Giả lập API call
-
+  const handleChange = (newRange: number | number[]) => {
+    if (Array.isArray(newRange)) {
+      setPriceRange([newRange[0], newRange[1]]);
+    }
+  };
+  const navigator = useNavigate();
+  const toggleWishlist = (product: Product) => {
+    const user = JSON.parse(localStorage.getItem("user") || "null");
+  
+    if (!user) {
+      alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
+      navigator('/login')
+      return
+    }
+  
+    let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+  
+    // Lưu ID sản phẩm thay vì object
+    const index = wishlist.indexOf(product.id);
+  
+    if (index !== -1) {
+      wishlist.splice(index, 1);
+    } else {
+      wishlist.push(product.id);
+      toast.success("Đã thêm sản phẩm yêu thích");
+    }
+  
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  
+    // Phát sự kiện cập nhật để các component khác biết
+    window.dispatchEvent(new Event("storage"));
+  };
   return (
     <>
       <div className="menu_overlay"></div>
@@ -150,90 +194,28 @@ const Shop = () => {
                         <span className="category_close_icon flaticon-down-arrow float-right"></span>
                       </div>
                       <div className="layer-filter">
-                        {/* <form className="py-2">
-                          <ul>
-                            <li>
-                              <div className="flex items-center gap-3">
-                                <label
-                                  style={{
-                                    fontSize: "16px",
-                                    fontFamily: "Arial, sans-serif",
-                                  }}
-                                >
-                                  <input
-                                    type="radio"
-                                    name="sortBy"
-                                    value="asc"
-                                    checked={sortBy === "asc"}
-                                    onChange={() => setSortBy("asc")}
-                                  />{" "}
-                                  Giá - Giá từ bé đến lớn
-                                </label>
-                              </div>
-                              <div className="flex items-center gap-3">
-                                <label
-                                  style={{
-                                    fontSize: "16px",
-                                    fontFamily: "Arial, sans-serif",
-                                  }}
-                                >
-                                  <input
-                                    type="radio"
-                                    name="sortBy"
-                                    value="dsc"
-                                    checked={sortBy === "dsc"}
-                                    onChange={() => setSortBy("dsc")}
-                                  />{" "}
-                                  Giá - Giá từ lớn đến bé
-                                </label>
-                              </div>
-                            </li>
-                          </ul>
-                        </form> */}
-                        <form className="price-filter-container">
-                          <ul className="price-filter-list">
-                            <li className="price-filter-item">
-                              <input
-                                type="radio"
-                                name="priceRange"
-                                id="price-range-all"
-                                onChange={() => setPriceRange(null)}
-                              />
-                              <label htmlFor="price-range-all">Tất cả</label>
-                            </li>
-                            <li className="price-filter-item">
-                              <input
-                                type="radio"
-                                name="priceRange"
-                                id="price-range-1"
-                                onChange={() => setPriceRange([0, 200000])}
-                              />
-                              <label htmlFor="price-range-1">0 - 200K</label>
-                            </li>
-                            <li className="price-filter-item">
-                              <input
-                                type="radio"
-                                name="priceRange"
-                                id="price-range-2"
-                                onChange={() => setPriceRange([200000, 500000])}
-                              />
-                              <label htmlFor="price-range-2">200K - 500K</label>
-                            </li>
-                            <li className="price-filter-item">
-                              <input
-                                type="radio"
-                                name="priceRange"
-                                id="price-range-3"
-                                onChange={() =>
-                                  setPriceRange([500000, 1000000])
-                                }
-                              />
-                              <label htmlFor="price-range-3">
-                                500K - 1000K
-                              </label>
-                            </li>
-                          </ul>
-                        </form>
+                        <div>
+                          {/* <label>Khoảng giá: {priceRange[0].toLocaleString()} - {priceRange[1].toLocaleString()} VND</label> */}
+                          <div
+                            style={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: "10px",
+                            }}
+                          >
+                            {priceRange[0].toLocaleString()}
+                            <Slider
+                              range
+                              min={0}
+                              max={3000000}
+                              step={10000}
+                              value={priceRange}
+                              onChange={handleChange}
+                              style={{ width: "150px", margin: "10px auto" }}
+                            />
+                            {priceRange[1].toLocaleString()}
+                          </div>
+                        </div>
                       </div>
                     </div>
                     {/* //category// */}
@@ -430,8 +412,12 @@ const Shop = () => {
                               />
                               <div className="featured_btn vertical_middle">
                                 <Link
-                                  to="/cart"
+                                  to="#"
                                   className="text-uppercase background-btn add_to_bag_btn"
+                                  onClick={(e) => {
+                                    e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
+                                    setSelectedProductId(product.id);
+                                  }}
                                 >
                                   Thêm vào giỏ hàng
                                 </Link>
@@ -444,18 +430,22 @@ const Shop = () => {
                                 </Link>
                               </div>
                               <a
-                                href="javascript:void(0);"
-                                className="heart rounded-circle text-center"
+                                href="#"
+                                className="heart yeuthich rounded-circle text-center d-block"
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  toggleWishlist(product);
+                                }}
                               >
-                                <i className="flaticon-heart vertical_middle"></i>
+                                <i className="flaticon-heart"></i>
                               </a>
                             </div>
                             <div className="featured_detail_content">
-                              <a href="product_list_detail.html">
+                              <Link to={`/product_detail/${product.id}`}>
                                 <p className="featured_title text-capitalize text-center">
-                                  {product.name}
+                                  {product.name.slice(0, 25) + (product.name.length > 6 ? "..." : "")}
                                 </p>
-                              </a>
+                              </Link>
                               <p className="featured_price title_h5 text-center">
                                 {/* <span>{product.price.toLocaleString()}</span> */}
                                 <span className="text-color">
@@ -509,6 +499,13 @@ const Shop = () => {
           </div>
         </section>
       </div>
+      {/* Quick View hiển thị khi có productId */}
+      {selectedProductId && (
+        <QuickViewProduct
+          productId={selectedProductId}
+          onClose={() => setSelectedProductId(null)}
+        />
+      )}
     </>
   );
 };

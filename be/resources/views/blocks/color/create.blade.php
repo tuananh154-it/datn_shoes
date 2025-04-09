@@ -36,7 +36,7 @@
                     </div>
 
                     <!-- Nút Thêm -->
-                    <button type="submit" class="btn btn-primary">Thêm</button>
+                    <button type="submit" class="btn btn-success">Thêm màu sắc </button>
                 </form>
             </div>
         </section>

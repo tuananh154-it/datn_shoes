@@ -55,8 +55,8 @@ const Login = () => {
                                     </div>
                                     <div className="login_links">
                                         <button type="submit" className="btn background-btn text-uppercase">Đăng nhập</button>
-                                        <p className="">or</p>
-                                        <a className="btn-link return_text" href="/shop">Quay lại cửa hàng</a>
+                                        {/* <p className="">or</p> */}
+                                        {/* <a className="btn-link return_text" href="/shop">Quay lại cửa hàng</a> */}
                                         <a className="btn-link text-right forgot_text" href="/quenmatkhau"><u>Quên mật khẩu?</u></a>
                                     </div>
                                 </form>

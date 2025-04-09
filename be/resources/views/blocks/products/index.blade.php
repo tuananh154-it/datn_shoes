@@ -21,11 +21,11 @@
                 </div>
             @endif
 
-            <div class="">
+            {{-- <div class="">
                 <a href="{{ route('products.create') }}" class="btn btn-success btn-sm">
                     <i class="fa fa-plus"></i> Thêm sản phẩm
                 </a>
-            </div>
+            </div> --}}
             <div class="mb-3">
                 <form action="{{ route('products.index') }}" method="GET">
                     <div class="row">
@@ -47,6 +47,12 @@
                 </form>
             </div>
 
+            <div class="mb-3">
+                <a href="{{ route('products.create') }}" class="btn btn-success btn-sm">
+                    <i class="fa fa-plus"></i> Thêm sản phẩm
+                </a>
+            </div>
+
 
 
 
@@ -57,7 +63,7 @@
                         <th><i class=""></i> Tên sản phẩm</th>
                         <th><i class=""></i> Ảnh sản phẩm</th> <!-- Thêm cột Ảnh -->
                         <th><i class=""></i> Trang thái</th>
-                        <th></th>
+                        <th>Hành động </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -85,13 +91,13 @@
                                     <i class="fa fa-pencil"></i>
                                 </a>
 
-                                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                                {{-- <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         <i class="fa fa-trash-o"></i>
                                     </button>
-                                </form>
+                                </form> --}}
                                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-warning btn-sm">
                                     <i class="fa fa-eye"></i>
                                 </a>

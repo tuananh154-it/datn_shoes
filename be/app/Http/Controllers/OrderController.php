@@ -16,10 +16,10 @@ class OrderController extends Controller
     {
         // Khởi tạo query cơ bản để lấy tất cả đơn hàng với quan hệ 'user' và 'voucher'
         $query = Order::with('user', 'voucher');
-        
+    
         // Tìm kiếm theo tên người dùng
         if ($request->has('search') && !empty($request->search)) {
-            $query->whereHas('user', function($query) use ($request) {
+            $query->whereHas('user', function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->search . '%');
             });
         }
@@ -29,12 +29,15 @@ class OrderController extends Controller
             $query->where('status', $request->status);
         }
     
-        // Phân trang kết quả tìm kiếm
+        // 👉 Sắp xếp theo thời gian tạo mới nhất
+        $query->orderBy('created_at', 'desc');
+    
+        // Phân trang
         $orders = $query->paginate(5);
     
-        // Trả về view với các đơn hàng tìm được
         return view('orders.index', compact('orders'));
     }
+    
     
 
     public function show($id)
@@ -55,32 +58,56 @@ class OrderController extends Controller
         return view('orders.show', compact('order', 'total_product_value', 'shipping_fee', 'total_price'));
     }
 
-    
     public function updateStatus(Request $request, $id)
     {
-        // Tìm đơn hàng theo id
         $order = Order::findOrFail($id);
-
-        // Định nghĩa các trạng thái hợp lệ và chuyển tiếp trạng thái
-        $validStatusTransitions = [
-            'waiting_for_confirmation' => 'waiting_for_pickup',
-            'waiting_for_pickup' => 'waiting_for_delivery',
-            'waiting_for_delivery' => 'delivered',
-            'delivered' => 'returned',
-            'returned' => 'cancelled',
+    
+        $currentStatus = $order->status;
+        $newStatus = $request->status;
+    
+        // Trạng thái kết thúc - không được chuyển tiếp nữa
+        $finalStatuses = ['completed', 'refunded', 'cancelled'];
+    
+        if (in_array($currentStatus, $finalStatuses)) {
+            return redirect()->route('orders.index')
+                ->with('error', 'Đơn hàng đã hoàn tất, hoàn tiền hoặc bị hủy. Không thể cập nhật thêm.');
+        }
+    
+        // ❗Không cho admin chuyển từ "Chờ xác nhận" (pending) sang "Đã xác nhận" (confirmed)
+        if ($currentStatus === 'pending' && $newStatus === 'confirmed') {
+            return redirect()->route('orders.index')
+                ->with('error', 'Chỉ người dùng mới có thể xác nhận đơn hàng qua email.');
+        }
+    
+        // ✅ Danh sách chuyển trạng thái hợp lệ
+        $validTransitions = [
+            'pending'    => ['cancelled'], // không cho admin tự chuyển sang confirmed
+            'confirmed'  => ['processing', 'cancelled'],
+            'processing' => ['shipping', 'cancelled'],
+            'shipping'   => ['delivered'],
+            'delivered'  => ['completed', 'returned'],
+            'returned'   => ['refunded'],
         ];
-
-        // Kiểm tra nếu trạng thái mới hợp lệ
-        if (isset($validStatusTransitions[$order->status]) && $validStatusTransitions[$order->status] === $request->status) {
-            // Cập nhật trạng thái mới
-            $order->status = $request->status;
+    
+        if (
+            isset($validTransitions[$currentStatus]) &&
+            in_array($newStatus, $validTransitions[$currentStatus])
+        ) {
+            $order->status = $newStatus;
+    
+            // Nếu đã giao thành công thì auto đánh dấu thanh toán
+            if ($newStatus === 'delivered') {
+                $order->payment_status = 'paid';
+            }
+    
             $order->save();
-
-            // Thông báo thành công
+    
             return redirect()->route('orders.index')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
         }
-
-        // Thông báo lỗi nếu trạng thái không hợp lệ
-        return redirect()->route('orders.index')->with('error', 'Trạng thái không hợp lệ.');
+    
+        return redirect()->route('orders.index')->with('error', 'Không thể chuyển trạng thái từ "' . $currentStatus . '" sang "' . $newStatus . '".');
     }
+    
+
+    
 }

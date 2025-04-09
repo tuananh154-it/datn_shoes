@@ -1,86 +1,129 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { CancellOrder, getDetailOrder, getPaymentStatusInVietnamese, getStatusLabel, Order } from "../services/orders"; // Import API
+import { getProductDetail } from "../services/product";
 
-
-interface OrderItem {
-    id: number;
-    name: string;
-    price: number;
-    quantity: number;
-    image: string;
+interface OrderDetailProps {
+    orderId: number; // Nhận ID của đơn hàng
 }
 
-interface Order {
-    id: string;
-    date: string;
-    status: string;
-    total: number;
-    items: OrderItem[];
-    shipping: {
-        name: string;
-        address: string;
-        phone: string;
-    };
-}
+const OrderDetail: React.FC<OrderDetailProps> = ({ orderId }) => {
+    const [order, setOrder] = useState<Order | null>(null);
+    const [loading, setLoading] = useState(true);
 
-const orderData: Order = {
-    id: "ORD123456",
-    date: "2025-03-27",
-    status: "Đang xử lý", // Thay đổi trạng thái để kiểm tra
-    total: 650000,
-    items: [
-        {
-            id: 1,
-            name: "Áo thun nam",
-            price: 200000,
-            quantity: 2,
-            image: "../src/images/shoes_product6.png",
-        },
-        {
-            id: 2,
-            name: "Quần jeans nữ",
-            price: 250000,
-            quantity: 1,
-            image: "../src/images/shoes_product5.png",
-        },
-    ],
-    shipping: {
-        name: "Nguyễn Văn A",
-        address: "123 Đường ABC, TP.HCM",
-        phone: "0987654321",
-    },
-};
+    // useEffect(() => {
+    //     const fetchOrderDetail = async () => {
+    //         try {
+    //             const response = await getDetailOrder(orderId);
+    //             setOrder(response.data); // Lưu đơn hàng vào state
+    //         } catch (error) {
+    //             console.error("Lỗi khi lấy chi tiết đơn hàng:", error);
+    //         } finally {
+    //             setLoading(false);
+    //         }
+    //     };
 
-const OrderDetail: React.FC = () => {
-    const handleCancelOrder = () => {
+    //     fetchOrderDetail();
+    // }, [orderId]); // Gọi lại khi orderId thay đổi
+    useEffect(() => {
+        const fetchOrderDetail = async () => {
+            try {
+                setLoading(true);
+
+                // 1️⃣ Lấy chi tiết đơn hàng
+                const response = await getDetailOrder(orderId);
+                const orderData = response.data;
+                if (!orderData) throw new Error("API không trả về dữ liệu hợp lệ");
+
+                // 2️⃣ Lọc danh sách `product_id`
+                const productIds = [...new Set(
+                    orderData.order_details.map(detail => detail.product_detail?.product_id)
+                )];
+
+                // 3️⃣ Gọi API lấy thông tin sản phẩm
+                const productResponses = await Promise.all(
+                    productIds.map(id => getProductDetail(id))
+                );
+
+                // 4️⃣ Lưu thông tin sản phẩm vào `Map`
+                const productMap = new Map();
+                productResponses.forEach(response => {
+                    if (response?.data?.data) {
+                        productMap.set(response.data.data.id, response.data.data);
+                    }
+                });
+
+                // 5️⃣ Cập nhật lại `order_details` với thông tin sản phẩm
+                const updatedOrderDetails = orderData.order_details.map(detail => {
+                    const productInfo = productMap.get(detail.product_detail?.product_id) || {};
+                    return {
+                        ...detail,
+                        product_detail: {
+                            ...detail.product_detail,
+                            product_name: productInfo.name || "Không xác định",
+                            // color: detail.product_detail?.color || "Không xác định",
+                            // size: detail.product_detail?.size || "Không xác định"
+                        }
+                    };
+                });
+
+                // 6️⃣ Cập nhật state
+                setOrder({
+                    ...orderData,
+                    order_details: updatedOrderDetails
+                });
+
+            } catch (error) {
+                console.error("Lỗi khi lấy chi tiết đơn hàng:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchOrderDetail();
+    }, [orderId]); // Gọi lại khi orderId thay đổi
+
+
+    if (loading) return <p>Đang tải chi tiết đơn hàng...</p>;
+    if (!order) return <p>Không tìm thấy đơn hàng.</p>;
+
+    const canCancel = order.status === "waiting_for_confirmation";
+
+    const handleCancelOrder = async () => {
+        const reason = prompt("Vui lòng nhập lý do hủy đơn hàng:");
+        if (!reason) {
+            alert("Bạn phải nhập lý do hủy đơn!");
+            return;
+        }
+
         const isConfirmed = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
-        if (isConfirmed) {
-            // Thực hiện hành động hủy đơn, ví dụ:
-            // - Gửi yêu cầu đến API để cập nhật trạng thái đơn hàng
-            // - Cập nhật state của component
-            console.log("Đơn hàng đã được hủy.");
+        if (!isConfirmed) return;
+
+
+        try {
+            await CancellOrder(order.id);
+            alert("Đơn hàng đã được hủy thành công!");
+            setOrder({ ...order, status: "cancelled" }); // Cập nhật UI
+        } catch (error) {
+            alert("Lỗi khi hủy đơn hàng, vui lòng thử lại!");
+            console.error("Lỗi khi hủy đơn:", error);
         }
     };
 
-    // Kiểm tra nếu trạng thái đơn hàng cho phép hủy
-    const canCancel = orderData.status === "Đang xử lý";
-
     return (
-        <div className="order-detail nav">
-            <h2>Chi tiết đơn hàng</h2>
+        <div className="order-detail">
+           <h2>Chi Tiết Đơn Hàng #{order.id}</h2>
             <table className="order-table">
                 <tbody>
-                    <tr>
-                        <td><strong>Mã đơn hàng:</strong></td>
-                        <td>{orderData.id}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Ngày đặt hàng:</strong></td>
-                        <td>{orderData.date}</td>
-                    </tr>
+                    <tr><td><strong>Mã đơn hàng:</strong></td><td>{order.id}</td></tr>
+                    <tr><td><strong>Khách hàng:</strong></td><td>{order.username}</td></tr>
+                    <tr><td><strong>Ngày đặt hàng:</strong></td><td>{new Date(order.created_at).toLocaleDateString()}</td></tr>
                     <tr>
                         <td><strong>Trạng thái:</strong></td>
-                        <td>{orderData.status}</td>
+                        <td style={{ color: order.status === "cancelled" ? "red" : "black" }}>
+                            {getStatusLabel(order.status)}
+                        </td>
                     </tr>
+                    <tr><td><strong>Thanh toán:</strong></td><td>{getPaymentStatusInVietnamese(order.payment_status)}</td></tr>
                 </tbody>
             </table>
 
@@ -92,17 +135,21 @@ const OrderDetail: React.FC = () => {
                         <th>Tên sản phẩm</th>
                         <th>Giá</th>
                         <th>Số lượng</th>
+                        <th>Màu</th>
+                        <th>Kích cỡ</th>
                         <th>Thành tiền</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {orderData.items.map((item) => (
+                    {order.order_details.map((item) => (
                         <tr key={item.id}>
-                            <td><img src={item.image} alt={item.name} /></td>
-                            <td>{item.name}</td>
-                            <td>{item.price.toLocaleString()}đ</td>
+                            <td><img src={JSON.parse(item.product_detail.image)[0]} alt="Sản phẩm" width="50" /></td>
+                            <td>{item.product_detail.product_name}</td>
+                            <td>{parseFloat(item.price).toLocaleString()}đ</td>
                             <td>{item.quantity}</td>
-                            <td>{(item.price * item.quantity).toLocaleString()}đ</td>
+                            <td>{item.color}</td>
+                            <td>{item.size}</td>
+                            <td>{parseFloat(item.total_price).toLocaleString()}đ</td>
                         </tr>
                     ))}
                 </tbody>
@@ -111,29 +158,23 @@ const OrderDetail: React.FC = () => {
             <h3>Thông tin giao hàng</h3>
             <table className="order-table">
                 <tbody>
-                    <tr>
-                        <td><strong>Người nhận:</strong></td>
-                        <td>{orderData.shipping.name}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Địa chỉ:</strong></td>
-                        <td>{orderData.shipping.address}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Điện thoại:</strong></td>
-                        <td>{orderData.shipping.phone}</td>
-                    </tr>
+                    <tr><td><strong>Địa chỉ:</strong></td><td>{order.address}</td></tr>
+                    <tr><td><strong>Điện thoại:</strong></td><td>{order.phone_number}</td></tr>
+                    <tr><td><strong>Email:</strong></td><td>{order.email}</td></tr>
+                    <tr><td><strong>Phí giao hàng:</strong></td><td>{parseFloat(order.deliver_fee).toLocaleString()}đ</td></tr>
                 </tbody>
             </table>
 
             <div className="order-total">
                 <span className="total-label">Tổng cộng:</span>
-                <span className="total-price">{orderData.total.toLocaleString()}đ</span>
-                 {canCancel && (
-                <button className="cancel-button" onClick={handleCancelOrder}>
+                <span className="total-price">{parseFloat(order.total_price).toLocaleString()}đ</span>
+                <button
+                    className="cancel-button"
+                    onClick={handleCancelOrder}
+                    disabled={!canCancel}
+                >
                     Hủy đơn
                 </button>
-            )}
             </div>
         </div>
     );
