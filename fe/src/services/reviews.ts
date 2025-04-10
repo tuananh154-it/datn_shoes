@@ -12,8 +12,10 @@ export interface Review {
     is_anonymous: boolean;    // Nếu bạn muốn hiển thị thông tin ẩn danh
     reply?: string;    
     order_id?: number;      
+    size?: string;            // Thêm size (tùy chọn, vì có thể là 'N/A')
+    color?: string;           // Thêm color (tùy chọn, vì có thể là 'N/A')
+    product_name:string;
 }
-
 export interface ReviewPayload {
     rating: number;
     content: string;

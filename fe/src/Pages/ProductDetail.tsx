@@ -263,10 +263,10 @@ const ProductDetail = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [totalReviews, setTotalReviews] = useState(0);
   const [newReview, setNewReview] = useState<string>(''); // Sửa thành chuỗi
-  const [eligibleOrderId, setEligibleOrderId] = useState<string | null>(null); // OrderId hợp lệ
+  // const [eligibleOrderId, setEligibleOrderId] = useState<string | null>(null); // OrderId hợp lệ
   const [rating, setRating] = useState<number>(0);       // Rating từ 1-5
-  const [isModalOpen, setIsModalOpen] = useState(false);      // Trạng thái modal
-  const [hasReviewed, setHasReviewed] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);      // Trạng thái modal
+  // const [hasReviewed, setHasReviewed] = useState(false);
   // sao đánh giá
   // Hàm render sao (hiển thị và cho phép bấm trong form)
   const renderStars = (rating: number, editable: boolean = false) => {
@@ -316,132 +316,132 @@ const ProductDetail = () => {
     }
   }, [productIdNumber, products]);
   // tạo đánh giá mới
-  useEffect(() => {
-    const fetchOrders = async () => {
-      try {
-        setLoading(true);
+  // useEffect(() => {
+  //   const fetchOrders = async () => {
+  //     try {
+  //       setLoading(true);
 
-        // 1️⃣ Lấy danh sách đơn hàng
-        const response = await getAllOrders();
-        const orders: Order[] = response.data;
-        console.log("Danh sách đơn hàng:", orders);
+  //       // 1️⃣ Lấy danh sách đơn hàng
+  //       const response = await getAllOrders();
+  //       const orders: Order[] = response.data;
+  //       console.log("Danh sách đơn hàng:", orders);
 
-        // 2️⃣ Lọc đơn hàng có trạng thái 'delivered'
-        const deliveredOrders = orders.filter(order => order.status === "delivered");
-        console.log("Đơn hàng có trạng thái 'delivered':", deliveredOrders);
+  //       // 2️⃣ Lọc đơn hàng có trạng thái 'delivered'
+  //       const deliveredOrders = orders.filter(order => order.status === "delivered");
+  //       console.log("Đơn hàng có trạng thái 'delivered':", deliveredOrders);
 
-        if (deliveredOrders.length === 0) {
-          console.log("Không có đơn hàng nào được giao.");
-          setEligibleOrderId(null);
-          setLoading(false);
-          return;
-        }
+  //       if (deliveredOrders.length === 0) {
+  //         console.log("Không có đơn hàng nào được giao.");
+  //         setEligibleOrderId(null);
+  //         setLoading(false);
+  //         return;
+  //       }
 
-        // 3️⃣ Gọi API getDetailOrder và kiểm tra lỗi
-        const orderDetailsResponses = await Promise.all(
-          deliveredOrders.map(async (order) => {
-            try {
-              console.log(`Gọi API getDetailOrder với order.id = ${order.id}`);
-              const res = await getDetailOrder(order.id);
-              return { orderId: order.id, data: res.data }; // Lưu cả orderId
-            } catch (error) {
-              console.error(`Lỗi khi gọi API getDetailOrder(${order.id}):`, error);
-              return null;
-            }
-          })
-        );
+  //       // 3️⃣ Gọi API getDetailOrder và kiểm tra lỗi
+  //       const orderDetailsResponses = await Promise.all(
+  //         deliveredOrders.map(async (order) => {
+  //           try {
+  //             console.log(`Gọi API getDetailOrder với order.id = ${order.id}`);
+  //             const res = await getDetailOrder(order.id);
+  //             return { orderId: order.id, data: res.data }; // Lưu cả orderId
+  //           } catch (error) {
+  //             console.error(`Lỗi khi gọi API getDetailOrder(${order.id}):`, error);
+  //             return null;
+  //           }
+  //         })
+  //       );
 
-        // 4️⃣ Loại bỏ các response null (có lỗi 404)
-        const validOrders = orderDetailsResponses.filter(item => item !== null);
-        if (validOrders.length === 0) {
-          console.log("Không có đơn hàng hợp lệ sau khi gọi API getDetailOrder.");
-          setEligibleOrderId(null);
-          setLoading(false);
-          return;
-        }
+  //       // 4️⃣ Loại bỏ các response null (có lỗi 404)
+  //       const validOrders = orderDetailsResponses.filter(item => item !== null);
+  //       if (validOrders.length === 0) {
+  //         console.log("Không có đơn hàng hợp lệ sau khi gọi API getDetailOrder.");
+  //         setEligibleOrderId(null);
+  //         setLoading(false);
+  //         return;
+  //       }
 
-        // 5️⃣ Tìm đơn hàng chứa sản phẩm
-        let eligibleOrderId = null;
-        for (const order of validOrders) {
-          const productIds = order.data.order_details
-            .map((detail: OrdersDetail) => detail.product_detail?.product_id)
-            .filter(id => id !== undefined);
-          console.log(`Danh sách product_id trong đơn hàng ${order.orderId}:`, productIds);
+  //       // 5️⃣ Tìm đơn hàng chứa sản phẩm
+  //       let eligibleOrderId = null;
+  //       for (const order of validOrders) {
+  //         const productIds = order.data.order_details
+  //           .map((detail: OrdersDetail) => detail.product_detail?.product_id)
+  //           .filter(id => id !== undefined);
+  //         console.log(`Danh sách product_id trong đơn hàng ${order.orderId}:`, productIds);
 
-          if (productIds.includes(productIdNumber)) {
-            eligibleOrderId = order.orderId.toString(); // Lưu orderId thực sự
-            break;
-          }
-        }
+  //         if (productIds.includes(productIdNumber)) {
+  //           eligibleOrderId = order.orderId.toString(); // Lưu orderId thực sự
+  //           break;
+  //         }
+  //       }
 
-        console.log("Eligible Order ID:", eligibleOrderId);
-        setEligibleOrderId(eligibleOrderId);
+  //       console.log("Eligible Order ID:", eligibleOrderId);
+  //       setEligibleOrderId(eligibleOrderId);
 
-      } catch (err) {
-        console.error("Lỗi khi lấy danh sách đơn hàng:", err);
-        setError('Không thể tải danh sách đơn hàng');
-      } finally {
-        setLoading(false);
-      }
-    };
+  //     } catch (err) {
+  //       console.error("Lỗi khi lấy danh sách đơn hàng:", err);
+  //       setError('Không thể tải danh sách đơn hàng');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchOrders();
-  }, [productIdNumber]);
-
-
+  //   fetchOrders();
+  // }, [productIdNumber]);
 
 
-  console.log("id cua san pham", productIdNumber);
 
-  const handlePostReview = async () => {
-    // Kiểm tra nhanh các điều kiện đầu vào
-    if (!newReview.trim()) {
-      alert('Vui lòng nhập nội dung bình luận!');
-      return;
-    }
-    if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
-      alert('productID không hợp lệ!');
-      return;
-    }
-    if (!eligibleOrderId) {
-      alert('Bạn chưa mua sản phẩm này hoặc đơn hàng chưa được giao.');
-      return;
-    }
-    if (rating === 0) {
-      alert('Vui lòng chọn số sao!');
-      return;
-    }
 
-    const reviewData: ReviewPayload = {
-      rating,
-      content: newReview,
-    };
+  // console.log("id cua san pham", productIdNumber);
 
-    try {
-      const newReviewResponse = await postReview(
-        productIdNumber.toString(),
-        eligibleOrderId,
-        reviewData
-      );
-      console.log("New Review Response:", newReviewResponse); // In dữ liệu trả về
-      setReviews((prev) => [...prev, newReviewResponse]); // Tối ưu cập nhật state
-      toast.success("Đánh giá của bạn đã được đăng thành công!");
-      setNewReview('');
-      setRating(0);
-      setHasReviewed(true);
-      setIsModalOpen(false);
-    } catch (error: any) {
-      alert(error.message || 'Lỗi khi đăng đánh giá!');
-    }
-  };
+  // const handlePostReview = async () => {
+  //   // Kiểm tra nhanh các điều kiện đầu vào
+  //   if (!newReview.trim()) {
+  //     alert('Vui lòng nhập nội dung bình luận!');
+  //     return;
+  //   }
+  //   if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
+  //     alert('productID không hợp lệ!');
+  //     return;
+  //   }
+  //   if (!eligibleOrderId) {
+  //     alert('Bạn chưa mua sản phẩm này hoặc đơn hàng chưa được giao.');
+  //     return;
+  //   }
+  //   if (rating === 0) {
+  //     alert('Vui lòng chọn số sao!');
+  //     return;
+  //   }
+
+  //   const reviewData: ReviewPayload = {
+  //     rating,
+  //     content: newReview,
+  //   };
+
+  //   try {
+  //     const newReviewResponse = await postReview(
+  //       productIdNumber.toString(),
+  //       eligibleOrderId,
+  //       reviewData
+  //     );
+  //     console.log("New Review Response:", newReviewResponse); // In dữ liệu trả về
+  //     setReviews((prev) => [...prev, newReviewResponse]); // Tối ưu cập nhật state
+  //     toast.success("Đánh giá của bạn đã được đăng thành công!");
+  //     setNewReview('');
+  //     setRating(0);
+  //     setHasReviewed(true);
+  //     setIsModalOpen(false);
+  //   } catch (error: any) {
+  //     alert(error.message || 'Lỗi khi đăng đánh giá!');
+  //   }
+  // };
 
   // if (loading) return <div>Đang kiểm tra đơn hàng...</div>;
   // if (error) return <div>{error}</div>;
   // Bind Modal với root element (cần cho accessibility)
-  Modal.setAppElement('#root');
-  useEffect(() => {
-    console.log("Trạng thái modal:", isModalOpen);
-  }, [isModalOpen]);
+  // Modal.setAppElement('#root');
+  // useEffect(() => {
+  //   console.log("Trạng thái modal:", isModalOpen);
+  // }, [isModalOpen]);
   return (
     <>
       <div className="menu_overlay"></div>
@@ -1057,7 +1057,7 @@ const ProductDetail = () => {
                                 <div className="user_detail">
                                   <h5 className="title_h5">{review.user_name}</h5>
                                   <p>{renderStars(review.rating)}</p>
-                                  <p>Phân loại hàng:</p>
+                                  <p>Phân loại hàng:{review.product_name}-{review.color}-size:{review.size}</p>
                                   <p className="review__date">{review.created_at}</p>
                                   <p>{review.content}</p>
                                 </div>
@@ -1065,7 +1065,7 @@ const ProductDetail = () => {
                             ))}
 
                             {/* Modal đánh giá */}
-                            <Modal
+                            {/* <Modal
                               isOpen={isModalOpen}
                               onRequestClose={() => setIsModalOpen(false)}
                               className="review-modal"
@@ -1092,7 +1092,7 @@ const ProductDetail = () => {
                                   </div>
                                 </div>
                               )}
-                            </Modal>
+                            </Modal> */}
                           </div>
                         </div>
                       </div>

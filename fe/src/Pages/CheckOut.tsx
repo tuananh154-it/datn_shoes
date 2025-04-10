@@ -229,15 +229,15 @@
 //       alert('Vui lòng nhập mã giảm giá');
 //       return;
 //     }
-  
+
 //     try {
 //       // Gọi API getVoucherById() bằng axios
 //       const response = await api.get(`/api/vouchers/id`, {
 //         params: { id: code },
 //       });
-  
+
 //       const data = response.data;
-  
+
 //       if (data) {
 //         const {
 //           discount_percent,
@@ -245,14 +245,14 @@
 //           max_discount_amount,
 //           min_purchase_amount,
 //         } = data;
-  
+
 //         // Kiểm tra điều kiện voucher có thể áp dụng cho đơn hàng không
 //         const totalPrice = checkout?.total || 0;
 //         if (totalPrice < min_purchase_amount) {
 //           alert(`Tổng đơn hàng phải lớn hơn ${min_purchase_amount.toLocaleString()}đ để áp dụng voucher`);
 //           return;
 //         }
-  
+
 //         // Tính toán giảm giá
 //         let discount = 0;
 //         if (discount_percent) {
@@ -260,12 +260,12 @@
 //         } else if (discount_amount) {
 //           discount = discount_amount;
 //         }
-  
+
 //         // Áp dụng giới hạn giảm giá tối đa
 //         if (max_discount_amount && discount > max_discount_amount) {
 //           discount = max_discount_amount;
 //         }
-  
+
 //         // Cập nhật lại checkout với voucher và giảm giá
 //         setCheckout((prev) => 
 //           prev ? { 
@@ -274,7 +274,7 @@
 //             discount: discount 
 //           } : null
 //         );
-  
+
 //         alert(`Voucher '${code}' đã được áp dụng! Giảm giá: ${discount.toLocaleString()}đ`);
 //       } else {
 //         alert('Voucher không hợp lệ hoặc đã hết hạn');
@@ -406,7 +406,7 @@
 //       <div className="checkout-container">
 //         <div className="checkout-left">
 //           <h2>Thanh toán & Vận chuyển</h2>
-        
+
 //           <form>
 //             <label>Họ và tên *</label>
 //             <input
@@ -453,7 +453,7 @@
 //               }
 //             />
 
-           
+
 //             <label>Tỉnh/Thành phố *</label>
 //             <select
 //               value={selectedProvince}
@@ -716,7 +716,7 @@ import { useEffect, useState } from "react";
 import { getCheckOut, getOrder, Momopayment } from "../services/Order";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-import {  FaMoneyBillWave, FaMobileAlt } from "react-icons/fa";
+import { FaMoneyBillWave, FaMobileAlt } from "react-icons/fa";
 // import { string } from "zod";
 import { AxiosError } from "axios";
 import { api } from "../config/axios";
@@ -768,7 +768,7 @@ const CheckOut = () => {
   const [selectedProvince, setSelectedProvince] = useState<string>("");
   const [selectedDistrict, setSelectedDistrict] = useState<string>("");
   const [selectedWard, setSelectedWard] = useState<string>("");
-
+  const [isLoading, setIsLoading] = useState(false);
   // const [address, setAddress] = useState<string>("");
   // const [note, setNote] = useState<string>("");
   // const [voucher, setVoucher] = useState<string>("");
@@ -804,6 +804,7 @@ const CheckOut = () => {
   }, [selectedItems]);
   const nav = useNavigate();
   const handleOrder = async (e: React.FormEvent) => {
+    setIsLoading(true); // Bắt đầu loading
     e.preventDefault();
 
     if (!checkout) {
@@ -851,6 +852,8 @@ const CheckOut = () => {
           console.error("Lỗi kết nối với MoMo:", (error as Error).message);
           alert("Lỗi kết nối với MoMo!");
         }
+      } finally {
+        setIsLoading(false); // Kết thúc loading
       }
     }
 
@@ -922,7 +925,7 @@ const CheckOut = () => {
       // Handle successful order
       toast.success("🎉 Đã đặt hàng thành công!");
       localStorage.removeItem("pendingOrder"); // Clear pending order
-      nav("/"); // Redirect to homepage or order confirmation page
+      nav("/myaccout?tab=orders"); // Redirect to homepage or order confirmation page
     } catch (error: unknown) {
       if (error instanceof AxiosError) {
         const errorMessage = error.response?.data?.message || "Có lỗi xảy ra!";
@@ -943,15 +946,15 @@ const CheckOut = () => {
       alert('Vui lòng nhập mã giảm giá');
       return;
     }
-  
+
     try {
       // Gọi API getVoucherById() bằng axios
       const response = await api.get(`/api/vouchers/id`, {
         params: { id: code },
       });
-  
+
       const data = response.data;
-  
+
       if (data) {
         const {
           discount_percent,
@@ -959,14 +962,14 @@ const CheckOut = () => {
           max_discount_amount,
           min_purchase_amount,
         } = data;
-  
+
         // Kiểm tra điều kiện voucher có thể áp dụng cho đơn hàng không
         const totalPrice = checkout?.total || 0;
         if (totalPrice < min_purchase_amount) {
           alert(`Tổng đơn hàng phải lớn hơn ${min_purchase_amount.toLocaleString()}đ để áp dụng voucher`);
           return;
         }
-  
+
         // Tính toán giảm giá
         let discount = 0;
         if (discount_percent) {
@@ -974,21 +977,21 @@ const CheckOut = () => {
         } else if (discount_amount) {
           discount = discount_amount;
         }
-  
+
         // Áp dụng giới hạn giảm giá tối đa
         if (max_discount_amount && discount > max_discount_amount) {
           discount = max_discount_amount;
         }
-  
+
         // Cập nhật lại checkout với voucher và giảm giá
-        setCheckout((prev) => 
-          prev ? { 
-            ...prev, 
-            voucher: code, 
-            discount: discount 
+        setCheckout((prev) =>
+          prev ? {
+            ...prev,
+            voucher: code,
+            discount: discount
           } : null
         );
-  
+
         alert(`Voucher '${code}' đã được áp dụng! Giảm giá: ${discount.toLocaleString()}đ`);
       } else {
         alert('Voucher không hợp lệ hoặc đã hết hạn');
@@ -1059,20 +1062,17 @@ const CheckOut = () => {
     setCheckout((prev) =>
       prev
         ? {
-            ...prev,
-            user: {
-              ...prev.user,
-              address: `${newValue || specificAddress}, ${
-                wards.find((w) => String(w.code) === selectedWard)?.name || ""
-              }, ${
-                districts.find((d) => String(d.code) === selectedDistrict)
-                  ?.name || ""
-              }, ${
-                provinces.find((p) => String(p.code) === selectedProvince)
-                  ?.name || ""
+          ...prev,
+          user: {
+            ...prev.user,
+            address: `${newValue || specificAddress}, ${wards.find((w) => String(w.code) === selectedWard)?.name || ""
+              }, ${districts.find((d) => String(d.code) === selectedDistrict)
+                ?.name || ""
+              }, ${provinces.find((p) => String(p.code) === selectedProvince)
+                ?.name || ""
               }`,
-            },
-          }
+          },
+        }
         : null
     );
   };
@@ -1121,7 +1121,7 @@ const CheckOut = () => {
       <div className="checkout-container">
         <div className="checkout-left">
           <h2>Thanh toán & Vận chuyển</h2>
-        
+
           <form>
             <label>Họ và tên *</label>
             <input
@@ -1146,9 +1146,9 @@ const CheckOut = () => {
                 setCheckout((prev) =>
                   prev
                     ? {
-                        ...prev,
-                        user: { ...prev.user, phone_number: e.target.value },
-                      }
+                      ...prev,
+                      user: { ...prev.user, phone_number: e.target.value },
+                    }
                     : null
                 )
               }
@@ -1168,109 +1168,109 @@ const CheckOut = () => {
               }
             />
 
-{!editingAddress ? (
-  <>
-    <label>Địa chỉ đầy đủ *</label>
-    <input
-      type="text"
-      id="address"
-      value={checkout?.user.address || ""}
-      readOnly
-    />
-    <button
-      type="button"
-      className="change-address-btn"
-      onClick={() => setEditingAddress(true)}
-    >
-      Đổi địa chỉ
-    </button>
-  </>
-) : (
-  <>
-    <label>Tỉnh/Thành phố *</label>
-    <select
-      value={selectedProvince}
-      onChange={(e) => {
-        setSelectedProvince(e.target.value);
-        updateAddress();
-      }}
-    >
-      <option value="">Chọn tỉnh/thành phố</option>
-      {provinces?.map((p) => (
-        <option key={p.code} value={p.code}>
-          {p.name}
-        </option>
-      ))}
-    </select>
+            {!editingAddress ? (
+              <>
+                <label>Địa chỉ đầy đủ *</label>
+                <input
+                  type="text"
+                  id="address"
+                  value={checkout?.user.address || ""}
+                  readOnly
+                />
+                <button
+                  type="button"
+                  className="change-address-btn"
+                  onClick={() => setEditingAddress(true)}
+                >
+                  Đổi địa chỉ
+                </button>
+              </>
+            ) : (
+              <>
+                <label>Tỉnh/Thành phố *</label>
+                <select
+                  value={selectedProvince}
+                  onChange={(e) => {
+                    setSelectedProvince(e.target.value);
+                    updateAddress();
+                  }}
+                >
+                  <option value="">Chọn tỉnh/thành phố</option>
+                  {provinces?.map((p) => (
+                    <option key={p.code} value={p.code}>
+                      {p.name}
+                    </option>
+                  ))}
+                </select>
 
-    <label>Quận/Huyện *</label>
-    <select
-      value={selectedDistrict}
-      onChange={(e) => {
-        setSelectedDistrict(e.target.value);
-        updateAddress();
-      }}
-      disabled={!selectedProvince}
-    >
-      <option value="">Chọn quận/huyện</option>
-      {districts?.map((d) => (
-        <option key={d.code} value={d.code}>
-          {d.name}
-        </option>
-      ))}
-    </select>
-    <label>Phường/Xã *</label>
-            <select
-              value={selectedWard}
-              onChange={(e) => {
-                setSelectedWard(e.target.value);
-                updateAddress();
-              }}
-              disabled={!selectedDistrict}
-            >
-              <option value="">Chọn phường/xã</option>
-              {wards?.map((w) => (
-                <option key={w.code} value={w.code}>
-                  {w.name}
-                </option>
-              ))}
-            </select>
+                <label>Quận/Huyện *</label>
+                <select
+                  value={selectedDistrict}
+                  onChange={(e) => {
+                    setSelectedDistrict(e.target.value);
+                    updateAddress();
+                  }}
+                  disabled={!selectedProvince}
+                >
+                  <option value="">Chọn quận/huyện</option>
+                  {districts?.map((d) => (
+                    <option key={d.code} value={d.code}>
+                      {d.name}
+                    </option>
+                  ))}
+                </select>
+                <label>Phường/Xã *</label>
+                <select
+                  value={selectedWard}
+                  onChange={(e) => {
+                    setSelectedWard(e.target.value);
+                    updateAddress();
+                  }}
+                  disabled={!selectedDistrict}
+                >
+                  <option value="">Chọn phường/xã</option>
+                  {wards?.map((w) => (
+                    <option key={w.code} value={w.code}>
+                      {w.name}
+                    </option>
+                  ))}
+                </select>
 
-    <label>Địa chỉ cụ thể *</label>
-    <input
-      type="text"
-      placeholder="Nhập số nhà, tên đường..."
-      value={specificAddress}
-      onChange={(e) => {
-        setSpecificAddress(e.target.value);
-        updateAddress(e.target.value);
-      }}
-    />
-       <label>Địa chỉ đầy đủ *</label>
-            <input
-              type="text"
-              id="address"
-              value={checkout?.user.address || ""}
-              onChange={(e) =>
-                setCheckout((prev) =>
-                  prev
-                    ? {
-                        ...prev,
-                        user: { ...prev.user, address: e.target.value },
-                      }
-                    : null
-                )
-              }
-            />
-    <button
-      type="button"
-      className="cancel-edit-btn"
-      onClick={() => setEditingAddress(false)}
-    >
-      Huỷ
-    </button>
-  </>
-)}
+                <label>Địa chỉ cụ thể *</label>
+                <input
+                  type="text"
+                  placeholder="Nhập số nhà, tên đường..."
+                  value={specificAddress}
+                  onChange={(e) => {
+                    setSpecificAddress(e.target.value);
+                    updateAddress(e.target.value);
+                  }}
+                />
+                <label>Địa chỉ đầy đủ *</label>
+                <input
+                  type="text"
+                  id="address"
+                  value={checkout?.user.address || ""}
+                  onChange={(e) =>
+                    setCheckout((prev) =>
+                      prev
+                        ? {
+                          ...prev,
+                          user: { ...prev.user, address: e.target.value },
+                        }
+                        : null
+                    )
+                  }
+                />
+                <button
+                  type="button"
+                  className="cancel-edit-btn"
+                  onClick={() => setEditingAddress(false)}
+                >
+                  Huỷ
+                </button>
+              </>
+            )}
 
             {savedAddresses.length > 0 && (
               <div style={{ marginTop: "5px" }}>
@@ -1283,9 +1283,9 @@ const CheckOut = () => {
                           setCheckout((prev) =>
                             prev
                               ? {
-                                  ...prev,
-                                  user: { ...prev.user, address: addr },
-                                }
+                                ...prev,
+                                user: { ...prev.user, address: addr },
+                              }
                               : null
                           )
                         }
@@ -1363,24 +1363,24 @@ const CheckOut = () => {
           ) : (
             <p>No items in the cart.</p>
           )}
-           <div className="voucher-section">
-                    <label className="voucher-label">Mã giảm giá</label>
-                    <div className="voucher-input-wrapper">
-                      <input
-                        type="text"
-                        id="voucher"
-                        value={checkout?.voucher || ""}
-                        onChange={(e) =>  
-                          setCheckout((prev) =>
-                            prev ? { ...prev, voucher: e.target.value } : null
-                          )
-                        }
-                        className="voucher-input"
-                        placeholder="Nhập mã giảm giá"
-                      />
-                      <button className="voucher-button" onClick={applyVoucher}>Áp mã</button>
-                    </div>
-                  </div>
+          <div className="voucher-section">
+            <label className="voucher-label">Mã giảm giá</label>
+            <div className="voucher-input-wrapper">
+              <input
+                type="text"
+                id="voucher"
+                value={checkout?.voucher || ""}
+                onChange={(e) =>
+                  setCheckout((prev) =>
+                    prev ? { ...prev, voucher: e.target.value } : null
+                  )
+                }
+                className="voucher-input"
+                placeholder="Nhập mã giảm giá"
+              />
+              <button className="voucher-button" onClick={applyVoucher}>Áp mã</button>
+            </div>
+          </div>
           <div className="price-details">
             <p>
               Tổng: <span>{checkout?.subtotal?.toLocaleString()}đ</span>
@@ -1395,9 +1395,8 @@ const CheckOut = () => {
 
           <div className="payment-method">
             <label
-              className={`payment-card ${
-                paymentMethod === "cash_on_delivery" ? "active" : ""
-              }`}
+              className={`payment-card ${paymentMethod === "cash_on_delivery" ? "active" : ""
+                }`}
             >
               <input
                 type="radio"
@@ -1411,20 +1410,19 @@ const CheckOut = () => {
             </label>
 
             <label
-              className={`payment-card ${
-                paymentMethod === "momo" ? "active" : ""
-              }`}
+              className={`payment-card ${paymentMethod === "momo" ? "active" : ""
+                }`}
             >
               <input
-  type="radio"
-  name="payment"
-  value="momo"
-  checked={paymentMethod === "momo"}
-  onChange={() => {
-    setPaymentMethod("momo");
-    setShowMoMoTerms(true); // ← hiện điều khoản khi chọn
-  }}
-/>
+                type="radio"
+                name="payment"
+                value="momo"
+                checked={paymentMethod === "momo"}
+                onChange={() => {
+                  setPaymentMethod("momo");
+                  setShowMoMoTerms(true); // ← hiện điều khoản khi chọn
+                }}
+              />
               <FaMobileAlt className="payment-icon momo" />
               <span>Thanh toán bằng Ví MoMo</span>
             </label>
@@ -1444,41 +1442,46 @@ const CheckOut = () => {
               </div>
             )}
             {showMoMoTerms && (
- <div className="momo-modal_dieukhoan">
-   <div className="momo-modal-overlay">
-    <div className="momo-modal">
-      <button className="close-btn" onClick={() => setShowMoMoTerms(false)}>×</button>
-      <h3>🔒 Điều Khoản Thanh Toán Qua MoMo</h3>
-      <p><strong>1. Phương thức thanh toán</strong><br />
-      Khách hàng có thể thanh toán đơn hàng thông qua Ví MoMo bằng cách quét mã QR hoặc thanh toán trực tiếp trên ứng dụng MoMo. Giao dịch được xử lý qua cổng thanh toán MoMo tích hợp trên website và đảm bảo an toàn theo quy trình bảo mật của MoMo.
-      </p>
-      <p><strong>2. Phí giao dịch</strong><br />
-      Chúng tôi không thu bất kỳ khoản phí nào khi khách hàng thanh toán bằng MoMo. Tuy nhiên, khách hàng cần đảm bảo số dư trong ví MoMo đủ để thực hiện thanh toán.
-      </p>
-      <p><strong>3. Xác nhận giao dịch</strong><br />
-      Sau khi hoàn tất thanh toán, đơn hàng sẽ được ghi nhận tự động. Hệ thống sẽ gửi xác nhận qua email hoặc giao diện đặt hàng trên website. Nếu giao dịch không thành công, đơn hàng sẽ không được xử lý.
-      </p>
-      <p><strong>4. Bảo mật thông tin</strong><br />
-      Thông tin thanh toán của khách hàng được xử lý hoàn toàn bởi hệ thống của MoMo. Chúng tôi không lưu trữ bất kỳ thông tin nào liên quan đến ví điện tử, tài khoản ngân hàng hay mã OTP của khách hàng.
-      </p>
-      <p><strong>5. Chính sách hủy đơn & hoàn tiền</strong><br />
-      Đơn hàng thanh toán bằng MoMo sẽ không được hoàn tiền dưới bất kỳ hình thức nào.
-      </p>
-      <p>Quý khách vui lòng kiểm tra kỹ thông tin đơn hàng và xác nhận trước khi tiến hành thanh toán.</p>
-      <p>Trong trường hợp đơn hàng bị hủy (bởi khách hàng hoặc vì lý do khác), số tiền đã thanh toán sẽ không được hoàn lại, do hệ thống không liên kết với ví MoMo để xử lý hoàn tiền tự động.</p>
-      <p><strong>6. Hỗ trợ và khiếu nại</strong><br />
-      <p>Mọi thắc mắc hoặc sự cố liên quan đến thanh toán qua MoMo, vui lòng liên hệ bộ phận hỗ trợ khách hàng của chúng tôi qua:</p>
-        📧 Email: [email hỗ trợ]<br />
-        📞 Hotline: [số điện thoại]
-      </p>
-    </div>
-  </div>
- </div>
-)}
+              <div className="momo-modal_dieukhoan">
+                <div className="momo-modal-overlay">
+                  <div className="momo-modal">
+                    <button className="close-btn" onClick={() => setShowMoMoTerms(false)}>×</button>
+                    <h3>🔒 Điều Khoản Thanh Toán Qua MoMo</h3>
+                    <p><strong>1. Phương thức thanh toán</strong><br />
+                      Khách hàng có thể thanh toán đơn hàng thông qua Ví MoMo bằng cách quét mã QR hoặc thanh toán trực tiếp trên ứng dụng MoMo. Giao dịch được xử lý qua cổng thanh toán MoMo tích hợp trên website và đảm bảo an toàn theo quy trình bảo mật của MoMo.
+                    </p>
+                    <p><strong>2. Phí giao dịch</strong><br />
+                      Chúng tôi không thu bất kỳ khoản phí nào khi khách hàng thanh toán bằng MoMo. Tuy nhiên, khách hàng cần đảm bảo số dư trong ví MoMo đủ để thực hiện thanh toán.
+                    </p>
+                    <p><strong>3. Xác nhận giao dịch</strong><br />
+                      Sau khi hoàn tất thanh toán, đơn hàng sẽ được ghi nhận tự động. Hệ thống sẽ gửi xác nhận qua email hoặc giao diện đặt hàng trên website. Nếu giao dịch không thành công, đơn hàng sẽ không được xử lý.
+                    </p>
+                    <p><strong>4. Bảo mật thông tin</strong><br />
+                      Thông tin thanh toán của khách hàng được xử lý hoàn toàn bởi hệ thống của MoMo. Chúng tôi không lưu trữ bất kỳ thông tin nào liên quan đến ví điện tử, tài khoản ngân hàng hay mã OTP của khách hàng.
+                    </p>
+                    <p><strong>5. Chính sách hủy đơn & hoàn tiền</strong><br />
+                      Đơn hàng thanh toán bằng MoMo sẽ không được hoàn tiền dưới bất kỳ hình thức nào.
+                    </p>
+                    <p>Quý khách vui lòng kiểm tra kỹ thông tin đơn hàng và xác nhận trước khi tiến hành thanh toán.</p>
+                    <p>Trong trường hợp đơn hàng bị hủy (bởi khách hàng hoặc vì lý do khác), số tiền đã thanh toán sẽ không được hoàn lại, do hệ thống không liên kết với ví MoMo để xử lý hoàn tiền tự động.</p>
+                    <p><strong>6. Hỗ trợ và khiếu nại</strong><br />
+                      <p>Mọi thắc mắc hoặc sự cố liên quan đến thanh toán qua MoMo, vui lòng liên hệ bộ phận hỗ trợ khách hàng của chúng tôi qua:</p>
+                      📧 Email: [email hỗ trợ]<br />
+                      📞 Hotline: [số điện thoại]
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          <button type="submit" className="order-button" onClick={handleOrder}>
-            ĐẶT HÀNG
+          <button
+            type="submit"
+            className="order-button"
+            onClick={handleOrder}
+            disabled={isLoading} // Disable nút khi đang loading
+          >
+            {isLoading ? "Đang xử lý..." : "ĐẶT HÀNG"}
           </button>
         </div>
       </div>
