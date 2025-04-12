@@ -53,12 +53,12 @@ Route::get('/order/confirm/{id}', function ($id) {
     }
 
     // Chỉ cho phép xác nhận khi đang ở trạng thái "chờ xác nhận"
-    if ($order->status !== 'waiting_for_confirmation') {
+    if ($order->status !== 'pending') {
         return view('order.already_confirmed');
     }
 
     // Cập nhật trạng thái
-    $order->status = 'waiting_for_pickup';
+    $order->status = 'confirmed';
     $order->save();
 
     return view('order.confirm_success', ['order' => $order]);
@@ -87,6 +87,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboards.index');
     });
+    // Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
     // Route::resource('products', ProductController::class)->middleware('permission:show-products');
     // ----------------------------------------
@@ -332,6 +334,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('admin/product', [AdminController::class, 'products'])->name('dashboards.product');
     //top 10 sp
     Route::get('admin/top10', [AdminController::class, 'top10'])->name('dashboards.top10');
+    //thống kê trạng thái đơn hàng 
+    Route::get('/dashboards/orders', [AdminController::class, 'orderStatus'])->name('dashboards.orders');
 
 
 

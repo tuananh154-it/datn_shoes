@@ -48,6 +48,7 @@ Route::post('/process-return', [ReturnController::class, 'processReturn'])->midd
 
 Route::apiResource('articles', ArticleController::class);
 Route::apiResource('comments', CommentController::class);
+// Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
@@ -64,6 +65,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders', [OrderController::class, 'listOrders']);
     Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
 
     Route::post('/momo-payment-code', [OnlineCheckOutController::class, 'momo_payment_code']);
@@ -78,7 +80,8 @@ Route::get('/home', [HomeController::class, 'index']);
 // top 10 sp
 
 // Trang Danh Mục
-Route::get('/categories', [CategoryController::class, '']);
+Route::get('/categories', [CategoryController::class, 'index']);
+
 
 // Trang Thương Hiệu
 Route::get('/brands', [BrandController::class, 'index']);
@@ -153,6 +156,7 @@ Route::put('review/{reviewId}/edit', [ReviewController::class, 'update'])->middl
 Route::put('review/{reviewId}/like', [ReviewController::class, 'like'])->middleware('auth:api'); // Like đánh giá
 Route::put('review/{reviewId}/report', [ReviewController::class, 'report'])->middleware('auth:api'); // Báo cáo đánh giá
 Route::put('review/{reviewId}/anonymous', [ReviewController::class, 'toggleAnonymous'])->middleware('auth:api'); // ẩn danh đánh giá
+// <<<<<<< HEAD
 
 // Hoàn hàng
 Route::middleware('auth:api')->group(function () {
@@ -180,3 +184,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('return-requests/{id}/receive', [ReturnRequestController::class, 'receiveReturn']);
 });
 
+// =======
+Route::post('/comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
+// >>>>>>> 682bbc13bae7612d5451d88ef54f5b3c01fda5fc

@@ -3220,7 +3220,7 @@
                     "dev-master": "2.0.x-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "files": [
                     "autoload.php"
@@ -4475,7 +4475,7 @@
                     "dev-master": "5.0-dev"
                 }
             },
-            "installation-source": "dist",
+            "installation-source": "source",
             "autoload": {
                 "psr-4": {
                     "Pusher\\": "src/"

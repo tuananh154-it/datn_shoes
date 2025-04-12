@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [2025-04-03 23:44:47] local.ERROR: Method App\Http\Controllers\API\CategoryController::() does not exist {"exception":"[object] (ReflectionException(code: 0): Method App\\Http\\Controllers\\API\\CategoryController::() does not exist at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteSignatureParameters.php:50)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteSignatureParameters.php(50): ReflectionMethod->__construct('App\\\\Http\\\\Contro...', '')
@@ -4653,7 +4654,6 @@ Did you mean one of these?
 #56 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #57 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #58 {main}
-=======
     \"<span class=sf-dump-key>path</span>\" => \"<span class=sf-dump-str title=\"34 characters\">http://127.0.0.1:8000/admin/orders</span>\"
     \"<span class=sf-dump-key>pageName</span>\" => \"<span class=sf-dump-str title=\"4 characters\">page</span>\"
   </samp>]
@@ -4926,9 +4926,9 @@ Did you mean one of these?
 #56 {main}
 >>>>>>> ee6d9630ffa4657f7f1e0d883f5c37b14cc405d5
 "}
-[2025-04-10 15:20:33] local.ERROR: ReturnRequest store error: The order id field is required.  
-[2025-04-10 15:20:41] local.ERROR: ReturnRequest store error: The order id field is required.  
-[2025-04-10 15:21:18] local.ERROR: ReturnRequest store error: The order id field is required.  
+[2025-04-10 15:20:33] local.ERROR: ReturnRequest store error: The order id field is required.
+[2025-04-10 15:20:41] local.ERROR: ReturnRequest store error: The order id field is required.
+[2025-04-10 15:21:18] local.ERROR: ReturnRequest store error: The order id field is required.
 [2025-04-10 16:15:54] local.ERROR: Call to a member function map() on null {"userId":2,"exception":"[object] (Error(code: 0): Call to a member function map() on null at C:\\laragon\\www\\be\\app\\Http\\Resources\\ReturnRequestDetailResource.php:57)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Http\\Resources\\Json\\JsonResource.php(108): App\\Http\\Resources\\ReturnRequestDetailResource->toArray(Object(Illuminate\\Http\\Request))
@@ -4980,24 +4980,24 @@ Did you mean one of these?
 #46 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #47 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #48 {main}
-"} 
-[2025-04-10 16:16:22] local.ERROR: Lỗi lấy chi tiết yêu cầu hoàn: Attempt to read property "quantity" on null  
-[2025-04-10 16:23:39] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '`status` = ?' at line 1 (Connection: mysql, SQL: select count(*) as aggregate from `return_requests` where rejected `status` = pending)  
-[2025-04-10 16:23:47] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '`status` = ?' at line 1 (Connection: mysql, SQL: select count(*) as aggregate from `return_requests` where rejected `status` = pending)  
-[2025-04-11 15:28:35] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:28:38] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:29:02] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:29:47] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:32:02] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:39:17] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:39:20] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:40:45] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:40:47] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:42:29] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:42:31] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:42:33] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:42:34] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
-[2025-04-11 15:42:35] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].  
+"}
+[2025-04-10 16:16:22] local.ERROR: Lỗi lấy chi tiết yêu cầu hoàn: Attempt to read property "quantity" on null
+[2025-04-10 16:23:39] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '`status` = ?' at line 1 (Connection: mysql, SQL: select count(*) as aggregate from `return_requests` where rejected `status` = pending)
+[2025-04-10 16:23:47] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1064 You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '`status` = ?' at line 1 (Connection: mysql, SQL: select count(*) as aggregate from `return_requests` where rejected `status` = pending)
+[2025-04-11 15:28:35] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:28:38] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:29:02] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:29:47] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:32:02] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:39:17] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:39:20] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:40:45] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:40:47] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:42:29] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:42:31] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:42:33] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:42:34] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
+[2025-04-11 15:42:35] local.ERROR: Lỗi xem yêu cầu hoàn: Call to undefined relationship [products] on model [App\Models\Order].
 [2025-04-12 20:44:42] local.ERROR: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it (Connection: mysql, SQL: select table_name as `name`, (data_length + index_length) as `size`, table_comment as `comment`, engine as `engine`, table_collation as `collation` from information_schema.tables where table_schema = 'datn_2' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED') order by table_name) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 2002): SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it (Connection: mysql, SQL: select table_name as `name`, (data_length + index_length) as `size`, table_comment as `comment`, engine as `engine`, table_collation as `collation` from information_schema.tables where table_schema = 'datn_2' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED') order by table_name) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(983): Illuminate\\Database\\Connection->runQueryCallback('select table_na...', Array, Object(Closure))
@@ -5073,4 +5073,68 @@ Did you mean one of these?
 #37 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #38 C:\\laragon\\www\\datn_shoes\\be\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #39 {main}
+"}
+[2025-04-12 20:55:28] local.ERROR: Command "session:clear" is not defined.
+
+Did you mean one of these?
+    auth:clear-resets
+    cache:clear
+    config:clear
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    schedule:clear-cache
+    session:table
+    view:clear {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"session:clear\" is not defined.
+
+Did you mean one of these?
+    auth:clear-resets
+    cache:clear
+    config:clear
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    schedule:clear-cache
+    session:table
+    view:clear at C:\\laragon\\www\\datn_shoes\\be\\vendor\\symfony\\console\\Application.php:737)
+[stacktrace]
+#0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\symfony\\console\\Application.php(266): Symfony\\Component\\Console\\Application->find('session:clear')
+#1 C:\\laragon\\www\\datn_shoes\\be\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\laragon\\www\\datn_shoes\\be\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 {main}
+"} 
+[2025-04-12 20:55:45] local.ERROR: Command "session:clear" is not defined.
+
+Did you mean one of these?
+    auth:clear-resets
+    cache:clear
+    config:clear
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    schedule:clear-cache
+    session:table
+    view:clear {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"session:clear\" is not defined.
+
+Did you mean one of these?
+    auth:clear-resets
+    cache:clear
+    config:clear
+    event:clear
+    optimize:clear
+    queue:clear
+    route:clear
+    schedule:clear-cache
+    session:table
+    view:clear at C:\\laragon\\www\\datn_shoes\\be\\vendor\\symfony\\console\\Application.php:737)
+[stacktrace]
+#0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\symfony\\console\\Application.php(266): Symfony\\Component\\Console\\Application->find('session:clear')
+#1 C:\\laragon\\www\\datn_shoes\\be\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\laragon\\www\\datn_shoes\\be\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 {main}
 "} 

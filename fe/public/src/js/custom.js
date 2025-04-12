@@ -1709,9 +1709,9 @@
         mobile: false,
         live: true
     });
-    $(window).imagesLoaded(function () {
-        wow.init();
-    });
+    // $(window).imagesLoaded(function () {
+    //     wow.init();
+    // });
     /* ===================================
      END  wow animation - on scroll
      ====================================== */
@@ -2086,69 +2086,69 @@
         <li class='min '><span class='no d-block'>$3</span><span class='text text-capitalize d-block text-center'>mins</span></li>\n\
         <li class='second '><span class='no d-block'>$4</span><span class='text text-capitalize d-block text-center'>Sec</span>"
     });
-    $('#fashion_countdown').final_countdown({
-        'start': 1362139200,
-        'end': 1388461320,
-        'now': 1387461319,
-        seconds: {
-            borderColor: '#b03939',
-            borderWidth: '4'
-        },
-        minutes: {
-            borderColor: '#b03939',
-            borderWidth: '4'
-        },
-        hours: {
-            borderColor: '#b03939',
-            borderWidth: '4'
-        },
-        days: {
-            borderColor: '#b03939',
-            borderWidth: '4'
-        }
-    });
-    $('#eye_glass_countdown').final_countdown({
-        'start': 1362139200,
-        'end': 1388461320,
-        'now': 1387461319,
-        seconds: {
-            borderColor: '#442bff',
-            borderWidth: '4'
-        },
-        minutes: {
-            borderColor: '#442bff',
-            borderWidth: '4'
-        },
-        hours: {
-            borderColor: '#442bff',
-            borderWidth: '4'
-        },
-        days: {
-            borderColor: '#442bff',
-            borderWidth: '4'
-        }
-    });
-    $('#Jewellery_countdown').final_countdown({
-        'start': 1362139200,
-        'end': 1388461320,
-        'now': 1387461319,
-        seconds: {
-            borderColor: '#fb1a41',
-            borderWidth: '4'
-        },
-        minutes: {
-            borderColor: '#fb1a41',
-            borderWidth: '4'
-        },
-        hours: {
-            borderColor: '#fb1a41',
-            borderWidth: '4'
-        },
-        days: {
-            borderColor: '#fb1a41',
-            borderWidth: '4'
-        }
-    });
+    // $('#fashion_countdown').final_countdown({
+    //     'start': 1362139200,
+    //     'end': 1388461320,
+    //     'now': 1387461319,
+    //     seconds: {
+    //         borderColor: '#b03939',
+    //         borderWidth: '4'
+    //     },
+    //     minutes: {
+    //         borderColor: '#b03939',
+    //         borderWidth: '4'
+    //     },
+    //     hours: {
+    //         borderColor: '#b03939',
+    //         borderWidth: '4'
+    //     },
+    //     days: {
+    //         borderColor: '#b03939',
+    //         borderWidth: '4'
+    //     }
+    // });
+    // $('#eye_glass_countdown').final_countdown({
+    //     'start': 1362139200,
+    //     'end': 1388461320,
+    //     'now': 1387461319,
+    //     seconds: {
+    //         borderColor: '#442bff',
+    //         borderWidth: '4'
+    //     },
+    //     minutes: {
+    //         borderColor: '#442bff',
+    //         borderWidth: '4'
+    //     },
+    //     hours: {
+    //         borderColor: '#442bff',
+    //         borderWidth: '4'
+    //     },
+    //     days: {
+    //         borderColor: '#442bff',
+    //         borderWidth: '4'
+    //     }
+    // });
+    // $('#Jewellery_countdown').final_countdown({
+    //     'start': 1362139200,
+    //     'end': 1388461320,
+    //     'now': 1387461319,
+    //     seconds: {
+    //         borderColor: '#fb1a41',
+    //         borderWidth: '4'
+    //     },
+    //     minutes: {
+    //         borderColor: '#fb1a41',
+    //         borderWidth: '4'
+    //     },
+    //     hours: {
+    //         borderColor: '#fb1a41',
+    //         borderWidth: '4'
+    //     },
+    //     days: {
+    //         borderColor: '#fb1a41',
+    //         borderWidth: '4'
+    //     }
+    // });
     $("#baby_exclusive_countdowntimer1,#baby_exclusive_countdowntimer2,#baby_exclusive_countdowntimer3,#baby_exclusive_countdowntimer4,#baby_exclusive_countdowntimer5,#baby_exclusive_countdowntimer6").countdowntimer({
         dateAndTime: "2019/01/01 00:00:00",
         size: "lg",
