@@ -22,12 +22,14 @@ use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\OnlineCheckOutController;
 use App\Http\Controllers\Api\OrderController;
+use App\Http\Controllers\Api\ReturnRequestController;
 use App\Http\Controllers\Api\ReviewController;
 
 use App\Http\Controllers\Api\VoucherController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ReturnController;
 
 
 
@@ -39,6 +41,11 @@ use App\Http\Controllers\UserController;
 
 
 // Public routes
+// routes/api.php
+
+Route::post('/process-return', [ReturnController::class, 'processReturn'])->middleware('csrf');
+
+
 Route::apiResource('articles', ArticleController::class);
 Route::apiResource('comments', CommentController::class);
 
@@ -60,7 +67,6 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
 
     Route::post('/momo-payment-code', [OnlineCheckOutController::class, 'momo_payment_code']);
-
 });
 Route::apiResource('products', ProductController::class);
 Route::get('/latest-products', [ProductController::class, 'latestProducts']);
@@ -114,7 +120,7 @@ Route::post('login', [AuthController::class, 'login']);
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-// top 19 sp 
+// top 19 sp
 Route::get('/top10', [Top10SPController::class, 'top10']);
 
 Route::post('login', [AuthController::class, 'login']);
@@ -147,3 +153,30 @@ Route::put('review/{reviewId}/edit', [ReviewController::class, 'update'])->middl
 Route::put('review/{reviewId}/like', [ReviewController::class, 'like'])->middleware('auth:api'); // Like đánh giá
 Route::put('review/{reviewId}/report', [ReviewController::class, 'report'])->middleware('auth:api'); // Báo cáo đánh giá
 Route::put('review/{reviewId}/anonymous', [ReviewController::class, 'toggleAnonymous'])->middleware('auth:api'); // ẩn danh đánh giá
+
+// Hoàn hàng
+Route::middleware('auth:api')->group(function () {
+    // Danh sách yêu cầu hoàn
+    Route::get('return-requests', [ReturnRequestController::class, 'index']);
+    // Chi tiết yêu cầu hoàn
+    Route::get('return-requests/{id}', [ReturnRequestController::class, 'show']);
+
+    // Tạo yêu cầu hoàn (User)
+    Route::post('return-requests/{orderId}', [ReturnRequestController::class, 'store']);
+
+    // Nhân viên CSKH tiếp nhận yêu cầu hoàn
+    Route::post('return-requests/{id}/review/accept', [ReturnRequestController::class, 'acceptReview']);
+
+    // Nhân viên CSKH từ chối tiếp nhận xử lý
+    Route::post('return-requests/{id}/review/reject', [ReturnRequestController::class, 'rejectReview']);
+
+    // Admin duyệt yêu cầu hoàn (approve)
+    Route::post('return-requests/{id}/approve', [ReturnRequestController::class, 'approveReturn']);
+
+    // Admin từ chối yêu cầu hoàn (reject)
+    Route::post('return-requests/{id}/reject', [ReturnRequestController::class, 'rejectReturn']);
+
+    // Nhân viên kho nhận hàng hoàn
+    Route::post('return-requests/{id}/receive', [ReturnRequestController::class, 'receiveReturn']);
+});
+

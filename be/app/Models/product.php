@@ -51,4 +51,8 @@ class Product extends Model
     {
         return $this->hasMany(Review::class);
     }
+    public function returns()
+    {
+        return $this->hasMany(ReturnOrder::class);
+    }
 }

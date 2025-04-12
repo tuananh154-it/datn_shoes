@@ -47,9 +47,12 @@ class OrderController extends Controller
             return response()->json(['message' => 'Có sản phẩm không hợp lệ hoặc không thuộc quyền sở hữu'], 403);
         }
 
-        $cart = Cart::with(['items' => function ($query) use ($selectedItemIds) {
-            $query->whereIn('id', $selectedItemIds);
-        }, 'items.productDetail.product'])->where('user_id', $user->id)->first();
+        $cart = Cart::with([
+            'items' => function ($query) use ($selectedItemIds) {
+                $query->whereIn('id', $selectedItemIds);
+            },
+            'items.productDetail.product'
+        ])->where('user_id', $user->id)->first();
 
         if (!$cart || $cart->items->isEmpty()) {
             return response()->json(['message' => 'Không có sản phẩm nào được chọn để đặt hàng'], 400);
@@ -112,7 +115,7 @@ class OrderController extends Controller
                 $total -= $discount;
             }
             // + $deliverFee
-            $total_price = $total ;
+            $total_price = $total;
 
             $order = Order::create([
                 'username' => $request->username,
@@ -300,7 +303,7 @@ class OrderController extends Controller
         }
 
         // $deliverFee = 30000;
-        $total = $subtotal - $discount ;
+        $total = $subtotal - $discount;
 
         return response()->json([
             'user' => [

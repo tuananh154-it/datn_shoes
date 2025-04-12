@@ -156,7 +156,6 @@ class ReviewController extends Controller
                     'product_price' => $orderDetail->price,
                     'quantity' => $orderDetail->quantity,
                     'total_price' => $orderDetail->total_price,
-
                 ],
                 'review' => $reviewData
             ]);
@@ -280,7 +279,6 @@ class ReviewController extends Controller
             ]);
 
             return response()->json(['message' => 'Phản hồi đánh giá thành công', 'review' => $review]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể phản hồi đánh giá', 'message' => $e->getMessage()], 500);
         }
@@ -338,7 +336,6 @@ class ReviewController extends Controller
             $review->update($updatedData);
 
             return response()->json(['message' => 'Cập nhật đánh giá thành công', 'review' => $review]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể cập nhật đánh giá', 'message' => $e->getMessage()], 500);
         }
@@ -428,7 +425,6 @@ class ReviewController extends Controller
                 'message' => $review->is_anonymous ? 'Đánh giá đã được chuyển thành ẩn danh' : 'Đánh giá đã không còn ẩn danh',
                 'review' => $review
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể thay đổi trạng thái ẩn danh', 'message' => $e->getMessage()], 500);
         }
