@@ -51,12 +51,12 @@ Route::get('/order/confirm/{id}', function ($id) {
     }
 
     // Chỉ cho phép xác nhận khi đang ở trạng thái "chờ xác nhận"
-    if ($order->status !== 'waiting_for_confirmation') {
+    if ($order->status !== 'pending') {
         return view('order.already_confirmed');
     }
 
     // Cập nhật trạng thái
-    $order->status = 'waiting_for_pickup';
+    $order->status = 'confirmed';
     $order->save();
 
     return view('order.confirm_success', ['order' => $order]);

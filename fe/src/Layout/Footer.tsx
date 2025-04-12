@@ -1,13 +1,13 @@
 const Footer = () => {
     return (
-      <footer className="shoes_footer wow fadeIn animated">
+      <footer className="shoes_footer wow fadeIn ">
         <div className="container">
           <div className="footer_top">
             <div className="row">
               <div className="col-lg-3 col-sm-6  wow fadeInUp ">
                 <div className="column">
                   <a href="shoes.html">
-                    <img src="../src/images/logo_footvibe_01.png" alt="logo" className="logo"/>
+                    <img src="../src/images/logo_footvibe_01.png" alt="logo_footerfooter" className="logo_footer"/>
                   </a>
                   <p>Đồng hành trên mọi hành trình, nâng niu từng bước chân của các bạn</p>
                 </div>
@@ -16,7 +16,7 @@ const Footer = () => {
                 <div className="column">
                   <h5 className="title_h5 text-capitalize">Cần giúp đỡ?</h5>
                   <ul>
-                    <li><a href="javascript:void(0);">Dịch vụ khách hàng</a></li>
+                    <li><a href="javascript:void(0);">Dịch vụ khách hàng</a></li>NN
                     <li><a href="my_account.html">Tài khoản của tôi</a></li>
                     <li><a href="contactus.html">Liên hệ chúng tôi</a></li>
                     <li><a href="faq.html">Câu hỏi thường gặp</a></li>
