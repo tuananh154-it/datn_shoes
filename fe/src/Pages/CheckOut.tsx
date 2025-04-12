@@ -900,7 +900,7 @@ const CheckOut = () => {
       note: (document.getElementById("note") as HTMLInputElement)?.value || "",
       payment_method: paymentMethod,
       selected_items: (checkout?.selected_items || []).map((item) => item.id),
-      voucher_id: checkout?.voucher || null,
+      // voucher_id: checkout?.voucher || null,
     };
 
     console.log("🚀 Sending Order Data:", orderData);

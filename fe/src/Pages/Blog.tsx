@@ -40,12 +40,12 @@ const Blog = () => {
             <nav aria-label="breadcrumb">
               <ol className="breadcrumb">
                 <li className="breadcrumb-item text-capitalize">
-                  <a href="/">Home</a> <i className="flaticon-arrows-4"></i>
+                  <a href="/">Trang chủ</a> <i className="flaticon-arrows-4"></i>
                 </li>
-                <li className="breadcrumb-item active text-capitalize">Blog</li>
+                <li className="breadcrumb-item active text-capitalize">Bài viết</li>
               </ol>
             </nav>
-            <h1 className="title_h1 font-weight-normal text-capitalize">Blog</h1>
+            <h1 className="title_h1 font-weight-normal text-capitalize">Bài viết</h1>
           </div>
         </section>
 
