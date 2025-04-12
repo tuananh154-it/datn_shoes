@@ -3,18 +3,23 @@
 @section('content')
 <div class="container-fluid">
     <h2 class="mb-4 font-weight-bold mt-5 ">📊 Trang Thống Kê tài khoản </h2>
+   
+    <!-- Thanh Menu -->
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('dashboards.index') ? 'active' : '' }}" href="{{ route('dashboards.index') }}">Doanh thu</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('dashboards.products') ? 'active' : '' }}" href="{{ route('dashboards.product') }}">Thống kê sản phẩm</a>
+            <a class="nav-link {{ request()->routeIs('dashboards.product') ? 'active' : '' }}" href="{{ route('dashboards.product') }}">Thống kê sản phẩm </a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('dashboards.top10') ? 'active' : '' }}" href="{{ route('dashboards.top10') }}">Top 10 sản phẩm bán chạy</a>
+            <a class="nav-link {{ request()->routeIs('dashboards.top10') ? 'active' : '' }}" href="{{ route('dashboards.top10') }}">Top 10 sản phẩm bán chạy </a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('dashboards.users') ? 'active' : '' }}" href="{{ route('dashboards.users') }}">Thống kê tài khoản</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('dashboards.orders') ? 'active' : '' }}" href="{{ route('dashboards.orders') }}">Thống kê trạng thái đơn hàng </a>
         </li>
     </ul>
     

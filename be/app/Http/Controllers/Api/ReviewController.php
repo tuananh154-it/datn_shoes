@@ -177,11 +177,11 @@ class ReviewController extends Controller
 
             $orderExists = Order::where('id', $orderId)
                 ->where('user_id', $userId)
-                ->where('status', 'delivered')
+                ->where('status', 'completed')
                 ->exists();
 
             if (!$orderExists) {
-                return response()->json(['message' => 'Bạn chỉ có thể đánh giá sau khi đơn hàng đã được giao'], 403);
+                return response()->json(['message' => 'Bạn chỉ có thể đánh giá sau khi đơn hàng hoàn tất'], 403);
             }
 
             $productDetailIds = ProductDetail::where('product_id', $productId)->pluck('id');

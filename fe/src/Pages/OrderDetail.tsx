@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { CancellOrder, getPaymentStatusInVietnamese, getStatusLabel, Order, OrdersDetail } from "../services/orders";
+import { CancellOrder, getPaymentStatusInVietnamese, getStatusLabel, getStatusColor, Order, OrdersDetail } from "../services/orders";
 import { Link } from "react-router-dom";
 import Modal from 'react-modal';
 import { postReview, ReviewPayload, getMyReviews } from "../services/reviews";
@@ -11,14 +11,17 @@ interface OrderDetailProps {
 
 const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
     const [currentOrder, setCurrentOrder] = useState<Order>(order);
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); // Modal cho đánh giá
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); // Modal cho hủy đơn
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
     const [rating, setRating] = useState<number>(0);
     const [newReview, setNewReview] = useState<string>('');
+    const [cancelReason, setCancelReason] = useState<string>(''); // Lý do hủy đơn
     const [hasReviewed, setHasReviewed] = useState<{ [key: number]: boolean }>({});
     const [reviewUpdated, setReviewUpdated] = useState<number>(0);
 
-    const canCancel = currentOrder.status === "waiting_for_confirmation";
+    // Chỉ cho phép hủy khi trạng thái là "pending"
+    const canCancel = currentOrder.status.toLowerCase() === "pending";
 
     Modal.setAppElement('#root');
 
@@ -44,10 +47,9 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                 const response = await getMyReviews();
                 console.log("Dữ liệu từ API /reviews:", response.data);
 
-                // Kiểm tra cấu trúc dữ liệu trả về
                 let reviews = [];
                 if (response.data && Array.isArray(response.data.my_reviews)) {
-                    reviews = response.data.my_reviews; // Truy cập my_reviews
+                    reviews = response.data.my_reviews;
                 } else {
                     console.error("Dữ liệu từ API không chứa mảng my_reviews:", response.data);
                     reviews = [];
@@ -74,10 +76,12 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
             }
         };
 
-        if (currentOrder.status === "delivered") {
+        if (currentOrder.status.toLowerCase() === "completed") {
             checkReviews();
         }
     }, [currentOrder, reviewUpdated]);
+
+    console.log(currentOrder);
 
     const handleOpenReviewModal = (productId: number) => {
         if (hasReviewed[productId]) {
@@ -87,7 +91,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
         setSelectedProductId(productId);
         setRating(0);
         setNewReview('');
-        setIsModalOpen(true);
+        setIsReviewModalOpen(true);
     };
 
     const handlePostReview = async () => {
@@ -118,27 +122,29 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
             toast.success("Đánh giá của bạn đã được đăng thành công!");
             setNewReview('');
             setRating(0);
-            setIsModalOpen(false);
+            setIsReviewModalOpen(false);
             setReviewUpdated((prev) => prev + 1);
         } catch (error: any) {
             alert(error.message || 'Lỗi khi đăng đánh giá!');
         }
     };
 
+    const handleOpenCancelModal = () => {
+        setCancelReason(''); // Reset lý do hủy đơn
+        setIsCancelModalOpen(true);
+    };
+
     const handleCancelOrder = async () => {
-        const reason = prompt("Vui lòng nhập lý do hủy đơn hàng:");
-        if (!reason) {
-            alert("Bạn phải nhập lý do hủy đơn!");
+        if (!cancelReason.trim()) {
+            alert('Vui lòng nhập lý do hủy đơn hàng!');
             return;
         }
 
-        const isConfirmed = window.confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?");
-        if (!isConfirmed) return;
-
         try {
             await CancellOrder(currentOrder.id);
-            alert("Đơn hàng đã được hủy thành công!");
+            toast.success("Đơn hàng đã được hủy thành công!");
             setCurrentOrder({ ...currentOrder, status: "cancelled" });
+            setIsCancelModalOpen(false);
         } catch (error) {
             alert("Lỗi khi hủy đơn hàng, vui lòng thử lại!");
             console.error("Lỗi khi hủy đơn:", error);
@@ -147,28 +153,14 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
 
     if (!currentOrder) return <p>Không tìm thấy đơn hàng.</p>;
 
+    // Sử dụng discount từ API
+    const discountAmount = currentOrder.discount ? parseFloat(currentOrder.discount) : 0;
+
     return (
         <div className="order-detail-container">
             <h2>
                 Chi tiết đơn hàng #FV-HN-{currentOrder.id} -
-                <span
-                    style={{
-                        color:
-                            currentOrder.status === "cancelled"
-                                ? "#FF0000"
-                                : currentOrder.status === "delivered"
-                                ? "#28A745"
-                                : currentOrder.status === "waiting_for_confirmation"
-                                ? "#FFA500"
-                                : currentOrder.status === "waiting_for_pickup"
-                                ? "#FFC107"
-                                : currentOrder.status === "waiting_for_delivery"
-                                ? "#007BFF"
-                                : currentOrder.status === "returned"
-                                ? "#6F42C1"
-                                : "black",
-                    }}
-                >
+                <span style={{ color: getStatusColor(currentOrder.status) }}>
                     {getStatusLabel(currentOrder.status)}
                 </span>
             </h2>
@@ -199,7 +191,6 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                         <th>Sản phẩm</th>
                         <th>Giá</th>
                         <th>Số lượng</th>
-                        <th>Giảm giá</th>
                         <th>Thành tiền</th>
                     </tr>
                 </thead>
@@ -227,7 +218,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                                             <p>Màu: {item.color || "Không có"}</p>
                                             <p>Kích cỡ: {item.size || "Không có"}</p>
                                             <div className="product-actions">
-                                                {order.status.toLowerCase() === "delivered" && (
+                                                {currentOrder.status.toLowerCase() === "completed" && (
                                                     hasReviewed[item.product_id] ? (
                                                         <span className="action-btn disabled">Đã đánh giá</span>
                                                     ) : (
@@ -245,7 +236,6 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                                 </td>
                                 <td>{parseFloat(item.price).toLocaleString()}đ</td>
                                 <td>{item.quantity}</td>
-                                <td>{currentOrder.voucher ? `${parseFloat(currentOrder.voucher).toLocaleString()}đ` : "0đ"}</td>
                                 <td>{parseFloat(item.total_price).toLocaleString()}đ</td>
                             </tr>
                         );
@@ -254,21 +244,26 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
             </table>
 
             <div className="order-summary">
-                <p>Tạm tính: {(parseFloat(currentOrder.total_price) - parseFloat(currentOrder.deliver_fee)).toLocaleString()}đ</p>
+                <p>Tạm tính: {(parseFloat(currentOrder.total_price) + discountAmount - parseFloat(currentOrder.deliver_fee)).toLocaleString()}đ</p>
                 <p>Phí vận chuyển: {parseFloat(currentOrder.deliver_fee).toLocaleString()}đ</p>
-                <p>Giảm giá: {currentOrder.voucher ? `${parseFloat(currentOrder.voucher).toLocaleString()}đ` : "0đ"}</p>
+                <p>
+                    Giảm giá: {discountAmount > 0
+                        ? `${discountAmount.toLocaleString()}đ (Mã: ${currentOrder.voucher?.name || "N/A"})`
+                        : "0đ"}
+                </p>
                 <p className="total">Tổng cộng: {parseFloat(currentOrder.total_price).toLocaleString()}đ</p>
             </div>
 
             {canCancel && (
-                <button className="cancel-button" onClick={handleCancelOrder}>
+                <button className="cancel-button" onClick={handleOpenCancelModal}>
                     Hủy đơn
                 </button>
             )}
 
+            {/* Modal cho đánh giá */}
             <Modal
-                isOpen={isModalOpen}
-                onRequestClose={() => setIsModalOpen(false)}
+                isOpen={isReviewModalOpen}
+                onRequestClose={() => setIsReviewModalOpen(false)}
                 className="review-modal"
                 overlayClassName="review-modal-overlay"
             >
@@ -286,7 +281,31 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                     />
                     <div className="modal-buttons">
                         <button onClick={handlePostReview} className="submit-btn">Gửi</button>
-                        <button onClick={() => setIsModalOpen(false)} className="cancel-btn">Hủy</button>
+                        <button onClick={() => setIsReviewModalOpen(false)} className="cancel-btn">Hủy</button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Modal cho hủy đơn hàng */}
+            <Modal
+                isOpen={isCancelModalOpen}
+                onRequestClose={() => setIsCancelModalOpen(false)}
+                className="review-modal"
+                overlayClassName="review-modal-overlay"
+            >
+                <h2>Hủy đơn hàng</h2>
+                <div className="review-form">
+                    <label>Lý do hủy đơn hàng:</label>
+                    <textarea
+                        value={cancelReason}
+                        onChange={(e) => setCancelReason(e.target.value)}
+                        maxLength={500}
+                        placeholder="Vui lòng nhập lý do hủy đơn hàng..."
+                        rows={4}
+                    />
+                    <div className="modal-buttons">
+                        <button onClick={handleCancelOrder} className="submit-btn">Xác nhận hủy</button>
+                        <button onClick={() => setIsCancelModalOpen(false)} className="cancel-btn">Đóng</button>
                     </div>
                 </div>
             </Modal>

@@ -361,56 +361,63 @@ margin-top: 100px;
   align-items: center;
 }
 
-.order-status {
+/* .order-status {
   padding: 3px 10px;
   border-radius: 9999px;
   font-size: 11px;
   font-weight: 500;
-}
-
-/* .delivered {
-  background-color: #d1fae5;
-  color: #065f46;
 } */
-.order-status.choxacnhan {
-  background-color: #fff3cd; /* Nền cam nhạt */
-  color: #FFA500; /* Chữ cam */
-}
-/* Trạng thái: Chờ lấy hàng (waiting_for_pickup) */
-.cholayhang {
-  background-color: #fff8dd; /* Nền vàng nhạt */
-  color: #FFC107; /* Chữ vàng */
+
+/* CSS cho trạng thái đơn hàng */
+.order-status {
+  display: inline-block;
+  padding: 4px 10px; /* Padding nhỏ gọn như trong hình */
+  font-size: 13px; /* Kích thước chữ nhỏ */
+  font-weight: 500;
+  text-transform: capitalize;
+  border-radius: 10px; /* Bo góc nhẹ */
+  transition: all 0.3s ease;
 }
 
-/* Trạng thái: Đang giao hàng (waiting_for_delivery) */
-.danggiaohang {
-  background-color: #cce5ff; /* Nền xanh dương nhạt */
-  color: #007BFF; /* Chữ xanh dương */
+/* Các kiểu nền cho từng trạng thái */
+.order-status[data-status="pending"],
+.order-status[data-status="waiting_for_confirmation"] {
+  background-color: #FFA50033; /* Màu nền cam nhạt (opacity 0.2) */
 }
 
-/* Trạng thái: Đã giao hàng (delivered) */
-.order-status.delivered {
-  background-color: #d4edda;
-  color: #28A745;
+.order-status[data-status="confirmed"] {
+  background-color: #17A2B833; /* Màu nền xanh dương nhạt */
 }
 
-/* Trạng thái: Đã hủy (cancelled) */
-.dahuy {
-  background-color: #f8d7da; /* Nền đỏ nhạt */
-  color: #FF0000; /* Chữ đỏ */
+.order-status[data-status="processing"] {
+  background-color: #6F42C133; /* Màu nền tím nhạt */
 }
 
-/* Trạng thái: Hoàn hàng (returned) */
-.hoanhang {
-  background-color: #e2d9f3; /* Nền tím nhạt */
-  color: #6F42C1; /* Chữ tím */
+.order-status[data-status="waiting_for_delivery"],
+.order-status[data-status="shipping"] {
+  background-color: #007BFF33; /* Màu nền xanh lam nhạt */
 }
 
-/* Trạng thái: Mặc định (pending) */
-.pending {
-  background-color: #f5f5f5; /* Nền xám nhạt */
-  color: black; /* Chữ đen */
+.order-status[data-status="delivered"] {
+  background-color: #28A74533; /* Màu nền xanh lá nhạt */
 }
+
+.order-status[data-status="completed"] {
+  background-color: #185E2033; /* Màu nền xanh lá đậm nhạt */
+}
+
+.order-status[data-status="returned"] {
+  background-color: #FF573333; /* Màu nền đỏ cam nhạt */
+}
+
+.order-status[data-status="refunded"] {
+  background-color: #6C757D33; /* Màu nền xám nhạt */
+}
+
+.order-status[data-status="cancelled"] {
+  background-color: #DC354533; /* Màu nền đỏ nhạt */
+}
+
 
 .order-content {
   border-top: none;

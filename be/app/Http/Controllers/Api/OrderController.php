@@ -23,13 +23,15 @@ class OrderController extends Controller
             return response()->json(['message' => 'Bạn cần đăng nhập để đặt hàng'], 401);
         }
 
+        Log::info('Dữ liệu request trong placeOrder: ' . json_encode($request->all()));
+
         $request->validate([
             'username' => 'required|string',
             'email' => 'required|email',
             'phone_number' => 'required|string',
             'address' => 'required|string',
-            'payment_method' => 'required|in:credit_card,cash_on_delivery,paypal',
-            'voucher_id' => 'nullable|exists:vouchers,id',
+            'payment_method' => 'required|in:credit_card,cash_on_delivery,paypal,momo',
+            'voucher_code' => 'nullable|string|exists:vouchers,name',
             'note' => 'nullable|string',
             'selected_items' => 'required|array|min:1',
             'selected_items.*' => 'integer|exists:cart_items,id',
@@ -77,15 +79,16 @@ class OrderController extends Controller
 
             $voucher = null;
 
-            if ($request->voucher_id) {
-                $voucher = Voucher::where('id', $request->voucher_id)
+            if ($request->voucher_code) {
+                Log::info('Kiểm tra mã giảm giá: ' . $request->voucher_code);
+                $voucher = Voucher::where('name', $request->voucher_code)
                     ->where('status', 'active')
                     ->where('expiration_date', '>=', now())
                     ->where('quantity', '>', 0)
                     ->first();
 
                 if (!$voucher) {
-                    return response()->json(['message' => 'Voucher không hợp lệ hoặc đã hết lượt sử dụng'], 400);
+                    return response()->json(['message' => 'Mã giảm giá không hợp lệ hoặc đã hết lượt sử dụng'], 400);
                 }
 
                 $usedVoucher = Order::where('user_id', $user->id)
@@ -93,11 +96,11 @@ class OrderController extends Controller
                     ->exists();
 
                 if ($usedVoucher) {
-                    return response()->json(['message' => 'Bạn đã sử dụng voucher này rồi'], 400);
+                    return response()->json(['message' => 'Bạn đã sử dụng mã giảm giá này rồi'], 400);
                 }
 
                 if ($total < $voucher->min_purchase_amount) {
-                    return response()->json(['message' => 'Không đủ điều kiện áp dụng voucher'], 400);
+                    return response()->json(['message' => 'Không đủ điều kiện áp dụng mã giảm giá'], 400);
                 }
 
                 if ($voucher->discount_percent) {
@@ -122,7 +125,7 @@ class OrderController extends Controller
                 'address' => $request->address,
                 'user_id' => $user->id,
                 'voucher_id' => $voucher->id ?? null,
-                'status' => 'waiting_for_confirmation',
+                'status' => 'pending',
                 'payment_status' => 'unpaid',
                 'payment_method' => $request->payment_method,
                 'note' => $request->note,
@@ -153,9 +156,13 @@ class OrderController extends Controller
             $cart->items()->whereIn('id', $selectedItemIds)->delete();
 
             try {
-                Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail($order->load('order_details.productDetail.product')));
+                Log::info('Chuẩn bị gửi email cho đơn hàng #' . $order->id . ', trạng thái: ' . $order->status . ', email: ' . $request->email);
+                $order->load('order_details.productDetail.product');
+                Log::info('Dữ liệu đơn hàng sau load: ' . json_encode($order->toArray()));
+                Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail($order));
+                Log::info('Email gửi thành công cho đơn hàng #' . $order->id);
             } catch (\Exception $e) {
-                Log::error('Lỗi gửi email xác nhận đơn hàng: ' . $e->getMessage());
+                Log::error('Lỗi gửi email xác nhận đơn hàng #' . $order->id . ': ' . $e->getMessage() . ' - Stack trace: ' . $e->getTraceAsString());
             }
 
             DB::commit();
@@ -171,6 +178,7 @@ class OrderController extends Controller
 
         } catch (\Exception $e) {
             DB::rollback();
+            Log::error('Lỗi đặt hàng: ' . $e->getMessage() . ' - Stack trace: ' . $e->getTraceAsString());
             return response()->json([
                 'message' => 'Lỗi đặt hàng',
                 'error' => $e->getMessage()
@@ -222,8 +230,8 @@ class OrderController extends Controller
                 }
 
                 return [
-                    'product_id' => $productDetail->product->id, // Thêm product_id
-                    'product_detail_id' => $productDetail->id,   // Thêm product_detail_id
+                    'product_id' => $productDetail->product->id,
+                    'product_detail_id' => $productDetail->id,
                     'product_name' => $productDetail->product->name,
                     'quantity' => $orderDetail->quantity,
                     'image' => $imageBase64,
@@ -233,6 +241,20 @@ class OrderController extends Controller
                     'total_price' => $orderDetail->total_price,
                 ];
             });
+
+            // Tính toán số tiền giảm giá
+            $subtotal = $order->order_details->sum('total_price'); // Tổng tiền sản phẩm
+            $discount = 0;
+            if ($order->voucher) {
+                if ($order->voucher->discount_percent) {
+                    $discount = $subtotal * ($order->voucher->discount_percent / 100);
+                } elseif ($order->voucher->discount_amount) {
+                    $discount = $order->voucher->discount_amount;
+                }
+                if ($order->voucher->max_discount_amount && $discount > $order->voucher->max_discount_amount) {
+                    $discount = $order->voucher->max_discount_amount;
+                }
+            }
 
             return [
                 'id' => $order->id,
@@ -246,6 +268,7 @@ class OrderController extends Controller
                 'note' => $order->note,
                 'deliver_fee' => $order->deliver_fee,
                 'total_price' => $order->total_price,
+                'discount' => $discount, // Trả về số tiền giảm giá đã tính toán
                 'created_at' => $order->created_at,
                 'voucher' => $order->voucher ? [
                     'id' => $order->voucher->id,
@@ -310,6 +333,23 @@ class OrderController extends Controller
             $orderDetail->size = $productDetail->size ? $productDetail->size->name : null;
         }
 
+        // Tính toán số tiền giảm giá
+        $subtotal = $order->order_details->sum('total_price'); // Tổng tiền sản phẩm
+        $discount = 0;
+        if ($order->voucher) {
+            if ($order->voucher->discount_percent) {
+                $discount = $subtotal * ($order->voucher->discount_percent / 100);
+            } elseif ($order->voucher->discount_amount) {
+                $discount = $order->voucher->discount_amount;
+            }
+            if ($order->voucher->max_discount_amount && $discount > $order->voucher->max_discount_amount) {
+                $discount = $order->voucher->max_discount_amount;
+            }
+        }
+
+        // Thêm discount vào dữ liệu trả về
+        $order->discount = $discount;
+
         return response()->json($order);
     }
 
@@ -319,7 +359,7 @@ class OrderController extends Controller
 
         $order = Order::where('user_id', $user->id)
             ->where('id', $id)
-            ->where('status', 'waiting_for_confirmation')
+            ->whereIn('status', ['pending', 'confirmed', 'processing'])
             ->first();
 
         if (!$order) {

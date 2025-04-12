@@ -19,17 +19,26 @@ class CommentController extends Controller
             ->with('user', 'product')
             ->orderBy('id', 'desc') // Sắp xếp giảm dần theo cột 'id'
             ->paginate($perPage);
-            $noResults = $comments->isEmpty();
+        $noResults = $comments->isEmpty();
 
         return view('comments.list', compact('comments', 'noResults'));
     }
 
+    // public function show(string $id)
+    // {
+    //     $comments = Comment::findOrFail($id); // Lấy tất cả bình luận cùng với user và product liên quan
+    //     return view('comments.show', compact('comments')); // Trả về view kèm dữ liệu bình luận
+
+    // }
     public function show(string $id)
     {
-        $comments = Comment::findOrFail($id); // Lấy tất cả bình luận cùng với user và product liên quan
-        return view('comments.show', compact('comments')); // Trả về view kèm dữ liệu bình luận
+        // Lấy một bình luận duy nhất
+        $comment = Comment::findOrFail($id); // Lấy bình luận theo ID
 
+        // Trả về view kèm dữ liệu bình luận
+        return view('comments.show', compact('comment'));
     }
+
 
     public function destroy($id)
     {

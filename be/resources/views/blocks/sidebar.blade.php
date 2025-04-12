@@ -26,9 +26,9 @@
                     @can('show-products')
                     <li><a href="{{ route('products.index') }}">Danh sách sản phẩm</a></li>
                     @endcan
-                    @can('create-product')
+                    {{-- @can('create-product')
                     <li><a href="{{ route('products.create') }}">Thêm sản phẩm</a></li>
-                    @endcan
+                    @endcan --}}
                     @can('show-sizes')
                     <li><a href="{{ route('sizes.index') }}">Quản lý kích thước</a></li>
                     @endcan
