@@ -28,7 +28,7 @@ class OrderController extends Controller
             'email' => 'required|email',
             'phone_number' => 'required|string',
             'address' => 'required|string',
-            'payment_method' => 'required|in:credit_card,cash_on_delivery,paypal',
+            'payment_method' => 'required|in:cash_on_delivery,momo,zalopay',
             'voucher_id' => 'nullable|exists:vouchers,id',
             'note' => 'nullable|string',
             'selected_items' => 'required|array|min:1',
@@ -121,7 +121,7 @@ class OrderController extends Controller
                 'address' => $request->address,
                 'user_id' => $user->id,
                 'voucher_id' => $voucher->id ?? null,
-                'status' => 'waiting_for_confirmation',
+                'status' => 'pending',
                 'payment_status' => 'unpaid',
                 'payment_method' => $request->payment_method,
                 'note' => $request->note,
@@ -223,7 +223,8 @@ class OrderController extends Controller
 
         $order = Order::where('user_id', $user->id)
             ->where('id', $id)
-            ->where('status', 'waiting_for_confirmation')
+            // ->where('status', 'waiting_for_confirmation')
+            ->where('status', 'pending') 
             ->first();
 
         if (!$order) {
@@ -412,4 +413,6 @@ class OrderController extends Controller
             'total' => $total,
         ]);
     }
+
+
 }
