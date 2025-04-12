@@ -74,7 +74,8 @@ Route::get('/home', [HomeController::class, 'index']);
 // top 10 sp
 
 // Trang Danh Mục
-Route::get('/categories', [CategoryController::class, '']);
+Route::get('/categories', [CategoryController::class, 'index']);
+
 
 // Trang Thương Hiệu
 Route::get('/brands', [BrandController::class, 'index']);
@@ -149,3 +150,4 @@ Route::put('review/{reviewId}/edit', [ReviewController::class, 'update'])->middl
 Route::put('review/{reviewId}/like', [ReviewController::class, 'like'])->middleware('auth:api'); // Like đánh giá
 Route::put('review/{reviewId}/report', [ReviewController::class, 'report'])->middleware('auth:api'); // Báo cáo đánh giá
 Route::put('review/{reviewId}/anonymous', [ReviewController::class, 'toggleAnonymous'])->middleware('auth:api'); // ẩn danh đánh giá
+Route::post('/comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');

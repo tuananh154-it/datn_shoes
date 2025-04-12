@@ -27,9 +27,9 @@ const BlogDetail = () => {
                     <div className="container">
                         <nav aria-label="breadcrumb">
                             <ol className="breadcrumb">
-                                <li className="breadcrumb-item text-capitalize"><a href="earthyellow.html">Home</a> <i className="flaticon-arrows-4"></i></li>
-                                <li className="breadcrumb-item text-capitalize"><a href="grids_blog_list.html">Blog</a> <i className="flaticon-arrows-4"></i></li>
-                                <li className="breadcrumb-item active text-capitalize">{article?.name}</li>
+                                <li className="breadcrumb-item text-capitalize"><a href="earthyellow.html">Trang chủ</a> <i className="flaticon-arrows-4"></i></li>
+                                <li className="breadcrumb-item text-capitalize"><a href="grids_blog_list.html">Bài viết</a> <i className="flaticon-arrows-4"></i></li>
+                                <li className="breadcrumb-item active text-capitalize">Chi tiết bài viết</li>
                             </ol>
                         </nav>
                         <h1 className="title_h1 font-weight-normal text-capitalize">{article?.name}</h1>

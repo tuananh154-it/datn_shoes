@@ -63,7 +63,7 @@
                         <th><i class=""></i> Tên sản phẩm</th>
                         <th><i class=""></i> Ảnh sản phẩm</th> <!-- Thêm cột Ảnh -->
                         <th><i class=""></i> Trang thái</th>
-                        <th></th>
+                        <th>Hành động </th>
                     </tr>
                 </thead>
                 <tbody>

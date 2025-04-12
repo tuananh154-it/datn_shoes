@@ -14,7 +14,8 @@
         }
 
         .table th {
-            background-color: #41CAC0;
+            background-color: #FF6C60;
+
             color: white;
         }
 
@@ -32,11 +33,17 @@
             justify-content: center;
             align-items: center;
         }
+
+        /* h4{
+            background: black;
+        } */
+
+
     </style>
 
     <div class="container">
         <div class="card shadow">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+       <div class="card-header" style="background-color: #41CAC0; color: white;" d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">Danh sách quyền hạn</h4>
                 <a href="{{ route('roles.create') }}" class="btn btn-light">
                     <i class="fa fa-plus"></i> Thêm quyền hạn
