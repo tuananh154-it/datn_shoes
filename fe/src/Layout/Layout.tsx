@@ -69,20 +69,28 @@ const Layout = () => {
           position: "fixed",
           bottom: "20px",
           left: "20px",
-          backgroundColor: "#FF9800",
+          backgroundColor: "#86ca30",
           color: "white",
-          padding: "12px 20px",
-          borderRadius: "8px",
-          boxShadow: "0 4px 10px rgba(0, 0, 0, 0.2)",
+          padding: "10px 16px",
+          borderRadius: "6px",
+          boxShadow: "0 3px 8px rgba(0, 0, 0, 0.15)",
           zIndex: "1000",
-          minWidth: "250px",
-          fontSize: "14px",
+          minWidth: "220px",
+          fontSize: "13px",
+          lineHeight: "1.4",
+          display: "flex",
+          alignItems: "center",
+          gap: "8px",
           animation: "fadeIn 0.5s ease-out, fadeOut 0.5s ease-out 4.5s",
         }}
       >
+        <span style={{ fontSize: "16px", marginRight: "4px" }}>📦</span>
         <strong>{order.username}</strong>
-        Đơn hàng #{order.id} của {order.username} vừa được đặt với tổng giá trị{" "}
-        {parseFloat(order.total_price).toLocaleString()} VND
+        <br />
+        <span>
+          Đơn #{order.id} vừa được đặt<br />
+          Tổng: {parseFloat(order.total_price).toLocaleString()} VND
+        </span>
       </div>
     );
   };

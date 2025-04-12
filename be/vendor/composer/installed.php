@@ -1,15 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'laravel/laravel',
-<<<<<<< HEAD
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '797518b645506855223f37f3b7998380c874b1bb',
-=======
         'pretty_version' => 'dev-duc',
         'version' => 'dev-duc',
         'reference' => 'd52ebba8689e22c6a383147f3445a83a86c98952',
->>>>>>> 79624b485ce1cf1dca1961012cbc0db8b13dda0f
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -377,24 +371,18 @@
             'dev_requirement' => false,
         ),
         'laravel/laravel' => array(
-<<<<<<< HEAD
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '797518b645506855223f37f3b7998380c874b1bb',
-=======
             'pretty_version' => 'dev-duc',
             'version' => 'dev-duc',
             'reference' => 'd52ebba8689e22c6a383147f3445a83a86c98952',
->>>>>>> 79624b485ce1cf1dca1961012cbc0db8b13dda0f
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'laravel/pint' => array(
-            'pretty_version' => 'v1.21.2',
-            'version' => '1.21.2.0',
-            'reference' => '370772e7d9e9da087678a0edf2b11b6960e40558',
+            'pretty_version' => 'v1.20.0',
+            'version' => '1.20.0.0',
+            'reference' => '53072e8ea22213a7ed168a8a15b96fbb8b82d44b',
             'type' => 'project',
             'install_path' => __DIR__ . '/../laravel/pint',
             'aliases' => array(),
@@ -1074,9 +1062,9 @@
             'dev_requirement' => false,
         ),
         'symfony/css-selector' => array(
-            'pretty_version' => 'v7.2.0',
-            'version' => '7.2.0.0',
-            'reference' => '601a5ce9aaad7bf10797e3663faefce9e26c24e2',
+            'pretty_version' => 'v6.4.13',
+            'version' => '6.4.13.0',
+            'reference' => 'cb23e97813c5837a041b73a6d63a9ddff0778f5e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/css-selector',
             'aliases' => array(),
@@ -1101,9 +1089,9 @@
             'dev_requirement' => false,
         ),
         'symfony/event-dispatcher' => array(
-            'pretty_version' => 'v7.2.0',
-            'version' => '7.2.0.0',
-            'reference' => '910c5db85a5356d0fea57680defec4e99eb9c8c1',
+            'pretty_version' => 'v6.4.13',
+            'version' => '6.4.13.0',
+            'reference' => '0ffc48080ab3e9132ea74ef4e09d8dcf26bf897e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/event-dispatcher',
             'aliases' => array(),
@@ -1269,9 +1257,9 @@
             'dev_requirement' => false,
         ),
         'symfony/string' => array(
-            'pretty_version' => 'v7.2.0',
-            'version' => '7.2.0.0',
-            'reference' => '446e0d146f991dde3e73f45f2c97a9faad773c82',
+            'pretty_version' => 'v6.4.15',
+            'version' => '6.4.15.0',
+            'reference' => '73a5e66ea2e1677c98d4449177c5a9cf9d8b4c6f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/string',
             'aliases' => array(),
@@ -1320,9 +1308,9 @@
             'dev_requirement' => false,
         ),
         'symfony/yaml' => array(
-            'pretty_version' => 'v7.2.5',
-            'version' => '7.2.5.0',
-            'reference' => '4c4b6f4cfcd7e52053f0c8bfad0f7f30fb924912',
+            'pretty_version' => 'v6.4.20',
+            'version' => '6.4.20.0',
+            'reference' => '28ee818fce4a73ac1474346b94e4b966f665c53f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/yaml',
             'aliases' => array(),

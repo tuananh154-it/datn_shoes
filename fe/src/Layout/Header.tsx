@@ -187,7 +187,7 @@ import MegaMenu from "./MegaMenu";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../store/useSlice";
 import { useCart } from "../context/CartContext";
 import { Product } from "../types/Product";
@@ -273,24 +273,42 @@ const Header = () => {
           <nav className="navbar-dark navbar-expand-lg navbar">
             <div className="navbar-collapse collapse" id="collapseNavbar">
               <ul className="navbar-nav">
-                <li className="nav-item active">
-                  <Link to="/" className="nav-link text-uppercase">
+                <li className="nav-item">
+                  <NavLink
+                    to="/"
+                    className={({ isActive }) =>
+                      isActive ? "nav-link text-uppercase active" : "nav-link text-uppercase"
+                    }
+                  >
                     Trang chủ
-                  </Link>
+                  </NavLink>
                 </li>
                 <MegaMenu />
                 <li className="nav-item dropdown mega-dropdown">
                   {/* <a className="nav-link text-uppercase" href="/blog">
                     Blog
                   </a> */}
-                  <Link to="/blog" className="nav-link text-uppercase"  >
+                 <NavLink
+                    to="/blog"
+                    className={({ isActive }) =>
+                      isActive ? "nav-link text-uppercase active" : "nav-link text-uppercase"
+                    }
+                  >
                     Bài viết
-                  </Link>
+                  </NavLink>
                 </li>
                 <li className="nav-item dropdown mega-dropdown">
-                  <Link to="/contacts" className="nav-link text-uppercase  dropdown-toggle" >
+                  {/* <Link to="/contacts" className="nav-link text-uppercase  dropdown-toggle" >
                     Liên Hệ
-                  </Link>
+                  </Link> */}
+                   <NavLink
+                    to="/contacts"
+                    className={({ isActive }) =>
+                      isActive ? "nav-link text-uppercase active" : "nav-link text-uppercase"
+                    }
+                  >
+                   Liên hệ
+                  </NavLink>
                 </li>
 
               </ul>

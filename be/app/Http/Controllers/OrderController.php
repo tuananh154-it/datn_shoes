@@ -16,10 +16,10 @@ class OrderController extends Controller
     {
         // Khởi tạo query cơ bản để lấy tất cả đơn hàng với quan hệ 'user' và 'voucher'
         $query = Order::with('user', 'voucher');
-        
+    
         // Tìm kiếm theo tên người dùng
         if ($request->has('search') && !empty($request->search)) {
-            $query->whereHas('user', function($query) use ($request) {
+            $query->whereHas('user', function ($query) use ($request) {
                 $query->where('name', 'like', '%' . $request->search . '%');
             });
         }
@@ -29,12 +29,15 @@ class OrderController extends Controller
             $query->where('status', $request->status);
         }
     
-        // Phân trang kết quả tìm kiếm
+        // 👉 Sắp xếp theo thời gian tạo mới nhất
+        $query->orderBy('created_at', 'desc');
+    
+        // Phân trang
         $orders = $query->paginate(5);
     
-        // Trả về view với các đơn hàng tìm được
         return view('orders.index', compact('orders'));
     }
+    
     
 
     public function show($id)
@@ -56,41 +59,55 @@ class OrderController extends Controller
     }
 
     public function updateStatus(Request $request, $id)
-{
-    $order = Order::findOrFail($id);
-
-    $currentStatus = $order->status;
-    $newStatus = $request->status;
-
-    // Các trạng thái hợp lệ và luồng chuyển tiếp
-    $validStatusTransitions = [
-        'waiting_for_confirmation' => 'waiting_for_pickup',
-        'waiting_for_pickup' => 'waiting_for_delivery',
-        'waiting_for_delivery' => 'delivered',
-        'delivered' => 'returned',
-        'returned' => 'cancelled',
-    ];
-
-    //  Không cho admin chuyển từ "chờ xác nhận" sang "chờ lấy hàng"
-    if ($currentStatus === 'waiting_for_confirmation' && $newStatus === 'waiting_for_pickup') {
-        return redirect()->route('orders.index')->with('success', 'Chỉ người dùng mới có thể xác nhận đơn hàng qua email.');
-    }
-
-    // ✅ Nếu chuyển đúng theo luồng
-    if (isset($validStatusTransitions[$currentStatus]) && $validStatusTransitions[$currentStatus] === $newStatus) {
-        $order->status = $newStatus;
-
-        if ($newStatus === 'delivered') {
-            $order->payment_status = 'paid';
-        }
-
-        $order->save();
-
-        return redirect()->route('orders.index')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
-    }
-
-    return redirect()->route('orders.index')->with('error', 'Trạng thái không hợp lệ.');
-}
-
+    {
+        $order = Order::findOrFail($id);
     
+        $currentStatus = $order->status;
+        $newStatus = $request->status;
+    
+        // Trạng thái không thể chuyển tiếp nữa
+        $finalStatuses = ['completed', 'refunded', 'cancelled'];
+    
+        if (in_array($currentStatus, $finalStatuses)) {
+            return redirect()->back()
+                ->with('error', 'Đơn hàng đã hoàn tất, hoàn tiền hoặc bị hủy. Không thể cập nhật thêm.');
+        }
+    
+        // Không cho admin tự chuyển sang confirmed
+        if ($currentStatus === 'pending' && $newStatus === 'confirmed') {
+            return redirect()->back()
+                ->with('error', 'Chỉ người dùng mới có thể xác nhận đơn hàng qua email.');
+        }
+    
+        $validTransitions = [
+            'pending'    => ['cancelled'],
+            'confirmed'  => ['processing', 'cancelled'],
+            'processing' => ['shipping', 'cancelled'],
+            'shipping'   => ['delivered'],
+            'delivered'  => ['completed', 'returned'],
+            'returned'   => ['refunded'],
+        ];
+    
+        if (
+            isset($validTransitions[$currentStatus]) &&
+            in_array($newStatus, $validTransitions[$currentStatus])
+        ) {
+            $order->status = $newStatus;
+    
+            if ($newStatus === 'delivered') {
+                $order->payment_status = 'paid';
+            }
+    
+            $order->save();
+    
+            return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
+        }
+    
+        return redirect()->back()
+            ->with('error', 'Không thể chuyển trạng thái từ "' . $currentStatus . '" sang "' . $newStatus . '".');
+    }
+    
+    
+
+   
 }

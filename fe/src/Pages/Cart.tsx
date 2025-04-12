@@ -406,9 +406,12 @@ const Cart = () => {
                 totalPages={totalPages}
                 onPageChange={setCurrentPage}
               />
-              <a href="/shop" className="continue-btn">
+              {/* <a href="/shop" className="continue-btn">
                 &#x276E; Quay lại cửa hàng
-              </a>
+              </a> */}
+              <Link to="/shop" className="continue-btn">
+              &#x276E; Quay lại cửa hàng
+              </Link>
             </div>
 
             <div className="cart-summary">

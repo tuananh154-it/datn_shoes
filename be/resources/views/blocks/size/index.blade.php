@@ -61,7 +61,7 @@
                         <th><i class=""></i> ID</th>
                         <th class="hidden-phone"><i class=""></i> Kích thước</th>
                         <th><i class=""></i> Trạng thái</th>
-                        <th></th>
+                        <th>Hành động </th>
                     </tr>
                 </thead>
                 <tbody>

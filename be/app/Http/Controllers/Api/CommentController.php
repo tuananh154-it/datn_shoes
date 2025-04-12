@@ -16,9 +16,14 @@ Carbon::setLocale('vi');
 class CommentController extends Controller
 {
     // Lấy danh sách bình luận cho sản phẩm
-    public function index($productId)
+    public function index(Request $request, $productId)
     {
         try {
+            // <<<<<<< HEAD
+            $perPage = $request->input('per_page', 10);
+
+            // =======
+            // >>>>>>> ee6d9630ffa4657f7f1e0d883f5c37b14cc405d5
             $allComments = Comment::where('product_id', $productId)->get();
 
             $commentsWithoutParent = Comment::where('product_id', $productId)
@@ -26,7 +31,12 @@ class CommentController extends Controller
                 ->withCount('children') // Đếm số lượng bình luận con (phản hồi)
                 ->withCount('reports') // Đếm số lượng báo cáo
                 ->with('user') // Tải thông tin người dùng
-                ->get();
+                ->paginate($perPage); // Phân trang
+
+            // Kiểm tra nếu không có bình luận nào
+            if ($commentsWithoutParent->isEmpty()) {
+                return response()->json(['message' => 'Không có bình luận nào'], 404);
+            }
 
             // Duyệt qua từng bình luận và trả về thông tin cần thiết
             $commentsData = $commentsWithoutParent->map(function ($comment) {
@@ -47,6 +57,12 @@ class CommentController extends Controller
             return response()->json([
                 'comments' => $commentsData,
                 'total_comments' => $allComments->count(),
+                'pagination' => [
+                    'total' => $commentsWithoutParent->total(),
+                    'per_page' => $commentsWithoutParent->perPage(),
+                    'current_page' => $commentsWithoutParent->currentPage(),
+                    'last_page' => $commentsWithoutParent->lastPage(),
+                ]
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể truy vấn tới bảng Comments', 'message' => $e->getMessage()], 500);
@@ -145,7 +161,6 @@ class CommentController extends Controller
 
             // Trả về bình luận vừa tạo với thông tin đầy đủ
             return response()->json(['data' => $commentData, 'message' => 'Bình luận thành công'], 201);
-
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có
             return response()->json(['error' => 'Bình luận thất bại', 'message' => $e->getMessage()], 500);
@@ -203,7 +218,6 @@ class CommentController extends Controller
 
             // Trả về bình luận vừa tạo với thông tin đầy đủ
             return response()->json(['data' => $commentData, 'message' => 'Trả lời bình luận thành công'], 201);
-
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có
             return response()->json(['error' => 'Trả lời bình luận thất bại', 'message' => $e->getMessage()], 500);
@@ -250,7 +264,6 @@ class CommentController extends Controller
 
             // Trả về bình luận đã cập nhật
             return response()->json(['data' => $comment, 'message' => 'Bình luận đã được cập nhật'], 200);
-
         } catch (\Exception $e) {
             // Xử lý lỗi nếu có
             return response()->json(['error' => 'Cập nhật bình luận thất bại', 'message' => $e->getMessage()], 500);

@@ -18,7 +18,7 @@ import { Article, getArticles } from "../services/articles";
 // import { getAllProduct } from "../services/product";
 
 const HomePages = () => {
- 
+
 
   const [product, setProduct] = useState<TopProductResponse | null>(null);
   const [lastProduct, getlatesProducts] = useState<Product[]>([]);
@@ -48,47 +48,69 @@ const HomePages = () => {
           getArticles(),
           getBanners(),
         ]);
-  
+
         setProduct(topProductRes.data);
         getlatesProducts(latestProductsRes.data.data);
         setArticles(articlesRes.data);
         setBanners(bannersRes.data);
-  
+
       } catch (error) {
         toast.error("Lỗi khi tải dữ liệu");
         console.error(error);
       }
     };
-  
+
     fetchData();
   }, []);
+  const [wishlist, setWishlist] = useState<string[]>([]);
+
+  useEffect(() => {
+    const storedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+    setWishlist(storedWishlist);
+  }, []);
+  // const toggleWishlist = (product: Product) => {
+  //   // const user = JSON.parse(localStorage.getItem("user") || "null");
+
+  //   // if (!user) {
+  //   //   alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
+  //   //   return;
+  //   // }
+
+  //   let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+
+  //   // Lưu ID sản phẩm thay vì object
+  //   const index = wishlist.indexOf(product.id);
+
+  //   if (index !== -1) {
+  //     wishlist.splice(index, 1);
+  //   } else {
+  //     wishlist.push(product.id);
+  //     toast.success("Đã thêm sản phẩm yêu thích");
+  //   }
+
+  //   localStorage.setItem("wishlist", JSON.stringify(wishlist));
+
+  //   // Phát sự kiện cập nhật để các component khác biết
+  //   window.dispatchEvent(new Event("storage"));
+  // };
 
   const toggleWishlist = (product: Product) => {
-    // const user = JSON.parse(localStorage.getItem("user") || "null");
-
-    // if (!user) {
-    //   alert("Bạn cần đăng nhập để thêm sản phẩm vào danh sách yêu thích!");
-    //   return;
-    // }
-
-    let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
-
-    // Lưu ID sản phẩm thay vì object
-    const index = wishlist.indexOf(product.id);
-
+    let updatedWishlist = [...wishlist];
+    const index = updatedWishlist.indexOf(product.id);
+  
     if (index !== -1) {
-      wishlist.splice(index, 1);
+      updatedWishlist.splice(index, 1);
     } else {
-      wishlist.push(product.id);
+      updatedWishlist.push(product.id);
       toast.success("Đã thêm sản phẩm yêu thích");
     }
-
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-
-    // Phát sự kiện cập nhật để các component khác biết
+  
+    localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+    setWishlist(updatedWishlist);
+  
+    // Nếu bạn cần phát event cho component khác, giữ cái này
     window.dispatchEvent(new Event("storage"));
   };
-
   return (
     <>
       <div className="menu_overlay"></div>
@@ -102,7 +124,7 @@ const HomePages = () => {
           {banners.map((banner) => (
             <SwiperSlide key={banner.id} style={{ height: "600px" }}>
               <a href={banner.link}>
-                <img src={banner.image_url} alt="" className="img-fluid" loading="lazy"/>
+                <img src={banner.image_url} alt="" className="img-fluid" loading="lazy" />
               </a>
             </SwiperSlide>
           ))}
@@ -153,7 +175,9 @@ const HomePages = () => {
                       toggleWishlist(last);
                     }}
                   >
-                    <i className="flaticon-heart yeuthich"></i>
+                    <i
+  className={`flaticon-heart yeuthich ${wishlist.includes(last.id) ? "active" : ""}`}
+/>
                   </a>
                   <i className="fas fa-sync-alt"></i>
                 </div>
@@ -163,61 +187,62 @@ const HomePages = () => {
         </div>
      </div>
       </section>
-
       <section className="bestseller">
         <div className="container">
-        <h2 className="section-title">
-          <span>Top 10 sản phẩm bán chạy</span>
-        </h2>
+          <h2 className="section-title">
+            <span>Top sản phẩm bán chạy</span>
+          </h2>
           <div className="content11">
             <div className="products">
-             {product?.top_selling_products.map((product)=>(
-               <div className="product-card">
-               <div className="label">SALE</div>
-               <img
-                 className="product-image1"
-                 src={product.image}
-                 alt="Product 4"
-               />
-               <div className="product-name">{product.name}</div>
-               <div className="product-price">
-                 <strong>{product?.price
-                            ? Number(
-                                product.price
-                                  .replace(/,/g, "")
-                                  .replace(" VND", "")
-                              ).toLocaleString("vi-VN") + " VND"
-                            : "0 VND"}</strong>
-               </div>
-               <div className="rating">★★★★★</div>
-               <div className="product-actions">
-               <Link
-                          to="#"
-                          className="text-uppercase add_to_bag_btn rounded-circle d-block"
-                          onClick={(e) => {
-                            e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
-                            setSelectedProductId(product.id);
-                          }}
-                        >
-                <button className="themgiohang">Thêm giỏ hàng</button>
-                          </Link>
-                 <div className="icons">
-                   <i className="fas fa-search"></i>
-                   <a
-                    href="#"
-                    className="heart rounded-circle text-center d-block"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      toggleWishlist(product);
-                    }}
-                  >
-                    <i className="flaticon-heart yeuthich"></i>
-                  </a>
-                   <i className="fas fa-sync-alt"></i>
-                 </div>
-               </div>
-             </div>
-             ))}
+              {product?.top_selling_products.map((product) => (
+                <div className="product-card">
+                  <div className="label">SALE</div>
+                  <img
+                    className="product-image1"
+                    src={product.image}
+                    alt="Product 4"
+                  />
+                  <div className="product-name">{product.name}</div>
+                  <div className="product-price">
+                    <strong>{product?.price
+                      ? Number(
+                        product.price
+                          .replace(/,/g, "")
+                          .replace(" VND", "")
+                      ).toLocaleString("vi-VN") + " VND"
+                      : "0 VND"}</strong>
+                  </div>
+                  <div className="rating">★★★★★</div>
+                  <div className="product-actions">
+                    <Link
+                      to="#"
+                      className="text-uppercase add_to_bag_btn rounded-circle d-block"
+                      onClick={(e) => {
+                        e.preventDefault(); // Ngăn chặn điều hướng nếu chỉ cần xử lý sự kiện
+                        setSelectedProductId(product.id);
+                      }}
+                    >
+                      <button className="themgiohang">Thêm giỏ hàng</button>
+                    </Link>
+                    <div className="icons">
+                      <i className="fas fa-search"></i>
+                      <a
+                        href="#"
+                        className="heart rounded-circle text-center d-block"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleWishlist(product);
+                        }}
+                      >
+                       <i
+  className={`flaticon-heart yeuthich ${wishlist.includes(product.id) ? "active" : ""}`}
+/>
+                      </a>
+                      <i className="fas fa-sync-alt"></i>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -247,14 +272,19 @@ const HomePages = () => {
             <div className="blog-box" key={blog.id}>
               <img src={blog.image} alt="Blog" className="blog-img" />
               <div className="blog-info">
-                <h3>{blog.title}</h3>
+                <h3>{blog.name
+                  .slice(0, 70) + (blog.content.length > 70 ? "..." : "")
+                }</h3>
                 <p className="meta">{blog.created_at.split("T")[0]}</p>
-                <p className="excerpt1">
+                {/* <p className="excerpt1">
                   {blog.content
                     .replace(/<p>/g, "")
                     .replace(/<\/p>/g, "")
                     .slice(0, 150) + (blog.content.length > 150 ? "..." : "")}
-                </p>
+                </p> */}
+                <p>{blog.title
+                  .slice(0, 120) + (blog.content.length > 120 ? "..." : "")
+                }</p>
                 <a href={`/blog/${blog.id}`} className="read-more">
                   Xem chi tiết
                 </a>
@@ -268,12 +298,20 @@ const HomePages = () => {
           <div className="row">
             <div className="col-md-12">
               <div className="big-banner">
-                <a href="/shop">
+                {/* <a href="/shop">
                   <img
-                    src="https://intphcm.com/data/upload/poster-giay-den.jpg"
+                    src={banners.}
                     alt=""
                   />
-                </a>
+                </a> */}
+                {banners.map((banner) => (
+                  <a href="/shop">
+                    <img
+                      src={banner.image_url[3]}
+                      alt=""
+                    />
+                  </a>
+                ))}
               </div>
             </div>
           </div>
@@ -297,7 +335,14 @@ const HomePages = () => {
             </div>
           </div>
         </section> */}
-        {/* <img src="https://tse4.mm.bing.net/th?id=OIP.C0b3zlLfZ0GD-5txQXOkzQHaE8&pid=Api&P=0&h=180"/> */}
+      {/* <img src="https://tse4.mm.bing.net/th?id=OIP.C0b3zlLfZ0GD-5txQXOkzQHaE8&pid=Api&P=0&h=180"/> */}
+        {/* Quick View hiển thị khi có productId */}
+        {selectedProductId && (
+                <QuickViewProduct
+                  productId={selectedProductId}
+                  onClose={() => setSelectedProductId(null)}
+                />
+              )}
     </>
   );
 };

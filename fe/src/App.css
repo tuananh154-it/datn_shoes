@@ -1,6 +1,29 @@
 body {
   font-family: 'Poppins', sans-serif;
 }
+/* Áp dụng font cho toàn bộ ứng dụng */
+html, body {
+  font-family: 'Lato', sans-serif !important;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+/* Ép buộc tất cả phần tử dùng font Poppins */
+* {
+  font-family: 'Lato', sans-serif !important;
+}
+.shoes_header .navbar-nav .nav-link {
+  font-size: 15px !important; /* hoặc 12px nếu bạn muốn nhỏ hơn nữa */
+  font-family: 'Lato', sans-serif !important;
+}
+.shoes_header .navbar-nav .nav-link.active {
+  color: #86ca30 !important; 
+  
+}
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
 .arrival{
   margin-top: -20px;
 }
@@ -140,7 +163,7 @@ margin-top: -10px;
 
 .discount-price {
   color: red; /* Màu đỏ cho giá khuyến mại */
-  font-weight: 300;
+  /* font-weight: 300; */
 }
 .qty_number{
   display: flex;
@@ -278,17 +301,22 @@ margin-top: -10px;
   position: relative;
 }
 .dropdownUser{
+  display: none;
   position: absolute;
   border: 0.5px ;
   background-color: white;
   width: 200px;
-  margin-top: 5px;
-  margin-left: -70px;
+  /* margin-top: 5px; */
+  border-radius: 20px;
+  margin-left: -60px;
   justify-content: center;
   align-items: center;
   z-index: 9999;
   text-align: center;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.drop:hover .dropdownUser{
+  display: block;
 }
 /*css checkout*/
 
@@ -484,6 +512,9 @@ margin-top: -10px;
  text-align: center;
  margin-top: -8px;
 }
+.yeuthich.active {
+  color: red;
+}
 .imageblog img{
   height: 230px;
   background-color: #b8005e;
@@ -554,6 +585,9 @@ margin-top: -10px;
 .phantrang{
   margin-left: 40%;
 }
+/* .phantrang{
+  margin-left: 40%;
+} */
 .imageShop{
   width: 300px;
   height: 300px;
@@ -919,6 +953,7 @@ input[type="range"] {
 }
 .product-card1 {
   /* border-bottom: 1px solid #eee; */
+  width: 270px;
   padding: 30px 30px;
   position: relative;
   text-align: center;
