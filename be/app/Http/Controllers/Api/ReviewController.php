@@ -76,7 +76,7 @@ class ReviewController extends Controller
     {
         try {
             $user = Auth::user();
-    
+
             $reviews = Review::where('user_id', $user->id)
                 ->with(['product' => function ($query) {
                     $query->select('id', 'name');
@@ -84,7 +84,7 @@ class ReviewController extends Controller
                 ->select('id', 'product_id', 'order_id', 'rating', 'content', 'created_at', 'is_anonymous', 'is_edited', 'helpful_count', 'is_reported')
                 ->orderBy('created_at', 'desc')
                 ->get();
-    
+
             $reviewsData = $reviews->map(function ($review) {
                 $orderDetail = OrderDetail::where('order_id', $review->order_id)
                     ->whereHas('productDetail', function ($query) use ($review) {
@@ -108,7 +108,7 @@ class ReviewController extends Controller
                     'color' => $orderDetail ? $orderDetail->productDetail->color->name : 'N/A',
                 ];
             });
-    
+
             return response()->json([
                 'my_reviews' => $reviewsData,
                 'total_reviews' => $reviews->count(),
@@ -126,8 +126,8 @@ class ReviewController extends Controller
             $review = Review::with(['product' => function ($query) {
                 $query->select('id', 'name');
             }])
-            ->select('id', 'product_id', 'rating', 'content', 'reply', 'service', 'packaging', 'shipping', 'customer_service', 'created_at', 'helpful_count', 'is_anonymous', 'is_edited', 'is_reported', 'order_id')
-            ->find($reviewId);
+                ->select('id', 'product_id', 'rating', 'content', 'reply', 'service', 'packaging', 'shipping', 'customer_service', 'created_at', 'helpful_count', 'is_anonymous', 'is_edited', 'is_reported', 'order_id')
+                ->find($reviewId);
 
             if (!$review) {
                 return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
@@ -163,6 +163,19 @@ class ReviewController extends Controller
                 'color' => $orderDetail ? $orderDetail->productDetail->color->name : 'N/A',
             ];
 
+            return response()->json([
+                'product' => [
+                    'product_id' => $review->product_id,
+                    'product_name' => $review->product->name,
+                    'product_image' => $review->product->image,
+                    'size' => $orderDetail->productDetail->size->name,
+                    'color' => $orderDetail->productDetail->color->name,
+                    'product_price' => $orderDetail->price,
+                    'quantity' => $orderDetail->quantity,
+                    'total_price' => $orderDetail->total_price,
+                ],
+                'review' => $reviewData
+            ]);
             return response()->json(['review' => $reviewData]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể lấy chi tiết đánh giá', 'message' => $e->getMessage()], 500);
@@ -341,6 +354,7 @@ class ReviewController extends Controller
 
             $review->update($updatedData);
 
+            return response()->json(['message' => 'Cập nhật đánh giá thành công', 'review' => $review]);
             return response()->json(['message' => 'Đánh giá đã được cập nhật thành công', 'review' => $review]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể cập nhật đánh giá', 'message' => $e->getMessage()], 500);

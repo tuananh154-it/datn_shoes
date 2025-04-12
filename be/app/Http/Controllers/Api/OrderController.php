@@ -49,9 +49,12 @@ class OrderController extends Controller
             return response()->json(['message' => 'Có sản phẩm không hợp lệ hoặc không thuộc quyền sở hữu'], 403);
         }
 
-        $cart = Cart::with(['items' => function ($query) use ($selectedItemIds) {
-            $query->whereIn('id', $selectedItemIds);
-        }, 'items.productDetail.product'])->where('user_id', $user->id)->first();
+        $cart = Cart::with([
+            'items' => function ($query) use ($selectedItemIds) {
+                $query->whereIn('id', $selectedItemIds);
+            },
+            'items.productDetail.product'
+        ])->where('user_id', $user->id)->first();
 
         if (!$cart || $cart->items->isEmpty()) {
             return response()->json(['message' => 'Không có sản phẩm nào được chọn để đặt hàng'], 400);
@@ -115,6 +118,8 @@ class OrderController extends Controller
 
                 $total -= $discount;
             }
+            // + $deliverFee
+            $total_price = $total;
 
             $total_price = $total + $deliverFee;
 
@@ -175,7 +180,6 @@ class OrderController extends Controller
                 'total' => $total_price,
                 'discount' => $discount
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollback();
             Log::error('Lỗi đặt hàng: ' . $e->getMessage() . ' - Stack trace: ' . $e->getTraceAsString());
@@ -196,9 +200,9 @@ class OrderController extends Controller
             'order_details.productDetail.color',
             'order_details.productDetail.size'
         ])
-        ->where('user_id', $user->id)
-        ->orderBy('created_at', 'desc')
-        ->get();
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         $formattedOrders = $orders->map(function ($order) {
             $orderDetails = $order->order_details->map(function ($orderDetail) {
@@ -293,8 +297,8 @@ class OrderController extends Controller
             'order_details.productDetail.size',
             'voucher'
         ])
-        ->where('user_id', $user->id)
-        ->find($id);
+            ->where('user_id', $user->id)
+            ->find($id);
 
         if (!$order) {
             return response()->json(['message' => 'Không tìm thấy đơn hàng'], 404);
@@ -459,6 +463,8 @@ class OrderController extends Controller
             }
         }
 
+        // $deliverFee = 30000;
+        $total = $subtotal - $discount;
         $deliverFee = 30000;
         $total = $subtotal - $discount + $deliverFee;
 
@@ -596,6 +602,4 @@ class OrderController extends Controller
             'total' => $total,
         ]);
     }
-
 }
-
