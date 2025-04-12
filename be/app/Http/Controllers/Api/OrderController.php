@@ -30,8 +30,8 @@ class OrderController extends Controller
             'email' => 'required|email',
             'phone_number' => 'required|string',
             'address' => 'required|string',
-            'payment_method' => 'required|in:credit_card,cash_on_delivery,paypal,momo',
-            'voucher_code' => 'nullable|string|exists:vouchers,name',
+            'payment_method' => 'required|in:cash_on_delivery,momo,zalopay',
+            'voucher_id' => 'nullable|exists:vouchers,id',
             'note' => 'nullable|string',
             'selected_items' => 'required|array|min:1',
             'selected_items.*' => 'integer|exists:cart_items,id',
@@ -359,6 +359,7 @@ class OrderController extends Controller
 
         $order = Order::where('user_id', $user->id)
             ->where('id', $id)
+
             ->whereIn('status', ['pending', 'confirmed', 'processing'])
             ->first();
 
@@ -595,4 +596,6 @@ class OrderController extends Controller
             'total' => $total,
         ]);
     }
+
 }
+

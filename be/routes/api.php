@@ -41,6 +41,7 @@ use App\Http\Controllers\UserController;
 // Public routes
 Route::apiResource('articles', ArticleController::class);
 Route::apiResource('comments', CommentController::class);
+// Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
@@ -57,6 +58,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders', [OrderController::class, 'listOrders']);
     Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
 
     Route::post('/momo-payment-code', [OnlineCheckOutController::class, 'momo_payment_code']);

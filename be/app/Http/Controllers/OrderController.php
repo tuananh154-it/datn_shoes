@@ -65,23 +65,22 @@ class OrderController extends Controller
         $currentStatus = $order->status;
         $newStatus = $request->status;
     
-        // Trạng thái kết thúc - không được chuyển tiếp nữa
+        // Trạng thái không thể chuyển tiếp nữa
         $finalStatuses = ['completed', 'refunded', 'cancelled'];
     
         if (in_array($currentStatus, $finalStatuses)) {
-            return redirect()->route('orders.index')
+            return redirect()->back()
                 ->with('error', 'Đơn hàng đã hoàn tất, hoàn tiền hoặc bị hủy. Không thể cập nhật thêm.');
         }
     
-        // ❗Không cho admin chuyển từ "Chờ xác nhận" (pending) sang "Đã xác nhận" (confirmed)
+        // Không cho admin tự chuyển sang confirmed
         if ($currentStatus === 'pending' && $newStatus === 'confirmed') {
-            return redirect()->route('orders.index')
+            return redirect()->back()
                 ->with('error', 'Chỉ người dùng mới có thể xác nhận đơn hàng qua email.');
         }
     
-        // ✅ Danh sách chuyển trạng thái hợp lệ
         $validTransitions = [
-            'pending'    => ['cancelled'], // không cho admin tự chuyển sang confirmed
+            'pending'    => ['cancelled'],
             'confirmed'  => ['processing', 'cancelled'],
             'processing' => ['shipping', 'cancelled'],
             'shipping'   => ['delivered'],
@@ -95,19 +94,20 @@ class OrderController extends Controller
         ) {
             $order->status = $newStatus;
     
-            // Nếu đã giao thành công thì auto đánh dấu thanh toán
             if ($newStatus === 'delivered') {
                 $order->payment_status = 'paid';
             }
     
             $order->save();
     
-            return redirect()->route('orders.index')->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
+            return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
         }
     
-        return redirect()->route('orders.index')->with('error', 'Không thể chuyển trạng thái từ "' . $currentStatus . '" sang "' . $newStatus . '".');
+        return redirect()->back()
+            ->with('error', 'Không thể chuyển trạng thái từ "' . $currentStatus . '" sang "' . $newStatus . '".');
     }
     
-
     
+
+   
 }
