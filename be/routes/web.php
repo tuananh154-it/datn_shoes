@@ -22,6 +22,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ReturnController;
+
 
 
 Route::middleware(['auth', 'admin'])->group(function () {
@@ -51,12 +53,12 @@ Route::get('/order/confirm/{id}', function ($id) {
     }
 
     // Chỉ cho phép xác nhận khi đang ở trạng thái "chờ xác nhận"
-    if ($order->status !== 'waiting_for_confirmation') {
+    if ($order->status !== 'pending') {
         return view('order.already_confirmed');
     }
 
     // Cập nhật trạng thái
-    $order->status = 'waiting_for_pickup';
+    $order->status = 'confirmed';
     $order->save();
 
     return view('order.confirm_success', ['order' => $order]);
@@ -85,6 +87,8 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboards.index');
     });
+    // Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+    Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
     // Route::resource('products', ProductController::class)->middleware('permission:show-products');
     // ----------------------------------------
@@ -339,9 +343,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('dashboards', [AdminController::class, 'index'])->name('dashboards.index')->middleware('permission:show-dashboards');
     // >>>>>>> tuan-anh2
 
-    
-    
-    
+
+
+
 });
 
 
@@ -405,5 +409,9 @@ Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEm
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 Route::post('/comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
+// routes/web.php
+
+
+Route::post('/process-return', [ReturnController::class, 'processReturn']);
 
 // Route cho trang danh sách người dùng
