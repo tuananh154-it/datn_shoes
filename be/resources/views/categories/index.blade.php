@@ -28,7 +28,7 @@
                                 <option value="inactive" {{ request()->status == 'inactive' ? 'selected' : '' }}>Không hoạt động</option>
                             </select>
                         </div>
-                       
+
                         <div class="col-md-2">
                             <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                         </div>
@@ -67,11 +67,11 @@
                                 <span class="badge badge-danger">Không hoạt động </span>
                             @endif
                         </td>
-                       
-                      
+
+
                         <td>
-                           
-                            <a class="btn btn-primary  btn-sm" href="{{ route('categories.edit', $category->id) }}"><i class="fa fa-pencil"></i></a> 
+
+                            <a class="btn btn-primary  btn-sm" href="{{ route('categories.edit', $category->id) }}"><i class="fa fa-pencil"></i></a>
                             {{-- <form action="{{ route('categories.destroy', $category->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Ban co chac chan muon xoa danh mục?');">
                                 @csrf
                                 @method('DELETE')

@@ -12,43 +12,69 @@ use App\Models\ReturnRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class ReturnRequestController extends Controller
 {
+    private function applyRoleFilters($query, $user)
+    {
+        if ($user->role === 'staff') {
+            // Nhân viên CSKH chỉ thấy yêu cầu với trạng thái 'pending', 'reviewed', 'rejected'
+            $query->whereIn('status', ['pending', 'reviewed', 'rejected']);
+        }
+
+        if ($user->role === 'admin' || $user->role === 'superadmin') {
+            // Admin có thể xem các yêu cầu đã được review, approve hoặc rejected
+            $query->whereIn('status', ['reviewed', 'approved', 'rejected']);
+        }
+
+        if ($user->role === 'user') {
+            // Người dùng chỉ có thể xem yêu cầu của chính mình
+            $query->where('user_id', $user->id);
+        }
+    }
+
     // 1. Danh sách yêu cầu (cho CSKH hoặc admin hoặc khách hàng)
     public function index(Request $request)
     {
         try {
             $user = Auth::user();
+            $query = ReturnRequest::with([
+                'user',
+                'order',
+                'reviewer',
+                'admin',
+            ]);
 
-            $query = ReturnRequest::with(['user', 'order', 'reviewer', 'admin']);
+            // Lọc theo quyền truy cập người dùng
+            $this->applyRoleFilters($query, $user);
 
-            // Nếu là nhân viên CSKH: chỉ thấy đơn 'pending'
-            if ($user->role === 'staff') {
-                $query->whereIn('status', ['pending', 'reviewed', 'rejected']);
-            }
-
-            // Nếu là admin: thấy đơn đã được review (để approve)
-            if ($user->role === 'admin') {
-                $query->whereIn('status', ['reviewed', 'approved', 'rejected']);
-            }
-
-            // Nếu là khách hàng: chỉ thấy đơn của chính họ
-            if ($user->role === 'user') {
-                $query->where('user_id', $user->id);
-            }
-
-            // Nếu truyền filter status thì ưu tiên cái này
+            // Lọc theo trạng thái nếu có
             if ($request->has('status')) {
                 $query->where('status', $request->status);
             }
 
-            return ReturnRequestResource::collection($query->latest()->paginate(15));
+            // Lọc theo order_id nếu có
+            if ($request->has('order_id')) {
+                $query->where('order_id', $request->order_id);
+            }
+
+            // Lọc theo order_detail_id nếu có
+            if ($request->has('order_detail_id')) {
+                $query->where('order_detail_id', $request->order_detail_id);
+            }
+
+            $query->orderByRaw("FIELD(status, 'pending', 'reviewed') DESC");
+
+            $query->latest();
+
+            return ReturnRequestResource::collection($query->paginate(15));
         } catch (\Exception $e) {
             Log::error('Lỗi lấy danh sách yêu cầu hoàn: ' . $e->getMessage());
-            return response()->json(['message' => 'Lỗi khi lấy danh sách yêu cầu hoàn'], 500);
+            return response()->json(['message' => 'Lỗi khi lấy danh sách yêu cầu hoàn', 'error' => $e->getMessage()], 500);
         }
     }
+
 
     // Chi tiết yêu cầu hoàn
     public function show($id)
@@ -56,24 +82,24 @@ class ReturnRequestController extends Controller
         try {
             $user = Auth::user();
 
-            $returnRequest = ReturnRequest::with(['user', 'order', 'reviewer', 'admin'])->findOrFail($id);
+            $returnRequest = ReturnRequest::with([
+                'orderDetail.productDetail.product',
+                'orderDetail.productDetail.size',
+                'orderDetail.productDetail.color'
+            ])
+                ->where('id', $id)
+                ->first();
 
-            $orderDetails = OrderDetail::where('order_id', $returnRequest->order_id)
-                ->with([
-                    'productDetail.product',
-                    'productDetail.size',
-                    'productDetail.color',
-                ])
-                ->get();
+            if (!$returnRequest) {
+                return response()->json(['message' => 'Không tìm thấy yêu cầu hoàn trả với review ID này'], 404);
+            }
 
-
-            $role = $user->role;
             $status = $returnRequest->status;
 
-            $canView = match ($role) {
+            $canView = match ($user->role) {
                 'user' => $returnRequest->user_id === $user->id,
                 'staff' => in_array($status, ['pending', 'reviewed', 'rejected']),
-                'admin' => in_array($status, ['reviewed', 'approved', 'rejected']),
+                'admin', 'superadmin' => in_array($status, ['reviewed', 'approved', 'rejected']),
                 default => false,
             };
 
@@ -81,74 +107,105 @@ class ReturnRequestController extends Controller
                 return response()->json(['message' => 'Bạn không có quyền xem yêu cầu này'], 403);
             }
 
-            return new ReturnRequestDetailResource($returnRequest, $orderDetails);
+            $product = [
+                'product_id' => $returnRequest->orderDetail->productDetail->product->id ?? null,
+                'product_name' => $returnRequest->orderDetail->productDetail->product->name ?? 'N/A',
+                'product_image' => $returnRequest->orderDetail->productDetail->product->image ?? 'null',
+                'size' => $returnRequest->orderDetail->productDetail->size->name ?? 'N/A',
+                'color' => $returnRequest->orderDetail->productDetail->color->name ?? 'N/A',
+                'product_price' => $returnRequest->orderDetail->price,
+                'quantity' => $returnRequest->orderDetail->quantity,
+                'total_price' => $returnRequest->orderDetail->total_price,
+            ];
+
+            return response()->json([
+                'id' => $id,
+                'product' => $product,
+                'reason' => [
+                    'reason' => $returnRequest->reason,
+                    'description' => $returnRequest->description,
+                    'bank_account' => $returnRequest->bank_account,
+                ],
+                'all_total' => $returnRequest->orderDetail->total_price,
+            ]);
 
         } catch (\Exception $e) {
-            Log::error('Lỗi xem yêu cầu hoàn: ' . $e->getMessage());
+            Log::error('Lỗi: ' . $e->getMessage());
             return response()->json(['message' => 'Lỗi khi lấy thông tin yêu cầu hoàn'], 500);
         }
     }
-
 
     // 2. Tạo mới yêu cầu hoàn hàng (cho khách hàng)
     public function store(Request $request, $orderId)
     {
         try {
             $request->validate([
-                'reason' => 'required|string|max:255',
-                'description' => 'nullable|string',
-                'image' => 'nullable|image|max:2048',
-                'bank_account' => 'required|string|max:255',
+                'product_detail' => 'required|array',
+                'product_detail.*.id' => 'required|exists:order_details,id',
+                'product_detail.*.reason' => 'required|string|max:255',
+                'product_detail.*.image' => 'nullable|string|max:2048',
+                'product_detail.*.bank_account' => 'required|string|max:255',
+                'product_detail.*.description' => 'nullable|string',
             ]);
 
-            $order = Order::where('id', $orderId)
-                ->where('user_id', Auth::id()) // Chỉ cho hoàn đơn của chính mình
-                ->first();
-
-            if (!$order) {
+            // Kiểm tra đơn hàng
+            $order = Order::find($orderId);
+            if (!$order || $order->user_id !== Auth::id()) {
                 return response()->json(['message' => 'Đơn hàng không tồn tại hoặc không thuộc về bạn'], 403);
             }
 
-            // Check 1: Đơn phải đã giao thành công
-            if ($order->status !== 'delivered') {
-                return response()->json(['message' => 'Chỉ có thể hoàn đơn đã được giao thành công'], 422);
+            $orderDetails = $order->orderDetails;
+            $delivered = $orderDetails->every(function ($detail) {
+                return $detail->order->status === 'delivered';
+            });
+
+            if (!$delivered) {
+                return response()->json(['message' => 'Đơn hàng phải được giao thành công để yêu cầu hoàn trả'], 422);
             }
 
-            // Check 2: Trong vòng 7 ngày từ khi giao
-            // if (!$order->delivered_at || now()->diffInDays($order->delivered_at) > 7) {
-            //     return response()->json(['message' => 'Chỉ được hoàn trong vòng 7 ngày kể từ khi giao hàng'], 422);
-            // }
+            // Kiểm tra yêu cầu hoàn trả đã tồn tại
+            $existingReturnRequest = ReturnRequest::where('order_id', $orderId)
+                ->where(function ($query) {
+                    $query->whereNotNull('status')
+                        ->where('status', '!=', 'rejected');
+                })
+                ->exists();
 
-            // làm thêm 1 trường delivered_at trong bảng orders thì mở cái này ra nhé.
-
-            // Check 3: Không được tạo request hoàn lần 2
-            $exists = ReturnRequest::where('order_id', $order->id)->exists();
-            if ($exists) {
-                return response()->json(['message' => 'Đơn hàng này đã có yêu cầu hoàn trước đó'], 422);
+            if ($existingReturnRequest) {
+                return response()->json(['message' => 'Đơn hàng này đang chờ được xem xét hoặc đã hoàn thành công'], 422);
             }
 
-            // Upload ảnh nếu có
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('return_images', 'public');
-            }
+            // Tiến hành tạo yêu cầu hoàn trả cho từng sản phẩm
+            $returnRequests = collect($request->product_detail)->map(function ($product) use ($order) {
+                $orderDetail = $order->orderDetails->firstWhere('id', $product['id']);
 
-            // Tạo request mới
-            $returnRequest = ReturnRequest::create([
-                'order_id' => $order->id,
-                'user_id' => Auth::id(),
-                'reason' => $request->reason,
-                'description' => $request->description,
-                'image' => $imagePath,
-                'bank_account' => $request->bank_account,
-                'status' => 'pending',
-                'requested_at' => now(),
-            ]);
+                $imagePath = null;
+                if (isset($product['image'])) {
+                    $imageData = base64_decode($product['image']);
+                    $imageName = 'return_' . uniqid() . '.jpg';
+                    $imagePath = 'return_images/' . $imageName;
 
-            return response()->json([$returnRequest, 'message' => 'Bạn đã gửi yêu cầu hoàn hàng thành công'], 201);
+                    Storage::disk('public')->put($imagePath, $imageData);
+                }
+
+                // Tạo yêu cầu hoàn trả
+                return ReturnRequest::create([
+                    'order_id' => $order->id,
+                    'order_detail_id' => $orderDetail->id,
+                    'user_id' => Auth::id(),
+                    'reason' => $product['reason'],
+                    'description' => $product['description'],
+                    'image' => $imagePath,
+                    'bank_account' => $product['bank_account'],
+                    'status' => 'pending',
+                    'requested_at' => now(),
+                ]);
+            });
+
+            return response()->json(['return_requests' => $returnRequests, 'message' => 'Yêu cầu hoàn trả đã được gửi thành công'], 201);
 
         } catch (\Exception $e) {
-            Log::error('ReturnRequest store error: ' . $e->getMessage());
+            Log::error('Lỗi khi tạo yêu cầu hoàn: ' . $e->getMessage());
             return response()->json(['message' => 'Lỗi khi gửi yêu cầu hoàn hàng'], 500);
         }
     }
@@ -225,7 +282,7 @@ class ReturnRequestController extends Controller
         try {
             $user = Auth::user();
 
-            if ($user->role !== 'admin') {
+            if ($user->role !== 'admin' || $user->role !== 'superadmin') {
                 return response()->json(['message' => 'Bạn không có quyền duyệt yêu cầu này'], 403);
             }
 
@@ -260,7 +317,7 @@ class ReturnRequestController extends Controller
         try {
             $user = Auth::user();
 
-            if ($user->role !== 'admin') {
+            if ($user->role !== 'admin' || $user->role !== 'superadmin') {
                 return response()->json(['message' => 'Bạn không có quyền từ chối yêu cầu này'], 403);
             }
 

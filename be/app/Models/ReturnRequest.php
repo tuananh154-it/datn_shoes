@@ -11,6 +11,7 @@ class ReturnRequest extends Model
 
     protected $fillable = [
         'order_id',
+        'order_detail_id',
         'user_id',
         'reason',
         'description',
@@ -44,6 +45,12 @@ class ReturnRequest extends Model
     {
         return $this->belongsTo(Order::class);
     }
+
+    public function orderDetail()
+    {
+        return $this->belongsTo(OrderDetail::class, 'order_detail_id');
+    }
+
 
     // Nhân viên CSKH xem xét đơn
     public function reviewer()

@@ -12,9 +12,8 @@ class Review extends Model
 
     protected $fillable = [
         'user_id',
-        'product_id',
         'order_id',
-        'parent_id',
+        'order_detail_id',
         'rating',
         'content',
         'reply',
@@ -25,6 +24,7 @@ class Review extends Model
         'is_anonymous',
         'helpful_count',
         'is_edited',
+        'is_hidden',
         'is_replied',
         'is_reported'
     ];
@@ -32,21 +32,15 @@ class Review extends Model
     protected $casts = [
         'is_anonymous' => 'boolean',
         'is_edited' => 'boolean',
+        'is_hidden' => 'boolean',
         'is_replied' => 'boolean',
         'is_reported' => 'boolean',
     ];
-
 
     // Mối quan hệ với bảng User
     public function user()
     {
         return $this->belongsTo(User::class);
-    }
-
-    // Mối quan hệ với bảng Product
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
     }
 
     // Mối quan hệ với bảng Order
@@ -55,17 +49,10 @@ class Review extends Model
         return $this->belongsTo(Order::class);
     }
 
-    // Mối quan hệ với bình luận cha ( reply comment -> comment)
-    // Bình luận cha có thể có nhiều bình luận con
-    public function parent()
+    // Mối quan hệ với bảng OrderDetail
+    public function orderDetail()
     {
-        return $this->belongsTo(Review::class, 'parent_id');
-    }
-
-    // Mối quan hệ với bình luận con (comment -> comment)
-    public function children()
-    {
-        return $this->hasMany(Review::class, 'parent_id');
+        return $this->belongsTo(OrderDetail::class);
     }
 
     public function interactions()
