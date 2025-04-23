@@ -14,7 +14,7 @@
         }
 
         .table th {
-            background-color: #FF6C60;
+            background-color: #78CD51;
 
             color: white;
         }
@@ -45,7 +45,7 @@
         <div class="card shadow">
        <div class="card-header" style="background-color: #41CAC0; color: white;" d-flex justify-content-between align-items-center">
                 <h4 class="mb-0">Danh sách quyền hạn</h4>
-                <a href="{{ route('roles.create') }}" class="btn btn-light">
+                <a href="{{ route('roles.create') }}" class="btn btn-light" style="margin-top:12px;background-color:#78CD51;color:white;border:#78CD51">
                     <i class="fa fa-plus"></i> Thêm quyền hạn
                 </a>
             </div>
@@ -67,18 +67,18 @@
                                 <td class="action-btns">
                                     @if (strtolower($role->name) !== 'super-admin')
                                         <div class="btn-group">
-                                            <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning">
+                                            <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning" style="background-color: #41CAC0;border:#41CAC0">
                                                 <i class="fa fa-pencil"></i> Sửa
                                             </a>
 
-                                            <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
+                                            {{-- <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
                                                 onsubmit="return confirm('Bạn có chắc muốn xóa?');">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger">
                                                     <i class="fa fa-trash"></i> Xóa
                                                 </button>
-                                            </form>
+                                            </form> --}}
                                         </div>
                                     @else
                                         <span class="badge bg-secondary">Super Admin</span>
