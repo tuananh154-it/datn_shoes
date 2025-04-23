@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 [2025-04-03 23:44:47] local.ERROR: Method App\Http\Controllers\API\CategoryController::() does not exist {"exception":"[object] (ReflectionException(code: 0): Method App\\Http\\Controllers\\API\\CategoryController::() does not exist at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteSignatureParameters.php:50)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\RouteSignatureParameters.php(50): ReflectionMethod->__construct('App\\\\Http\\\\Contro...', '')
@@ -5105,7 +5104,7 @@ Did you mean one of these?
 #2 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #3 C:\\laragon\\www\\datn_shoes\\be\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #4 {main}
-"} 
+"}
 [2025-04-12 20:55:45] local.ERROR: Command "session:clear" is not defined.
 
 Did you mean one of these?
@@ -5137,7 +5136,7 @@ Did you mean one of these?
 #2 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #3 C:\\laragon\\www\\datn_shoes\\be\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #4 {main}
-"} 
+"}
 [2025-04-14 11:46:54] local.ERROR: SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'role' (Connection: mysql, SQL: alter table `users` add `role` enum('user', 'admin') not null default 'user' after `phone_number`) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S21): SQLSTATE[42S21]: Column already exists: 1060 Duplicate column name 'role' (Connection: mysql, SQL: alter table `users` add `role` enum('user', 'admin') not null default 'user' after `phone_number`) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('alter table `us...', Array, Object(Closure))
@@ -5211,7 +5210,7 @@ Did you mean one of these?
 #32 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #33 C:\\laragon\\www\\datn_shoes\\be\\artisan(37): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
 #34 {main}
-"} 
+"}
 [2025-04-16 19:54:11] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select `id`, `n...', Array, Object(Closure))
@@ -5315,7 +5314,7 @@ Did you mean one of these?
 #47 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #48 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #49 {main}
-"} 
+"}
 [2025-04-16 19:54:11] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select `id`, `n...', Array, Object(Closure))
@@ -5419,7 +5418,7 @@ Did you mean one of these?
 #47 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #48 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #49 {main}
-"} 
+"}
 [2025-04-16 19:56:55] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5470,7 +5469,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:56:57] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5521,7 +5520,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:56:58] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5572,7 +5571,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:05] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5623,7 +5622,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:06] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5674,7 +5673,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:07] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5725,7 +5724,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:07] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5776,7 +5775,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:08] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5827,7 +5826,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:09] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5878,7 +5877,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:13] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5929,7 +5928,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:14] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -5980,7 +5979,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:26] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -6031,7 +6030,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:26] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -6082,7 +6081,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:57] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -6133,7 +6132,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:57:57] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -6184,7 +6183,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:58:01] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select `id`, `n...', Array, Object(Closure))
@@ -6288,7 +6287,7 @@ Did you mean one of these?
 #47 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #48 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #49 {main}
-"} 
+"}
 [2025-04-16 19:58:02] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select `id`, `n...', Array, Object(Closure))
@@ -6392,7 +6391,7 @@ Did you mean one of these?
 #47 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #48 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #49 {main}
-"} 
+"}
 [2025-04-16 19:58:20] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -6443,7 +6442,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-16 19:58:20] local.ERROR: Undefined array key 0 {"userId":9,"exception":"[object] (ErrorException(code: 0): Undefined array key 0 at C:\\laragon\\www\\datn_shoes\\be\\app\\Http\\Controllers\\Api\\CartController.php:31)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Undefined array...', 'C:\\\\laragon\\\\www\\\\...', 31)
@@ -6494,7 +6493,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-19 19:36:05] local.ERROR: Method App\Http\Controllers\Api\CommentController::destroy does not exist. {"userId":5,"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\Api\\CommentController::destroy does not exist. at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php:68)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): Illuminate\\Routing\\Controller->__call('destroy', Array)
@@ -6538,7 +6537,7 @@ Did you mean one of these?
 #38 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #39 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #40 {main}
-"} 
+"}
 [2025-04-19 19:44:02] local.ERROR: Call to a member function diffForHumans() on null {"exception":"[object] (Error(code: 0): Call to a member function diffForHumans() on null at C:\\laragon\\www\\be\\app\\Http\\Controllers\\Api\\CommentController.php:47)
 [stacktrace]
 #0 [internal function]: App\\Http\\Controllers\\Api\\CommentController->App\\Http\\Controllers\\Api\\{closure}(Object(App\\Models\\Comment), 0)
@@ -6587,7 +6586,7 @@ Did you mean one of these?
 #43 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #44 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #45 {main}
-"} 
+"}
 [2025-04-19 19:44:08] local.ERROR: Call to a member function diffForHumans() on null {"exception":"[object] (Error(code: 0): Call to a member function diffForHumans() on null at C:\\laragon\\www\\be\\app\\Http\\Controllers\\Api\\CommentController.php:47)
 [stacktrace]
 #0 [internal function]: App\\Http\\Controllers\\Api\\CommentController->App\\Http\\Controllers\\Api\\{closure}(Object(App\\Models\\Comment), 0)
@@ -6636,7 +6635,7 @@ Did you mean one of these?
 #43 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #44 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #45 {main}
-"} 
+"}
 [2025-04-19 20:50:25] local.ERROR: Call to undefined method App\Models\Comment::withTrashed() {"userId":3,"exception":"[object] (BadMethodCallException(code: 0): Call to undefined method App\\Models\\Comment::withTrashed() at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php:67)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(36): Illuminate\\Database\\Eloquent\\Model::throwBadMethodCallException('withTrashed')
@@ -6693,7 +6692,7 @@ Did you mean one of these?
 #51 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #52 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #53 {main}
-"} 
+"}
 [2025-04-19 20:50:45] local.ERROR: Call to undefined method App\Models\Comment::withTrashed() {"userId":3,"exception":"[object] (BadMethodCallException(code: 0): Call to undefined method App\\Models\\Comment::withTrashed() at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php:67)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(36): Illuminate\\Database\\Eloquent\\Model::throwBadMethodCallException('withTrashed')
@@ -6750,7 +6749,7 @@ Did you mean one of these?
 #51 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #52 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #53 {main}
-"} 
+"}
 [2025-04-19 21:13:00] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select `id`, `n...', Array, Object(Closure))
@@ -6854,7 +6853,7 @@ Did you mean one of these?
 #47 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #48 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #49 {main}
-"} 
+"}
 [2025-04-19 21:13:01] local.ERROR: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 42S22): SQLSTATE[42S22]: Column not found: 1054 Unknown column 'quantity' in 'field list' (Connection: mysql, SQL: select `id`, `name`, `discount_amount`, `discount_percent`, `expiration_date`, `min_purchase_amount`, `max_discount_amount`, `status`, `quantity` from `vouchers` where `status` = active and `deleted_at` is null) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('select `id`, `n...', Array, Object(Closure))
@@ -6958,7 +6957,7 @@ Did you mean one of these?
 #47 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #48 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #49 {main}
-"} 
+"}
 [2025-04-19 21:50:02] local.ERROR: Undefined variable $comment {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\comments\\list.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-474464951 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1622</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -7116,7 +7115,7 @@ Did you mean one of these?
 #56 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #57 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #58 {main}
-"} 
+"}
 [2025-04-19 21:50:15] local.ERROR: Undefined variable $comment {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\comments\\list.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1587155307 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1629</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -7274,7 +7273,7 @@ Did you mean one of these?
 #56 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #57 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #58 {main}
-"} 
+"}
 [2025-04-20 21:04:25] local.ERROR: SQLSTATE[HY000]: General error: 1364 Field 'guard_name' doesn't have a default value (Connection: mysql, SQL: insert into `roles` (`name`, `updated_at`, `created_at`) values (staff, 2025-04-20 21:04:25, 2025-04-20 21:04:25)) {"userId":3,"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1364 Field 'guard_name' doesn't have a default value (Connection: mysql, SQL: insert into `roles` (`name`, `updated_at`, `created_at`) values (staff, 2025-04-20 21:04:25, 2025-04-20 21:04:25)) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `ro...', Array, Object(Closure))
@@ -7400,7 +7399,7 @@ Did you mean one of these?
 #58 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #59 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #60 {main}
-"} 
+"}
 [2025-04-20 21:09:38] local.ERROR: SQLSTATE[HY000]: General error: 1364 Field 'guard_name' doesn't have a default value (Connection: mysql, SQL: insert into `roles` (`name`, `updated_at`, `created_at`) values (staff, 2025-04-20 21:09:38, 2025-04-20 21:09:38)) {"userId":3,"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1364 Field 'guard_name' doesn't have a default value (Connection: mysql, SQL: insert into `roles` (`name`, `updated_at`, `created_at`) values (staff, 2025-04-20 21:09:38, 2025-04-20 21:09:38)) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `ro...', Array, Object(Closure))
@@ -7526,7 +7525,7 @@ Did you mean one of these?
 #58 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #59 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #60 {main}
-"} 
+"}
 [2025-04-20 21:20:06] local.ERROR: Route [return_requests.approve] not defined. {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\return_requests\\index.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-605888447 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1668</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -7674,7 +7673,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-20 21:20:11] local.ERROR: Route [return_requests.approve] not defined. {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\return_requests\\index.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-2111894984 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1678</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -7822,7 +7821,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-20 21:21:58] local.ERROR: Method App\Http\Controllers\ReturnRequestController::approve does not exist. {"userId":3,"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\ReturnRequestController::approve does not exist. at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php:68)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): Illuminate\\Routing\\Controller->__call('approve', Array)
@@ -7873,7 +7872,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-20 21:50:16] local.ERROR: SQLSTATE[HY000]: General error: 1364 Field 'guard_name' doesn't have a default value (Connection: mysql, SQL: insert into `roles` (`name`, `updated_at`, `created_at`) values (zzzz, 2025-04-20 21:50:16, 2025-04-20 21:50:16)) {"userId":4,"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1364 Field 'guard_name' doesn't have a default value (Connection: mysql, SQL: insert into `roles` (`name`, `updated_at`, `created_at`) values (zzzz, 2025-04-20 21:50:16, 2025-04-20 21:50:16)) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `ro...', Array, Object(Closure))
@@ -7999,7 +7998,7 @@ Did you mean one of these?
 #58 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #59 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #60 {main}
-"} 
+"}
 [2025-04-20 21:53:46] local.ERROR: SQLSTATE[HY000]: General error: 1364 Field 'guard_name' doesn't have a default value (Connection: mysql, SQL: insert into `roles` (`name`, `updated_at`, `created_at`) values (ss, 2025-04-20 21:53:46, 2025-04-20 21:53:46)) {"userId":4,"exception":"[object] (Illuminate\\Database\\QueryException(code: HY000): SQLSTATE[HY000]: General error: 1364 Field 'guard_name' doesn't have a default value (Connection: mysql, SQL: insert into `roles` (`name`, `updated_at`, `created_at`) values (ss, 2025-04-20 21:53:46, 2025-04-20 21:53:46)) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('insert into `ro...', Array, Object(Closure))
@@ -8125,7 +8124,7 @@ Did you mean one of these?
 #58 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #59 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #60 {main}
-"} 
+"}
 [2025-04-20 22:13:43] local.ERROR: Attempt to read property "name" on null {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\blocks\\header.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-299535711 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1662</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -8854,7 +8853,7 @@ Did you mean one of these?
 #68 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #69 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #70 {main}
-"} 
+"}
 [2025-04-20 22:13:50] local.ERROR: Attempt to read property "name" on null {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\blocks\\header.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-948371643 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1663</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -9144,7 +9143,7 @@ Did you mean one of these?
 #68 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #69 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #70 {main}
-"} 
+"}
 [2025-04-20 22:13:59] local.ERROR: Attempt to read property "name" on null {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\blocks\\header.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-924808058 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1663</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -9434,7 +9433,7 @@ Did you mean one of these?
 #68 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #69 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #70 {main}
-"} 
+"}
 [2025-04-20 22:14:01] local.ERROR: Attempt to read property "name" on null {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\blocks\\header.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1540322678 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1663</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -9724,7 +9723,7 @@ Did you mean one of these?
 #68 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #69 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #70 {main}
-"} 
+"}
 [2025-04-20 22:14:12] local.ERROR: Attempt to read property "name" on null {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\blocks\\header.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1542677771 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1663</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -10014,7 +10013,7 @@ Did you mean one of these?
 #68 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #69 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #70 {main}
-"} 
+"}
 [2025-04-20 22:14:39] local.ERROR: Attempt to read property "name" on null {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\blocks\\header.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1017286388 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1663</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -10304,7 +10303,7 @@ Did you mean one of these?
 #68 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #69 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #70 {main}
-"} 
+"}
 [2025-04-20 22:15:17] local.ERROR: Attempt to read property "name" on null {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\blocks\\header.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-334047790 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1663</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -10594,7 +10593,7 @@ Did you mean one of these?
 #68 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #69 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #70 {main}
-"} 
+"}
 [2025-04-20 22:15:43] local.ERROR: Attempt to read property "name" on null {"view":{"view":"C:\\laragon\\www\\datn_shoes\\be\\resources\\views\\blocks\\header.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1630695170 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1663</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -10884,7 +10883,7 @@ Did you mean one of these?
 #68 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #69 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #70 {main}
-"} 
+"}
 [2025-04-22 12:59:33] local.ERROR: Method App\Http\Controllers\Api\OrderController::getOrderReview does not exist. {"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\Api\\OrderController::getOrderReview does not exist. at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php:68)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): Illuminate\\Routing\\Controller->__call('getOrderReview', Array)
@@ -10926,7 +10925,7 @@ Did you mean one of these?
 #36 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #37 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #38 {main}
-"} 
+"}
 [2025-04-22 13:02:14] local.ERROR: Call to a member function map() on null {"exception":"[object] (Error(code: 0): Call to a member function map() on null at C:\\laragon\\www\\be\\app\\Http\\Controllers\\Api\\ReviewController.php:146)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): App\\Http\\Controllers\\Api\\ReviewController->getOrderReview('1')
@@ -10968,13 +10967,13 @@ Did you mean one of these?
 #36 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #37 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #38 {main}
-"} 
-[2025-04-22 13:32:35] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].  
-[2025-04-22 13:33:35] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].  
-[2025-04-22 13:34:42] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].  
-[2025-04-22 13:35:09] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].  
-[2025-04-22 13:35:25] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].  
-[2025-04-22 13:35:28] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].  
+"}
+[2025-04-22 13:32:35] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].
+[2025-04-22 13:33:35] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].
+[2025-04-22 13:34:42] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].
+[2025-04-22 13:35:09] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].
+[2025-04-22 13:35:25] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].
+[2025-04-22 13:35:28] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].
 [2025-04-22 13:36:36] local.ERROR: Call to undefined method App\Models\OrderDetail::belongsToThrough() {"userId":5,"exception":"[object] (BadMethodCallException(code: 0): Call to undefined method App\\Models\\OrderDetail::belongsToThrough() at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php:67)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(36): Illuminate\\Database\\Eloquent\\Model::throwBadMethodCallException('belongsToThroug...')
@@ -11034,7 +11033,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 13:37:16] local.ERROR: Call to undefined method App\Models\OrderDetail::belongsToThrough() {"userId":5,"exception":"[object] (BadMethodCallException(code: 0): Call to undefined method App\\Models\\OrderDetail::belongsToThrough() at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php:67)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(36): Illuminate\\Database\\Eloquent\\Model::throwBadMethodCallException('belongsToThroug...')
@@ -11094,7 +11093,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 13:38:53] local.ERROR: Attempt to read property "name" on null {"userId":5,"exception":"[object] (ErrorException(code: 0): Attempt to read property \"name\" on null at C:\\laragon\\www\\be\\app\\Http\\Resources\\ReturnRequestResource.php:23)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Attempt to read...', 'C:\\\\laragon\\\\www\\\\...', 23)
@@ -11148,7 +11147,7 @@ Did you mean one of these?
 #48 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #49 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #50 {main}
-"} 
+"}
 [2025-04-22 13:40:57] local.ERROR: Attempt to read property "name" on null {"userId":5,"exception":"[object] (ErrorException(code: 0): Attempt to read property \"name\" on null at C:\\laragon\\www\\be\\app\\Http\\Resources\\ReturnRequestResource.php:23)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Attempt to read...', 'C:\\\\laragon\\\\www\\\\...', 23)
@@ -11202,7 +11201,7 @@ Did you mean one of these?
 #48 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #49 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #50 {main}
-"} 
+"}
 [2025-04-22 13:42:49] local.ERROR: Call to undefined method App\Models\OrderDetail::belongsToThrough() {"userId":5,"exception":"[object] (BadMethodCallException(code: 0): Call to undefined method App\\Models\\OrderDetail::belongsToThrough() at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php:67)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(36): Illuminate\\Database\\Eloquent\\Model::throwBadMethodCallException('belongsToThroug...')
@@ -11262,7 +11261,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 13:43:05] local.ERROR: Call to undefined method App\Models\OrderDetail::belongsToThrough() {"userId":5,"exception":"[object] (BadMethodCallException(code: 0): Call to undefined method App\\Models\\OrderDetail::belongsToThrough() at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php:67)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(36): Illuminate\\Database\\Eloquent\\Model::throwBadMethodCallException('belongsToThroug...')
@@ -11322,7 +11321,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 13:44:08] local.ERROR: Call to undefined method App\Models\OrderDetail::belongsToThrough() {"userId":5,"exception":"[object] (BadMethodCallException(code: 0): Call to undefined method App\\Models\\OrderDetail::belongsToThrough() at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php:67)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(36): Illuminate\\Database\\Eloquent\\Model::throwBadMethodCallException('belongsToThroug...')
@@ -11382,7 +11381,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 13:44:10] local.ERROR: Call to undefined method App\Models\OrderDetail::belongsToThrough() {"userId":5,"exception":"[object] (BadMethodCallException(code: 0): Call to undefined method App\\Models\\OrderDetail::belongsToThrough() at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php:67)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Support\\Traits\\ForwardsCalls.php(36): Illuminate\\Database\\Eloquent\\Model::throwBadMethodCallException('belongsToThroug...')
@@ -11442,20 +11441,20 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
-[2025-04-22 13:56:31] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetail] on model [App\Models\ReturnRequest].  
-[2025-04-22 13:56:47] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetail] on model [App\Models\ReturnRequest].  
-[2025-04-22 13:57:13] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetail] on model [App\Models\ReturnRequest].  
-[2025-04-22 13:57:15] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetail] on model [App\Models\ReturnRequest].  
-[2025-04-22 13:59:39] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'datn_2.return_request_order_details' doesn't exist (Connection: mysql, SQL: select `order_details`.*, `return_request_order_details`.`return_request_id` as `pivot_return_request_id`, `return_request_order_details`.`order_detail_id` as `pivot_order_detail_id` from `order_details` inner join `return_request_order_details` on `order_details`.`id` = `return_request_order_details`.`order_detail_id` where `return_request_order_details`.`return_request_id` in (1))  
-[2025-04-22 14:00:43] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'datn_2.return_request_order_details' doesn't exist (Connection: mysql, SQL: select `order_details`.*, `return_request_order_details`.`return_request_id` as `pivot_return_request_id`, `return_request_order_details`.`order_detail_id` as `pivot_order_detail_id` from `order_details` inner join `return_request_order_details` on `order_details`.`id` = `return_request_order_details`.`order_detail_id` where `return_request_order_details`.`return_request_id` in (1))  
-[2025-04-22 14:01:26] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:01:28] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:02:01] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_detail_id` in (1))  
-[2025-04-22 14:12:22] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_id` = 1 and `order_details`.`order_id` is not null and `order_detail_id` in (?, ?))  
-[2025-04-22 14:12:45] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_id` = 1 and `order_details`.`order_id` is not null and `order_detail_id` in (?, ?))  
-[2025-04-22 14:13:33] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_id` = 1 and `order_details`.`order_id` is not null and `order_detail_id` in (?, ?))  
-[2025-04-22 14:14:44] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_id` = 1 and `order_details`.`order_id` is not null and `order_detail_id` in (?, ?))  
+"}
+[2025-04-22 13:56:31] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetail] on model [App\Models\ReturnRequest].
+[2025-04-22 13:56:47] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetail] on model [App\Models\ReturnRequest].
+[2025-04-22 13:57:13] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetail] on model [App\Models\ReturnRequest].
+[2025-04-22 13:57:15] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Call to undefined relationship [orderDetail] on model [App\Models\ReturnRequest].
+[2025-04-22 13:59:39] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'datn_2.return_request_order_details' doesn't exist (Connection: mysql, SQL: select `order_details`.*, `return_request_order_details`.`return_request_id` as `pivot_return_request_id`, `return_request_order_details`.`order_detail_id` as `pivot_order_detail_id` from `order_details` inner join `return_request_order_details` on `order_details`.`id` = `return_request_order_details`.`order_detail_id` where `return_request_order_details`.`return_request_id` in (1))
+[2025-04-22 14:00:43] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'datn_2.return_request_order_details' doesn't exist (Connection: mysql, SQL: select `order_details`.*, `return_request_order_details`.`return_request_id` as `pivot_return_request_id`, `return_request_order_details`.`order_detail_id` as `pivot_order_detail_id` from `order_details` inner join `return_request_order_details` on `order_details`.`id` = `return_request_order_details`.`order_detail_id` where `return_request_order_details`.`return_request_id` in (1))
+[2025-04-22 14:01:26] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:01:28] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:02:01] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_detail_id` in (1))
+[2025-04-22 14:12:22] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_id` = 1 and `order_details`.`order_id` is not null and `order_detail_id` in (?, ?))
+[2025-04-22 14:12:45] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_id` = 1 and `order_details`.`order_id` is not null and `order_detail_id` in (?, ?))
+[2025-04-22 14:13:33] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_id` = 1 and `order_details`.`order_id` is not null and `order_detail_id` in (?, ?))
+[2025-04-22 14:14:44] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_detail_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`order_id` = 1 and `order_details`.`order_id` is not null and `order_detail_id` in (?, ?))
 [2025-04-22 14:17:04] local.ERROR: Call to a member function contains() on null {"userId":5,"exception":"[object] (Error(code: 0): Call to a member function contains() on null at C:\\laragon\\www\\be\\app\\Http\\Resources\\ReturnRequestDetailResource.php:26)
 [stacktrace]
 #0 [internal function]: App\\Http\\Resources\\ReturnRequestDetailResource->App\\Http\\Resources\\{closure}(Object(App\\Models\\OrderDetail), 0)
@@ -11504,7 +11503,7 @@ Did you mean one of these?
 #43 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #44 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #45 {main}
-"} 
+"}
 [2025-04-22 14:17:53] local.ERROR: Call to a member function contains() on null {"userId":5,"exception":"[object] (Error(code: 0): Call to a member function contains() on null at C:\\laragon\\www\\be\\app\\Http\\Resources\\ReturnRequestDetailResource.php:26)
 [stacktrace]
 #0 [internal function]: App\\Http\\Resources\\ReturnRequestDetailResource->App\\Http\\Resources\\{closure}(Object(App\\Models\\OrderDetail), 0)
@@ -11553,7 +11552,7 @@ Did you mean one of these?
 #43 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #44 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #45 {main}
-"} 
+"}
 [2025-04-22 14:20:13] local.ERROR: Attempt to read property "productDetail" on int {"userId":5,"exception":"[object] (ErrorException(code: 0): Attempt to read property \"productDetail\" on int at C:\\laragon\\www\\be\\app\\Http\\Resources\\ReturnRequestDetailResource.php:24)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'Attempt to read...', 'C:\\\\laragon\\\\www\\\\...', 24)
@@ -11604,15 +11603,15 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
-[2025-04-22 14:22:16] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:22:28] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:22:30] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:22:45] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:22:47] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:22:49] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:23:37] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:23:38] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+"}
+[2025-04-22 14:22:16] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:22:28] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:22:30] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:22:45] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:22:47] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:22:49] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:23:37] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:23:38] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:23:51] local.ERROR: Too few arguments to function Illuminate\Database\Eloquent\Builder::findOrFail(), 0 passed in C:\laragon\www\be\app\Http\Controllers\Api\ReturnRequestController.php on line 88 and at least 1 expected {"userId":5,"exception":"[object] (ArgumentCountError(code: 0): Too few arguments to function Illuminate\\Database\\Eloquent\\Builder::findOrFail(), 0 passed in C:\\laragon\\www\\be\\app\\Http\\Controllers\\Api\\ReturnRequestController.php on line 88 and at least 1 expected at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Eloquent\\Builder.php:479)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\app\\Http\\Controllers\\Api\\ReturnRequestController.php(88): Illuminate\\Database\\Eloquent\\Builder->findOrFail()
@@ -11657,19 +11656,19 @@ Did you mean one of these?
 #39 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #40 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #41 {main}
-"} 
-[2025-04-22 14:24:49] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:26:37] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:26:39] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:27:01] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:27:03] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:27:35] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:28:34] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:28:49] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:29:33] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:29:34] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:29:36] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:30:02] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+"}
+[2025-04-22 14:24:49] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:26:37] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:26:39] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:27:01] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:27:03] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:27:35] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:28:34] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:28:49] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:29:33] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:29:34] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:29:36] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:30:02] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:30:02] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -11724,8 +11723,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:30:03] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:30:03] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:30:03] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -11780,8 +11779,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:31:28] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:31:28] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:31:28] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -11836,8 +11835,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:31:29] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:31:29] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:31:29] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -11892,8 +11891,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:31:53] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:31:53] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:31:53] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -11948,8 +11947,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:31:54] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:31:54] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:31:54] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12004,8 +12003,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:32:24] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:32:24] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:32:24] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12060,8 +12059,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:32:25] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:32:25] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:32:25] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12116,8 +12115,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:33:33] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:33:33] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:33:33] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12172,8 +12171,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:34:27] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:34:27] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:34:27] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12228,8 +12227,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:34:32] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:34:32] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:34:32] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12284,8 +12283,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:34:53] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` = 1 and `order_details`.`return_request_id` is not null)  
+#54 {main}
+[2025-04-22 14:34:53] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` = 1 and `order_details`.`return_request_id` is not null)
 [2025-04-22 14:34:53] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12346,8 +12345,8 @@ Did you mean one of these?
 #57 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #58 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #59 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#60 {main}  
-[2025-04-22 14:35:54] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#60 {main}
+[2025-04-22 14:35:54] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:35:54] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12402,8 +12401,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:36:59] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:36:59] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:36:59] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12458,8 +12457,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:37:01] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:37:01] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:37:01] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12514,8 +12513,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:37:21] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:37:21] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:37:21] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12570,8 +12569,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:37:23] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:37:23] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:37:23] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12626,8 +12625,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:38:20] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:38:20] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:38:20] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12682,8 +12681,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:38:22] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:38:22] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:38:22] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12738,8 +12737,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:38:47] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:38:47] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:38:47] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12794,8 +12793,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:38:49] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:38:49] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:38:49] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12850,8 +12849,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:39:12] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:39:12] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:39:12] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12906,8 +12905,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:40:04] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:40:04] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:40:04] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -12962,8 +12961,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:40:06] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:40:06] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:40:06] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -13018,8 +13017,8 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:40:16] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:40:16] local.ERROR: Lỗi xem yêu cầu hoàn: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:40:16] local.ERROR: #0 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(783): Illuminate\Database\Connection->runQueryCallback('select * from `...', Array, Object(Closure))
 #1 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Connection.php(414): Illuminate\Database\Connection->run('select * from `...', Array, Object(Closure))
 #2 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Database\Query\Builder.php(2913): Illuminate\Database\Connection->select('select * from `...', Array, true)
@@ -13074,9 +13073,9 @@ Did you mean one of these?
 #51 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\Http\Kernel.php(144): Illuminate\Foundation\Http\Kernel->sendRequestThroughRouter(Object(Illuminate\Http\Request))
 #52 C:\laragon\www\be\public\index.php(51): Illuminate\Foundation\Http\Kernel->handle(Object(Illuminate\Http\Request))
 #53 C:\laragon\www\be\vendor\laravel\framework\src\Illuminate\Foundation\resources\server.php(16): require_once('C:\\laragon\\www\\...')
-#54 {main}  
-[2025-04-22 14:41:43] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:42:52] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
+#54 {main}
+[2025-04-22 14:41:43] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:42:52] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
 [2025-04-22 14:43:23] local.ERROR: syntax error, unexpected token "}", expecting ";" {"exception":"[object] (ParseError(code: 0): syntax error, unexpected token \"}\", expecting \";\" at C:\\laragon\\www\\be\\app\\Http\\Controllers\\Api\\ReturnRequestController.php:110)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\laragon\\\\www\\\\...')
@@ -13110,15 +13109,15 @@ Did you mean one of these?
 #28 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #29 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #30 {main}
-"} 
-[2025-04-22 14:43:35] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:44:00] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:44:02] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:44:16] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:45:03] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:45:05] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))  
-[2025-04-22 14:47:11] local.ERROR: Lỗi: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].  
-[2025-04-22 14:47:12] local.ERROR: Lỗi: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].  
+"}
+[2025-04-22 14:43:35] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:44:00] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:44:02] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:44:16] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:45:03] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:45:05] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'order_details.return_request_id' in 'where clause' (Connection: mysql, SQL: select * from `order_details` where `order_details`.`return_request_id` in (1))
+[2025-04-22 14:47:11] local.ERROR: Lỗi: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].
+[2025-04-22 14:47:12] local.ERROR: Lỗi: Call to undefined relationship [orderDetails] on model [App\Models\ReturnRequest].
 [2025-04-22 14:47:43] local.ERROR: Call to a member function map() on null {"userId":5,"exception":"[object] (Error(code: 0): Call to a member function map() on null at C:\\laragon\\www\\be\\app\\Http\\Controllers\\Api\\ReturnRequestController.php:102)
 [stacktrace]
 #0 [internal function]: App\\Http\\Controllers\\Api\\ReturnRequestController->App\\Http\\Controllers\\Api\\{closure}(Object(App\\Models\\ReturnRequest), 0)
@@ -13168,7 +13167,7 @@ Did you mean one of these?
 #44 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #45 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #46 {main}
-"} 
+"}
 [2025-04-22 14:50:11] local.ERROR: syntax error, unexpected single-quoted string "all_total", expecting "]" {"exception":"[object] (ParseError(code: 0): syntax error, unexpected single-quoted string \"all_total\", expecting \"]\" at C:\\laragon\\www\\be\\app\\Http\\Controllers\\Api\\ReturnRequestController.php:124)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\composer\\ClassLoader.php(427): Composer\\Autoload\\{closure}('C:\\\\laragon\\\\www\\\\...')
@@ -13202,7 +13201,7 @@ Did you mean one of these?
 #28 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #29 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #30 {main}
-"} 
+"}
 [2025-04-22 14:55:32] local.ERROR: Undefined variable $returnRequest {"view":{"view":"C:\\laragon\\www\\be\\resources\\views\\return_requests\\show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1591531625 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1672</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -13350,7 +13349,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 14:55:37] local.ERROR: Undefined variable $returnRequest {"view":{"view":"C:\\laragon\\www\\be\\resources\\views\\return_requests\\show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1353925896 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1672</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -13498,7 +13497,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 14:57:13] local.ERROR: Undefined variable $returnRequest {"view":{"view":"C:\\laragon\\www\\be\\resources\\views\\return_requests\\show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1191012088 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1672</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -13646,7 +13645,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 14:57:44] local.ERROR: Undefined variable $returnRequest {"view":{"view":"C:\\laragon\\www\\be\\resources\\views\\return_requests\\show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-1823095596 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1672</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -13794,7 +13793,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 14:58:05] local.ERROR: Undefined variable $orderDetails {"view":{"view":"C:\\laragon\\www\\be\\resources\\views\\return_requests\\show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-418530861 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1672</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -14142,7 +14141,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 15:07:22] local.ERROR: There is no role named `staff` for guard `web`. {"userId":3,"exception":"[object] (Spatie\\Permission\\Exceptions\\RoleDoesNotExist(code: 0): There is no role named `staff` for guard `web`. at C:\\laragon\\www\\be\\vendor\\spatie\\laravel-permission\\src\\Exceptions\\RoleDoesNotExist.php:11)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\spatie\\laravel-permission\\src\\Models\\Role.php(105): Spatie\\Permission\\Exceptions\\RoleDoesNotExist::named('staff', 'web')
@@ -14202,7 +14201,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 15:10:12] local.ERROR: There is no role named `staff` for guard `web`. {"userId":3,"exception":"[object] (Spatie\\Permission\\Exceptions\\RoleDoesNotExist(code: 0): There is no role named `staff` for guard `web`. at C:\\laragon\\www\\be\\vendor\\spatie\\laravel-permission\\src\\Exceptions\\RoleDoesNotExist.php:11)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\spatie\\laravel-permission\\src\\Models\\Role.php(105): Spatie\\Permission\\Exceptions\\RoleDoesNotExist::named('staff', 'web')
@@ -14262,7 +14261,7 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
+"}
 [2025-04-22 18:21:35] local.ERROR: compact(): Undefined variable $roles {"userId":3,"exception":"[object] (ErrorException(code: 0): compact(): Undefined variable $roles at C:\\laragon\\www\\be\\app\\Http\\Controllers\\UserController.php:77)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Bootstrap\\HandleExceptions.php(255): Illuminate\\Foundation\\Bootstrap\\HandleExceptions->handleError(2, 'compact(): Unde...', 'C:\\\\laragon\\\\www\\\\...', 77)
@@ -14318,25 +14317,25 @@ Did you mean one of these?
 #50 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #51 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #52 {main}
-"} 
-[2025-04-22 18:44:34] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:45:08] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:45:41] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:45:46] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:45:55] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:46:00] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:46:26] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product detail field is required.  
-[2025-04-22 18:46:30] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:46:31] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:46:33] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:46:45] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)  
-[2025-04-22 18:58:10] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Method App\Http\Controllers\ReturnRequestController::applyRoleFilters does not exist.  
-[2025-04-22 18:58:29] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select count(*) as aggregate from (select * from `return_requests` where `status` in (reviewed, approved, rejected) group by `order_id`) as `aggregate_table`)  
-[2025-04-22 18:58:32] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select count(*) as aggregate from (select * from `return_requests` where `status` in (reviewed, approved, rejected) group by `order_id`) as `aggregate_table`)  
-[2025-04-22 19:00:53] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select * from `return_requests` where `status` in (reviewed, approved, rejected) group by `order_id`)  
-[2025-04-22 19:01:28] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #3 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.status' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select MAX(id) as id, `order_id`, `status`, `reason`, MAX(requested_at) as requested_at from `return_requests` group by `order_id`)  
-[2025-04-22 19:01:29] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #3 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.status' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select MAX(id) as id, `order_id`, `status`, `reason`, MAX(requested_at) as requested_at from `return_requests` group by `order_id`)  
-[2025-04-22 19:02:27] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select * from `return_requests` where `status` in (reviewed, approved, rejected) group by `order_id`)  
+"}
+[2025-04-22 18:44:34] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:45:08] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:45:41] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:45:46] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:45:55] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:46:00] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:46:26] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product detail field is required.
+[2025-04-22 18:46:30] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:46:31] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:46:33] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:46:45] local.ERROR: Lỗi khi tạo yêu cầu hoàn: The product_detail.0.image field must be an image. (and 1 more error)
+[2025-04-22 18:58:10] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: Method App\Http\Controllers\ReturnRequestController::applyRoleFilters does not exist.
+[2025-04-22 18:58:29] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select count(*) as aggregate from (select * from `return_requests` where `status` in (reviewed, approved, rejected) group by `order_id`) as `aggregate_table`)
+[2025-04-22 18:58:32] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select count(*) as aggregate from (select * from `return_requests` where `status` in (reviewed, approved, rejected) group by `order_id`) as `aggregate_table`)
+[2025-04-22 19:00:53] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select * from `return_requests` where `status` in (reviewed, approved, rejected) group by `order_id`)
+[2025-04-22 19:01:28] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #3 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.status' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select MAX(id) as id, `order_id`, `status`, `reason`, MAX(requested_at) as requested_at from `return_requests` group by `order_id`)
+[2025-04-22 19:01:29] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #3 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.status' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select MAX(id) as id, `order_id`, `status`, `reason`, MAX(requested_at) as requested_at from `return_requests` group by `order_id`)
+[2025-04-22 19:02:27] local.ERROR: Lỗi lấy danh sách yêu cầu hoàn: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'datn_2.return_requests.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by (Connection: mysql, SQL: select * from `return_requests` where `status` in (reviewed, approved, rejected) group by `order_id`)
 [2025-04-22 19:06:25] local.ERROR: Method App\Http\Controllers\ReturnRequestController::index does not exist. {"userId":3,"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\ReturnRequestController::index does not exist. at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php:68)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): Illuminate\\Routing\\Controller->__call('index', Array)
@@ -14387,7 +14386,7 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
+"}
 [2025-04-22 19:07:19] local.ERROR: Method App\Http\Controllers\ReturnRequestController::index does not exist. {"userId":3,"exception":"[object] (BadMethodCallException(code: 0): Method App\\Http\\Controllers\\ReturnRequestController::index does not exist. at C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php:68)
 [stacktrace]
 #0 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Routing\\Controller.php(54): Illuminate\\Routing\\Controller->__call('index', Array)
@@ -14438,8 +14437,8 @@ Did you mean one of these?
 #45 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #46 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #47 {main}
-"} 
-[2025-04-22 19:09:33] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21)  
+"}
+[2025-04-22 19:09:33] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21)
 [2025-04-22 19:09:33] local.ERROR: Undefined variable $returnRequest {"view":{"view":"C:\\laragon\\www\\be\\resources\\views\\return_requests\\show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-2092824060 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1672</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -14563,8 +14562,8 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
-[2025-04-22 19:10:26] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)  
+"}
+[2025-04-22 19:10:26] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)
 [2025-04-22 19:10:26] local.ERROR: Undefined variable $returnRequest {"view":{"view":"C:\\laragon\\www\\be\\resources\\views\\return_requests\\show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-938663278 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1672</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -14688,8 +14687,8 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
-[2025-04-22 19:10:45] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)  
+"}
+[2025-04-22 19:10:45] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)
 [2025-04-22 19:10:45] local.ERROR: Undefined variable $returnRequest {"view":{"view":"C:\\laragon\\www\\be\\resources\\views\\return_requests\\show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-248954912 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1672</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -14813,8 +14812,8 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
-[2025-04-22 19:11:24] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)  
+"}
+[2025-04-22 19:11:24] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)
 [2025-04-22 19:11:24] local.ERROR: Undefined variable $returnRequest {"view":{"view":"C:\\laragon\\www\\be\\resources\\views\\return_requests\\show.blade.php","data":{"errors":"<pre class=sf-dump id=sf-dump-504724572 data-indent-pad=\"  \"><span class=sf-dump-note>Illuminate\\Support\\ViewErrorBag</span> {<a class=sf-dump-ref>#1672</a><samp data-depth=1 class=sf-dump-expanded>
   #<span class=sf-dump-protected title=\"Protected property\">bags</span>: []
 </samp>}
@@ -14938,10 +14937,10 @@ Did you mean one of these?
 #54 C:\\laragon\\www\\be\\public\\index.php(51): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #55 C:\\laragon\\www\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #56 {main}
-"} 
-[2025-04-22 19:11:43] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)  
-[2025-04-22 19:12:30] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)  
-[2025-04-22 19:12:31] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)  
+"}
+[2025-04-22 19:11:43] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)
+[2025-04-22 19:12:30] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)
+[2025-04-22 19:12:31] local.ERROR: Lỗi: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'review_id' in 'where clause' (Connection: mysql, SQL: select * from `return_requests` where `review_id` = 21 limit 1)
 [2025-04-22 22:10:43] local.ERROR: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'status' at row 1 (Connection: mysql, SQL: update `orders` set `status` = refunded, `orders`.`updated_at` = 2025-04-22 22:10:42 where `id` = 1) {"userId":3,"exception":"[object] (Illuminate\\Database\\QueryException(code: 01000): SQLSTATE[01000]: Warning: 1265 Data truncated for column 'status' at row 1 (Connection: mysql, SQL: update `orders` set `status` = refunded, `orders`.`updated_at` = 2025-04-22 22:10:42 where `id` = 1) at C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:829)
 [stacktrace]
 #0 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(783): Illuminate\\Database\\Connection->runQueryCallback('update `orders`...', Array, Object(Closure))
@@ -15061,4 +15060,6 @@ Did you mean one of these?
 #55 C:\\laragon\\www\\datn_shoes\\be\\public\\index.php(52): Illuminate\\Foundation\\Http\\Kernel->handle(Object(Illuminate\\Http\\Request))
 #56 C:\\laragon\\www\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\resources\\server.php(16): require_once('C:\\\\laragon\\\\www\\\\...')
 #57 {main}
-"} 
+"}
+=======
+>>>>>>> 5ce41651c54a9aab49fa422036c76684ecae4267
