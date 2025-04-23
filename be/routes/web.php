@@ -85,6 +85,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboards.index');
     });
+    Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
     // Route::resource('products', ProductController::class)->middleware('permission:show-products');
     // ----------------------------------------

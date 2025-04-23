@@ -1,48 +1,58 @@
 import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
-import { Productyeuthich, Detail } from "../types/Product";
+import { Productyeuthich } from "../types/Product";
 import { getProductDetail } from "../services/product";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
-// import "./styles.css"; // Đảm bảo import CSS nếu cần
+import QuickViewProduct from "./QuickViewProduct"; // Import QuickViewProduct
 
 const Wishlist = () => {
   const { addToCart } = useCart();
   const [wishlistProducts, setWishlistProducts] = useState<Productyeuthich[]>([]);
-  const [selectedDetails, setSelectedDetails] = useState<{ [key: number]: Detail }>({});
   const [quantities, setQuantities] = useState<{ [key: number]: number }>({});
+  const [showQuickView, setShowQuickView] = useState(false); // State để hiển thị modal
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null); // State để lưu productId
   const nav = useNavigate();
 
   useEffect(() => {
-    const wishlistIds = JSON.parse(localStorage.getItem("wishlist") || "[]");
-    if (wishlistIds.length === 0) {
-      setWishlistProducts([]);
-      return;
-    }
-
-    Promise.all(wishlistIds.map((id: string) => getProductDetail(id)))
-      .then((responses) => {
-        console.log("API responses:", responses); // Debug dữ liệu API
-        const products = responses.map(({ data }) => data.data).filter(Boolean);
-        setWishlistProducts(products);
-
-        const initialDetails: { [key: number]: Detail } = {};
-        const initialQuantities: { [key: number]: number } = {};
-
-        products.forEach((product) => {
-          if (product.details && product.details.length > 0) {
-            initialDetails[product.id] = product.details[0];
-            initialQuantities[product.id] = 1;
-          }
-        });
-
-        setSelectedDetails(initialDetails);
-        setQuantities(initialQuantities);
-      })
-      .catch((error) => {
-        console.error("Lỗi khi lấy sản phẩm yêu thích:", error);
+    const fetchProducts = async () => {
+      const wishlistIds = JSON.parse(localStorage.getItem("wishlist") || "[]");
+      if (wishlistIds.length === 0) {
         setWishlistProducts([]);
+        return;
+      }
+
+      const productPromises = wishlistIds.map(async (id: string) => {
+        try {
+          const response = await getProductDetail(id);
+          return response.data.data;
+        } catch (error) {
+          console.error(`Lỗi khi lấy sản phẩm với ID ${id}:`, error);
+          toast.error(`Sản phẩm với ID ${id} không còn tồn tại.`);
+          return null;
+        }
       });
+
+      const products = (await Promise.all(productPromises)).filter(Boolean);
+      if (products.length < wishlistIds.length) {
+        toast.warn("Một số sản phẩm trong danh sách yêu thích không còn tồn tại.");
+        const validIds = products.map((product) => product.id);
+        localStorage.setItem("wishlist", JSON.stringify(validIds));
+        window.dispatchEvent(new Event("storage"));
+      }
+      setWishlistProducts(products);
+
+      const initialQuantities: { [key: number]: number } = {};
+      products.forEach((product) => {
+        initialQuantities[product.id] = 1;
+      });
+      setQuantities(initialQuantities);
+    };
+
+    fetchProducts().catch((error) => {
+      console.error("Lỗi khi lấy sản phẩm yêu thích:", error);
+      setWishlistProducts([]);
+    });
   }, []);
 
   const handleIncrease = (productId: number) => {
@@ -56,30 +66,6 @@ const Wishlist = () => {
     }));
   };
 
-  const handleVariantChange = (productId: number, detail: Detail) => {
-    setSelectedDetails((prev) => ({ ...prev, [productId]: detail }));
-  };
-
-  const handleAddToCart = (productId: number, detailId: number, quantity: number) => {
-    const user = JSON.parse(localStorage.getItem("user") || "null");
-
-    if (!user) {
-      alert("Bạn cần đăng nhập để thêm sản phẩm vào trong giỏ hàng!");
-      nav("/login");
-      return;
-    }
-    addToCart(detailId, quantity);
-    toast.success("Thêm vào giỏ hàng thành công");
-
-    // setWishlistProducts((prev) => prev.filter((p) => p.id !== productId));
-    // const updatedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]").filter(
-    //   (id: number) => id !== productId
-    // );
-    // localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
-    // window.dispatchEvent(new Event("storage"));
-  };
-
-  // Thêm hàm xóa sản phẩm yêu thích
   const handleRemoveFromWishlist = (productId: number) => {
     setWishlistProducts((prev) => prev.filter((p) => p.id !== productId));
     const updatedWishlist = JSON.parse(localStorage.getItem("wishlist") || "[]").filter(
@@ -88,6 +74,16 @@ const Wishlist = () => {
     localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
     toast.success("Đã xóa sản phẩm khỏi danh sách yêu thích");
     window.dispatchEvent(new Event("storage"));
+  };
+
+  const openQuickView = (productId: number) => {
+    setSelectedProductId(productId.toString());
+    setShowQuickView(true);
+  };
+
+  const closeQuickView = () => {
+    setShowQuickView(false);
+    setSelectedProductId(null);
   };
 
   return (
@@ -122,22 +118,20 @@ const Wishlist = () => {
                   <div className="table">
                     <div className="thead">
                       <div className="tr">
-                        <div className="th title_h5 border-bottom border-top">Ảnh</div>
-                        <div className="th title_h5 border-bottom border-top">Giá</div>
-                        <div className="th title_h5 border-bottom border-top">Số lượng</div>
-                        <div className="th title_h5 border-bottom border-top">Tùy chọn</div>
+                        <div className="th title_h5 border-bottom border-top">Sản Phẩm</div>
+                        <div className="th title_h5 border-bottom border-top"></div>
+                        <div className="th title_h5 border-bottom border-top"></div>
                         <div className="th title_h5 border-bottom border-top"></div>
                         <div className="th title_h5 border-bottom border-top"></div>
                       </div>
                     </div>
                     <div className="tbody">
                       {wishlistProducts.map((product) => {
-                        const selectedDetail = selectedDetails[product.id] || product.details?.[0];
                         const quantity = quantities[product.id] || 1;
-                        const price = selectedDetail?.discount_price
-                          ? Number(selectedDetail.discount_price.replace(/,/g, "").replace(" VND", "")) * quantity
-                          : selectedDetail?.default_price
-                          ? Number(selectedDetail.default_price.replace(/,/g, "").replace(" VND", "")) * quantity
+                        const price = product.details?.[0]?.discount_price
+                          ? parseFloat(product.details[0].discount_price.replace(/,/g, "").replace(" VND", "") || "0") * quantity
+                          : product.details?.[0]?.default_price
+                          ? parseFloat(product.details[0].default_price.replace(/,/g, "").replace(" VND", "") || "0") * quantity
                           : 0;
 
                         return (
@@ -145,7 +139,7 @@ const Wishlist = () => {
                             <div className="td border-bottom" data-title="Product">
                               <div className="product_img d-table-cell">
                                 <img
-                                  src={selectedDetail?.image || product.image || "placeholder.jpg"}
+                                  src={product.details?.[0]?.image || product.image || "placeholder.jpg"}
                                   className="vertical_middle img-fluid"
                                   alt={product.name || "Product"}
                                 />
@@ -159,10 +153,10 @@ const Wishlist = () => {
                               </div>
                             </div>
                             <div className="td border-bottom" data-title="Price">
-                              <p className="price">{price ? price.toLocaleString("vi-VN") + " VND" : "N/A"}</p>
+                              {/* <p className="price">{price ? price.toLocaleString("vi-VN") + " VND" : "N/A"}</p> */}
                             </div>
                             <div className="td border-bottom" data-title="Quantity">
-                              <div className="form-group quantity_box d-inline-block">
+                              {/* <div className="form-group quantity_box d-inline-block">
                                 <div className="qty_number">
                                   <button
                                     type="button"
@@ -180,56 +174,12 @@ const Wishlist = () => {
                                     +
                                   </button>
                                 </div>
-                              </div>
-                            </div>
-                            <div className="td border-bottom" data-title="Options">
-                              <div className="wishlist_variant">
-                                <div className="options">
-                                  <label htmlFor="sizes" className="title_h5">Size:</label>
-                                  <select
-                                    className="form-control chon"
-                                    onChange={(e) => {
-                                      const newDetail = product.details?.find((d) => d.size === e.target.value);
-                                      if (newDetail) handleVariantChange(product.id, newDetail);
-                                    }}
-                                    value={selectedDetail?.size || ""}
-                                  >
-                                    {product.details?.map((detail) => (
-                                      <option key={detail.id} value={detail.size}>
-                                        {detail.size}
-                                      </option>
-                                    )) || <option value="">Không có kích thước</option>}
-                                  </select>
-                                </div>
-                                <div className="options">
-                                  <label htmlFor="colors" className="title_h5">Màu:</label>
-                                  <select
-                                    className="form-control chon"
-                                    onChange={(e) => {
-                                      const newDetail = product.details?.find((d) => d.color === e.target.value);
-                                      if (newDetail) handleVariantChange(product.id, newDetail);
-                                    }}
-                                    value={selectedDetail?.color || ""}
-                                  >
-                                    {product.details?.map((detail) => (
-                                      <option key={detail.id} value={detail.color}>
-                                        {detail.color}
-                                      </option>
-                                    )) || <option value="">Không có màu</option>}
-                                  </select>
-                                </div>
-                              </div>
+                              </div> */}
                             </div>
                             <div className="td cart_bag border-bottom" data-title="Add To Bag">
                               <a
                                 type="button"
-                                onClick={() => {
-                                  if (!selectedDetail) {
-                                    alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
-                                    return;
-                                  }
-                                  handleAddToCart(product.id, Number(selectedDetail.id), quantity);
-                                }}
+                                onClick={() => openQuickView(product.id)}
                               >
                                 <i className="flaticon-shopping-bag"></i>
                               </a>
@@ -253,6 +203,14 @@ const Wishlist = () => {
           </section>
         </div>
       </div>
+
+      {/* Hiển thị modal QuickViewProduct khi showQuickView là true */}
+      {showQuickView && selectedProductId && (
+        <QuickViewProduct
+          productId={selectedProductId}
+          onClose={closeQuickView}
+        />
+      )}
     </>
   );
 };

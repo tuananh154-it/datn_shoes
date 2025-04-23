@@ -171,7 +171,7 @@ const MyAccount = () => {
             <h1 className="title_h1 font-weight-normal text-capitalize">Trang cá nhân</h1>
           </div>
         </section>
-        <section className="wishlist_section padding-top-60 padding-bottom-60">
+        <section className="wishlist_section padding-bottom-60">
           <main className="container">
             <div className="grid-container">
               <aside className="sidebar">
@@ -202,12 +202,12 @@ const MyAccount = () => {
                     >
                       <Home className="icon" /> Địa chỉ
                     </button>
-                    <button
+                    {/* <button
                       onClick={() => setActiveTab("payment")}
                       className={activeTab === "payment" ? "active" : ""}
                     >
                       <CreditCard className="icon" /> Phương thức thanh toán
-                    </button>
+                    </button> */}
                     <button
                       onClick={() => setActiveTab("settings")}
                       className={activeTab === "settings" ? "active" : ""}
@@ -527,7 +527,7 @@ const MyAccount = () => {
                     </div>
                   </div>
                 )}
-                {activeTab === "payment" && (
+                {/* {activeTab === "payment" && (
                   <div className="card">
                     <h2 className="section-title">Phương thức thanh toán</h2>
                     <div className="payment-grid">
@@ -553,7 +553,7 @@ const MyAccount = () => {
                       </div>
                     </div>
                   </div>
-                )}
+                )} */}
                 {activeTab === "settings" && (
                   <div className="card">
                     <h2 className="section-title">Cài đặt tài khoản</h2>

@@ -559,7 +559,148 @@ margin-top: 100px;
 .order-empty-link:hover {
   text-decoration: underline;
 }
+/* Container chính của section địa chỉ */
+.address-title {
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #333;
+}
 
+/* Grid layout cho danh sách địa chỉ */
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Style cho mỗi thẻ địa chỉ */
+.address-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+}
+
+.address-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Style cho tiêu đề địa chỉ trong thẻ */
+.address-heading {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Style cho chi tiết địa chỉ */
+.address-details {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Style cho các nút hành động (Cập nhật, Xóa) */
+.address-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn,
+.delete-btn {
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.edit-btn {
+  color: #007bff;
+}
+
+.edit-btn:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.delete-btn {
+  color: #dc3545;
+}
+
+.delete-btn:hover {
+  background-color: rgba(220, 53, 69, 0.1);
+}
+/* Tab dia chi */
+/* Style cho thẻ thêm địa chỉ mới */
+.address-add-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  border: 2px dashed #ccc;
+  border-radius: 8px;
+  padding: 20px;
+  transition: background-color 0.2s ease;
+}
+
+.address-add-card:hover {
+  background-color: #e9ecef;
+}
+
+/* Style cho nút thêm địa chỉ mới */
+.add-address-btn {
+  background: none;
+  border: none;
+  font-size: 16px;
+  color: #007bff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: color 0.2s ease;
+}
+
+.add-address-btn span {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.add-address-btn:hover {
+  color: #0056b3;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .address-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .address-title {
+    font-size: 20px;
+  }
+
+  .address-card {
+    padding: 15px;
+  }
+
+  .address-heading {
+    font-size: 16px;
+  }
+
+  .address-details {
+    font-size: 13px;
+  }
+}
 /* Pagination */
 .pagination-container {
   margin-top: 15px;
