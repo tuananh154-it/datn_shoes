@@ -56,21 +56,21 @@
             transition: all 0.3s ease;
         }
 
-        .btn-primary:hover {
+        /* .btn-primary:hover {
             background-color: #0056b3;
             border-color: #004085;
-        }
+        } */
 
         .btn-danger {
-            background-color: #dc3545;
-            border-color: #dc3545;
+            background-color:#F1C500;
+            border-color: #F1C500;
             color: white;
             transition: all 0.3s ease;
         }
 
         .btn-danger:hover {
-            background-color: #c82333;
-            border-color: #bd2130;
+            background-color: #b89a18;
+            border-color: #b89a18;
         }
 
         .btn-success {
@@ -115,6 +115,7 @@
 
                 <!-- Form tìm kiếm -->
                 <div class="mb-3">
+
                     <form action="{{ route('users.index') }}" method="GET">
                         <div class="row">
                             <div class="col-md-3">
@@ -143,12 +144,27 @@
                     </form>
                 </div>
 
-                <!-- Thêm người dùng -->
-                <div class="mb-3 text-right">
-                    <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
-                        <i class="fa fa-plus"></i> Thêm người dùng
-                    </a>
+                <div class=" px-3 py-2">
+                    <div class="mb-3">
+                        <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
+                            <i class="fa fa-plus"></i> Thêm người dùng
+                        </a>
+                    </div>
+                    {{-- <form action="{{ route('users.index') }}" method="GET">
+                        <label>
+                            <select class="form-control-sm ml-1 custom-select-small" name="per_page"
+                                onchange="this.form.submit()">
+                                <option value="10" {{ request('per_page') == 10 ? 'selected' : '' }}>10</option>
+                                <option value="25" {{ request('per_page') == 25 ? 'selected' : '' }}>25</option>
+                                <option value="50" {{ request('per_page') == 50 ? 'selected' : '' }}>50</option>
+                                <option value="100" {{ request('per_page') == 100 ? 'selected' : '' }}>100</option>
+                            </select>
+                        </label>
+                    </form> --}}
+
                 </div>
+                <!-- Thêm người dùng -->
+
 
                 <!-- Bảng người dùng -->
                 <table class="table table-striped table-advance table-hover">
@@ -168,11 +184,11 @@
                                 <td>{{ $user->role }}</td>
                                 <td>
                                     <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">
-                                        <i class="fa fa-pencil"></i> Sửa
+                                        <i class="fa fa-pencil"></i>
                                     </a>
 
                                     <a href="{{ route('users.show', $user->id) }}" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-eye"></i> Xem
+                                        <i class="fa fa-eye"></i>
                                     </a>
                                 </td>
                             </tr>

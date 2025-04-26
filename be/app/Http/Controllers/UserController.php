@@ -14,6 +14,8 @@ class UserController extends Controller
     // Hiển thị danh sách người dùng
     public function index(Request $request)
     {
+        $query = User::query();
+
         // Lấy tất cả người dùng và kèm theo các quyền của họ
         $users = User::with('roles');
         // Lọc theo tên người dùng nếu có giá trị tìm kiếm
@@ -32,6 +34,7 @@ class UserController extends Controller
 
         // Lấy danh sách người dùng sau khi lọc
         $users = $users->paginate(40)->appends($request->all());
+        $users = $query->orderBy('id', 'desc')->paginate(5);
 
         // Trả về view danh sách người dùng
         return view('users.index', compact('users'));

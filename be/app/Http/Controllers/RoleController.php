@@ -8,11 +8,23 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $roles = Role::with('permissions')->get();
+        $roles = Role::with('permissions');
+
+        // Kiểm tra nếu có query tìm kiếm
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $roles = $roles->where('name', 'like', '%' . $search . '%');
+        }
+
+        // Lấy danh sách vai trò và phân trang
+        $roles = $roles->paginate(10);
+
         return view('roles.index', compact('roles'));
     }
+
+
 
     public function create()
     {

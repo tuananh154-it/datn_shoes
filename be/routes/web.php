@@ -23,6 +23,8 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ReturnRequestController;
+use App\Http\Controllers\ReviewController;
+
 // use App\Http\Controllers\ReturnController;
 
 // Route::middleware('auth')->group(function () {
@@ -31,6 +33,10 @@ use App\Http\Controllers\ReturnRequestController;
 //     Route::post('product/{productId}/comments', [CommentController::class, 'store']);
 //     Route::get('my-comments', [CommentController::class, 'myComments']);
 // });
+
+
+
+
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -435,4 +441,6 @@ Route::middleware('auth')->group(function () {
 
 });
 
+Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('reviews/show/{id}', [ReviewController::class, 'show'])->name('reviews.show');
 // Route cho trang danh sách người dùng

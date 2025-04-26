@@ -38,7 +38,14 @@ class ReturnRequestController extends Controller
         try {
             $user = Auth::user();
             $query = ReturnRequest::with(['user', 'order', 'reviewer', 'admin']);
+            if ($request->has('status') && $request->status) {
+                $query->where('status', $request->status);
+            }
 
+            // Tìm kiếm theo mã đơn hàng (order_id)
+            if ($request->has('order_id') && $request->order_id) {
+                $query->where('order_id', $request->order_id);
+            }
             $this->applyRoleFilters($query, $user);
 
             if ($request->has('status')) {
@@ -125,7 +132,6 @@ class ReturnRequestController extends Controller
                 ],
                 'all_total' => $returnRequest->orderDetail->total_price,
             ]);
-
         } catch (\Exception $e) {
             // Xử lý lỗi
             Log::error('Lỗi: ' . $e->getMessage());

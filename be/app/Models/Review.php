@@ -67,4 +67,14 @@ class Review extends Model
     {
         return $this->interactions()->where('type', 2);
     }
+    public function productDetail()
+    {
+        return $this->belongsTo(ProductDetail::class);
+    }
+
+    // app/Models/ProductDetail.php
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }
