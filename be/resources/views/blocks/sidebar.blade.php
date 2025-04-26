@@ -78,9 +78,8 @@
                         @can('show-comments')
                             <li><a href="{{ route('comments.index') }}">Quản lý bình luận</a></li>
                         @endcan
-                        @can('show-returns')
-                            <li><a href="{{ route('return_requests.index') }}">Quản lý yêu cầu hoàn</a></li>
-                        @endcan
+                        <li><a href="{{ route('reviews.index') }}">Quản lý đánh giá</a></li>
+
                     </ul>
                 </li>
             @endcanany
@@ -123,6 +122,7 @@
                     <span>Quản lý yêu cầu trả lại</span>
                 </a>
             </li>
+
             {{-- @endcan --}}
 
         </ul>
