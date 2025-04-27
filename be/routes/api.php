@@ -169,7 +169,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('return-requests/{id}', [ReturnRequestController::class, 'show']);
 
     // Tạo yêu cầu hoàn (User)
-    Route::post('return-requests/{id}', [ReturnRequestController::class, 'store']);
+    Route::post('return-requests/{orderId}', [ReturnRequestController::class, 'store']);
 
     // Nhân viên CSKH tiếp nhận yêu cầu hoàn
     Route::post('return-requests/{id}/review/accept', [ReturnRequestController::class, 'acceptReview']);
