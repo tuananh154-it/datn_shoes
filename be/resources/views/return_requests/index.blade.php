@@ -1,100 +1,199 @@
-
 @extends('master')
 
 @section('content')
-<style>
 
-    .row{
-        padding-top: 60px;
-    }
-</style>
-<div class="row">
-    <div class="col-lg-12">
-        <section class="card">
-            <header class="card-header">
-                Danh sách hoàn hàng
-            </header>
-             {{-- tim kiem ,loc thuong hieu--}}
-             <div class="mb-3">
-                <form action="{{  route('return_requests.index') }}" method="GET">
-                    <div class="row">
-                        {{-- <div class="col-md-3">
-                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm đơn hàng" value="{{ request()->search }}">
-                        </div> --}}
-                        <div class="col-md-3">
-                            <select name="status" class="form-control">
-                                <option value="">Chọn trạng thái</option>
-                                <option value="pending" {{ request()->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="reviewed" {{ request()->status == 'reviewed' ? 'selected' : '' }}>Reviewed</option>
-                                <option value="approved" {{ request()->status == 'approved' ? 'selected' : '' }}>Approved</option>
-                                <option value="rejected" {{ request()->status == 'rejected' ? 'selected' : '' }}>Rejected</option>
-                            </select>
-                        </div>
+    <style>
+        .container {
+            padding-top: 60px;
+        }
 
-                        <div class="col-md-2">
-                            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
-                        </div>
-                        {{-- <div class="col-md-2">
-                            <a href="{{route("categories.index")}}" class="btn btn-success btn-sm">Quay lai danh sach</a>
-                        </div> --}}
-                    </div>
+        .table th,
+        .table td {
+            text-align: center;
+            vertical-align: middle;
+        }
 
-                </form>
+        .table th {
+            background-color: #FF6C60;
+            color: white;
+            font-weight: bold;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        .action-btns {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .badge-warning {
+            background-color: #ffc107;
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .btn-success {
+            background-color: #28a745;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .btn-primary:hover {
+            background-color: #0069d9;
+        }
+    </style>
+
+    <div class="container">
+        <div class="card shadow">
+            <div class="card-header" style="background-color: #41CAC0; color: white;">
+                <h4 class="mb-0">Danh sách yêu cầu hoàn</h4>
             </div>
-            {{-- them moi  --}}
 
+            <div class="card-body">
+                @if(session('success'))
+                    <div class="alert alert-success">{{ session('success') }}</div>
+                @endif
 
-            <table class="table table-striped table-advance table-hover">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Đơn hàng</th>
-                        <th>Người yêu cầu</th>
-                        <th>Lý do</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày yêu cầu</th>
-                        <th>Xác nhận</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($returnRequests as $request)
+                @if($errors->any())
+                    <div class="alert alert-danger">
+                        @foreach($errors->all() as $error)
+                            <p>{{ $error }}</p>
+                        @endforeach
+                    </div>
+                @endif
+
+                <table class="table table-bordered table-hover">
+                    <thead>
                         <tr>
-                            <td>{{ $request->id }}</td>
-                            <td>{{ $request->order->id ?? 'N/A' }}</td>
-                            <td>{{ $request->user->name ?? 'N/A' }}</td>
-                            <td>{{ $request->reason }}</td>
-                            <td>{{ $request->status }}</td>
-                            <td>{{ $request->requested_at->format('d/m/Y H:i') }}</td>
-                            <td>
-                                @if($request->status == 'approved')
-                                    <span class="badge badge-success">Đã duyệt</span>
-                                @else
-                                    <span class="badge badge-warning">Chưa duyệt</span>
-                                @endif
-                            </td>
-                            <td class="action-btns">
-                                <a href="{{ route('return_requests.show', $request->id) }}" class="btn btn-primary">
-                                    <i class="fa fa-eye"></i>
-                                </a>
-                                @if($request->status !== 'approved')
-                                    <form action="{{ route('return_requests.approve', $request->id) }}" method="POST"
-                                        style="display: inline;">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success">
-                                            <i class="fa fa-check"></i> Duyệt
-                                        </button>
-                                    </form>
-                                @endif
-                            </td>
+                            <th>ID</th>
+                            <th>Đơn hàng</th>
+                            <th>Người yêu cầu</th>
+                            <th>Lý do</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày yêu cầu</th>
+                            <th>Xác nhận</th>
+                            <th>Hành động</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            {{ $returnRequests->links() }}
+                    </thead>
+                    <tbody>
+                        @foreach($returnRequests as $request)
+                            <tr>
+                                <td>{{ $request->id }}</td>
+                                <td>{{ $request->order->id ?? 'N/A' }}</td>
+                                <td>{{ $request->user->name ?? 'N/A' }}</td>
+                                <td>{{ $request->reason }}</td>
+                                <td>{{ $request->status }}</td>
+                                <td>{{ $request->requested_at->format('d/m/Y H:i') }}</td>
+                                <td>
+                                    @if($request->status == 'approved')
+                                        <span class="badge badge-success">Đã duyệt</span>
+                                    @else
+                                        <span class="badge badge-warning">Chưa duyệt</span>
+                                    @endif
+                                </td>
+                                <td class="action-btns">
+                                    <a href="{{ route('return_requests.show', $request->id) }}" class="btn btn-primary">
+                                        <i class="fa fa-eye"></i> Xem chi tiết
+                                    </a>
+                                    @if($request->status !== 'approved')
+                                        <form action="{{ route('return_requests.approve', $request->id) }}" method="POST" style="display: inline;">
+                                            @csrf
+                                            <button type="submit" class="btn btn-success">
+                                                <i class="fa fa-check"></i> Duyệt
+                                            </button>
+                                        </form>
+                                    @endif
+                                    @if($request->status == 'reviewed')
+                                        <button type="button" class="btn btn-danger btn-reject" data-url="{{ route('return_requests.reject', $request->id) }}">
+                                            <i class="fa fa-times"></i> Từ chối
+                                        </button>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
 
-        </section>
+                {{ $returnRequests->links() }}
+            </div>
+        </div>
     </div>
-</div>
+
+    <!-- Modal từ chối -->
+    <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form method="POST" id="rejectForm">
+                @csrf
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #FF6C60; color: white;">
+                        <h5 class="modal-title" id="rejectModalLabel">Lý do từ chối yêu cầu hoàn</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <textarea name="reason" id="rejectReason" class="form-control" rows="4" placeholder="Nhập lý do từ chối..." required></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                        <button type="submit" id="rejectConfirmButton" class="btn btn-danger">Xác nhận từ chối</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const rejectButtons = document.querySelectorAll('.btn-reject');
+            const rejectForm = document.getElementById('rejectForm');
+            const rejectModal = new bootstrap.Modal(document.getElementById('rejectModal'));
+            const rejectReason = document.getElementById('rejectReason');
+            const rejectConfirmButton = document.getElementById('rejectConfirmButton');
+
+            rejectButtons.forEach(button => {
+                button.addEventListener('click', function () {
+                    const url = this.getAttribute('data-url');
+                    rejectForm.action = url;
+                    rejectReason.value = '';
+                    rejectModal.show();
+                });
+            });
+
+            rejectConfirmButton.addEventListener('click', function (event) {
+                if (rejectReason.value.trim() === '') {
+                    event.preventDefault();
+                    alert('Vui lòng nhập lý do từ chối trước khi xác nhận.');
+                }
+            });
+        });
+    </script>
 
 @endsection

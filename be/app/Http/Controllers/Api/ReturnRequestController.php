@@ -128,7 +128,6 @@ class ReturnRequestController extends Controller
                 ],
                 'all_total' => $returnRequest->orderDetail->total_price,
             ]);
-
         } catch (\Exception $e) {
             Log::error('Lỗi: ' . $e->getMessage());
             return response()->json(['message' => 'Lỗi khi lấy thông tin yêu cầu hoàn'], 500);
@@ -194,7 +193,7 @@ class ReturnRequestController extends Controller
                     'order_detail_id' => $orderDetail->id,
                     'user_id' => Auth::id(),
                     'reason' => $product['reason'],
-                    'description' => $product['description'],
+                    'description' => $product['description'] ?? null,
                     'image' => $imagePath,
                     'bank_account' => $product['bank_account'],
                     'status' => 'pending',
@@ -203,7 +202,6 @@ class ReturnRequestController extends Controller
             });
 
             return response()->json(['return_requests' => $returnRequests, 'message' => 'Yêu cầu hoàn trả đã được gửi thành công'], 201);
-
         } catch (\Exception $e) {
             Log::error('Lỗi khi tạo yêu cầu hoàn: ' . $e->getMessage());
             return response()->json(['message' => 'Lỗi khi gửi yêu cầu hoàn hàng'], 500);

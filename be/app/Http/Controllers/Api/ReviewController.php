@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\ProductDetail;
 use App\Models\Review;
+use App\Models\ReviewImage;
 use App\Models\ReviewInteraction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 Carbon::setLocale('vi');
 
@@ -36,6 +38,7 @@ class ReviewController extends Controller
             'user_role' => $review->user->role,
             'product_name' => $review->orderDetail->productDetail->product->name,
             'content' => $review->content,
+            'images' => $review->images->map(fn($img) => asset('storage/' . $img->image_path)),
             'reply' => $review->reply,
             'number_of_likes' => $review->helpful_count,
             'created_at' => $review->created_at->diffForHumans(),
@@ -88,6 +91,7 @@ class ReviewController extends Controller
                     'order_id' => $r->order_id,
                     'rating' => $r->rating,
                     'content' => $r->content,
+                    'images' => $r->images->map(fn($img) => asset('storage/' . $img->image_path)),
                     'created_at' => $r->created_at->diffForHumans(),
                     'is_anonymous' => $r->is_anonymous,
                     'is_edited' => $r->is_edited,
@@ -176,6 +180,7 @@ class ReviewController extends Controller
                         'packaging' => $review->packaging,
                         'customer_service' => $review->customer_service,
                         'content' => $review->content,
+                        'images' => $review->images->map(fn($img) => asset('storage/' . $img->image_path)),
                         'is_anonymous' => $review->is_anonymous,
                         'liked_count' => $review->likes()->count(),
                         'reported_count' => $review->reports()->count(),
@@ -193,13 +198,11 @@ class ReviewController extends Controller
                 'total_reviews' => $totalReviews,
                 'all_price' => $orderTotalPrice,
             ]);
-
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không tìm thấy đơn hàng.',
             ], 404);
-
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -214,20 +217,12 @@ class ReviewController extends Controller
             $user = Auth::user();
             $userId = $user->id;
 
-            // Kiểm tra đơn hàng có phải của bạn không
-            $order = Order::where('id', $orderId)
-                ->where('user_id', $userId)
-                ->first();
+            $order = Order::where('id', $orderId)->where('user_id', $userId)->first();
             if (!$order) {
                 return response()->json(['message' => 'Đơn hàng không tồn tại hoặc không phải của bạn'], 404);
             }
 
-            // Kiểm tra đơn hàng đã hoàn tất chưa
-            $orderExists = Order::where('id', $orderId)
-                ->where('status', 'delivered')
-                ->exists();
-
-            if (!$orderExists) {
+            if (!Order::where('id', $orderId)->where('status', 'delivered')->exists()) {
                 return response()->json(['message' => 'Bạn chỉ có thể đánh giá sau khi đơn hàng hoàn tất'], 403);
             }
 
@@ -241,6 +236,7 @@ class ReviewController extends Controller
                 'reviews.*.shipping' => 'nullable|integer|min:1|max:5',
                 'reviews.*.customer_service' => 'nullable|integer|min:1|max:5',
                 'reviews.*.is_anonymous' => 'nullable|boolean',
+                'reviews.*.images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             if ($validator->fails()) {
@@ -249,30 +245,18 @@ class ReviewController extends Controller
 
             $responseReviews = [];
 
-            // Lặp qua từng sản phẩm và xử lý
             foreach ($request->reviews as $reviewData) {
                 $orderDetailId = $reviewData['order_detail_id'];
 
-                // Kiểm tra sản phẩm có trong đơn hàng này không
-                $orderDetail = OrderDetail::where('order_id', $orderId)
-                    ->where('id', $orderDetailId)
-                    ->first();
-
+                $orderDetail = OrderDetail::where('order_id', $orderId)->where('id', $orderDetailId)->first();
                 if (!$orderDetail) {
                     continue;
                 }
 
-                // Kiểm tra nếu đã đánh giá sản phẩm này rồi
-                $existingReview = Review::where('user_id', $userId)
-                    ->where('order_detail_id', $orderDetailId)
-                    ->where('order_id', $orderId)
-                    ->exists();
-
-                if ($existingReview) {
-                    continue; // Nếu đã đánh giá thì bỏ qua
+                if (Review::where('user_id', $userId)->where('order_detail_id', $orderDetailId)->where('order_id', $orderId)->exists()) {
+                    continue;
                 }
 
-                // Tạo review mới cho sản phẩm
                 $review = Review::create([
                     'user_id' => $userId,
                     'order_id' => $orderId,
@@ -286,15 +270,28 @@ class ReviewController extends Controller
                     'is_anonymous' => $reviewData['is_anonymous'] ?? false,
                 ]);
 
-                // Load thông tin người dùng và các chi tiết sản phẩm liên quan
+                // Xử lý lưu ảnh
+                if (isset($reviewData['images']) && is_array($reviewData['images'])) {
+                    foreach ($reviewData['images'] as $imageFile) {
+                        if ($imageFile instanceof \Illuminate\Http\UploadedFile) {
+                            $path = $imageFile->store('review_images', 'public');
+
+                            ReviewImage::create([
+                                'review_id' => $review->id,
+                                'image_path' => $path,
+                            ]);
+                        }
+                    }
+                }
+
                 $review->load('user:id,name,role');
                 $productDetail = $orderDetail->productDetail;
 
-                // Chuẩn bị dữ liệu để trả về
                 $responseReviews[] = [
                     'user_name' => $review->user->name,
                     'user_role' => $review->user->role,
                     'content' => $review->content,
+                    'images' => $review->images->map(fn($img) => asset('storage/' . $img->image_path)),
                     'rating' => $review->rating,
                     'number_of_likes' => $review->helpful_count,
                     'created_at' => $review->created_at->diffForHumans(),
@@ -312,7 +309,6 @@ class ReviewController extends Controller
             return response()->json(['error' => 'Không thể gửi đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
-
 
     public function reply(Request $request, $reviewId)
     {
@@ -353,7 +349,6 @@ class ReviewController extends Controller
     {
         try {
             $user = Auth::user();
-
             $review = Review::find($reviewId);
 
             if (!$review) {
@@ -375,6 +370,7 @@ class ReviewController extends Controller
                 'packaging' => 'sometimes|integer|min:1|max:5',
                 'shipping' => 'sometimes|integer|min:1|max:5',
                 'customer_service' => 'sometimes|integer|min:1|max:5',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             if ($validator->fails()) {
@@ -392,6 +388,28 @@ class ReviewController extends Controller
             ];
 
             $review->update($updatedData);
+
+            // Xử lý xóa ảnh theo yêu cầu
+            if ($request->has('deleted_image_ids')) {
+                $imageIdsToDelete = $request->input('deleted_image_ids');
+                foreach ($imageIdsToDelete as $imageId) {
+                    $image = ReviewImage::where('review_id', $review->id)->where('id', $imageId)->first();
+                    if ($image) {
+                        Storage::disk('public')->delete($image->image_path);
+                        $image->delete();
+                    }
+                }
+            }
+
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('review_images', 'public');
+                    ReviewImage::create([
+                        'review_id' => $review->id,
+                        'image_path' => $path,
+                    ]);
+                }
+            }
 
             return response()->json(['message' => 'Đánh giá đã được cập nhật thành công', 'review' => $review]);
         } catch (\Exception $e) {

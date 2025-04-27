@@ -243,6 +243,39 @@ class ReturnRequestController extends Controller
         }
     }
 
+    public function reject(Request $request, $id)
+    {
+        try {
+            $user = Auth::user();
+
+            if (!in_array($user->role, ['admin', 'superadmin'])) {
+                return redirect()->back()->with('error', 'Bạn không có quyền từ chối yêu cầu này');
+            }
+
+            $validated = $request->validate([
+                'reason' => 'nullable|string|max:255',
+            ]);
+
+            $returnRequest = ReturnRequest::findOrFail($id);
+
+            if ($returnRequest->status !== 'reviewed') {
+                return redirect()->back()->with('error', 'Yêu cầu chưa được nhân viên xem xét hoặc đã xử lý xong');
+            }
+
+            $returnRequest->update([
+                'status' => 'rejected',
+                'admin_id' => $user->id,
+                'admin_approved_at' => now(),
+                'staff_notes' => $returnRequest->staff_notes . "[Lí do từ chối]: " . $request->reason,
+            ]);
+
+            return redirect()->back()
+                ->with('success', 'Yêu cầu đã bị từ chối thành công');
+        } catch (\Exception $e) {
+            Log::error('Lỗi từ chối yêu cầu hoàn: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Đã có lỗi xảy ra, vui lòng thử lại sau.');
+        }
+    }
 
     // Phương thức rejectReview: xử lý khi nhân viên từ chối yêu cầu
     public function rejectReview($id)

@@ -75,7 +75,7 @@
                             @if($img)
                                 <a href="{{ asset($img) }}" target="_blank">Xem</a>
                             @else
-                                Không có thông tin
+                                Không có ảnh
                             @endif
                         </td>
                     </tr>

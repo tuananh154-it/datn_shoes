@@ -436,6 +436,10 @@ Route::middleware('auth')->group(function () {
         'return-requests/{id}/approve',
         [ReturnRequestController::class, 'approve']
     )->name('return_requests.approve');
+    Route::post(
+        'return-requests/{id}/reject',
+        [ReturnRequestController::class, 'reject']
+    )->name('return_requests.reject');
 
     // Các route xử lý khác (acceptReview, rejectReview, approveReturn, rejectReturn, receiveReturn)
 
