@@ -22,7 +22,15 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use App\Http\Controllers\ReturnRequestController;
+// use App\Http\Controllers\ReturnController;
 
+// Route::middleware('auth')->group(function () {
+//     Route::get('product/{productId}/comments', [CommentController::class, 'index']);
+//     Route::get('comment/{commentId}', [CommentController::class, 'show']);
+//     Route::post('product/{productId}/comments', [CommentController::class, 'store']);
+//     Route::get('my-comments', [CommentController::class, 'myComments']);
+// });
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
@@ -85,6 +93,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboards.index');
     });
+    // Route::put('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
     Route::put('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
     // Route::resource('products', ProductController::class)->middleware('permission:show-products');
@@ -331,7 +340,7 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('admin/product', [AdminController::class, 'products'])->name('dashboards.product');
     //top 10 sp
     Route::get('admin/top10', [AdminController::class, 'top10'])->name('dashboards.top10');
-    //thống kê trạng thái đơn hàng 
+    //thống kê trạng thái đơn hàng
     Route::get('/dashboards/orders', [AdminController::class, 'orderStatus'])->name('dashboards.orders');
 
 
@@ -340,9 +349,9 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('dashboards', [AdminController::class, 'index'])->name('dashboards.index')->middleware('permission:show-dashboards');
     // >>>>>>> tuan-anh2
 
-    
-    
-    
+
+
+
 });
 
 
@@ -406,5 +415,24 @@ Route::post('password/email', [ForgotPasswordController::class, 'sendResetLinkEm
 Route::get('password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('password/reset', [ResetPasswordController::class, 'reset'])->name('password.update');
 Route::post('/comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
+// routes/web.php
+
+
+// Route::post('/process-return', [ReturnController::class, 'processReturn']);
+Route::middleware('auth')->group(function () {
+    Route::get('/return-requests', [ReturnRequestController::class, 'index'])->name('return_requests.index');
+    Route::get('/return-requests/{id}', [ReturnRequestController::class, 'show'])->name('return_requests.show');
+
+    // Route tạo mới yêu cầu (GET hiển thị form, POST xử lý lưu)
+    Route::get('/orders/{orderId}/return/create', [ReturnRequestController::class, 'create'])->name('return_requests.create');
+    Route::post('/orders/{orderId}/return', [ReturnRequestController::class, 'store'])->name('return_requests.store');
+    Route::post(
+        'return-requests/{id}/approve',
+        [ReturnRequestController::class, 'approve']
+    )->name('return_requests.approve');
+
+    // Các route xử lý khác (acceptReview, rejectReview, approveReturn, rejectReturn, receiveReturn)
+
+});
 
 // Route cho trang danh sách người dùng

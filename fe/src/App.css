@@ -237,6 +237,7 @@ margin-top: -10px;
 }
 
 /* Khi dropdown mở */
+/* CSS cho form tìm kiếm (giữ nguyên) */
 .search_form.open {
   display: block;
 }
@@ -254,13 +255,16 @@ margin-top: -10px;
   cursor: pointer;
   margin-left: 5px;
 }
+
+/* CSS cho phần đăng nhập (giữ nguyên) */
 .dangnhap {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 420px;
-  /* background-color: aqua; */
 }
+
+/* CSS cho overlay hình ảnh (giữ nguyên) */
 .image-overlay {
   position: relative;
   width: 100%;
@@ -291,24 +295,73 @@ margin-top: -10px;
   padding: 20px;
   border-radius: 10px;
 }
-.text{
+
+/* CSS cho text (giữ nguyên) */
+.text {
   color: red;
 }
-.drop{
+
+/* CSS cho phần drop */
+.drop {
   position: relative;
+  padding-bottom: 10px; /* Tăng vùng hover để không bị mất khi di chuyển chuột xuống */
 }
-.dropdownUser{
+
+/* CSS cho dropdownUser */
+.dropdownUser {
+  display: none; /* Ẩn mặc định */
   position: absolute;
-  border: 0.5px ;
+  top: 100%; /* Đặt ngay dưới tên người dùng */
+  left: 50%; /* Căn giữa */
+  transform: translateX(-50%); /* Căn giữa chính xác */
+  width: 180px; /* Chiều rộng giống Shopee */
+  margin-top: 0; /* Không có khoảng cách để tránh trượt ra ngoài */
   background-color: white;
-  width: 200px;
-  margin-top: 5px;
-  margin-left: -70px;
-  justify-content: center;
-  align-items: center;
+  border: none; /* Loại bỏ viền */
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Bóng mờ giống Shopee */
+  border-radius: 8px; /* Bo góc giống Shopee */
   z-index: 9999;
-  text-align: center;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 10px 0; /* Khoảng cách bên trong */
+}
+
+/* Hiển thị modal khi hover vào drop HOẶC dropdownUser */
+.drop:hover .dropdownUser,
+.dropdownUser:hover {
+  display: block; /* Giữ modal hiển thị khi hover vào chính nó */
+}
+
+/* Tạo kiểu cho các liên kết và nút bên trong modal */
+.dropdownUser nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Căn giữa các mục theo chiều ngang */
+}
+
+.dropdown-item {
+  display: block;
+  padding: 10px 16px;
+  font-size: 14px;
+  color: #333; /* Màu chữ đậm hơn một chút*/
+  text-align: center; /* Căn giữa chữ */
+  text-decoration: none; /* Loại bỏ gạch chân của liên kết */
+  width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng */
+}
+
+.dropdown-button {
+  color: #ee4d2d; /* Màu đỏ cho nút Đăng xuất */
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  text-align: center; /* Căn giữa chữ */
+  cursor: pointer;
+  width: 100%; /* Đảm bảo chiếm toàn bộ chiều rộng */
+}
+
+.dropdown-item:hover,
+.dropdown-button:hover {
+  background-color: #f5f5f5; /* Hiệu ứng hover giống Shopee */
+  color: #ee4d2d; /* Giữ màu đỏ cho Đăng xuất khi hover */
 }
 /*css checkout*/
 

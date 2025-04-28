@@ -1,4 +1,6 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { getUser } from "../services/user"; // Import getUser từ file service
+import toast from "react-hot-toast";
 
 export interface User {
   id: number;
@@ -9,7 +11,12 @@ export interface User {
   updated_at: string;
 }
 
-// ✅ Xử lý dữ liệu từ localStorage an toàn
+interface UserState {
+  user: User | null;
+  loading: boolean;
+  error: string | null;
+}
+
 const storedUser = localStorage.getItem("user");
 let parsedUser: User | null = null;
 
@@ -20,30 +27,63 @@ try {
   localStorage.removeItem("user");
 }
 
-// ✅ Khởi tạo state từ localStorage
-const initialState: { user: User | null } = {
+const initialState: UserState = {
   user: parsedUser,
+  loading: false,
+  error: null,
 };
 
-// ✅ Tạo slice cho user
+// Sử dụng getUser từ API service
+export const refreshUser = createAsyncThunk(
+  "user/refreshUser",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getUser(); // Gọi API bằng getUser
+      return response.data; // Trả về dữ liệu user từ API
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || "Lỗi không xác định");
+    }
+  }
+);
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
     setUserDetail: (state, action) => {
       state.user = action.payload;
-      localStorage.setItem("user", JSON.stringify(action.payload)); // Lưu vào localStorage
+      localStorage.setItem("user", JSON.stringify(action.payload));
     },
     logout: (state) => {
-        state.user = null;
-        localStorage.removeItem("user"); // Xóa user
-        localStorage.removeItem("token"); // ✅ Xóa token khi logout
-      },
+      state.user = null;
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(refreshUser.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(refreshUser.fulfilled, (state, action) => {
+        state.loading = false;
+        state.user = action.payload;
+        localStorage.setItem("user", JSON.stringify(action.payload));
+      })
+      .addCase(refreshUser.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string; // Ép kiểu ở đây vẫn ổn, nhưng không cần thiết cho logic dưới
+        // Kiểm tra kiểu của action.payload trước khi gọi .includes()
+        if (typeof action.payload === 'string' && action.payload.includes('Không thể lấy thông tin user')) {
+          state.user = null;
+          localStorage.removeItem('user');
+          localStorage.removeItem('token');
+          toast.error("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        }
+      })
   },
 });
 
-// Export actions
 export const { setUserDetail, logout } = userSlice.actions;
-
-// Export reducer
 export default userSlice.reducer;

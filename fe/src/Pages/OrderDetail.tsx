@@ -11,17 +11,18 @@ interface OrderDetailProps {
 
 const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
     const [currentOrder, setCurrentOrder] = useState<Order>(order);
-    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false); // Modal cho đánh giá
-    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false); // Modal cho hủy đơn
+    const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+    const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
     const [selectedProductId, setSelectedProductId] = useState<number | null>(null);
+    const [selectedOrderDetailId, setSelectedOrderDetailId] = useState<number | null>(null);
     const [rating, setRating] = useState<number>(0);
     const [newReview, setNewReview] = useState<string>('');
-    const [cancelReason, setCancelReason] = useState<string>(''); // Lý do hủy đơn
+    const [cancelReason, setCancelReason] = useState<string>('');
     const [hasReviewed, setHasReviewed] = useState<{ [key: number]: boolean }>({});
     const [reviewUpdated, setReviewUpdated] = useState<number>(0);
 
-    // Chỉ cho phép hủy khi trạng thái là "pending"
-    const canCancel = currentOrder.status.toLowerCase() === "pending";
+    const canCancel = currentOrder.status.toLowerCase() === "pending" && currentOrder.payment_status.toLowerCase() !== "paid";
+
 
     Modal.setAppElement('#root');
 
@@ -45,34 +46,44 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
         const checkReviews = async () => {
             try {
                 const response = await getMyReviews();
-                console.log("Dữ liệu từ API /reviews:", response.data);
+                const reviews = response?.data?.my_reviews || [];
 
-                let reviews = [];
-                if (response.data && Array.isArray(response.data.my_reviews)) {
-                    reviews = response.data.my_reviews;
-                } else {
-                    console.error("Dữ liệu từ API không chứa mảng my_reviews:", response.data);
-                    reviews = [];
-                }
+                console.log("📦 Reviews API data:", reviews);
+                console.log("🧾 Current order object:", currentOrder);
+                console.log("🔍 Mapping through order_details:", currentOrder.order_details);
 
-                const reviewedProducts: { [key: number]: boolean } = {};
+                const reviewedOrderDetails: { [key: number]: boolean } = {};
+
                 currentOrder.order_details.forEach((item) => {
-                    const hasReviewed = reviews.some((review: any) =>
-                        review.product_id === item.product_id &&
-                        review.order_id === currentOrder.id
-                    );
-                    reviewedProducts[item.product_id] = hasReviewed;
+                    if (item.order_id !== currentOrder.id) {
+                        console.warn(`⚠️ Order detail order_id (${item.order_id}) không khớp với order_id (${currentOrder.id})`);
+                        return;
+                    }
+
+                    const orderDetailId = item.id;
+                    if (orderDetailId !== undefined && Number.isInteger(orderDetailId)) {
+                        const hasReviewed = reviews.some((review: any) =>
+                            review.order_detail_id === orderDetailId &&
+                            review.order_id === currentOrder.id
+                        );
+                        reviewedOrderDetails[orderDetailId] = hasReviewed;
+                    } else {
+                        console.warn("⚠️ Order detail ID không hợp lệ:", item);
+                    }
                 });
 
-                console.log("Reviewed products:", reviewedProducts);
-                setHasReviewed(reviewedProducts);
+                console.log("✅ Final reviewedOrderDetails:", reviewedOrderDetails);
+                setHasReviewed(reviewedOrderDetails);
             } catch (error) {
-                console.error("Lỗi khi kiểm tra đánh giá:", error);
-                const reviewedProducts: { [key: number]: boolean } = {};
+                console.error("❌ Lỗi khi kiểm tra đánh giá:", error);
+                const fallbackReviewed: { [key: number]: boolean } = {};
                 currentOrder.order_details.forEach((item) => {
-                    reviewedProducts[item.product_id] = false;
+                    if (item.id !== undefined && Number.isInteger(item.id)) {
+                        fallbackReviewed[item.id] = false;
+                    }
                 });
-                setHasReviewed(reviewedProducts);
+                setHasReviewed(fallbackReviewed);
+                toast.error("Lỗi khi kiểm tra trạng thái đánh giá!");
             }
         };
 
@@ -81,14 +92,28 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
         }
     }, [currentOrder, reviewUpdated]);
 
-    console.log(currentOrder);
+    console.log("Current Order:", currentOrder);
 
-    const handleOpenReviewModal = (productId: number) => {
-        if (hasReviewed[productId]) {
-            toast.error("Bạn đã đánh giá sản phẩm này rồi.");
+    const handleOpenReviewModal = (orderDetailId: number, productId: number | undefined) => {
+        if (currentOrder.status.toLowerCase() !== "completed") {
+            toast.error("Chỉ có thể đánh giá khi đơn hàng đã hoàn tất!");
             return;
         }
+        if (!Number.isInteger(orderDetailId)) {
+            toast.error("Không thể mở đánh giá: ID chi tiết đơn hàng không hợp lệ!");
+            return;
+        }
+        if (hasReviewed[orderDetailId]) {
+            toast.error("Bạn đã đánh giá mục này rồi.");
+            return;
+        }
+        if (!productId || !Number.isInteger(productId)) {
+            toast.error("Không thể mở đánh giá: Thiếu thông tin sản phẩm hoặc product_id không hợp lệ!");
+            return;
+        }
+
         setSelectedProductId(productId);
+        setSelectedOrderDetailId(orderDetailId);
         setRating(0);
         setNewReview('');
         setIsReviewModalOpen(true);
@@ -96,47 +121,65 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
 
     const handlePostReview = async () => {
         if (!newReview.trim()) {
-            alert('Vui lòng nhập nội dung đánh giá!');
+            toast.error('Vui lòng nhập nội dung đánh giá!');
             return;
         }
-        if (!selectedProductId) {
-            alert('Không có sản phẩm được chọn để đánh giá!');
+        if (!selectedProductId || !Number.isInteger(selectedProductId)) {
+            toast.error('Thiếu thông tin sản phẩm hoặc product_id không hợp lệ!');
+            return;
+        }
+        if (selectedOrderDetailId === null || !Number.isInteger(selectedOrderDetailId)) {
+            toast.error('Chi tiết đơn hàng không hợp lệ!');
             return;
         }
         if (rating === 0) {
-            alert('Vui lòng chọn số sao!');
+            toast.error('Vui lòng chọn số sao!');
             return;
         }
 
         const reviewData: ReviewPayload = {
+            order_detail_id: selectedOrderDetailId,
+            product_id: selectedProductId,
             rating,
             content: newReview,
+            is_anonymous: false,
+            service: 3,
+            packaging: 3,
+            shipping: 3,
+            customer_service: 3,
         };
 
+        console.log("Review data being sent:", reviewData);
+
         try {
-            await postReview(
-                selectedProductId.toString(),
-                currentOrder.id.toString(),
-                reviewData
-            );
+            console.log(`Sending review for order_id: ${currentOrder.id}, order_detail_id: ${selectedOrderDetailId}`, reviewData);
+            await postReview(currentOrder.id.toString(), [reviewData]);
             toast.success("Đánh giá của bạn đã được đăng thành công!");
             setNewReview('');
             setRating(0);
+            setSelectedOrderDetailId(null);
+            setSelectedProductId(null);
             setIsReviewModalOpen(false);
             setReviewUpdated((prev) => prev + 1);
         } catch (error: any) {
-            alert(error.message || 'Lỗi khi đăng đánh giá!');
+            console.error(`Error posting review for order_id: ${currentOrder.id}, order_detail_id: ${selectedOrderDetailId}`, error.response?.data);
+            const errorDetails = error.response?.data?.details || error.response?.data?.message;
+            let errorMessage = error.response?.data?.errors || error.response?.data?.message || 'Lỗi khi đăng đánh giá!';
+            if (errorDetails) {
+                errorMessage += ` (order_detail_id: ${selectedOrderDetailId}) Chi tiết: ${typeof errorDetails === 'object' ? JSON.stringify(errorDetails) : errorDetails}`;
+            }
+            toast.error(errorMessage);
         }
     };
 
     const handleOpenCancelModal = () => {
-        setCancelReason(''); // Reset lý do hủy đơn
+        setCancelReason('');
         setIsCancelModalOpen(true);
     };
 
     const handleCancelOrder = async () => {
         if (!cancelReason.trim()) {
-            alert('Vui lòng nhập lý do hủy đơn hàng!');
+            toast.error('Vui lòng nhập lý do hủy đơn hàng!');
             return;
         }
 
@@ -146,14 +189,13 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
             setCurrentOrder({ ...currentOrder, status: "cancelled" });
             setIsCancelModalOpen(false);
         } catch (error) {
-            alert("Lỗi khi hủy đơn hàng, vui lòng thử lại!");
+            toast.error("Lỗi khi hủy đơn hàng, vui lòng thử lại!");
             console.error("Lỗi khi hủy đơn:", error);
         }
     };
 
     if (!currentOrder) return <p>Không tìm thấy đơn hàng.</p>;
 
-    // Sử dụng discount từ API
     const discountAmount = currentOrder.discount ? parseFloat(currentOrder.discount) : 0;
 
     return (
@@ -195,8 +237,8 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {currentOrder.order_details.map((item, index) => {
-                        const key = `${item.product_name}-${item.color}-${item.size}-${index}`;
+                    {currentOrder.order_details.map((item) => {
+                        console.log("Order detail item:", item);
                         let imageSrc = "/default.jpg";
 
                         if (typeof item.image === "string") {
@@ -209,7 +251,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                         }
 
                         return (
-                            <tr key={key}>
+                            <tr key={item.id}>
                                 <td>
                                     <div className="product-item">
                                         <img src={imageSrc} alt="Sản phẩm" onError={(e) => (e.currentTarget.src = "/default.jpg")} />
@@ -219,15 +261,19 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                                             <p>Kích cỡ: {item.size || "Không có"}</p>
                                             <div className="product-actions">
                                                 {currentOrder.status.toLowerCase() === "completed" && (
-                                                    hasReviewed[item.product_id] ? (
-                                                        <span className="action-btn disabled">Đã đánh giá</span>
+                                                    Number.isInteger(item.id) ? (
+                                                        hasReviewed[item.id] ? (
+                                                            <span className="action-btn disabled">Đã đánh giá</span>
+                                                        ) : (
+                                                            <button
+                                                                className="action-btn buy-again"
+                                                                onClick={() => handleOpenReviewModal(item.id, item.product_id)}
+                                                            >
+                                                                Đánh giá
+                                                            </button>
+                                                        )
                                                     ) : (
-                                                        <button
-                                                            className="action-btn buy-again"
-                                                            onClick={() => handleOpenReviewModal(item.product_id)}
-                                                        >
-                                                            Đánh giá
-                                                        </button>
+                                                        <span className="action-btn disabled">Không thể đánh giá</span>
                                                     )
                                                 )}
                                             </div>
@@ -260,7 +306,6 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                 </button>
             )}
 
-            {/* Modal cho đánh giá */}
             <Modal
                 isOpen={isReviewModalOpen}
                 onRequestClose={() => setIsReviewModalOpen(false)}
@@ -286,7 +331,6 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                 </div>
             </Modal>
 
-            {/* Modal cho hủy đơn hàng */}
             <Modal
                 isOpen={isCancelModalOpen}
                 onRequestClose={() => setIsCancelModalOpen(false)}

@@ -62,7 +62,6 @@
                 </table>
                 <div class="text-end mt-2">
                     <strong>Tổng cộng:</strong> {{ number_format($total_product_value, 0, ',', '.') }}₫
-                    
                 </div>
             </div>
 

@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Comment extends Model
 {
-    use HasFactory, SoftDeletes;
+    use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -17,11 +18,13 @@ class Comment extends Model
         'content',
         'is_anonymous',
         'is_edited',
+        'is_hidden',
     ];
 
     protected $casts = [
         'is_anonymous' => 'boolean',
         'is_edited' => 'boolean',
+        'is_hidden' => 'boolean',
     ];
 
     // Mối quan hệ với bảng User

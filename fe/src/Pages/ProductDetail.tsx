@@ -738,7 +738,7 @@ const ProductDetail = () => {
 
                               if (newTotalAddedToCart > originalQuantity) {
                                 toast.error(
-                                  `Không thể thêm vào giỏ hàng. Tổng số lượng đã thêm (${newTotalAddedToCart}) vượt quá số lượng gốc (${originalQuantity}).`
+                                  `Không thể thêm vào giỏ hàng. Tổng số lượng đã thêm  vượt quá số lượng gốc.`
                                 );
                                 return;
                               }
@@ -928,7 +928,7 @@ const ProductDetail = () => {
                                 {comments.map((comment) => (
                                   <div key={comment.id} className="comment-container">
                                     <img
-                                      src="../src/images/reivew_user.png "// Nếu không có avatar, dùng ảnh mặc định
+                                      src="https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg "// Nếu không có avatar, dùng ảnh mặc định
                                       alt="User Avatar"
                                       className="avatar"
                                     />
@@ -1049,16 +1049,19 @@ const ProductDetail = () => {
                               <div className="review_content" key={review.id}>
                                 <div className="user_img rounded-circle">
                                   <img
-                                    src="../src/images/reivew_user.png"
+                                    src="https://cellphones.com.vn/sforum/wp-content/uploads/2023/10/avatar-trang-4.jpg"
                                     className="img-fluid vertical_middle"
                                     alt="user"
                                   />
                                 </div>
                                 <div className="user_detail">
                                   <h5 className="title_h5">{review.user_name}</h5>
-                                  <p>{renderStars(review.rating)}</p>
-                                  <p>Phân loại hàng:{review.product_name}-{review.color}-size:{review.size}</p>
-                                  <p className="review__date">{review.created_at}</p>
+                                  <p>{renderStars(review.rating)}
+                                   <p>{review.product_name}-{review.color}-size:{review.size}</p> 
+                                   <p className="review__date">{review.created_at}</p>
+                                  </p>
+                                  {/* <p>{review.product_name}-{review.color}-size:{review.size}</p> */}
+                                  {/* <p className="review__date">{review.created_at}</p> */}
                                   <p>{review.content}</p>
                                 </div>
                               </div>
@@ -1124,12 +1127,12 @@ const ProductDetail = () => {
                             className="img-product_detail"
                           />
                           <div className="featured_btn vertical_middle">
-                            <a
+                            {/* <a
                               href="cart.html"
                               className="text-uppercase background-btn add_to_bag_btn"
                             >
                               Thêm vào giỏ hàng
-                            </a>
+                            </a> */}
                             <a
                               href={`/product_detail/${product.id}`}
                               className="text-uppercase border-btn popup_btn"

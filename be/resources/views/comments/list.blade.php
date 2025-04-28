@@ -7,30 +7,30 @@
             padding-top: 60px;
         }
         .table th, .table td {
-        vertical-align: middle;
-        text-align: center;
-    }
+            vertical-align: middle;
+            text-align: center;
+        }
 
-    .table th {
-        white-space: nowrap;
-        background-color: #f8f9fa;
-    }
+        .table th {
+            white-space: nowrap;
+            background-color: #f8f9fa;
+        }
 
-    .table td {
-        word-wrap: break-word;
-        max-width: 300px; /* Giới hạn chiều rộng của ô nội dung */
-    }
+        .table td {
+            word-wrap: break-word;
+            max-width: 300px; /* Giới hạn chiều rộng của ô nội dung */
+        }
 
-    .table-responsive {
-        overflow-x: auto;
-    }
+        .table-responsive {
+            overflow-x: auto;
+        }
 
-    .text-truncate {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        max-width: 250px;
-    }
+        .text-truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 250px;
+        }
     </style>
 
     <div class="row">
@@ -39,8 +39,9 @@
                 <header class="card-header">
                     Danh sách bình luận
                 </header>
-                 {{-- tim kiem ,loc thuong hieu--}}
-                 <div class="mb-3">
+
+                {{-- Form tìm kiếm --}}
+                <div class="mb-3">
                     <form action="{{ route('comments.index') }}" method="GET">
                         <div class="row">
                             <div class="col-md-3">
@@ -51,9 +52,10 @@
                                 <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                             </div>
                         </div>
-
                     </form>
                 </div>
+
+                {{-- Form chọn số lượng hiển thị mỗi trang --}}
                 <div class="d-flex justify-content-between px-3 py-2">
                     <form action="{{ route('comments.index') }}" method="GET">
                         <label>Xem
@@ -67,6 +69,8 @@
                         </label>
                     </form>
                 </div>
+
+                {{-- Bảng hiển thị bình luận --}}
                 <div class="table-responsive">
                     <table class="table table-striped">
                         <thead>
@@ -80,16 +84,16 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($noResults)
+                            @if ($comments->isEmpty())
                                 <tr>
-                                    <td colspan="7" class="text-center">Không có bình luận phù hợp</td>
+                                    <td colspan="6" class="text-center">Không có bình luận nào</td>
                                 </tr>
                             @else
                                 @foreach ($comments as $item)
                                     <tr>
                                         <td>{{ $item->user->name }}</td>
                                         <td class="text-truncate">{{ $item->product->name }}</td>
-                                        <td class="text-truncate" style="max-width: 300px;">{{ $item->comment }}</td>
+                                        <td class="text-truncate" style="max-width: 300px;">{{ $item->content }}</td>
                                         <td>
                                             @if ($item->file)
                                                 <a href="{{ Storage::url($item->file) }}" target="_blank">Tải file</a>
@@ -97,32 +101,37 @@
                                                 Không có file
                                             @endif
                                         </td>
-                                        <td class="text-end">{{ $item->star_rating }} / 5</td>
+                                        <td class="text-end">{{ $item->star_rating }}</td>
                                         <td class="text-center">
+                                            {{-- Nút xem chi tiết --}}
                                             @if (!$item->deleted_at)
-                                                <a href="{{ route('comments.show', $item->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-eye"></i></a>
+                                                <a href="{{ route('comments.show', $item->id) }}"
+                                                   class="btn btn-primary btn-sm">
+                                                   <i class="fa fa-eye"></i>
+                                                </a>
                                             @endif
+
+                                            {{-- Nút khôi phục (chỉ hiện khi đã xoá) --}}
                                             @if ($item->deleted_at)
-                                                <form action="{{ route('comments.restore', $item->id) }}" method="POST" style="display:inline;">
+                                                <form action="{{ route('comments.restore', $item->id) }}"
+                                                      method="POST" style="display:inline;">
                                                     @csrf
-                                                    <button type="submit" class="btn btn-warning btn-sm"><i class="bi bi-arrow-repeat"></i></button>
-                                                </form>
-                                            @else
-                                                <form action="{{ route('comments.destroy', $item->id) }}" method="POST" class="d-inline-block">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Bạn có chắc muốn tắt bình luận này?')">
-                                                        <i class="fa fa-trash-o"></i>
+                                                    <button type="submit" class="btn btn-warning btn-sm">
+                                                        <i class="bi bi-arrow-repeat"></i>
                                                     </button>
                                                 </form>
                                             @endif
+                                            {{-- Form xoá vĩnh viễn đã bị gỡ bỏ --}}
                                         </td>
+
                                     </tr>
                                 @endforeach
                             @endif
                         </tbody>
                     </table>
                 </div>
+
+                {{-- Phân trang --}}
                 <div class="row-fluid">
                     <div class="span6">
                         <div class="dataTables_info" id="hidden-table-info_info">
@@ -134,8 +143,7 @@
                         <div class="dataTables_paginate paging_bootstrap pagination">
                             <ul class="pagination">
                                 <li class="prev">
-                                    <a href="{{ $comments->previousPageUrl() }}" aria-label="Previous">←
-                                        Trước</a>
+                                    <a href="{{ $comments->previousPageUrl() }}" aria-label="Previous">← Trước</a>
                                 </li>
                                 @foreach ($comments->getUrlRange(1, $comments->lastPage()) as $page => $url)
                                     <li class="{{ $page == $comments->currentPage() ? 'active' : '' }}">
@@ -149,9 +157,11 @@
                         </div>
                     </div>
                 </div>
+
             </section>
         </div>
     </div>
+
     <script src="{{ asset('assets/admin/js/dynamic_table_init.js') }}"></script>
 
 @endsection

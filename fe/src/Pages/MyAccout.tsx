@@ -5,32 +5,35 @@ import OrderDetail from "./OrderDetail";
 import { getAllOrders, getStatusLabel, getStatusColor, Order } from "../services/Orders";
 import toast from "react-hot-toast";
 import { getUser, updateUser, Users } from "../services/user";
+import { useDispatch } from "react-redux"; // Thêm useDispatch
+import { refreshUser } from "../store/useSlice"; // Import refreshUser
 import Pagination from "./Pagination";
 import styles from './MyAccount.module.css'; // Import CSS Modules
 
 const MyAccount = () => {
+  const dispatch = useDispatch(); // Thêm dispatch để gọi refreshUser
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const tab = queryParams.get("tab");
   const orderId = queryParams.get("orderId");
 
-  const validTabs = ["profile", "orders", "orderDetail", "addresses", "payment", "settings"];
-  const [activeTab, setActiveTab] = useState(() => {
-    return validTabs.includes(tab) ? tab : "profile";
+  const validTabs = ["profile", "orders", "orderDetail", "payment", "settings", "addresses"];
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    return validTabs.includes(tab) ? tab! : "profile";
   });
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(orderId || null);
 
   // State cho phân trang và danh sách đơn hàng
   const [orders, setOrders] = useState<Order[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
-  const [itemsPerPage] = useState(3);
-  const [isLoading, setIsLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [itemsPerPage] = useState<number>(3);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
   // State cho tab trạng thái đơn hàng
-  const [orderStatusTab, setOrderStatusTab] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [orderStatusTab, setOrderStatusTab] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -85,25 +88,28 @@ const MyAccount = () => {
   const [user, setUser] = useState<Users | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [name, setName] = useState("");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [gender, setGender] = useState("");
-  const [dateOfBirth, setDateOfBirth] = useState("");
-  const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [gender, setGender] = useState<string>("");
+  const [dateOfBirth, setDateOfBirth] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  // State cho địa chỉ
+  const [isEditingAddress, setIsEditingAddress] = useState<boolean>(false);
+  const [address, setAddress] = useState<string>("");
 
   useEffect(() => {
     getUser()
       .then(({ data }) => {
+        console.log("User data from API:", data);
         setUser(data);
         setName(data?.name || "");
         setPhoneNumber(data?.phone_number || "");
         setGender(data?.gender || "");
-        if (data?.date_of_birth) {
-          const formattedDate = new Date(data.date_of_birth).toISOString().split("T")[0];
-          setDateOfBirth(formattedDate);
-        }
+        setAddress(data?.address || "");
+        setDateOfBirth(data?.date_of_birth || "");
         setLoading(false);
       })
       .catch((err) => {
@@ -117,6 +123,7 @@ const MyAccount = () => {
       setName(user.name || "");
       setPhoneNumber(user.phone_number || "");
       setGender(user.gender || "");
+      setAddress(user.address || "");
       if (user.date_of_birth) {
         const formattedDate = new Date(user.date_of_birth).toISOString().split("T")[0];
         setDateOfBirth(formattedDate);
@@ -146,8 +153,33 @@ const MyAccount = () => {
       setNewPassword("");
       setConfirmPassword("");
       toast.success("Thay đổi thông tin thành công");
+
+      // Làm mới thông tin user trong Redux store để cập nhật header
+      dispatch(refreshUser());
     } catch (error) {
       alert("Có lỗi xảy ra khi cập nhật thông tin!");
+    }
+  };
+
+  const handleUpdateAddress = async () => {
+    if (!user) return alert("Không có thông tin người dùng!");
+    if (!address.trim()) return alert("Vui lòng nhập địa chỉ!");
+
+    try {
+      const updatedData = {
+        ...user,
+        address: address.trim(),
+      };
+      const response = await updateUser(user.id, updatedData);
+      alert(response.data.message);
+      setUser(response.data.data);
+      setIsEditingAddress(false);
+      toast.success("Cập nhật địa chỉ thành công");
+
+      // Làm mới thông tin user trong Redux store để cập nhật header
+      dispatch(refreshUser());
+    } catch (error) {
+      alert("Có lỗi xảy ra khi cập nhật địa chỉ!");
     }
   };
 
@@ -202,12 +234,6 @@ const MyAccount = () => {
                     >
                       <Home className="icon" /> Địa chỉ
                     </button>
-                    {/* <button
-                      onClick={() => setActiveTab("payment")}
-                      className={activeTab === "payment" ? "active" : ""}
-                    >
-                      <CreditCard className="icon" /> Phương thức thanh toán
-                    </button> */}
                     <button
                       onClick={() => setActiveTab("settings")}
                       className={activeTab === "settings" ? "active" : ""}
@@ -307,7 +333,7 @@ const MyAccount = () => {
                                 <div className="order-status-wrapper">
                                   <span
                                     className="order-status"
-                                    data-status={order.status.toLowerCase()} // Thêm data-status
+                                    data-status={order.status.toLowerCase()}
                                     style={{ color: getStatusColor(order.status) }}
                                   >
                                     {getStatusLabel(order.status)}
@@ -329,9 +355,6 @@ const MyAccount = () => {
                                             {item.product_name || "Tên sản phẩm không có"}
                                           </span>
                                           <span className="item-quantity">x{item.quantity}</span>
-                                          {/* <span className="item-price">
-                                            {parseFloat(item.price).toLocaleString()} VND
-                                          </span> */}
                                         </div>
                                       </div>
                                     ))
@@ -506,54 +529,77 @@ const MyAccount = () => {
                 {activeTab === "addresses" && (
                   <div className="card">
                     <h2 className="address-title">Địa chỉ của tôi</h2>
-                    <div className="address-grid">
+                    {isEditingAddress ? (
+                      <div className="address-form">
+                        <div className="form-group">
+                          <label htmlFor="name">Họ và tên</label>
+                          <input
+                            type="text"
+                            id="name"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            placeholder="Nhập họ và tên"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="phone">Số điện thoại</label>
+                          <input
+                            type="text"
+                            id="phone"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            placeholder="Nhập số điện thoại"
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label htmlFor="address">Địa chỉ</label>
+                          <textarea
+                            id="address"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            placeholder="Nhập địa chỉ của bạn"
+                            rows={3}
+                          />
+                        </div>
+                        <div className="form-actions">
+                          <button
+                            className="cancel-address-btn"
+                            onClick={() => {
+                              setIsEditingAddress(false);
+                              setAddress(user?.address || "");
+                              setName(user?.name || "");
+                              setPhoneNumber(user?.phone_number || "");
+                            }}
+                          >
+                            Hủy
+                          </button>
+                          <button className="save-address-btn" onClick={handleUpdateAddress}>
+                            Hoàn tất
+                          </button>
+                        </div>
+                      </div>
+                    ) : user?.address ? (
                       <div className="address-card">
                         <div className="address-actions">
-                          <button className="edit-btn">Cập nhật</button>
-                          <button className="delete-btn">Xóa</button>
+                          <button className="edit-btn" onClick={() => setIsEditingAddress(true)}>
+                            Cập nhật
+                          </button>
                         </div>
-                        <h3 className="address-heading">Địa chỉ</h3>
-                        <p className="address-details">
-                          {user?.address}
-                          <br />
-                          {user?.phone_number}
-                        </p>
+                        <h3 className="address-heading">
+                          {user.name} (+84) {user.phone_number}
+                        </h3>
+                        <p className="address-details">{user.address}</p>
                       </div>
-                      <div className="address-add-card">
-                        <button className="add-address-btn">
+                    ) : (
+                      <div className="address-empty">
+                        <p>Chưa có địa chỉ nào được thêm.</p>
+                        <button className="add-address-btn" onClick={() => setIsEditingAddress(true)}>
                           <span>+</span> Thêm địa chỉ mới
                         </button>
                       </div>
-                    </div>
+                    )}
                   </div>
                 )}
-                {/* {activeTab === "payment" && (
-                  <div className="card">
-                    <h2 className="section-title">Phương thức thanh toán</h2>
-                    <div className="payment-grid">
-                      <div className="payment-card">
-                        <div className="address-actions">
-                          <button className="edit-btn">Cập nhật</button>
-                          <button className="delete-btn">Xóa</button>
-                        </div>
-                        <h3 className="payment-title">Credit Card</h3>
-                        <div className="card-info">
-                          <div className="card-logo"></div>
-                          <p className="card-details">
-                            **** **** **** 4567
-                            <br />
-                            <span className="card-expiry">Expires 05/25</span>
-                          </p>
-                        </div>
-                      </div>
-                      <div className="add-payment-card">
-                        <button className="add-payment-btn">
-                          <span className="plus-icon">+</span> Thêm phương thức thanh toán mới
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )} */}
                 {activeTab === "settings" && (
                   <div className="card">
                     <h2 className="section-title">Cài đặt tài khoản</h2>
@@ -564,16 +610,20 @@ const MyAccount = () => {
                   <div className="card">
                     {isLoading ? (
                       <div>Đang tải...</div>
-                    ) : orders.find((o) => String(o.id) === selectedOrderId) ? (
-                      <OrderDetail
-                        order={orders.find((o) => String(o.id) === selectedOrderId) || ({} as Order)}
-                      />
                     ) : (
-                      <div>Không tìm thấy đơn hàng với ID: {selectedOrderId}</div>
+                      <>
+                        {orders.find((o) => String(o.id) === selectedOrderId) ? (
+                          <OrderDetail
+                            order={orders.find((o) => String(o.id) === selectedOrderId)!}
+                          />
+                        ) : (
+                          <div>Không tìm thấy đơn hàng với ID: {selectedOrderId}</div>
+                        )}
+                        <div className="back-link" onClick={() => setActiveTab("orders")}>
+                          &lt;&lt; Quay lại đơn hàng của tôi
+                        </div>
+                      </>
                     )}
-                    <div className="back-link" onClick={() => setActiveTab("orders")}>
-                      &lt;&lt; Quay lại đơn hàng của tôi
-                    </div>
                   </div>
                 )}
               </div>
