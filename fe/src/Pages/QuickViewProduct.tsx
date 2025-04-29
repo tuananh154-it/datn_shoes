@@ -14,7 +14,8 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
   const [selectedDetail, setSelectedDetail] = useState<any>(null);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const scrollRef = useRef<HTMLDivElement>(null); // Thêm useRef để điều khiển cuộn
+  const [totalAddedToCart, setTotalAddedToCart] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const formatPrice = (price: string | number | undefined) => {
     if (price === undefined) return "0 VND";
@@ -28,9 +29,24 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
   };
 
   useEffect(() => {
+    if (selectedDetail) {
+      setTotalAddedToCart(0);
+    }
+  }, [selectedDetail]);
+
+  useEffect(() => {
     if (!productId) return;
+
     getProductDetail(productId).then(({ data }) => {
-      setProduct(data.data);
+      const product = data.data;
+      setProduct(product);
+
+      if (product.details?.length > 0) {
+        const firstDetail = product.details[0];
+        setSelectedColor(firstDetail.color);
+        setSelectedSize(firstDetail.size);
+        setSelectedDetail(firstDetail);
+      }
     });
   }, [productId]);
 
@@ -42,22 +58,26 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
       if (!acc[detail.color]) {
         acc[detail.color] = [];
       }
-      acc[detail.color].push(detail.size);
+      if (!acc[detail.color].includes(detail.size)) {
+        acc[detail.color].push(detail.size);
+      }
       return acc;
     }, {} as Record<string, string[]>) || {};
 
   const uniqueColors = Object.keys(colorSizeMap);
 
-  const getVariantImagesForColor = (color: string) => {
-    const colorDetails = product?.details.filter((detail) => detail.color === color) || [];
-    return colorDetails.flatMap((detail) => detail.image);
-  };
+  // Lấy danh sách ảnh biến thể duy nhất từ tất cả biến thể
+  const uniqueVariantImages = product?.details
+    ? [...new Set(product.details.map((detail) => detail.image))]
+    : [];
 
   const handleColorSelect = (color: string) => {
     setSelectedColor(color);
-    setSelectedSize(colorSizeMap[color][0]);
+    const availableSizes = colorSizeMap[color];
+    const firstSize = availableSizes[0];
+    setSelectedSize(firstSize);
     const matchingDetail = product?.details.find(
-      (d) => d.color === color && d.size === colorSizeMap[color][0]
+      (d) => d.color === color && d.size === firstSize
     );
     setSelectedDetail(matchingDetail || null);
   };
@@ -72,13 +92,14 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
 
   const handleVariantClick = (detail: any) => {
     setSelectedDetail(detail || null);
+    setSelectedColor(detail?.color || null);
+    setSelectedSize(detail?.size || null);
   };
 
-  // Hàm cuộn ảnh trái/phải, giống hệt ProductDetail
   const handleScroll = (direction: "left" | "right") => {
     const scrollContainer = scrollRef.current;
     if (scrollContainer) {
-      const scrollAmount = 120; // Số pixel mỗi lần cuộn
+      const scrollAmount = 120;
       scrollContainer.scrollBy({
         left: direction === "right" ? scrollAmount : -scrollAmount,
         behavior: "smooth",
@@ -88,32 +109,19 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
 
   function getColorFromText(colorText: string): string {
     switch (colorText.toLowerCase()) {
-      case "màu trắng":
-        return "#FFFFFF";
-      case "màu đen":
-        return "#000000";
-      case "màu đỏ":
-        return "#FF0000";
-      case "màu xanh dương":
-        return "#0000FF";
-      case "màu xanh lá":
-        return "#008000";
-      case "màu vàng":
-        return "#FFFF00";
-      case "màu cam":
-        return "#FFA500";
-      case "màu tím":
-        return "#800080";
-      case "màu hồng":
-        return "#FFC0CB";
-      case "màu nâu":
-        return "#A52A2A";
-      case "màu xám":
-        return "#808080";
-      case "màu xanh ngọc":
-        return "#00CED1";
-      default:
-        return "#000000";
+      case "màu trắng": return "#FFFFFF";
+      case "màu đen": return "#000000";
+      case "màu đỏ": return "#FF0000";
+      case "màu xanh dương": return "#0000FF";
+      case "màu xanh lá": return "#008000";
+      case "màu vàng": return "#FFFF00";
+      case "màu cam": return "#FFA500";
+      case "màu tím": return "#800080";
+      case "màu hồng": return "#FFC0CB";
+      case "màu nâu": return "#A52A2A";
+      case "màu xám": return "#808080";
+      case "màu xanh ngọc": return "#00CED1";
+      default: return "#000000";
     }
   }
 
@@ -130,8 +138,7 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
                     <img src={selectedDetail?.image || product.image} alt="Product" />
                   </div>
                   <div className="imageBienthe-wrapper" style={{ position: "relative" }}>
-                    {/* Nút chuyển trái, chỉ hiển thị nếu có nhiều hơn 2 ảnh */}
-                    {product.details.length + 1 > 2 && (
+                    {uniqueVariantImages.length + 1 > 2 && (
                       <a className="nav-button left" onClick={() => handleScroll("left")}>
                         ‹
                       </a>
@@ -147,18 +154,22 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
                         className="inline-block w-24 h-24 object-cover mx-1 cursor-pointer rounded variant-thumb"
                         onClick={() => handleVariantClick(null)}
                       />
-                      {product.details.map((detail, index) => (
+                      {uniqueVariantImages.map((image, index) => (
                         <img
                           key={index}
-                          src={detail.image}
+                          src={image}
                           alt={`Variant ${index}`}
                           className="inline-block w-24 h-24 object-cover mx-1 cursor-pointer rounded variant-thumb"
-                          onClick={() => handleVariantClick(detail)}
+                          onClick={() => {
+                            const matchingDetail = product?.details.find(
+                              (d) => d.image === image
+                            );
+                            handleVariantClick(matchingDetail);
+                          }}
                         />
                       ))}
                     </div>
-                    {/* Nút chuyển phải, chỉ hiển thị nếu có nhiều hơn 2 ảnh */}
-                    {product.details.length + 1 > 2 && (
+                    {uniqueVariantImages.length + 1 > 2 && (
                       <a className="nav-button right" onClick={() => handleScroll("right")}>
                         ›
                       </a>
@@ -171,7 +182,22 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
                     <p className="sku_text">
                       Thương hiệu: <strong>{product.brand}</strong>
                     </p>
-                    <p className="text-color">{formatPrice(selectedDetail?.discount_price || product.price)}</p>
+                    <p className="text-color title_h4">
+                      {selectedDetail?.discount_price ? (
+                        <>
+                          <span className="original-price">
+                            {formatPrice(selectedDetail?.default_price)}
+                          </span>{" "}
+                          <span className="discount-price">
+                            {formatPrice(selectedDetail?.discount_price)}
+                          </span>{" "}
+                        </>
+                      ) : (
+                        <span className="default-price">
+                          {formatPrice(selectedDetail?.default_price || product.price)}
+                        </span>
+                      )}
+                    </p>
                     <p>Số lượng: {selectedDetail?.quantity}</p>
                     <div className="star">⭐ (1 Review)</div>
 
@@ -203,10 +229,9 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
                             value={selectedSize || ""}
                             onChange={(e) => handleSizeSelect(e.target.value)}
                           >
-                            {selectedColor &&
-                              colorSizeMap[selectedColor].map((size, index) => (
-                                <option key={index} value={size}>{size}</option>
-                              ))}
+                            {selectedColor && colorSizeMap[selectedColor]?.map((size, index) => (
+                              <option key={index} value={size}>{size}</option>
+                            ))}
                           </select>
                         </div>
 
@@ -235,30 +260,55 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
                         <button
                           type="button"
                           className="background-btn text-uppercase cart_btn"
-                          onClick={() => {
+                          onClick={async () => {
                             if (!isLoggedIn) {
                               alert("Vui lòng đăng nhập trước khi thêm vào giỏ hàng!");
                               nav("/login");
                               return;
                             }
+
                             if (!selectedDetail) {
                               alert("Vui lòng chọn biến thể trước khi thêm vào giỏ hàng!");
                               return;
                             }
-                            addToCart(Number(selectedDetail.id), quantity);
-                            toast.success("Thêm vào giỏ hàng thành công");
-                            console.log(
-                              "Dữ liệu gửi lên API:",
-                              JSON.stringify({
-                                product_detail_id: selectedDetail.id,
-                                quantity,
-                              })
-                            );
+
+                            try {
+                              const originalQuantity = Number(selectedDetail.quantity);
+
+                              if (quantity <= 0) {
+                                toast.error("Số lượng phải lớn hơn 0");
+                                return;
+                              }
+
+                              const newTotalAddedToCart = totalAddedToCart + quantity;
+
+                              if (newTotalAddedToCart > originalQuantity) {
+                                toast.error(
+                                  "Không thể thêm vào giỏ hàng. Tổng số lượng đã thêm vượt quá số lượng gốc."
+                                );
+                                return;
+                              }
+
+                              await addToCart(Number(selectedDetail.id), quantity);
+                              setTotalAddedToCart(newTotalAddedToCart);
+
+                              console.log(
+                                "Dữ liệu gửi lên API:",
+                                JSON.stringify({
+                                  product_detail_id: selectedDetail.id,
+                                  quantity,
+                                })
+                              );
+                              console.log("Số lượng gốc:", originalQuantity);
+                              console.log("Tổng số lượng đã thêm:", newTotalAddedToCart);
+                            } catch (error) {
+                              console.error("Lỗi:", error);
+                              toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng: ");
+                            }
                           }}
                         >
-                          Add to cart
+                          Thêm vào giỏ hàng
                         </button>
-                       
                       </div>
                     </form>
                   </div>

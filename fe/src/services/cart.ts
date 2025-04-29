@@ -2,13 +2,14 @@ import { api } from "../config/axios";
 
 export interface CartItem {
   id_cart_item: number;
-  product_detail_id: number;
-  product_name: string;
-  color: string;
-  size: string;
-  quantity: number;
-  discount_price: number;
-  image: string;
+    product_detail_id: number;
+    product_name: string;
+    color: string;
+    size: string;
+    quantity: number;
+    stock: number; // Thêm số lượng tồn kho
+    discount_price: number;
+    image: string;
 }
 export const fetchCart = async (): Promise<CartItem[]> => {
   try {

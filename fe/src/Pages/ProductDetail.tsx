@@ -575,35 +575,21 @@ const ProductDetail = () => {
                             selectedDetail?.price ||
                             productId.price}
                         </p> */}
-                     <p className="text-color title_h4">
+                      <p className="text-color title_h4">
                         {selectedDetail?.discount_price ? (
                           <>
                             <span className="original-price">
-                              {selectedDetail?.default_price
-                                ? Number(
-                                  selectedDetail.default_price
-                                    .replace(/,/g, "")
-                                    .replace(" VND", "")
-                                ).toLocaleString("vi-VN") + " VND"
-                                : "0 VND"}
+                              {formatPrice(selectedDetail?.default_price)}
                             </span>{" "}
                             {/* Giá gốc */}
                             <span className="discount-price">
-                              {selectedDetail?.default_price
-                                ? Number(
-                                  selectedDetail.default_price
-                                    .replace(/,/g, "")
-                                    .replace(" VND", "")
-                                ).toLocaleString("vi-VN") + " VND"
-                                : "0 VND"}
+                              {formatPrice(selectedDetail?.discount_price)}
                             </span>{" "}
                             {/* Giá khuyến mại */}
                           </>
                         ) : (
                           <span className="default-price">
-                            {formatPrice(
-                              selectedDetail?.default_price || productId?.price
-                            )}
+                            {formatPrice(selectedDetail?.default_price || productId?.price)}
                           </span>
                         )}
                       </p>
@@ -738,22 +724,14 @@ const ProductDetail = () => {
 
                               if (newTotalAddedToCart > originalQuantity) {
                                 toast.error(
-                                  `Không thể thêm vào giỏ hàng. Tổng số lượng đã thêm  vượt quá số lượng gốc.`
+                                  "Không thể thêm vào giỏ hàng. Tổng số lượng đã thêm vượt quá số lượng gốc."
                                 );
                                 return;
                               }
 
-                              try {
-                                addToCart(Number(selectedDetail.id), quantity);
-                              } catch (error) {
-                                console.error("Lỗi từ addToCart:", error);
-                                toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng: ");
-                                return;
-                              }
-
+                              // Gọi addToCart và để CartContext xử lý thông báo
+                              await addToCart(Number(selectedDetail.id), quantity);
                               setTotalAddedToCart(newTotalAddedToCart);
-
-                              toast.success("Thêm vào giỏ hàng thành công");
 
                               console.log(
                                 "Dữ liệu gửi lên API:",
@@ -762,7 +740,6 @@ const ProductDetail = () => {
                                   quantity,
                                 })
                               );
-
                               console.log("Số lượng gốc:", originalQuantity);
                               console.log("Tổng số lượng đã thêm:", newTotalAddedToCart);
                             } catch (error) {
@@ -771,7 +748,7 @@ const ProductDetail = () => {
                             }
                           }}
                         >
-                          Add to cart
+                          Thêm vào giỏ hàng
                         </button>
                         {/* <div className="product_share">
                           <p>Share the love</p>
@@ -806,7 +783,7 @@ const ProductDetail = () => {
                   >
                     <h5 className="title_h5 text-capitalize">Mô tả sản phẩm</h5>
                     {/* <p>{productId.description}</p> */}
-                      <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(productId.description || "") }} />
+                    <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(productId.description || "") }} />
                   </div>
                   <div
                     className="col-md-6 wow fadeInRight"
@@ -1057,8 +1034,8 @@ const ProductDetail = () => {
                                 <div className="user_detail">
                                   <h5 className="title_h5">{review.user_name}</h5>
                                   <p>{renderStars(review.rating)}
-                                   <p>{review.product_name}-{review.color}-size:{review.size}</p> 
-                                   <p className="review__date">{review.created_at}</p>
+                                    <p>{review.product_name}-{review.color}-size:{review.size}</p>
+                                    <p className="review__date">{review.created_at}</p>
                                   </p>
                                   {/* <p>{review.product_name}-{review.color}-size:{review.size}</p> */}
                                   {/* <p className="review__date">{review.created_at}</p> */}

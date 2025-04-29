@@ -158,15 +158,15 @@ class OrderController extends Controller
 
             $cart->items()->whereIn('id', $selectedItemIds)->delete();
 
-            try {
-                Log::info('Chuẩn bị gửi email cho đơn hàng #' . $order->id . ', trạng thái: ' . $order->status . ', email: ' . $request->email);
-                $order->load('order_details.productDetail.product');
-                Log::info('Dữ liệu đơn hàng sau load: ' . json_encode($order->toArray()));
-                Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail($order));
-                Log::info('Email gửi thành công cho đơn hàng #' . $order->id);
-            } catch (\Exception $e) {
-                Log::error('Lỗi gửi email xác nhận đơn hàng #' . $order->id . ': ' . $e->getMessage() . ' - Stack trace: ' . $e->getTraceAsString());
-            }
+            // try {
+            //     Log::info('Chuẩn bị gửi email cho đơn hàng #' . $order->id . ', trạng thái: ' . $order->status . ', email: ' . $request->email);
+            //     $order->load('order_details.productDetail.product');
+            //     Log::info('Dữ liệu đơn hàng sau load: ' . json_encode($order->toArray()));
+            //     Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail($order));
+            //     Log::info('Email gửi thành công cho đơn hàng #' . $order->id);
+            // } catch (\Exception $e) {
+            //     Log::error('Lỗi gửi email xác nhận đơn hàng #' . $order->id . ': ' . $e->getMessage() . ' - Stack trace: ' . $e->getTraceAsString());
+            // }
 
             DB::commit();
 

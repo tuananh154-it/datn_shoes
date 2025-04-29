@@ -436,3 +436,8 @@ Route::middleware('auth')->group(function () {
 });
 
 // Route cho trang danh sách người dùng
+
+// routes chuyển trạng thái hàng loạt 
+Route::put('orders/bulk-update-status', [OrderController::class, 'bulkUpdateStatus'])->name('orders.bulk_update_status');
+// routes gửi mail 
+// Route::put('orders/bulk-update-status', [OrderController::class, 'bulkUpdateStatus'])->name('orders.bulk_update_status');

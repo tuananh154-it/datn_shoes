@@ -78,6 +78,7 @@
                         @can('show-comments')
                             <li><a href="{{ route('comments.index') }}">Quản lý bình luận</a></li>
                         @endcan
+                        
                         @can('show-returns')
                             <li><a href="{{ route('return_requests.index') }}">Quản lý yêu cầu hoàn</a></li>
                         @endcan
@@ -125,5 +126,96 @@
 
         </ul>
         <!-- sidebar menu end-->
-    </div>
+        <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pusher = new Pusher("ee494af10a7f4a6e48b6", {
+            cluster: "mt1",
+        });
+        console.log("Pusher initialized:", pusher);
+
+        var channel = pusher.subscribe('orders');
+        console.log("Subscribed to channel:", channel);
+
+        channel.bind('pusher:subscription_succeeded', function() {
+            console.log("Successfully subscribed to orders");
+        });
+
+        channel.bind('pusher:subscription_error', function(status) {
+            console.error("Subscription error:", status);
+        });
+
+        channel.bind("order.placed", function(data) {
+            console.log("Received order.placed event:", data);
+            const notificationsDiv = document.getElementById("admin-notifications");
+            if (notificationsDiv) {
+                const notification = document.createElement('div');
+                notification.className = 'admin-notification';
+                notification.innerHTML = `
+                    <span class="emoji">📦</span>
+                    <strong>${data.username}</strong><br>
+                    <span>
+                        Đơn #${data.id} vừa được đặt<br>
+                        Tổng: ${parseFloat(data.total_price).toLocaleString()} VNĐ<br>
+                        <small>${data.created_at}</small>
+                    </span>
+                `;
+                notificationsDiv.appendChild(notification);
+
+                // Ẩn thông báo sau 5 giây
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.5s ease-out';
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 500);
+                }, 9500);
+            } else {
+                console.error("Element #admin-notifications not found");
+            }
+        });
+    });
+</script>
+
+<div id="admin-notifications"></div>
+
+<style>
+    #admin-notifications {
+        position: fixed;
+        bottom: 20px;
+        left: 20px;
+        z-index: 1000;
+    }
+
+    .admin-notification {
+        background-color: #86ca30;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 6px;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        min-width: 220px;
+        font-size: 13px;
+        line-height: 1.4;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 10px;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .admin-notification .emoji {
+        font-size: 16px;
+        margin-right: 4px;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeOut {
+        from { opacity: 1; transform: translateY(0); }
+        to { opacity: 0; transform: translateY(10px); }
+    }
+</style>
+</style>
 </aside>

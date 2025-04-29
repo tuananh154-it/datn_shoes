@@ -18,7 +18,7 @@ class ProductController extends Controller
     {
 
         $query = Product::where('status', 'active');
-
+        
 
         $products = $query->with(['category', 'brand'])->get();
         return response()->json([
