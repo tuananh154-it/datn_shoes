@@ -51,6 +51,25 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
         const colorDetails = product?.details.filter((detail) => detail.color === color) || [];
         return colorDetails.flatMap((detail) => detail.image);
     };
+     // Lấy danh sách ảnh từ biến thể
+  const detailImages: string[] = product?.details
+  ?.map(detail => detail.image?.[0])
+  .filter((img): img is string => typeof img === 'string') || [];
+
+// Kiểm tra và thêm ảnh chính nếu chưa có trong biến thể
+const allImages = [...detailImages];
+if (product?.image && !detailImages.includes(product.image)) {
+  allImages.unshift(product.image);
+}
+
+// Lọc ảnh không trùng nhau
+const uniqueImages = Array.from(new Set(allImages)).map(img => {
+  return product?.details.find(detail => detail.image[0] === img) || {
+    image: [img], // ảnh chính không có detail nên tạo object giả
+    size: '',
+    color: '',
+  };
+});
 
     const handleColorSelect = (color: string) => {
         setSelectedColor(color);
@@ -104,10 +123,13 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
                                         <img src={selectedDetail?.image || product.image} alt="Product" />
                                     </div>
                                     <div className="imageBienthe">
-                                        <img src={product.image} alt="Product main" onClick={() => handleVariantClick(null)} />
+                                        {uniqueImages.map((image,index)=>(
+                                              <img key={index} src={image.image[0]} alt={`Variant ${index}`} onClick={() => handleVariantClick(image)} />
+                                        ))}
+                                        {/* <img src={product.image} alt="Product main" onClick={() => handleVariantClick(null)} />
                                         {product.details.map((detail, index) => (
                                             <img key={index} src={detail.image} alt={`Variant ${index}`} onClick={() => handleVariantClick(detail)} />
-                                        ))}
+                                        ))} */}
                                     </div>
                                 </div>
                                 <div className="main-right">

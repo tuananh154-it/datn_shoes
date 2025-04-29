@@ -17,8 +17,8 @@ class ProductController extends Controller
     public function index(Request $request)
     {
 
-        $query = Product::where('status', 'active');
-
+        $query = Product::where('status', 'active')
+        ->orderBy('created_at', 'desc');
 
         $products = $query->with(['category', 'brand'])->get();
         return response()->json([
