@@ -308,7 +308,7 @@ const Shop = () => {
                             <Slider
                               range
                               min={0}
-                              max={3000000}
+                              max={5000000}
                               step={10000}
                               value={priceRange}
                               onChange={handleChange}

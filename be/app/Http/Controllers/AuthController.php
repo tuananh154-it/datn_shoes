@@ -112,18 +112,31 @@ class AuthController extends Controller
         ]);
     }
 
+    // public function logout(Request $request)
+    // {
+    //     try {
+    //         Auth::logout();
+    //         if ($token = JWTAuth::getToken()) {
+    //             JWTAuth::invalidate($token);
+    //         }
+
+    //         return response()->json(['message' => 'Đăng xuất thành công!'], 200);
+    //     } catch (\Exception $e) {
+    //         return response()->json(['error' => 'Lỗi đăng xuất: ' . $e->getMessage()], 500);
+    //     }
+    // }
     public function logout(Request $request)
     {
-        try {
-            Auth::logout();
-            if ($token = JWTAuth::getToken()) {
-                JWTAuth::invalidate($token);
-            }
+        Auth::logout();
 
-            return response()->json(['message' => 'Đăng xuất thành công!'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['error' => 'Lỗi đăng xuất: ' . $e->getMessage()], 500);
+        if ($token = JWTAuth::getToken()) {
+            JWTAuth::invalidate($token);
         }
+        // Trả về JSON cho client API, còn giao diện web thì redirect
+        return $request->expectsJson()
+            ? response()->json(['message' => 'Đăng xuất thành công!'], 200)
+            : redirect()->route('login')
+            ->with('success', 'Đăng xuất thành công!');
     }
 
     public function user(Request $request)

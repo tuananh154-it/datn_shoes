@@ -35,7 +35,7 @@ class Top10SPController extends Controller
                 'products.description', 'products.category_id', 'products.brand_id'
             )
             ->orderByDesc('total_sold')
-            ->limit(10)
+            ->limit(8)
             ->get();
 
         // Chuyển đổi hình ảnh sang base64

@@ -160,15 +160,15 @@ class OrderController extends Controller
 
             $cart->items()->whereIn('id', $selectedItemIds)->delete();
 
-            try {
-                Log::info('Chuẩn bị gửi email cho đơn hàng #' . $order->id . ', trạng thái: ' . $order->status . ', email: ' . $request->email);
-                $order->load('order_details.productDetail.product');
-                Log::info('Dữ liệu đơn hàng sau load: ' . json_encode($order->toArray()));
-                Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail($order));
-                Log::info('Email gửi thành công cho đơn hàng #' . $order->id);
-            } catch (\Exception $e) {
-                Log::error('Lỗi gửi email xác nhận đơn hàng #' . $order->id . ': ' . $e->getMessage() . ' - Stack trace: ' . $e->getTraceAsString());
-            }
+            // try {
+            //     Log::info('Chuẩn bị gửi email cho đơn hàng #' . $order->id . ', trạng thái: ' . $order->status . ', email: ' . $request->email);
+            //     $order->load('order_details.productDetail.product');
+            //     Log::info('Dữ liệu đơn hàng sau load: ' . json_encode($order->toArray()));
+            //     Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail($order));
+            //     Log::info('Email gửi thành công cho đơn hàng #' . $order->id);
+            // } catch (\Exception $e) {
+            //     Log::error('Lỗi gửi email xác nhận đơn hàng #' . $order->id . ': ' . $e->getMessage() . ' - Stack trace: ' . $e->getTraceAsString());
+            // }
 
             DB::commit();
 
@@ -234,6 +234,8 @@ class OrderController extends Controller
                 }
 
                 return [
+                    'id' => $orderDetail->id, // Thêm order_detail_id
+                    'order_id' => $orderDetail->order_id, // Thêm order_id
                     'product_id' => $productDetail->product->id,
                     'product_detail_id' => $productDetail->id,
                     'product_name' => $productDetail->product->name,
@@ -246,8 +248,7 @@ class OrderController extends Controller
                 ];
             });
 
-            // Tính toán số tiền giảm giá
-            $subtotal = $order->order_details->sum('total_price'); // Tổng tiền sản phẩm
+            $subtotal = $order->order_details->sum('total_price');
             $discount = 0;
             if ($order->voucher) {
                 if ($order->voucher->discount_percent) {
@@ -272,7 +273,7 @@ class OrderController extends Controller
                 'note' => $order->note,
                 'deliver_fee' => $order->deliver_fee,
                 'total_price' => $order->total_price,
-                'discount' => $discount, // Trả về số tiền giảm giá đã tính toán
+                'discount' => $discount,
                 'created_at' => $order->created_at,
                 'voucher' => $order->voucher ? [
                     'id' => $order->voucher->id,
@@ -304,7 +305,7 @@ class OrderController extends Controller
             return response()->json(['message' => 'Không tìm thấy đơn hàng'], 404);
         }
 
-        foreach ($order->order_details as $orderDetail) {
+        $formattedOrderDetails = $order->order_details->map(function ($orderDetail) {
             $productDetail = $orderDetail->productDetail;
             $imageBase64 = null;
 
@@ -332,13 +333,22 @@ class OrderController extends Controller
                 Log::warning('product_detail.image là null cho product_detail_id: ' . $productDetail->id);
             }
 
-            $orderDetail->image = $imageBase64;
-            $orderDetail->color = $productDetail->color ? $productDetail->color->name : null;
-            $orderDetail->size = $productDetail->size ? $productDetail->size->name : null;
-        }
+            return [
+                'id' => $orderDetail->id,
+                'order_id' => $orderDetail->order_id,
+                'product_detail_id' => $productDetail->id,
+                'product_id' => $productDetail->product->id,
+                'product_name' => $productDetail->product->name,
+                'quantity' => $orderDetail->quantity,
+                'price' => $orderDetail->price,
+                'total_price' => $orderDetail->total_price,
+                'image' => $imageBase64,
+                'color' => $productDetail->color ? $productDetail->color->name : null,
+                'size' => $productDetail->size ? $productDetail->size->name : null,
+            ];
+        });
 
-        // Tính toán số tiền giảm giá
-        $subtotal = $order->order_details->sum('total_price'); // Tổng tiền sản phẩm
+        $subtotal = $order->order_details->sum('total_price');
         $discount = 0;
         if ($order->voucher) {
             if ($order->voucher->discount_percent) {
@@ -351,10 +361,34 @@ class OrderController extends Controller
             }
         }
 
-        // Thêm discount vào dữ liệu trả về
-        $order->discount = $discount;
+        $formattedOrder = [
+            'id' => $order->id,
+            'username' => $order->username,
+            'email' => $order->email,
+            'phone_number' => $order->phone_number,
+            'address' => $order->address,
+            'user_id' => $order->user_id,
+            'voucher_id' => $order->voucher_id,
+            'status' => $order->status,
+            'payment_status' => $order->payment_status,
+            'payment_method' => $order->payment_method,
+            'note' => $order->note,
+            'deliver_fee' => $order->deliver_fee,
+            'total_price' => $order->total_price,
+            'discount' => $discount,
+            'created_at' => $order->created_at,
+            'updated_at' => $order->updated_at,
+            'deleted_at' => $order->deleted_at,
+            'voucher' => $order->voucher ? [
+                'id' => $order->voucher->id,
+                'name' => $order->voucher->name,
+                'discount_percent' => $order->voucher->discount_percent,
+                'discount_amount' => $order->voucher->discount_amount,
+            ] : null,
+            'order_details' => $formattedOrderDetails,
+        ];
 
-        return response()->json($order);
+        return response()->json($formattedOrder);
     }
 
     public function cancelOrder($id, Request $request)

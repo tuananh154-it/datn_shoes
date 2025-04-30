@@ -1,3 +1,4 @@
+
 @extends('master')
 
 @section('content')
@@ -20,7 +21,11 @@
 
     <div class="text-center mb-5 mt-4">
         <h3 class="fw-bold text-primary text-uppercase">
+<<<<<<< HEAD
             <i class="bi bi-receipt me-2"></i>Chi tiết đơn hàng #{{ $order->id }}
+=======
+            <i class="bi bi-receipt me-2"></i>Chi tiết đơn hàng #FV-HN-{{ $order->id }}
+>>>>>>> 9d6e39e21da7da11611326d3b9f39019492547ae
         </h3>
     </div>
 
@@ -37,6 +42,11 @@
                         <tr>
                             <th>Ảnh</th>
                             <th>Tên Sản Phẩm</th>
+<<<<<<< HEAD
+=======
+                            <th>Size</th>
+                            <th>Màu</th>
+>>>>>>> 9d6e39e21da7da11611326d3b9f39019492547ae
                             <th>Giá</th>
                             <th>Số Lượng</th>
                             <th>Tổng</th>
@@ -46,28 +56,76 @@
                         @foreach ($order->order_details as $orderDetail)
                         <tr>
                             <td>
+<<<<<<< HEAD
                                 @if($orderDetail->productDetail?->product?->image)
+=======
+                                @php
+                                    $imagePath = null;
+                                    if ($orderDetail->productDetail?->image) {
+                                        try {
+                                            $imagePath = json_decode($orderDetail->productDetail->image, true)[0] ?? null;
+                                        } catch (\Exception $e) {
+                                            $imagePath = $orderDetail->productDetail->image;
+                                        }
+                                    }
+                                @endphp
+                                @if($imagePath)
+                                    <img src="{{ asset('storage/' . $imagePath) }}" class="img-thumbnail" style="width: 70px;" onerror="this.src='{{ asset('storage/' . ($orderDetail->productDetail?->product?->image ?? 'default.jpg')) }}';">
+                                @elseif($orderDetail->productDetail?->product?->image)
+>>>>>>> 9d6e39e21da7da11611326d3b9f39019492547ae
                                     <img src="{{ asset('storage/' . $orderDetail->productDetail->product->image) }}" class="img-thumbnail" style="width: 70px;">
                                 @else
                                     <span class="text-muted">Không có ảnh</span>
                                 @endif
                             </td>
                             <td>{{ $orderDetail->productDetail->product->name ?? 'N/A' }}</td>
+<<<<<<< HEAD
                             <td>{{ number_format($orderDetail->price, 0, ',', '.') }}₫</td>
                             <td>{{ $orderDetail->quantity }}</td>
                             <td>{{ number_format($orderDetail->price * $orderDetail->quantity, 0, ',', '.') }}₫</td>
+=======
+                            <td>{{ $orderDetail->productDetail->size->name ?? 'N/A' }}</td>
+                            <td>{{ $orderDetail->productDetail->color->name ?? 'N/A' }}</td>
+                            <td>{{ number_format($orderDetail->price, 0, ',', '.') }}₫</td>
+                            <td>{{ $orderDetail->quantity }}</td>
+                            <td>{{ number_format($orderDetail->total_price, 0, ',', '.') }}₫</td>
+>>>>>>> 9d6e39e21da7da11611326d3b9f39019492547ae
                         </tr>
                         @endforeach
                     </tbody>
                 </table>
                 <div class="text-end mt-2">
+<<<<<<< HEAD
                     <strong>Tổng cộng:</strong> {{ number_format($total_product_value, 0, ',', '.') }}₫
+=======
+                    @php
+                        $subtotal = $order->order_details->sum('total_price');
+                        $discount = 0;
+                        if ($order->voucher) {
+                            if ($order->voucher->discount_percent) {
+                                $discount = $subtotal * ($order->voucher->discount_percent / 100);
+                            } elseif ($order->voucher->discount_amount) {
+                                $discount = $order->voucher->discount_amount;
+                            }
+                            if ($order->voucher->max_discount_amount && $discount > $order->voucher->max_discount_amount) {
+                                $discount = $order->voucher->max_discount_amount;
+                            }
+                        }
+                    @endphp
+                    <div><strong>Tạm tính:</strong> {{ number_format($subtotal, 0, ',', '.') }}₫</div>
+                    @if($discount > 0)
+                        <div><strong>Giảm giá:</strong>{{ number_format($discount, 0, ',', '.') }}₫ (Mã:{{ $order->voucher->name }})</div>
+                    @endif
+                    <div><strong>Phí vận chuyển:</strong> {{ number_format($order->deliver_fee, 0, ',', '.') }}₫</div>
+                    <div><strong>Tổng cộng:</strong> {{ number_format($order->total_price, 0, ',', '.') }}₫</div>
+>>>>>>> 9d6e39e21da7da11611326d3b9f39019492547ae
                 </div>
             </div>
 
             {{-- 🧾 Thông tin chung --}}
             <h5 class="fw-semibold text-primary"><i class="bi bi-info-circle me-2"></i>Thông tin đơn hàng</h5>
             <div class="row mb-3">
+<<<<<<< HEAD
                 <div class="col-md-4"><strong>Người đặt:</strong> {{ $order->user->name ?? 'Không rõ' }}</div>
                 <div class="col-md-4"><strong>Ngày đặt:</strong> {{ $order->created_at?->format('d/m/Y') ?? 'N/A' }}</div>
                 <div class="col-md-4"><strong>Tổng tiền:</strong> {{ number_format($order->total_price, 0, ',', '.') }}₫</div>
@@ -90,6 +148,41 @@
                             <span class="badge bg-light text-muted border">Không rõ</span>
                     @endswitch
                 </div>
+=======
+                <div class="col-md-4"><strong>Người đặt:</strong> {{ $order->username ?? 'Không rõ' }}</div>
+                <div class="col-md-4"><strong>Email:</strong> {{ $order->email ?? 'N/A' }}</div>
+                <div class="col-md-4"><strong>Ngày đặt:</strong> {{ $order->created_at?->format('d/m/Y') ?? 'N/A' }}</div>
+            </div>
+            <!-- <div class="row mb-3">
+                <div class="col-md-4"><strong>Số điện thoại:</strong> {{ $order->phone_number ?? 'N/A' }}</div>
+                <div class="col-md-4"><strong>Địa chỉ:</strong> {{ $order->address ?? 'N/A' }}</div>
+                <div class="col-md-4">
+                    @if($order->voucher)
+                        <strong>Voucher:</strong> {{ $order->voucher->name }} ({{ $order->voucher->discount_percent ? number_format($order->voucher->discount_percent, 0, ',', '.') . '%' : number_format($order->voucher->discount_amount, 0, ',', '.') . '₫' }})
+                    @else
+                        <strong>Voucher:</strong> Không áp dụng
+                    @endif
+                </div>
+            </div> -->
+
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <strong>Phương thức thanh toán:</strong><br>
+                    @switch($order->payment_method)
+                        @case('cash_on_delivery')
+                            <span class="badge bg-light text-dark border border-secondary">Tiền mặt</span>
+                            @break
+                        @case('momo')
+                            <span class="badge" style="background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba;">MoMo</span>
+                            @break
+                        @case('zalopay')
+                            <span class="badge" style="background-color: #d0f0ff; color: #007bff; border: 1px solid #b6e0fe;">ZaloPay</span>
+                            @break
+                        @default
+                            <span class="badge bg-light text-muted border">Không rõ</span>
+                    @endswitch
+                </div>
+>>>>>>> 9d6e39e21da7da11611326d3b9f39019492547ae
 
                 <div class="col-md-4">
                     <strong>Trạng thái thanh toán:</strong><br>

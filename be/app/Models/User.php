@@ -9,62 +9,56 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Profile;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Carbon;
 
-class User extends Authenticatable implements JWTSubject  // Implement JWTSubject
+class User extends Authenticatable implements JWTSubject
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
     protected $fillable = [
         'name',
         'email',
         'password',
-        'gender',           // Thêm trường gender
-        'date_of_birth',    // Thêm trường date_of_birth
-        'address',          // Thêm trường address
+        'gender',
+        'date_of_birth',
+        'address',
         'phone_number',
-        'role',    // Thêm trường phone_number
+        'role',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'date_of_birth' => 'date', // cast thành date
         'password' => 'hashed',
-        'date_of_birth' => 'date',  // Cast date_of_birth thành đối tượng Carbon
     ];
+
+    /**
+     * Định dạng date khi trả JSON cho frontend
+     */
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
+    }
 
     /**
      * Quan hệ 1-1 với Profile
      */
     public function profile()
     {
-        return $this->hasOne(Profile::class);  // Quan hệ 1-1 với Profile
+        return $this->hasOne(Profile::class);
     }
 
     /**
-     * Quan hệ 1-n với Orders
+     * Quan hệ 1-n với Order
      */
     public function orders()
     {
-        return $this->hasMany(Order::class);  // Quan hệ 1-n với Orders
+        return $this->hasMany(Order::class);
     }
 
     /**
@@ -72,11 +66,11 @@ class User extends Authenticatable implements JWTSubject  // Implement JWTSubjec
      */
     public function cart()
     {
-        return $this->hasOne(Cart::class);  // Quan hệ 1-1 với Cart
+        return $this->hasOne(Cart::class);
     }
 
     /**
-     * Tạo hoặc lấy giỏ hàng hiện tại của user
+     * Tự động tạo Cart nếu chưa có
      */
     public function getOrCreateCart()
     {
@@ -84,40 +78,35 @@ class User extends Authenticatable implements JWTSubject  // Implement JWTSubjec
     }
 
     /**
-     * Get the identifier that will be stored in the subject claim of the JWT.
-     *
-     * @return mixed
+     * Lấy ID cho JWT
      */
     public function getJWTIdentifier()
     {
-        return $this->getKey();  // Trả về khóa chính (thường là ID người dùng)
+        return $this->getKey();
     }
 
     /**
-     * Get custom claims for the JWT.
-     *
-     * @return array
+     * Thêm các claims custom vào JWT
      */
     public function getJWTCustomClaims()
     {
         return [
-            'role' => $this->roles->pluck('name'), // Trả về các vai trò của người dùng dưới dạng mảng
-            'profile' => $this->profile,           // Trả về thông tin profile nếu cần
+            'role' => $this->roles->pluck('name'),
+            'profile' => $this->profile,
         ];
     }
 
-    // Các phương thức khác như roles() có thể được sử dụng nếu cần
-    // public function roles()
-    // {
-    //     return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id');
-    // }
-
-    // Bình luận + Đánh giá
+    /**
+     * Quan hệ 1-n với Comment
+     */
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
 
+    /**
+     * Quan hệ 1-n với Review
+     */
     public function reviews()
     {
         return $this->hasMany(Review::class);

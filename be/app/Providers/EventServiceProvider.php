@@ -25,7 +25,9 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        Event::listen(Registered::class, function ($event) {
+            logger('User registered: '.$event->user->email);
+        });
     }
 
     /**

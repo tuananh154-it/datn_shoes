@@ -11,10 +11,43 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function index(Request $request)
+//     public function index(Request $request)
+// {
+//     $user = $request->user();
+
+//     if (!$user) {
+//         return response()->json(['error' => 'User not authenticated'], 401);
+//     }
+
+//     $cart = Cart::where('user_id', $user->id)->with('items.productDetail.product')->first();
+
+//     if (!$cart || $cart->items->isEmpty()) {
+//         return response()->json(['message' => 'Giỏ hàng trống'], 200);
+//     }
+
+//     return response()->json([
+//         'cart' => $cart->items->map(function ($item) {
+//             // Phân tích chuỗi JSON trong image của ProductDetail
+//             $imagePath = $item->productDetail->image ? json_decode($item->productDetail->image, true)[0] : null;
+
+//             return [
+//                 'id_cart_item' => $item->id,
+//                 'product_name' => $item->productDetail->product->name ?? 'N/A',
+//                 'color' => $item->productDetail->color->name ?? 'N/A',
+//                 'size' => $item->productDetail->size->name ?? 'N/A',
+//                 'quantity' => $item->quantity,
+//                 'default_price' => $item->productDetail->default_price,
+//                 'discount_price' => $item->productDetail->discount_price ?? $item->productDetail->default_price,
+//                 'final_price' => ($item->productDetail->discount_price ?? $item->productDetail->default_price) * $item->quantity,
+//                 'image' => $this->getImageAsBase64($imagePath), // Truyền đường dẫn ảnh đã phân tích
+//             ];
+//         }),
+//         'total_price' => $cart->items->sum(fn($item) => $item->quantity * ($item->productDetail->discount_price ?? $item->productDetail->default_price)),
+//     ]);
+// }
+public function index(Request $request)
 {
     $user = $request->user();
-
     if (!$user) {
         return response()->json(['error' => 'User not authenticated'], 401);
     }
@@ -27,25 +60,25 @@ class CartController extends Controller
 
     return response()->json([
         'cart' => $cart->items->map(function ($item) {
-            // Phân tích chuỗi JSON trong image của ProductDetail
             $imagePath = $item->productDetail->image ? json_decode($item->productDetail->image, true)[0] : null;
 
             return [
                 'id_cart_item' => $item->id,
+                'product_detail_id' => $item->product_detail_id, // Thêm product_detail_id
                 'product_name' => $item->productDetail->product->name ?? 'N/A',
                 'color' => $item->productDetail->color->name ?? 'N/A',
                 'size' => $item->productDetail->size->name ?? 'N/A',
                 'quantity' => $item->quantity,
+                'stock' => $item->productDetail->quantity, // Thêm số lượng tồn kho
                 'default_price' => $item->productDetail->default_price,
                 'discount_price' => $item->productDetail->discount_price ?? $item->productDetail->default_price,
                 'final_price' => ($item->productDetail->discount_price ?? $item->productDetail->default_price) * $item->quantity,
-                'image' => $this->getImageAsBase64($imagePath), // Truyền đường dẫn ảnh đã phân tích
+                'image' => $this->getImageAsBase64($imagePath),
             ];
         }),
         'total_price' => $cart->items->sum(fn($item) => $item->quantity * ($item->productDetail->discount_price ?? $item->productDetail->default_price)),
     ]);
 }
-
 private function getImageAsBase64($imagePath)
 {
     // Nếu không có đường dẫn ảnh, trả về null

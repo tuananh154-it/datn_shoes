@@ -19,14 +19,13 @@ class CommentController extends Controller
     public function index(Request $request, $productId)
     {
         try {
-            // <<<<<<< HEAD
             $perPage = $request->input('per_page', 10);
 
-            // =======
-            // >>>>>>> ee6d9630ffa4657f7f1e0d883f5c37b14cc405d5
-            $allComments = Comment::where('product_id', $productId)->get();
+            $allComments = Comment::where('product_id', $productId)
+                ->get();
 
             $commentsWithoutParent = Comment::where('product_id', $productId)
+                ->where('is_hidden', false)
                 ->whereNull('parent_id') // Lấy bình luận gốc (không phải bình luận con)
                 ->withCount('children') // Đếm số lượng bình luận con (phản hồi)
                 ->withCount('reports') // Đếm số lượng báo cáo
@@ -46,7 +45,8 @@ class CommentController extends Controller
                     'id' => $comment->id,
                     'content' => $comment->content,
                     'number_of_likes' => $comment->number_of_likes,
-                    'created_at' => $comment->created_at->diffForHumans(), // Thời gian tạo bình luận
+                    // 'created_at' => $comment->created_at->diffForHumans(),
+                    'created_at' => $comment->created_at ? $comment->created_at->format('d-m-Y H:i') : 'N/A',
                     'is_anonymous' => $comment->is_anonymous,
                     'is_edited' => $comment->is_edited,
                     'total_reports' => $comment->reports_count, // Số lượng báo cáo
@@ -75,6 +75,7 @@ class CommentController extends Controller
         try {
             // Tải bình luận cùng với người dùng và các bình luận con
             $comment = Comment::with('user', 'children.user') // Tải người dùng và bình luận con cùng người dùng của chúng
+                ->where('is_hidden', false)
                 ->find($commentId);
 
             // Kiểm tra xem bình luận có tồn tại không
@@ -88,7 +89,7 @@ class CommentController extends Controller
                 'user_role' => $comment->user->role,
                 'content' => $comment->content,
                 'number_of_likes' => $comment->number_of_likes,
-                'created_at' => $comment->created_at->diffForHumans(), // Thời gian tạo bình luận
+                'created_at' => $comment->created_at ? $comment->created_at->format('d-m-Y H:i') : 'N/A',
                 'is_anonymous' => $comment->is_anonymous,
                 'is_edited' => $comment->is_edited,
                 'total_replies' => $comment->children_count, // Số lượng phản hồi (đã đếm sẵn)
@@ -330,44 +331,143 @@ class CommentController extends Controller
         return response()->json(['message' => 'Bình luận đã được báo cáo']);
     }
 
-    // Xóa bình luận (soft delete)
+    // Xóa bình luận 
     public function destroy($commentId)
     {
-        $comment = Comment::find($commentId);
+        try {
+            $user = Auth::user();
+            $comment = Comment::withTrashed()->find($commentId);
 
-        if (!$comment) {
-            return response()->json(['message' => 'Bình luận không tồn tại'], 404);
-        }
+            if (!$comment) {
+                return response()->json(['message' => 'Bình luận không tồn tại'], 404);
+            }
 
-        // Chỉ cho phép người dùng xóa bình luận của chính họ
-        if ($comment->user_id !== Auth::id()) {
+            $isOwner = $comment->user_id === $user->id;
+            $targetUser = $comment->user;
+
+            // Superadmin: có thể xóa tất cả
+            if ($user->role === 'superadmin') {
+                $comment->forceDelete();
+                return response()->json(['message' => 'Bình luận đã được xóa vĩnh viễn']);
+            }
+
+            // Admin: được xóa của mình + của user
+            if ($user->role === 'admin') {
+                if ($isOwner || $targetUser->role === 'user') {
+                    $comment->forceDelete();
+                    return response()->json(['message' => 'Bình luận đã được xóa vĩnh viễn']);
+                } else {
+                    return response()->json(['message' => 'Bạn không có quyền xóa bình luận này'], 403);
+                }
+            }
+
+            // User thường: chỉ xóa được của mình
+            if ($user->role === 'user' && $isOwner) {
+                $comment->forceDelete();
+                return response()->json(['message' => 'Bình luận đã được xóa vĩnh viễn']);
+            }
+
+            // Tất cả các trường hợp không hợp lệ
             return response()->json(['message' => 'Bạn không có quyền xóa bình luận này'], 403);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi trong quá trình xóa bình luận',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // Xóa mềm bình luận
-        $comment->delete();
-
-        return response()->json(['message' => 'Bình luận đã được xóa (soft delete)']);
     }
 
-    // Xóa vĩnh viễn bình luận (hard delete)
-    // Chỉ Admin mới có quyền xóa vĩnh viễn
-    public function forceDelete($commentId)
+    // Ẩn bình luận
+    public function toggleHidden($commentId)
     {
-        $comment = Comment::withTrashed()->find($commentId);
+        try {
+            $user = Auth::user();
+            $comment = Comment::find($commentId);
 
-        if (!$comment) {
-            return response()->json(['message' => 'Bình luận không tồn tại'], 404);
+            if (!$comment) {
+                return response()->json(['message' => 'Bình luận không tồn tại'], 404);
+            }
+
+            $isOwner = $comment->user_id === $user->id;
+            $targetUser = $comment->user;
+
+            // superadmin: có thể ẩn hoặc hiện bất kỳ bình luận nào
+            if ($user->role === 'superadmin') {
+                $comment->is_hidden = !$comment->is_hidden;
+                $comment->save();
+                return response()->json(['message' => $comment->is_hidden ? 'Bình luận đã được ẩn' : 'Bình luận đã được hiện lại']);
+            }
+
+            // admin: có thể ẩn hoặc hiện bình luận của chính mình và của user
+            if ($user->role === 'admin') {
+                if ($isOwner || $targetUser->role === 'user') {
+                    $comment->is_hidden = !$comment->is_hidden;
+                    $comment->save();
+                    return response()->json(['message' => $comment->is_hidden ? 'Bình luận đã được ẩn' : 'Bình luận đã được hiện lại']);
+                } else {
+                    return response()->json(['message' => 'Bạn không có quyền thay đổi trạng thái ẩn/hiện bình luận này'], 403);
+                }
+            }
+
+            // user: chỉ có thể ẩn hoặc hiện bình luận của chính mình
+            if ($user->role === 'user' && $isOwner) {
+                $comment->is_hidden = !$comment->is_hidden;
+                $comment->save();
+                return response()->json(['message' => $comment->is_hidden ? 'Bình luận đã được ẩn' : 'Bình luận đã được hiện lại']);
+            }
+
+            return response()->json(['message' => 'Bạn không có quyền thay đổi trạng thái ẩn/hiện bình luận này'], 403);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi thay đổi trạng thái ẩn/hiện bình luận',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // Kiểm tra quyền (Chỉ Admin mới có quyền xóa vĩnh viễn)
-        if (!Auth::user()->role == 'user') {
-            return response()->json(['message' => 'Bạn không có quyền xóa vĩnh viễn bình luận này'], 403);
-        }
-
-        // Xóa vĩnh viễn bình luận
-        $comment->forceDelete();
-
-        return response()->json(['message' => 'Bình luận đã được xóa vĩnh viễn']);
     }
+
+    // Tất cả bình luận của người dùng
+    // Chỉ admin và superadmin mới có thể xem bình luận của người khác
+    // User thường chỉ có thể xem bình luận của chính mình
+    public function myComments()
+    {
+        try {
+            $user = Auth::user();
+
+            $comments = Comment::where('user_id', $user->id)
+                ->withCount('reports') // Đếm số lượng báo cáo
+                ->with('user')
+                ->with('parent')
+                ->orderByDesc('created_at')
+                ->get();
+
+            $commentsData = $comments->map(function ($comment) {
+                $parentComment = $comment->parent->content ?? null; // Lấy nội dung bình luận cha nếu có
+                return [
+                    'id' => $comment->id,
+                    'content' => $comment->content,
+                    'parent_comment' => $parentComment, // Bình luận cha (nếu có)
+                    'number_of_likes' => $comment->number_of_likes,
+                    'created_at' => $comment->created_at->diffForHumans(), // Thời gian tạo bình luận
+                    'is_hidden' => $comment->is_hidden,
+                    'is_anonymous' => $comment->is_anonymous,
+                    'is_edited' => $comment->is_edited,
+                    'total_reports' => $comment->reports_count, // Số lượng báo cáo
+                ];
+            });
+
+            return response()->json([
+                'message' => 'Danh sách bình luận của bạn',
+                'total_comments' => $comments->count(),
+                'data' => $commentsData
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Đã xảy ra lỗi khi lấy danh sách bình luận',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }

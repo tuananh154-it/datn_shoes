@@ -18,7 +18,7 @@ class VoucherController extends Controller {
     public function show($id) {
         return response()->json(
             Voucher::select('id', 'name', 'discount_amount', 'discount_percent', 'expiration_date', 'min_purchase_amount', 'max_discount_amount', 'status', 'quantity')
-                ->findOrFail($id)
+                ->findOrFail(id: $id)
         );
     }  
 }

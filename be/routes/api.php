@@ -43,7 +43,7 @@ use App\Http\Controllers\ReturnController;
 // Public routes
 // routes/api.php
 
-Route::post('/process-return', [ReturnController::class, 'processReturn'])->middleware('csrf');
+// Route::post('/process-return', [ReturnController::class, 'processReturn'])->middleware('csrf');
 
 
 Route::apiResource('articles', ArticleController::class);
@@ -141,21 +141,24 @@ Route::get('comment/{commentId}', [CommentController::class, 'show']); // Chi ti
 Route::post('product/{productId}/post', [CommentController::class, 'store'])->middleware('auth:api'); // Đăng bình luận
 Route::post('comment/{parentId}/reply', [CommentController::class, 'reply'])->middleware('auth:api'); // Phản hồi bình luận
 Route::put('comment/{commentId}/edit', [CommentController::class, 'update'])->middleware('auth:api'); // Sửa bình luận
-Route::delete('comment/{commentId}', [CommentController::class, 'destroy'])->middleware('auth:api'); // Xóa mềm bình luận
-Route::delete('comment/{commentId}/force', [CommentController::class, 'forceDelete'])->middleware('auth:api'); // Xóa vĩnh viễn (Admin)
+Route::delete('comment/{commentId}', [CommentController::class, 'destroy'])->middleware('auth:api'); // Xóa bình luận
 Route::put('comment/{commentId}/like', action: [CommentController::class, 'like'])->middleware('auth:api'); // Like bình luận
 Route::put('comment/{commentId}/report', [CommentController::class, 'report'])->middleware('auth:api'); // Báo cáo bình luận
+Route::put('comment/{commentId}/hide', [CommentController::class, 'hide'])->middleware('auth:api'); // ẩn bình luận
+Route::get('myComments', [CommentController::class, 'myComments'])->middleware('auth:api'); // Danh sách bình luận của bản thân
 
 // Đánh giá
 Route::get('product/{productId}/reviews', [ReviewController::class, 'index']); // Danh sách đánh giá theo sản phẩm
 Route::get('reviews', [ReviewController::class, 'myReviews'])->middleware('auth:api'); // Đánh giá của bản thân
 Route::get('review/{reviewId}', [ReviewController::class, 'show'])->middleware('auth:api'); // Chi tiết đánh giá
-Route::post('product/{productId}/order/{orderId}/review', [ReviewController::class, 'storeReviewAfterDelivery'])->middleware('auth:api'); // Đánh giá sau khi nhận hàng
+Route::get('order/{order}/reviews', [ReviewController::class, 'getOrderReview']); // Danh sách đánh giá theo đơn hàng
+Route::post('order/{orderId}/review', [ReviewController::class, 'storeReviewAfterDelivery'])->middleware('auth:api'); // Đánh giá sau khi nhận hàng
 Route::post('review/{reviewId}/reply', [ReviewController::class, 'reply'])->middleware('auth:api'); // Phản hồi đánh giá (Admin)
 Route::put('review/{reviewId}/edit', [ReviewController::class, 'update'])->middleware('auth:api'); // Chỉnh sửa đánh giá (chỉ 1 lần)
 Route::put('review/{reviewId}/like', [ReviewController::class, 'like'])->middleware('auth:api'); // Like đánh giá
 Route::put('review/{reviewId}/report', [ReviewController::class, 'report'])->middleware('auth:api'); // Báo cáo đánh giá
 Route::put('review/{reviewId}/anonymous', [ReviewController::class, 'toggleAnonymous'])->middleware('auth:api'); // ẩn danh đánh giá
+Route::put('review/{reviewId}/hide', [ReviewController::class, 'hide'])->middleware('auth:api'); // ẩn đánh giá
 // <<<<<<< HEAD
 
 // Hoàn hàng
@@ -166,7 +169,7 @@ Route::middleware('auth:api')->group(function () {
     Route::get('return-requests/{id}', [ReturnRequestController::class, 'show']);
 
     // Tạo yêu cầu hoàn (User)
-    Route::post('return-requests/{orderId}', [ReturnRequestController::class, 'store']);
+    Route::post('return-requests/{id}', [ReturnRequestController::class, 'store']);
 
     // Nhân viên CSKH tiếp nhận yêu cầu hoàn
     Route::post('return-requests/{id}/review/accept', [ReturnRequestController::class, 'acceptReview']);

@@ -21,7 +21,7 @@ const MegaMenu = () => {
                   >
                   Cửa hàng 
             </NavLink>
-            <span className="menu_arrow flaticon-down-arrow-1"></span>
+            {/* <span className="menu_arrow flaticon-down-arrow-1"></span> */}
             <ul className={`dropdown-menu megamenu_full_screen ${isOpen ? "block" : "hidden"}`}>
                 <li className="w-100 text-capitalize">
                     <div className="container">

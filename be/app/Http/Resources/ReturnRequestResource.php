@@ -20,6 +20,7 @@ class ReturnRequestResource extends JsonResource
         if ($user->role === 'user') {
             return [
                 'id' => $this->id,
+                'order_id' => $this->order_id,
                 'order_total' => $this->order->total_price,
                 'order_status' => $this->order->status,
                 'bank_account' => $this->bank_account,
@@ -34,6 +35,8 @@ class ReturnRequestResource extends JsonResource
         if ($user->role === 'staff') {
             return [
                 'id' => $this->id,
+                'order_id' => $this->order_id,
+
                 'order_total' => $this->order->total_price,
                 'order_status' => $this->order->status,
                 'customer_name' => $this->user->name,
@@ -46,6 +49,8 @@ class ReturnRequestResource extends JsonResource
         if ($user->role === 'admin') {
             return [
                 'id' => $this->id,
+                'order_id' => $this->order_id,
+
                 'order_total' => $this->order->total_price,
                 'order_status' => $this->order->status,
                 'customer_name' => $this->user->name,

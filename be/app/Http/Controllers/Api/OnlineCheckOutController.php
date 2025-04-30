@@ -151,12 +151,6 @@ class OnlineCheckOutController extends Controller
 
             DB::commit();
 
-            try {
-                Mail::to($request->email)->send(new \App\Mail\OrderPlacedMail($order->load('order_details.productDetail.product')));
-            } catch (\Exception $e) {
-                Log::error('Lỗi gửi email xác nhận đơn hàng: ' . $e->getMessage());
-            }
-
             // Gọi API MoMo
             $endpoint = "https://test-payment.momo.vn/v2/gateway/api/create";
             $partnerCode = 'MOMOBKUN20180529';
@@ -223,6 +217,75 @@ class OnlineCheckOutController extends Controller
                 'message' => 'Đã xảy ra lỗi khi xử lý thanh toán MoMo',
                 'error' => $e->getMessage()
             ], 500);
+        }
+    }
+
+    public function momoIpn(Request $request)
+    {
+        $data = $request->all();
+        Log::info('MoMo IPN received: ' . json_encode($data));
+
+        // Xác thực chữ ký từ MoMo
+        $secretKey = 'at67qH6mk8w5Y1nAyMoYKMWACiEi2bsa';
+        $rawHash = "accessKey=klm05TvNBzhg7h7j"
+            . "&amount={$data['amount']}"
+            . "&extraData={$data['extraData']}"
+            . "&message={$data['message']}"
+            . "&orderId={$data['orderId']}"
+            . "&orderInfo={$data['orderInfo']}"
+            . "&orderType={$data['orderType']}"
+            . "&partnerCode={$data['partnerCode']}"
+            . "&payType={$data['payType']}"
+            . "&requestId={$data['requestId']}"
+            . "&responseTime={$data['responseTime']}"
+            . "&resultCode={$data['resultCode']}"
+            . "&transId={$data['transId']}";
+
+        $signature = hash_hmac("sha256", $rawHash, $secretKey);
+        Log::info('Raw hash for signature: ' . $rawHash);
+        Log::info('Generated signature: ' . $signature);
+        Log::info('Received signature: ' . $data['signature']);
+
+        if ($signature !== $data['signature']) {
+            Log::error('MoMo IPN: Invalid signature');
+            return response()->json(['message' => 'Invalid signature'], 400);
+        }
+
+        // Lấy orderId từ extraData
+        parse_str($data['extraData'], $extraData);
+        Log::info('ExtraData parsed: ' . json_encode($extraData));
+        $orderId = $extraData['orderId'] ?? null;
+        Log::info('Order ID extracted: ' . $orderId);
+
+        if (!$orderId) {
+            Log::error('MoMo IPN: orderId not found in extraData');
+            return response()->json(['message' => 'orderId not found'], 400);
+        }
+
+        $order = Order::find($orderId);
+
+        if (!$order) {
+            Log::error('MoMo IPN: Order not found, orderId: ' . $orderId);
+            return response()->json(['message' => 'Order not found'], 404);
+        }
+
+        // Kiểm tra kết quả thanh toán
+        if ($data['resultCode'] == 0) {
+            try {
+                Log::info('Attempting to broadcast OrderPlaced event for order #' . $order->id);
+                $event = new OrderPlaced($order);
+                Log::info('Broadcast data for MoMo: ' . json_encode($event->broadcastWith()));
+                $broadcastResult = broadcast($event);
+                Log::info('Broadcasted OrderPlaced event for order #' . $order->id);
+                Log::info('Broadcast result: ' . json_encode($broadcastResult));
+            } catch (\Exception $e) {
+                Log::error('Failed to broadcast OrderPlaced event: ' . $e->getMessage());
+                Log::error('Pusher connection details: ' . json_encode(config('broadcasting.connections.pusher')));
+            }
+            return response()->json(['message' => 'IPN processed successfully'], 200);
+        } else {
+            Log::warning('MoMo IPN: Payment failed for order #' . $orderId . ', resultCode: ' . $data['resultCode']);
+            return response()->json(['message' => 'Payment failed'], 200);
         }
     }
 

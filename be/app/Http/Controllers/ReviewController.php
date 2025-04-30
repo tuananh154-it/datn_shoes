@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderDetail;
+use App\Models\ProductDetail;
 use App\Models\Review;
 use App\Models\ReviewInteraction;
 use Illuminate\Http\Request;
@@ -20,32 +21,28 @@ class ReviewController extends Controller
 {
     private function getOrderDetail($orderId, $orderDetailId)
     {
-        if (is_null($orderDetailId)) {
-            return null;
-        }
-
         return OrderDetail::where('order_id', $orderId)
             ->where('id', $orderDetailId)
-            ->with('productDetail.color', 'productDetail.size', 'productDetail.product')
+            ->with('productDetail.color', 'productDetail.size')
             ->first();
     }
 
     private function formDataBack($review)
     {
-        $orderDetail = $review->orderDetail ?? $this->getOrderDetail($review->order_id, $review->order_detail_id);
+        $orderDetail = $this->getOrderDetail($review->order_id, $review->order_detail_id);
 
         return [
-            'user_name' => isset($review->user) && $review->user ? ($review->user->name ?? 'N/A') : 'N/A',
-            'user_role' => isset($review->user) && $review->user ? ($review->user->role ?? 'N/A') : 'N/A',
-            'product_name' => $orderDetail && isset($orderDetail->productDetail) && $orderDetail->productDetail && isset($orderDetail->productDetail->product) && $orderDetail->productDetail->product ? ($orderDetail->productDetail->product->name ?? 'N/A') : 'N/A',
-            'content' => $review->content ?? 'N/A',
-            'reply' => $review->reply ?? null,
-            'number_of_likes' => $review->helpful_count ?? 0,
-            'created_at' => $review->created_at ? $review->created_at->format('d-m-Y H:i') : 'N/A',
-            'is_anonymous' => $review->is_anonymous ?? false,
-            'rating' => $review->rating ?? 0,
-            'size' => $orderDetail && isset($orderDetail->productDetail) && $orderDetail->productDetail && isset($orderDetail->productDetail->size) && $orderDetail->productDetail->size ? ($orderDetail->productDetail->size->name ?? 'N/A') : 'N/A',
-            'color' => $orderDetail && isset($orderDetail->productDetail) && $orderDetail->productDetail && isset($orderDetail->productDetail->color) && $orderDetail->productDetail->color ? ($orderDetail->productDetail->color->name ?? 'N/A') : 'N/A',
+            'user_name' => $review->user->name,
+            'user_role' => $review->user->role,
+            'product_name' => $review->orderDetail->productDetail->product->name,
+            'content' => $review->content,
+            'reply' => $review->reply,
+            'number_of_likes' => $review->helpful_count,
+            'created_at' => $review->created_at->diffForHumans(),
+            'is_anonymous' => $review->is_anonymous,
+            'rating' => $review->rating,
+            'size' => $orderDetail->productDetail->size->name ?? 'N/A',
+            'color' => $orderDetail->productDetail->color->name ?? 'N/A',
         ];
     }
 
@@ -55,17 +52,12 @@ class ReviewController extends Controller
             $allReviews = Review::whereHas('orderDetail.productDetail', function ($query) use ($productId) {
                 $query->where('product_id', $productId);
             })
-                ->orWhere(function ($query) use ($productId) {
-                    $query->where('product_id', $productId)
-                          ->whereNull('order_detail_id');
-                })
                 ->with([
                     'user:id,name,role',
-                    'orderDetail.productDetail.product',
                     'orderDetail.productDetail.color',
                     'orderDetail.productDetail.size'
                 ])
-                ->select('id', 'user_id', 'order_detail_id', 'content', 'reply', 'helpful_count', 'created_at', 'is_anonymous', 'rating', 'order_id', 'product_id')
+                ->select('id', 'user_id', 'order_detail_id', 'content', 'reply', 'helpful_count', 'created_at', 'is_anonymous', 'rating', 'order_id')
                 ->get();
 
             return response()->json([
@@ -73,7 +65,6 @@ class ReviewController extends Controller
                 'total_reviews' => $allReviews->count(),
             ]);
         } catch (\Exception $e) {
-            \Log::error("Error when fetching reviews for product_id {$productId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
             return response()->json(['error' => 'Không thể truy vấn đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
@@ -84,33 +75,31 @@ class ReviewController extends Controller
             $user = Auth::user();
 
             $reviews = Review::where('user_id', $user->id)
-                ->with('orderDetail.productDetail.product', 'orderDetail.productDetail.color', 'orderDetail.productDetail.size')
+                ->with('orderDetail.productDetail.color', 'orderDetail.productDetail.size')
                 ->select('id', 'order_detail_id', 'order_id', 'rating', 'content', 'created_at', 'is_anonymous', 'is_edited', 'helpful_count', 'is_reported')
                 ->orderByDesc('created_at')
                 ->get();
 
             $data = $reviews->map(function ($r) {
-                $od = $r->orderDetail;
+                $od = $this->getOrderDetail($r->order_id, $r->order_detail_id);
                 return [
-                    'product_name' => $od && isset($od->productDetail) && $od->productDetail && isset($od->productDetail->product) ? ($od->productDetail->product->name ?? 'N/A') : 'N/A',
-                    'product_id' => $od && isset($od->productDetail) && $od->productDetail && isset($od->productDetail->product) ? ($od->productDetail->product->id ?? 0) : 0,
-                    'order_id' => $r->order_id ?? 0,
-                    'order_detail_id' => $r->order_detail_id ?? 0,
-                    'rating' => $r->rating ?? 0,
-                    'content' => $r->content ?? 'N/A',
-                    'created_at' => $r->created_at ? $r->created_at->format('d-m-Y H:i') : 'N/A',
-                    'is_anonymous' => $r->is_anonymous ?? false,
-                    'is_edited' => $r->is_edited ?? false,
-                    'helpful_count' => $r->helpful_count ?? 0,
-                    'is_reported' => $r->is_reported ?? false,
-                    'size' => $od && isset($od->productDetail) && $od->productDetail && isset($od->productDetail->size) ? ($od->productDetail->size->name ?? 'N/A') : 'N/A',
-                    'color' => $od && isset($od->productDetail) && $od->productDetail && isset($od->productDetail->color) ? ($od->productDetail->color->name ?? 'N/A') : 'N/A',
+                    'product_name' => $od->productDetail->product->name,
+                    'product_id' => $od->productDetail->product->id,
+                    'order_id' => $r->order_id,
+                    'rating' => $r->rating,
+                    'content' => $r->content,
+                    'created_at' => $r->created_at->diffForHumans(),
+                    'is_anonymous' => $r->is_anonymous,
+                    'is_edited' => $r->is_edited,
+                    'helpful_count' => $r->helpful_count,
+                    'is_reported' => $r->is_reported,
+                    'size' => $od->productDetail->size->name ?? 'N/A',
+                    'color' => $od->productDetail->color->name ?? 'N/A',
                 ];
             });
 
             return response()->json(['my_reviews' => $data, 'total_reviews' => $reviews->count()]);
         } catch (\Exception $e) {
-            \Log::error("Error when fetching my reviews: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
             return response()->json(['error' => 'Không thể lấy danh sách đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
@@ -126,24 +115,23 @@ class ReviewController extends Controller
                 return response()->json(['message' => !$review ? 'Không tồn tại' : 'Không có quyền truy cập'], 403);
             }
 
-            $productDetail = isset($review->orderDetail) && $review->orderDetail ? $review->orderDetail->productDetail : null;
-            $product = $productDetail && isset($productDetail->product) ? $productDetail->product : null;
+            $productDetail = $review->orderDetail->productDetail;
+            $product = $productDetail->product;
 
             return response()->json([
                 'product' => [
-                    'product_id' => $product ? ($product->id ?? 0) : 0,
-                    'product_name' => $product ? ($product->name ?? 'N/A') : 'N/A',
-                    'product_image' => $product ? ($product->image ?? null) : null,
-                    'size' => $productDetail && isset($productDetail->size) ? ($productDetail->size->name ?? 'N/A') : 'N/A',
-                    'color' => $productDetail && isset($productDetail->color) ? ($productDetail->color->name ?? 'N/A') : 'N/A',
-                    'product_price' => isset($review->orderDetail) && $review->orderDetail ? ($review->orderDetail->price ?? 0) : 0,
-                    'quantity' => isset($review->orderDetail) && $review->orderDetail ? ($review->orderDetail->quantity ?? 0) : 0,
-                    'total_price' => isset($review->orderDetail) && $review->orderDetail ? ($review->orderDetail->total_price ?? 0) : 0,
+                    'product_id' => $product->id,
+                    'product_name' => $product->name,
+                    'product_image' => $product->image,
+                    'size' => $productDetail->size->name ?? 'N/A',
+                    'color' => $productDetail->color->name ?? 'N/A',
+                    'product_price' => $review->orderDetail->price,
+                    'quantity' => $review->orderDetail->quantity,
+                    'total_price' => $review->orderDetail->total_price,
                 ],
                 'review' => $this->formDataBack($review),
             ]);
         } catch (\Exception $e) {
-            \Log::error("Error when fetching review {$reviewId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
             return response()->json(['error' => 'Không thể lấy chi tiết đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
@@ -156,8 +144,6 @@ class ReviewController extends Controller
                 'orderDetail.productDetail.product',
                 'orderDetail.productDetail.color',
                 'orderDetail.productDetail.size',
-                'likes',
-                'reports'
             ])->where('order_id', $orderId)->get();
 
             if ($reviews->isEmpty()) {
@@ -169,18 +155,18 @@ class ReviewController extends Controller
 
             $summary = $reviews->map(function ($review) {
                 $detail = $review->orderDetail;
-                $productDetail = $detail ? $detail->productDetail : null;
+                $productDetail = $detail->productDetail;
 
                 return [
                     'product' => [
-                        'product_name' => $productDetail && isset($productDetail->product) ? ($productDetail->product->name ?? 'N/A') : 'N/A',
+                        'product_name' => $productDetail->product->name ?? 'N/A',
                         'variant' => [
-                            'size' => $productDetail && isset($productDetail->size) ? ($productDetail->size->name ?? 'N/A') : 'N/A',
-                            'color' => $productDetail && isset($productDetail->color) ? ($productDetail->color->name ?? 'N/A') : 'N/A',
+                            'size' => $productDetail->size->name ?? 'N/A',
+                            'color' => $productDetail->color->name ?? 'N/A',
                         ],
-                        'quantity' => $detail ? ($detail->quantity ?? 0) : 0,
-                        'product_price' => $detail ? ($detail->price ?? 0) : 0,
-                        'total_price' => $detail ? ($detail->total_price ?? 0) : 0,
+                        'quantity' => $detail->quantity,
+                        'product_price' => $detail->price,
+                        'total_price' => $detail->total_price,
                     ],
                     'is_reviewed' => true,
                     'review' => [
@@ -191,15 +177,15 @@ class ReviewController extends Controller
                         'customer_service' => $review->customer_service,
                         'content' => $review->content,
                         'is_anonymous' => $review->is_anonymous,
-                        'liked_count' => $review->likes->count(),
-                        'reported_count' => $review->reports->count(),
+                        'liked_count' => $review->likes()->count(),
+                        'reported_count' => $review->reports()->count(),
                         'reply' => $review->reply,
                     ]
                 ];
             });
 
             $totalReviews = $reviews->count();
-            $orderTotalPrice = $reviews->first()->order ? ($reviews->first()->order->total_price ?? 0) : 0;
+            $orderTotalPrice = $reviews->first()->order->total_price ?? 0;
 
             return response()->json([
                 'success' => true,
@@ -207,13 +193,14 @@ class ReviewController extends Controller
                 'total_reviews' => $totalReviews,
                 'all_price' => $orderTotalPrice,
             ]);
+
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không tìm thấy đơn hàng.',
             ], 404);
+
         } catch (\Exception $e) {
-            \Log::error("Error when fetching order reviews for order_id {$orderId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
                 'message' => 'Đã có lỗi xảy ra: ' . $e->getMessage(),
@@ -227,6 +214,7 @@ class ReviewController extends Controller
             $user = Auth::user();
             $userId = $user->id;
 
+            // Kiểm tra đơn hàng có phải của bạn không
             $order = Order::where('id', $orderId)
                 ->where('user_id', $userId)
                 ->first();
@@ -234,7 +222,12 @@ class ReviewController extends Controller
                 return response()->json(['message' => 'Đơn hàng không tồn tại hoặc không phải của bạn'], 404);
             }
 
-            if ($order->status !== 'completed') {
+            // Kiểm tra đơn hàng đã hoàn tất chưa
+            $orderExists = Order::where('id', $orderId)
+                ->where('status', 'delivered')
+                ->exists();
+
+            if (!$orderExists) {
                 return response()->json(['message' => 'Bạn chỉ có thể đánh giá sau khi đơn hàng hoàn tất'], 403);
             }
 
@@ -254,44 +247,36 @@ class ReviewController extends Controller
                 return response()->json(['errors' => 'Dữ liệu đầu vào không hợp lệ', 'details' => $validator->errors()], 400);
             }
 
-            $orderDetailIds = collect($request->reviews)->pluck('order_detail_id')->unique()->toArray();
-            $orderDetails = OrderDetail::where('order_id', $orderId)
-                ->whereIn('id', $orderDetailIds)
-                ->with('productDetail.color', 'productDetail.size', 'productDetail.product')
-                ->get()
-                ->keyBy('id');
-
-            $existingReviews = Review::where('user_id', $userId)
-                ->where('order_id', $orderId)
-                ->whereIn('order_detail_id', $orderDetailIds)
-                ->pluck('order_detail_id')
-                ->toArray();
-
             $responseReviews = [];
 
+            // Lặp qua từng sản phẩm và xử lý
             foreach ($request->reviews as $reviewData) {
                 $orderDetailId = $reviewData['order_detail_id'];
 
-                $orderDetail = $orderDetails[$orderDetailId] ?? null;
+                // Kiểm tra sản phẩm có trong đơn hàng này không
+                $orderDetail = OrderDetail::where('order_id', $orderId)
+                    ->where('id', $orderDetailId)
+                    ->first();
+
                 if (!$orderDetail) {
                     continue;
                 }
 
-                if (in_array($orderDetailId, $existingReviews)) {
-                    continue;
+                // Kiểm tra nếu đã đánh giá sản phẩm này rồi
+                $existingReview = Review::where('user_id', $userId)
+                    ->where('order_detail_id', $orderDetailId)
+                    ->where('order_id', $orderId)
+                    ->exists();
+
+                if ($existingReview) {
+                    continue; // Nếu đã đánh giá thì bỏ qua
                 }
 
-                // Lấy product_id từ orderDetail
-                $productId = $orderDetail->productDetail->product->id ?? null;
-                if (!$productId) {
-                    return response()->json(['message' => 'Không tìm thấy sản phẩm cho chi tiết đơn hàng này'], 400);
-                }
-
+                // Tạo review mới cho sản phẩm
                 $review = Review::create([
                     'user_id' => $userId,
                     'order_id' => $orderId,
                     'order_detail_id' => $orderDetailId,
-                    'product_id' => $productId,
                     'rating' => $reviewData['rating'],
                     'content' => $reviewData['content'] ?? '',
                     'service' => $reviewData['service'] ?? 1,
@@ -301,19 +286,21 @@ class ReviewController extends Controller
                     'is_anonymous' => $reviewData['is_anonymous'] ?? false,
                 ]);
 
+                // Load thông tin người dùng và các chi tiết sản phẩm liên quan
                 $review->load('user:id,name,role');
                 $productDetail = $orderDetail->productDetail;
 
+                // Chuẩn bị dữ liệu để trả về
                 $responseReviews[] = [
-                    'user_name' => $review->user ? ($review->user->name ?? 'N/A') : 'N/A',
-                    'user_role' => $review->user ? ($review->user->role ?? 'N/A') : 'N/A',
+                    'user_name' => $review->user->name,
+                    'user_role' => $review->user->role,
                     'content' => $review->content,
                     'rating' => $review->rating,
                     'number_of_likes' => $review->helpful_count,
-                   'created_at' => $review->created_at->format('d-m-Y H:i'),
+                    'created_at' => $review->created_at->diffForHumans(),
                     'is_anonymous' => $review->is_anonymous,
-                    'size' => $productDetail && isset($productDetail->size) ? ($productDetail->size->name ?? 'N/A') : 'N/A',
-                    'color' => $productDetail && isset($productDetail->color) ? ($productDetail->color->name ?? 'N/A') : 'N/A',
+                    'size' => $productDetail ? $productDetail->size->name : 'N/A',
+                    'color' => $productDetail ? $productDetail->color->name : 'N/A',
                 ];
             }
 
@@ -322,10 +309,10 @@ class ReviewController extends Controller
                 'reviews' => $responseReviews,
             ], 201);
         } catch (\Exception $e) {
-            \Log::error("Error when storing reviews for order_id {$orderId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
             return response()->json(['error' => 'Không thể gửi đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
+
 
     public function reply(Request $request, $reviewId)
     {
@@ -358,7 +345,6 @@ class ReviewController extends Controller
 
             return response()->json(['message' => 'Phản hồi đánh giá thành công', 'review' => $review]);
         } catch (\Exception $e) {
-            \Log::error("Error when replying to review {$reviewId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
             return response()->json(['error' => 'Không thể phản hồi đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
@@ -409,78 +395,67 @@ class ReviewController extends Controller
 
             return response()->json(['message' => 'Đánh giá đã được cập nhật thành công', 'review' => $review]);
         } catch (\Exception $e) {
-            \Log::error("Error when updating review {$reviewId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
             return response()->json(['error' => 'Không thể cập nhật đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
 
     public function like($reviewId)
     {
-        try {
-            $review = Review::find($reviewId);
+        $review = Review::find($reviewId);
 
-            if (!$review) {
-                return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
-            }
-
-            $userId = Auth::id();
-
-            if ($review->likes()->where('user_id', $userId)->exists()) {
-                $review->likes()->where('user_id', $userId)->delete();
-                $review->decrement('helpful_count');
-                return response()->json(['message' => 'Đã bỏ thích đánh giá'], 200);
-            }
-
-            $review->increment('helpful_count');
-            $review->save();
-
-            ReviewInteraction::create([
-                'review_id' => $reviewId,
-                'user_id' => $userId,
-                'type' => 1
-            ]);
-
-            return response()->json(['message' => 'Đã thích đánh giá']);
-        } catch (\Exception $e) {
-            \Log::error("Error when liking review {$reviewId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
-            return response()->json(['error' => 'Không thể thích đánh giá', 'message' => $e->getMessage()], 500);
+        if (!$review) {
+            return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
         }
+
+        $userId = Auth::id();
+
+        if ($review->likes()->where('user_id', $userId)->exists()) {
+            $review->likes()->where('user_id', $userId)->delete();
+            $review->decrement('helpful_count');
+            return response()->json(['message' => 'Đã bỏ thích đánh giá'], 200);
+        }
+
+        $review->increment('helpful_count');
+        $review->save();
+
+        ReviewInteraction::create([
+            'review_id' => $reviewId,
+            'user_id' => $userId,
+            'type' => 1
+        ]);
+
+        return response()->json(['message' => 'Đã thích đánh giá']);
     }
 
     public function report($reviewId)
     {
-        try {
-            $review = Review::find($reviewId);
+        $review = Review::find($reviewId);
 
-            if (!$review) {
-                return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
-            }
-
-            $userId = Auth::id();
-
-            if ($review->user_id === $userId) {
-                return response()->json(['message' => 'Bạn không thể báo cáo đánh giá của chính mình'], 403);
-            }
-
-            if (Auth::user()->role == 'admin') {
-                return response()->json(['message' => 'Admin không thể báo cáo đánh giá'], 403);
-            }
-
-            if ($review->reports()->where('user_id', $userId)->exists()) {
-                return response()->json(['message' => 'Bạn đã báo cáo đánh giá này rồi'], 400);
-            }
-
-            ReviewInteraction::create([
-                'review_id' => $reviewId,
-                'user_id' => $userId,
-                'type' => 2
-            ]);
-
-            return response()->json(['message' => 'Đã báo cáo đánh giá thành công']);
-        } catch (\Exception $e) {
-            \Log::error("Error when reporting review {$reviewId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
-            return response()->json(['error' => 'Không thể báo cáo đánh giá', 'message' => $e->getMessage()], 500);
+        if (!$review) {
+            return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
         }
+
+        $userId = Auth::id();
+
+        if ($review->user_id === $userId) {
+            return response()->json(['message' => 'Bạn không thể báo cáo đánh giá của chính mình'], 403);
+        }
+
+        if (Auth::user()->role == 'admin') {
+            return response()->json(['message' => 'Admin không thể báo cáo đánh giá'], 403);
+        }
+
+        if ($review->reports()->where('user_id', $userId)->exists()) {
+            return response()->json(['message' => 'Bạn đã báo cáo đánh giá này rồi'], 400);
+        }
+
+        ReviewInteraction::create([
+            'review_id' => $reviewId,
+            'user_id' => $userId,
+            'type' => 2
+        ]);
+
+        return response()->json(['message' => 'Đã báo cáo đánh giá thành công']);
     }
 
     public function toggleAnonymous($reviewId)
@@ -506,11 +481,11 @@ class ReviewController extends Controller
                 'review' => $review
             ]);
         } catch (\Exception $e) {
-            \Log::error("Error when toggling anonymous status for review {$reviewId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
             return response()->json(['error' => 'Không thể thay đổi trạng thái ẩn danh', 'message' => $e->getMessage()], 500);
         }
     }
 
+    // ẩn đánh giá phía user
     public function toggleHidden($reviewId)
     {
         try {
@@ -534,7 +509,6 @@ class ReviewController extends Controller
                 'review' => $review
             ]);
         } catch (\Exception $e) {
-            \Log::error("Error when toggling hidden status for review {$reviewId}: " . $e->getMessage() . "\nTrace: " . $e->getTraceAsString());
             return response()->json(['error' => 'Không thể thay đổi trạng thái ẩn/hiện', 'message' => $e->getMessage()], 500);
         }
     }

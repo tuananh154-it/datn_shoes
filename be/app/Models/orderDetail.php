@@ -10,7 +10,11 @@ class OrderDetail extends Model
 
     public $timestamps = true;
     protected $fillable = [
-        'order_id', 'product_detail_id', 'price', 'quantity', 'total_price'
+        'order_id',
+        'product_detail_id',
+        'price',
+        'quantity',
+        'total_price'
     ];
     public function order()
     {
@@ -36,4 +40,15 @@ class OrderDetail extends Model
     {
         return $this->belongsToThrough(Product::class, ProductDetail::class);
     }
+
+    public function size()
+    {
+        return $this->belongsTo(Size::class);
+    }
+
+    public function color()
+    {
+        return $this->belongsTo(Color::class);
+    }
+
 }
