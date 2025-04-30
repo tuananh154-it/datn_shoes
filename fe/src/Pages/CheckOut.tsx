@@ -1032,6 +1032,7 @@ const CheckOut = () => {
           `Voucher '${checkout.voucher}' đã được áp dụng! Giảm giá: ${orderResponse.data.discount.toLocaleString()} VNĐ`
         );
       }
+      
       toast.success("🎉 Đã đặt hàng thành công!");
       localStorage.removeItem("pendingOrder");
       nav("/myaccout?tab=orders");
