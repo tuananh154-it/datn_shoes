@@ -1,24 +1,17 @@
-
 @extends('master')
 
 @section('content')
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-        <i class="bi bi-check-circle me-2"></i>{{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-@endif
-
-@if(session('error'))
-    <div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-        <i class="bi bi-exclamation-triangle me-2"></i>{{ session('error') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-@endif
+@foreach (['success', 'error', 'warning', 'info'] as $msg)
+    @if(session($msg))
+        <div class="alert alert-{{ $msg == 'error' ? 'danger' : ($msg == 'success' ? 'success' : $msg) }} alert-dismissible fade show" role="alert">
+            <i class="bi bi-{{ $msg == 'success' ? 'check-circle' : 'exclamation-triangle' }} me-2"></i>{{ session($msg) }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+@endforeach
 
 <div class="row m-0 p-4">
     <div class="col-12">
-
     <div class="text-center mb-5 mt-4">
         <h3 class="fw-bold text-primary text-uppercase">
             <i class="bi bi-receipt me-2"></i>Chi tiết đơn hàng #FV-HN-{{ $order->id }}
@@ -27,7 +20,6 @@
 
     <div class="card shadow-sm border-0">
         <div class="card-body px-4 py-4">
-
             {{-- 🛒 Sản phẩm đã đặt --}}
             <h5 class="fw-semibold text-primary mb-3">
                 <i class="bi bi-box-seam me-2"></i>Sản phẩm đã đặt
@@ -108,17 +100,6 @@
                 <div class="col-md-4"><strong>Email:</strong> {{ $order->email ?? 'N/A' }}</div>
                 <div class="col-md-4"><strong>Ngày đặt:</strong> {{ $order->created_at?->format('d/m/Y') ?? 'N/A' }}</div>
             </div>
-            <!-- <div class="row mb-3">
-                <div class="col-md-4"><strong>Số điện thoại:</strong> {{ $order->phone_number ?? 'N/A' }}</div>
-                <div class="col-md-4"><strong>Địa chỉ:</strong> {{ $order->address ?? 'N/A' }}</div>
-                <div class="col-md-4">
-                    @if($order->voucher)
-                        <strong>Voucher:</strong> {{ $order->voucher->name }} ({{ $order->voucher->discount_percent ? number_format($order->voucher->discount_percent, 0, ',', '.') . '%' : number_format($order->voucher->discount_amount, 0, ',', '.') . '₫' }})
-                    @else
-                        <strong>Voucher:</strong> Không áp dụng
-                    @endif
-                </div>
-            </div> -->
 
             <div class="row mb-3">
                 <div class="col-md-4">
@@ -154,7 +135,7 @@
                         @csrf
                         @method('PUT')
                         <label for="status" class="form-label fw-semibold">Trạng thái đơn hàng:</label>
-                        <select name="status" id="status" class="form-select form-select-sm w-auto d-inline-block bg-light text-dark" onchange="this.form.submit()">
+                        <select name="status" id="status" class="form-select form-select-sm w-auto d-inline-block bg-light text-dark">
                             @foreach ([
                                 'pending' => 'Chờ xác nhận',
                                 'confirmed' => 'Đã xác nhận',
@@ -171,6 +152,7 @@
                                 </option>
                             @endforeach
                         </select>
+                        <button type="submit" class="btn btn-primary btn-sm ms-2">Cập nhật</button>
                     </form>
                 </div>
             </div>

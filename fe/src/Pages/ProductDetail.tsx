@@ -139,7 +139,11 @@ const ProductDetail = () => {
     );
     setSelectedDetail(matchingDetail || null);
   };
-
+  useEffect(() => {
+    if (uniqueColors.length > 0 && !selectedColor) {
+      handleColorSelect(uniqueColors[0]);
+    }
+  }, [uniqueColors, selectedColor]);
   // Xử lý chọn size
   const handleSizeSelect = (size: string) => {
     setSelectedSize(size);
@@ -237,15 +241,66 @@ const ProductDetail = () => {
   }, [productIdNumber, products]);
 
   // Đăng bình luận mới
+  // const handlePostComment = async () => {
+  //   if (!newComment.trim()) {
+  //     alert('Vui lòng nhập nội dung bình luận!');
+  //     return;
+  //   }
+
+  //   if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
+  //     console.error('productID không hợp lệ:', productIdNumber);
+  //     alert('productID không hợp lệ. Vui lòng kiểm tra lại.');
+  //     return;
+  //   }
+
+  //   try {
+  //     const response = await postComment(productIdNumber, newComment);
+  //     console.log('Bình luận mới:', response.data);
+  //     setComments([...comments, response.data.data]);
+  //     setNewComment('');
+  //   } catch (error: any) {
+  //     console.error('Lỗi khi đăng bình luận:', error);
+  //     alert(error.response?.data?.message || 'Lỗi khi đăng bình luận!');
+  //   }
+  // };
   const handlePostComment = async () => {
+    // Kiểm tra trạng thái đăng nhập
+    const isAuthenticated = !!localStorage.getItem('token'); // Giả sử token được lưu trong localStorage
+
+    if (!isAuthenticated) {
+      toast.error('Vui lòng đăng nhập để bình luận!', {
+        // position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      return;
+    }
+
     if (!newComment.trim()) {
-      alert('Vui lòng nhập nội dung bình luận!');
+      toast.warn('Vui lòng nhập nội dung bình luận!', {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return;
     }
 
     if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
       console.error('productID không hợp lệ:', productIdNumber);
-      alert('productID không hợp lệ. Vui lòng kiểm tra lại.');
+      toast.error('productID không hợp lệ. Vui lòng kiểm tra lại.', {
+        // position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
       return;
     }
 
@@ -254,13 +309,29 @@ const ProductDetail = () => {
       console.log('Bình luận mới:', response.data);
       setComments([...comments, response.data.data]);
       setNewComment('');
-    } catch (error: any) {
+      toast.success('Đăng bình luận thành công!', {
+        // position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } catch (error) {
       console.error('Lỗi khi đăng bình luận:', error);
-      alert(error.response?.data?.message || 'Lỗi khi đăng bình luận!');
+      toast.error(error.response?.data?.message || 'Lỗi khi đăng bình luận!', {
+        // position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
     }
   };
   // đánh giá sản phẩm
   const [reviews, setReviews] = useState<Review[]>([]);
+  // console.log("thời gian",reviews)
   const [totalReviews, setTotalReviews] = useState(0);
   const [newReview, setNewReview] = useState<string>(''); // Sửa thành chuỗi
   // const [eligibleOrderId, setEligibleOrderId] = useState<string | null>(null); // OrderId hợp lệ
@@ -269,6 +340,7 @@ const ProductDetail = () => {
   // const [hasReviewed, setHasReviewed] = useState(false);
   // sao đánh giá
   // Hàm render sao (hiển thị và cho phép bấm trong form)
+
   const renderStars = (rating: number, editable: boolean = false) => {
     return Array.from({ length: 5 }, (_, index) => (
       <span
@@ -315,133 +387,12 @@ const ProductDetail = () => {
       fetchReviews();
     }
   }, [productIdNumber, products]);
-  // tạo đánh giá mới
-  // useEffect(() => {
-  //   const fetchOrders = async () => {
-  //     try {
-  //       setLoading(true);
-
-  //       // 1️⃣ Lấy danh sách đơn hàng
-  //       const response = await getAllOrders();
-  //       const orders: Order[] = response.data;
-  //       console.log("Danh sách đơn hàng:", orders);
-
-  //       // 2️⃣ Lọc đơn hàng có trạng thái 'delivered'
-  //       const deliveredOrders = orders.filter(order => order.status === "delivered");
-  //       console.log("Đơn hàng có trạng thái 'delivered':", deliveredOrders);
-
-  //       if (deliveredOrders.length === 0) {
-  //         console.log("Không có đơn hàng nào được giao.");
-  //         setEligibleOrderId(null);
-  //         setLoading(false);
-  //         return;
-  //       }
-
-  //       // 3️⃣ Gọi API getDetailOrder và kiểm tra lỗi
-  //       const orderDetailsResponses = await Promise.all(
-  //         deliveredOrders.map(async (order) => {
-  //           try {
-  //             console.log(`Gọi API getDetailOrder với order.id = ${order.id}`);
-  //             const res = await getDetailOrder(order.id);
-  //             return { orderId: order.id, data: res.data }; // Lưu cả orderId
-  //           } catch (error) {
-  //             console.error(`Lỗi khi gọi API getDetailOrder(${order.id}):`, error);
-  //             return null;
-  //           }
-  //         })
-  //       );
-
-  //       // 4️⃣ Loại bỏ các response null (có lỗi 404)
-  //       const validOrders = orderDetailsResponses.filter(item => item !== null);
-  //       if (validOrders.length === 0) {
-  //         console.log("Không có đơn hàng hợp lệ sau khi gọi API getDetailOrder.");
-  //         setEligibleOrderId(null);
-  //         setLoading(false);
-  //         return;
-  //       }
-
-  //       // 5️⃣ Tìm đơn hàng chứa sản phẩm
-  //       let eligibleOrderId = null;
-  //       for (const order of validOrders) {
-  //         const productIds = order.data.order_details
-  //           .map((detail: OrdersDetail) => detail.product_detail?.product_id)
-  //           .filter(id => id !== undefined);
-  //         console.log(`Danh sách product_id trong đơn hàng ${order.orderId}:`, productIds);
-
-  //         if (productIds.includes(productIdNumber)) {
-  //           eligibleOrderId = order.orderId.toString(); // Lưu orderId thực sự
-  //           break;
-  //         }
-  //       }
-
-  //       console.log("Eligible Order ID:", eligibleOrderId);
-  //       setEligibleOrderId(eligibleOrderId);
-
-  //     } catch (err) {
-  //       console.error("Lỗi khi lấy danh sách đơn hàng:", err);
-  //       setError('Không thể tải danh sách đơn hàng');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
-
-  //   fetchOrders();
-  // }, [productIdNumber]);
-
-
-
-
-  // console.log("id cua san pham", productIdNumber);
-
-  // const handlePostReview = async () => {
-  //   // Kiểm tra nhanh các điều kiện đầu vào
-  //   if (!newReview.trim()) {
-  //     alert('Vui lòng nhập nội dung bình luận!');
-  //     return;
-  //   }
-  //   if (!productIdNumber || isNaN(productIdNumber) || productIdNumber <= 0) {
-  //     alert('productID không hợp lệ!');
-  //     return;
-  //   }
-  //   if (!eligibleOrderId) {
-  //     alert('Bạn chưa mua sản phẩm này hoặc đơn hàng chưa được giao.');
-  //     return;
-  //   }
-  //   if (rating === 0) {
-  //     alert('Vui lòng chọn số sao!');
-  //     return;
-  //   }
-
-  //   const reviewData: ReviewPayload = {
-  //     rating,
-  //     content: newReview,
-  //   };
-
-  //   try {
-  //     const newReviewResponse = await postReview(
-  //       productIdNumber.toString(),
-  //       eligibleOrderId,
-  //       reviewData
-  //     );
-  //     console.log("New Review Response:", newReviewResponse); // In dữ liệu trả về
-  //     setReviews((prev) => [...prev, newReviewResponse]); // Tối ưu cập nhật state
-  //     toast.success("Đánh giá của bạn đã được đăng thành công!");
-  //     setNewReview('');
-  //     setRating(0);
-  //     setHasReviewed(true);
-  //     setIsModalOpen(false);
-  //   } catch (error: any) {
-  //     alert(error.message || 'Lỗi khi đăng đánh giá!');
-  //   }
-  // };
-
-  // if (loading) return <div>Đang kiểm tra đơn hàng...</div>;
-  // if (error) return <div>{error}</div>;
-  // Bind Modal với root element (cần cho accessibility)
-  // Modal.setAppElement('#root');
-  // useEffect(() => {
-  //   console.log("Trạng thái modal:", isModalOpen);
-  // }, [isModalOpen]);
+  // Hàm tính trung bình số sao
+  const calculateAverageRating = (reviews: Review[]): number => {
+    if (!reviews || reviews.length === 0) return 0;
+    const total = reviews.reduce((sum: number, review: Review) => sum + review.rating, 0);
+    return Number((total / reviews.length).toFixed(1));
+  };
   return (
     <>
       <div className="menu_overlay"></div>
@@ -594,15 +545,20 @@ const ProductDetail = () => {
                         )}
                       </p>
 
-                      <p>Số lượng: {selectedDetail?.quantity}</p>
+                      {/* <p>Số lượng: {selectedDetail?.quantity}</p> */}
+                      <p>Số lượng: {selectedDetail?.quantity === 0 ? <span style={{ color: 'red' }}>Đã hết hàng </span> : selectedDetail?.quantity}</p>
                       {/* Đánh giá */}
-                      <div className="star">
+                      {/* <div className="star">
                         <img
                           src="../public/src/images/star.png"
                           className="img-fluid"
                           alt="star"
                         />
                         ({totalReviews} review)
+                      </div> */}
+                      <div className="star">
+                        {renderStars(calculateAverageRating(reviews))}
+                        ({totalReviews} review{totalReviews !== 1 ? 's' : ''})
                       </div>
                     </div>
 
@@ -858,7 +814,7 @@ const ProductDetail = () => {
                               aria-expanded="true"
                               aria-controls="collapseOne"
                             >
-                              Bình luận({totalComments})
+                              Bình luận({comments.length})
                             </button>
                           </h5>
                         </div>
@@ -1033,13 +989,18 @@ const ProductDetail = () => {
                                 </div>
                                 <div className="user_detail">
                                   <h5 className="title_h5">{review.user_name}</h5>
-                                  <p>{renderStars(review.rating)}
-                                    <p>{review.product_name}-{review.color}-size:{review.size}</p>
-                                    <p className="review__date">{review.created_at}</p>
+                                  <p className="review__date">{review.created_at}|{review.product_name}-{review.color}-size:{review.size}</p>
+                                  <p>
+                                    {renderStars(review.rating)}
                                   </p>
-                                  {/* <p>{review.product_name}-{review.color}-size:{review.size}</p> */}
-                                  {/* <p className="review__date">{review.created_at}</p> */}
-                                  <p>{review.content}</p>
+                                  {/* <p>{review.content}</p> */}
+                                  {review.image && (
+                                    <img
+                                    src={`http://localhost:8000${review.image}`}
+                                      alt="review image"
+                                      style={{ maxWidth: '100px', marginTop: '10px' }} // CSS tùy chỉnh
+                                    />
+                                  )} <p>{review.content}</p>
                                 </div>
                               </div>
                             ))}

@@ -17,6 +17,7 @@ class Review extends Model
         'product_id', // Đã thêm
         'rating',
         'content',
+        'image',
         'reply',
         'service',
         'packaging',

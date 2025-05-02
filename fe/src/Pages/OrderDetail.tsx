@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Modal from 'react-modal';
 import { postReview, ReviewPayload, getMyReviews } from "../services/reviews";
 import toast from "react-hot-toast";
+import Pusher from "pusher-js";
 
 interface OrderDetailProps {
     order: Order;
@@ -20,11 +21,36 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
     const [cancelReason, setCancelReason] = useState<string>('');
     const [hasReviewed, setHasReviewed] = useState<{ [key: number]: boolean }>({});
     const [reviewUpdated, setReviewUpdated] = useState<number>(0);
-
+    const [imageFile, setImageFile] = useState<File | null>(null); // Thêm state cho file ảnh
     const canCancel = currentOrder.status.toLowerCase() === "pending" && currentOrder.payment_status.toLowerCase() !== "paid";
 
 
     Modal.setAppElement('#root');
+    // Lắng nghe cập nhật trạng thái qua Pusher
+    useEffect(() => {
+        const pusher = new Pusher("ee494af10a7f4a6e48b6", {
+            cluster: "mt1",
+            encrypted: true,
+        });
+
+        const channel = pusher.subscribe("orders");
+
+        channel.bind("order.placed", (data: Order) => {
+            if (data && data.id === currentOrder.id) {
+                setCurrentOrder((prev) => ({ ...prev, status: data.status }));
+                // toast.success(`Đơn hàng #FV-HN-${data.id} đã cập nhật: ${getStatusLabel(data.status)}`, {
+                //     position: "top-right",
+                //     duration: 3000,
+                // });
+            }
+        });
+
+        return () => {
+            channel.unbind_all();
+            channel.unsubscribe();
+            pusher.disconnect();
+        };
+    }, [currentOrder.id]);
 
     const renderStars = (rating: number, editable: boolean = false) => {
         return Array.from({ length: 5 }, (_, index) => (
@@ -94,6 +120,30 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
 
     console.log("Current Order:", currentOrder);
 
+    // const handleOpenReviewModal = (orderDetailId: number, productId: number | undefined) => {
+    //     if (currentOrder.status.toLowerCase() !== "completed") {
+    //         toast.error("Chỉ có thể đánh giá khi đơn hàng đã hoàn tất!");
+    //         return;
+    //     }
+    //     if (!Number.isInteger(orderDetailId)) {
+    //         toast.error("Không thể mở đánh giá: ID chi tiết đơn hàng không hợp lệ!");
+    //         return;
+    //     }
+    //     if (hasReviewed[orderDetailId]) {
+    //         toast.error("Bạn đã đánh giá mục này rồi.");
+    //         return;
+    //     }
+    //     if (!productId || !Number.isInteger(productId)) {
+    //         toast.error("Không thể mở đánh giá: Thiếu thông tin sản phẩm hoặc product_id không hợp lệ!");
+    //         return;
+    //     }
+
+    //     setSelectedProductId(productId);
+    //     setSelectedOrderDetailId(orderDetailId);
+    //     setRating(0);
+    //     setNewReview('');
+    //     setIsReviewModalOpen(true);
+    // };
     const handleOpenReviewModal = (orderDetailId: number, productId: number | undefined) => {
         if (currentOrder.status.toLowerCase() !== "completed") {
             toast.error("Chỉ có thể đánh giá khi đơn hàng đã hoàn tất!");
@@ -111,14 +161,66 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
             toast.error("Không thể mở đánh giá: Thiếu thông tin sản phẩm hoặc product_id không hợp lệ!");
             return;
         }
-
+    
         setSelectedProductId(productId);
         setSelectedOrderDetailId(orderDetailId);
         setRating(0);
         setNewReview('');
+        setImageFile(null); // Reset file ảnh khi mở modal
         setIsReviewModalOpen(true);
     };
+    // const handlePostReview = async () => {
+    //     if (!newReview.trim()) {
+    //         toast.error('Vui lòng nhập nội dung đánh giá!');
+    //         return;
+    //     }
+    //     if (!selectedProductId || !Number.isInteger(selectedProductId)) {
+    //         toast.error('Thiếu thông tin sản phẩm hoặc product_id không hợp lệ!');
+    //         return;
+    //     }
+    //     if (selectedOrderDetailId === null || !Number.isInteger(selectedOrderDetailId)) {
+    //         toast.error('Chi tiết đơn hàng không hợp lệ!');
+    //         return;
+    //     }
+    //     if (rating === 0) {
+    //         toast.error('Vui lòng chọn số sao!');
+    //         return;
+    //     }
 
+    //     const reviewData: ReviewPayload = {
+    //         order_detail_id: selectedOrderDetailId,
+    //         product_id: selectedProductId,
+    //         rating,
+    //         content: newReview,
+    //         is_anonymous: false,
+    //         service: 3,
+    //         packaging: 3,
+    //         shipping: 3,
+    //         customer_service: 3,
+    //     };
+
+    //     console.log("Review data being sent:", reviewData);
+
+    //     try {
+    //         console.log(`Sending review for order_id: ${currentOrder.id}, order_detail_id: ${selectedOrderDetailId}`, reviewData);
+    //         await postReview(currentOrder.id.toString(), [reviewData]);
+    //         toast.success("Đánh giá của bạn đã được đăng thành công!");
+    //         setNewReview('');
+    //         setRating(0);
+    //         setSelectedOrderDetailId(null);
+    //         setSelectedProductId(null);
+    //         setIsReviewModalOpen(false);
+    //         setReviewUpdated((prev) => prev + 1);
+    //     } catch (error: any) {
+    //         console.error(`Error posting review for order_id: ${currentOrder.id}, order_detail_id: ${selectedOrderDetailId}`, error.response?.data);
+    //         const errorDetails = error.response?.data?.details || error.response?.data?.message;
+    //         let errorMessage = error.response?.data?.errors || error.response?.data?.message || 'Lỗi khi đăng đánh giá!';
+    //         if (errorDetails) {
+    //             errorMessage += ` (order_detail_id: ${selectedOrderDetailId}) Chi tiết: ${typeof errorDetails === 'object' ? JSON.stringify(errorDetails) : errorDetails}`;
+    //         }
+    //         toast.error(errorMessage);
+    //     }
+    // };
     const handlePostReview = async () => {
         if (!newReview.trim()) {
             toast.error('Vui lòng nhập nội dung đánh giá!');
@@ -136,27 +238,29 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
             toast.error('Vui lòng chọn số sao!');
             return;
         }
-
+    
         const reviewData: ReviewPayload = {
             order_detail_id: selectedOrderDetailId,
             product_id: selectedProductId,
             rating,
             content: newReview,
+            image: imageFile || undefined, // Thêm file ảnh vào dữ liệu đánh giá
             is_anonymous: false,
             service: 3,
             packaging: 3,
             shipping: 3,
             customer_service: 3,
         };
-
+    
         console.log("Review data being sent:", reviewData);
-
+    
         try {
             console.log(`Sending review for order_id: ${currentOrder.id}, order_detail_id: ${selectedOrderDetailId}`, reviewData);
             await postReview(currentOrder.id.toString(), [reviewData]);
             toast.success("Đánh giá của bạn đã được đăng thành công!");
             setNewReview('');
             setRating(0);
+            setImageFile(null); // Reset file ảnh sau khi gửi
             setSelectedOrderDetailId(null);
             setSelectedProductId(null);
             setIsReviewModalOpen(false);
@@ -171,7 +275,6 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
             toast.error(errorMessage);
         }
     };
-
     const handleOpenCancelModal = () => {
         setCancelReason('');
         setIsCancelModalOpen(true);
@@ -306,7 +409,7 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                 </button>
             )}
 
-            <Modal
+            {/* <Modal
                 isOpen={isReviewModalOpen}
                 onRequestClose={() => setIsReviewModalOpen(false)}
                 className="review-modal"
@@ -329,7 +432,57 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                         <button onClick={() => setIsReviewModalOpen(false)} className="cancel-btn">Hủy</button>
                     </div>
                 </div>
-            </Modal>
+            </Modal> */}
+            <Modal
+    isOpen={isReviewModalOpen}
+    onRequestClose={() => {
+        setIsReviewModalOpen(false);
+        setImageFile(null); // Reset file ảnh khi đóng modal
+    }}
+    className="review-modal"
+    overlayClassName="review-modal-overlay"
+>
+    <h2>Thêm đánh giá của bạn</h2>
+    <div className="review-form">
+        <label>Đánh giá (1-5 sao):</label>
+        <div>{renderStars(rating, true)}</div>
+        <label>Nội dung đánh giá:</label>
+        <textarea
+            value={newReview}
+            onChange={(e) => setNewReview(e.target.value)}
+            maxLength={500}
+            placeholder="Viết đánh giá của bạn..."
+            rows={4}
+        />
+        <label>Thêm ảnh (tùy chọn):</label>
+        <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => {
+                if (e.target.files && e.target.files[0]) {
+                    setImageFile(e.target.files[0]); // Lưu file ảnh vào state
+                }
+            }}
+            className="file-input"
+        />
+        {imageFile && (
+            <div className="preview-image">
+                <img
+                    src={URL.createObjectURL(imageFile)}
+                    alt="Preview"
+                    style={{ maxWidth: '100px', marginTop: '10px' }}
+                />
+            </div>
+        )}
+        <div className="modal-buttons">
+            <button onClick={handlePostReview} className="submit-btn">Gửi</button>
+            <button onClick={() => {
+                setIsReviewModalOpen(false);
+                setImageFile(null); // Reset file ảnh khi hủy
+            }} className="cancel-btn">Hủy</button>
+        </div>
+    </div>
+</Modal>
 
             <Modal
                 isOpen={isCancelModalOpen}

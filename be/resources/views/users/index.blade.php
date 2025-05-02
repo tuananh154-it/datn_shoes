@@ -29,11 +29,11 @@
             padding: 12px;
             border-bottom: 1px solid #ddd;
         }
-
+/*
         th {
-            background-color: #41CAC0;
+            background-color: #007bff;
             color: white;
-        }
+        } */
 
         tr:nth-child(even) {
             background-color: #f9f9f9;
@@ -51,7 +51,7 @@
         /* Cải tiến nút và form */
         .btn-primary {
             background-color: #41CAC0;
-            /* border-color: #007bff; */
+            border-color: #41CAC0;
             color: white;
             transition: all 0.3s ease;
         }
@@ -62,8 +62,8 @@
         }
 
         .btn-danger {
-            background-color: #dc3545;
-            border-color: #dc3545;
+            background-color: #F1C500;
+            border-color: #F1C500;
             color: white;
             transition: all 0.3s ease;
         }
@@ -144,7 +144,7 @@
                 </div>
 
                 <!-- Thêm người dùng -->
-                <div class="mb-3 text-right">
+                <div class="mb-3">
                     <a href="{{ route('users.create') }}" class="btn btn-success btn-sm">
                         <i class="fa fa-plus"></i> Thêm người dùng
                     </a>
@@ -182,10 +182,7 @@
             </section>
         </div>
     </div>
-    <div class="row">
-        <div class="col-12">
-            {{ $users->links() }}
-        </div>
+    <div class="pagination">
+        {{ $users->links() }}
     </div>
-
 @endsection

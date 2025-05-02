@@ -2,12 +2,12 @@
 
 @section('content')
 <style>
-    .row{padding-top:60px}
-    .table th,.table td{vertical-align:middle;text-align:center}
-    .table th{white-space:nowrap;background:#f8f9fa}
-    .table td{word-wrap:break-word;max-width:300px}
-    .table-responsive{overflow-x:auto}
-    .text-truncate{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:250px}
+    .row { padding-top: 60px; }
+    .table th, .table td { vertical-align: middle; text-align: center; }
+    .table th { white-space: nowrap; background: #f8f9fa; }
+    .table td { word-wrap: break-word; max-width: 300px; }
+    .table-responsive { overflow-x: auto; }
+    .text-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px; }
 </style>
 
 <div class="row">
@@ -21,7 +21,7 @@
                     <div class="row">
                         <div class="col-md-3">
                             <input type="text" name="search" class="form-control"
-                                   placeholder="Tìm kiếm bình luận"
+                                   placeholder="Tìm kiếm theo tên sản phẩm"
                                    value="{{ request()->search }}">
                         </div>
                         <div class="col-md-2">
@@ -31,20 +31,6 @@
                 </form>
             </div>
 
-            {{-- Chọn số bản ghi / trang --}}
-            {{-- <div class="d-flex justify-content-between px-3 py-2">
-                <form action="{{ route('comments.index') }}" method="GET">
-                    <label>Xem
-                        <select class="form-control-sm ml-1 custom-select-small" name="per_page"
-                                onchange="this.form.submit()">
-                            @foreach([10,25,50,100] as $n)
-                                <option value="{{ $n }}" {{ request('per_page',10)==$n?'selected':'' }}>{{ $n }}</option>
-                            @endforeach
-                        </select>
-                    </label>
-                </form>
-            </div> --}}
-
             {{-- Bảng bình luận --}}
             <div class="table-responsive">
                 <table class="table table-striped">
@@ -53,14 +39,13 @@
                             <th>Người dùng</th>
                             <th>Sản phẩm</th>
                             <th>Nội dung</th>
-                            <!-- <th>Ảnh</th> -->
                             <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
                         @if ($comments->isEmpty())
                             <tr>
-                                <td colspan="5" class="text-center">Không có bình luận nào</td>
+                                <td colspan="4" class="text-center">Không có bình luận nào</td>
                             </tr>
                         @else
                             @foreach ($comments as $item)
@@ -68,15 +53,8 @@
                                     <td>{{ $item->user->name }}</td>
                                     <td class="text-truncate">{{ $item->product->name }}</td>
                                     <td class="text-truncate">{{ $item->content }}</td>
-                                    <!-- <td>
-                                        @if($item->file)
-                                            <a href="{{ Storage::url($item->file) }}" target="_blank">Tải file</a>
-                                        @else
-                                            Không có file
-                                        @endif
-                                    </td> -->
                                     <td>
-                                        <a href="{{ route('comments.show',$item->id) }}"
+                                        <a href="{{ route('comments.show', $item->id) }}"
                                            class="btn btn-primary btn-sm">
                                             <i class="fa fa-eye"></i>
                                         </a>
@@ -102,8 +80,8 @@
                             <li class="prev">
                                 <a href="{{ $comments->previousPageUrl() }}">← Trước</a>
                             </li>
-                            @foreach($comments->getUrlRange(1,$comments->lastPage()) as $page=>$url)
-                                <li class="{{ $page==$comments->currentPage()?'active':'' }}">
+                            @foreach($comments->getUrlRange(1, $comments->lastPage()) as $page => $url)
+                                <li class="{{ $page == $comments->currentPage() ? 'active' : '' }}">
                                     <a href="{{ $url }}">{{ $page }}</a>
                                 </li>
                             @endforeach

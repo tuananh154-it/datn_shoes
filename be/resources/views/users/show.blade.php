@@ -18,10 +18,14 @@
                     <th>Email</th>
                     <td>{{ $user->email }}</td>
                 </tr>
-                <tr>
+                <!-- <tr>
                     <th>Vai trò</th>
                     <td>{{ $user->roles->first()?->name ?? 'Chưa có vai trò' }}</td>
-                </tr>
+                </tr> -->
+                <tr>
+                        <th>Vai trò</th>
+                        <td>{{ $user->role ?? 'Chưa có vai trò' }}</td>
+                    </tr>
                 <tr>
                     <th>Giới tính</th>
                     <td>{{ $user->gender ?? 'Chưa có thông tin' }}</td>

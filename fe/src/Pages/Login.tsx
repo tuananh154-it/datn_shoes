@@ -22,7 +22,7 @@ const Login = () => {
         fetchCartData();
         // console.log("Dispatched user:", data.data);
          nav("/")
-      }).catch((e)=>{toast.error("Error:"+e.message)})
+      }).catch((e)=>{toast.error("Email hoặc mật khẩu không đúng")})
     }
   return (
    <>

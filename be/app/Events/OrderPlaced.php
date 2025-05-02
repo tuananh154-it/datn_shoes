@@ -36,6 +36,7 @@ class OrderPlaced implements ShouldBroadcastNow
         return [
             'id' => $this->order->id,
             'username' => $this->order->username,
+            'status' => $this->order->status, // Thêm trường status
             'total_price' => $this->order->total_price,
             'created_at' => $this->order->created_at->diffForHumans(),
         ];

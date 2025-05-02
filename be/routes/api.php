@@ -65,9 +65,10 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders', [OrderController::class, 'listOrders']);
     Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+    Route::post('/orders/{id}/confirm-receipt', [OrderController::class, 'confirmReceipt']);
 
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
-
+    
     Route::post('/momo-payment-code', [OnlineCheckOutController::class, 'momo_payment_code']);
 });
 Route::apiResource('products', ProductController::class);
@@ -190,3 +191,7 @@ Route::middleware('auth:api')->group(function () {
 // =======
 Route::post('/comments/{id}/restore', [CommentController::class, 'restore'])->name('comments.restore');
 // >>>>>>> 682bbc13bae7612d5451d88ef54f5b3c01fda5fc
+Route::post('/momo/ipn', [OnlineCheckOutController::class, 'momoIpn']);
+
+// cache để lưu tạm và phát realtime sau khi chuyển hướng 
+Route::post('/confirm-order', [OnlineCheckOutController::class, 'confirmOrder']);

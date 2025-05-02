@@ -118,7 +118,7 @@
                                             <input type="checkbox" name="order_ids[]" value="{{ $order->id }}" class="order-checkbox">
                                         @endif
                                     </td>
-                                    <td>{{ $order->id }}</td>
+                                    <td>#FV-HN-{{ $order->id }}</td>
                                     <td>{{ $order->user->name }}</td>
                                     <td>{{ $order->created_at ? $order->created_at->format('d/m/Y') : 'N/A' }}</td>
                                     <td>
@@ -228,4 +228,5 @@
         });
     }
 </script>
+
 @endsection

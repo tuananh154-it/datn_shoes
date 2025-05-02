@@ -1,69 +1,128 @@
-import { User, Package, Home, CreditCard, Settings } from "lucide-react";
-import { useEffect, useState } from "react";
+import { User, Package, Home, Settings } from "lucide-react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useLocation } from "react-router-dom";
 import OrderDetail from "./OrderDetail";
 import { getAllOrders, getStatusLabel, getStatusColor, Order } from "../services/Orders";
 import toast from "react-hot-toast";
 import { getUser, updateUser, Users } from "../services/user";
-import { useDispatch } from "react-redux"; // Thêm useDispatch
-import { refreshUser } from "../store/useSlice"; // Import refreshUser
+import { useDispatch } from "react-redux";
+import { refreshUser } from "../store/useSlice";
 import Pagination from "./Pagination";
-import styles from './MyAccount.module.css'; // Import CSS Modules
+import styles from './MyAccount.module.css';
+import { api } from "../config/axios";
+import Pusher from "pusher-js";
+
+// Định nghĩa kiểu cho hàm debounce
+type DebounceFunction<T extends (...args: any[]) => void> = (...args: Parameters<T>) => void;
+
+// Hàm debounce với TypeScript
+const debounce = <T extends (...args: any[]) => void>(func: T, delay: number): DebounceFunction<T> => {
+  let timeoutId: NodeJS.Timeout;
+  return (...args: Parameters<T>) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func(...args), delay);
+  };
+};
 
 const MyAccount = () => {
-  const dispatch = useDispatch(); // Thêm dispatch để gọi refreshUser
+  const dispatch = useDispatch();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const tab = queryParams.get("tab");
   const orderId = queryParams.get("orderId");
 
-  const validTabs = ["profile", "orders", "orderDetail", "payment", "settings", "addresses"];
+  const validTabs = ["profile", "orders", "orderDetail", "settings", "addresses"];
   const [activeTab, setActiveTab] = useState<string>(() => {
     return validTabs.includes(tab) ? tab! : "profile";
   });
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(orderId || null);
 
   // State cho phân trang và danh sách đơn hàng
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [allOrders, setAllOrders] = useState<Order[]>([]);
+  const [displayedOrders, setDisplayedOrders] = useState<Order[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [itemsPerPage] = useState<number>(3);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [orderError, setOrderError] = useState<string | null>(null);
 
-  // State cho tab trạng thái đơn hàng
+  // State cho tab trạng thái đơn hàng và tìm kiếm
   const [orderStatusTab, setOrderStatusTab] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
 
+  // Kết nối Pusher để lắng nghe cập nhật trạng thái
+  useEffect(() => {
+    const pusher = new Pusher("ee494af10a7f4a6e48b6", {
+      cluster: "mt1",
+      encrypted: true,
+    });
+
+    const channel = pusher.subscribe("orders");
+
+    channel.bind("order.placed", (data: Order) => {
+      console.log("Received order.placed event in MyAccount:", data);
+      if (data && data.status !== "pending") {
+        // Cập nhật trạng thái đơn hàng
+        setAllOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.id === data.id ? { ...order, status: data.status } : order
+          )
+        );
+        toast.success(`Đơn hàng #FV-HN-${data.id} đã cập nhật trạng thái: ${getStatusLabel(data.status)}`, {
+          position: "top-right",
+          duration: 3000,
+        });
+      }
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+      pusher.disconnect();
+    };
+  }, []);
+
+  // Xử lý confirm order
+  useEffect(() => {
+    const tempOrderId = localStorage.getItem('temp_order_id');
+    if (tempOrderId) {
+      api.post('/confirm-order', { temp_order_id: tempOrderId })
+        .then(response => {
+          console.log(response.data.message);
+          localStorage.removeItem('temp_order_id');
+        })
+        .catch(error => {
+          console.error('Error confirming order:', error);
+        });
+    }
+  }, []);
+  // xử lý xác nhận hoàn tất đơn hàng 
+  const handleConfirmReceipt = async (orderId: number) => {
+    try {
+      const response = await api.post(`/orders/${orderId}/confirm-receipt`);
+
+      if (response.status === 200) {
+       toast.success("đơn hàng đã được hoàn tất")
+        // Ẩn nút sau khi hoàn tất
+        window.location.href = '/myaccout?tab=orders';
+        const button = document.querySelector(`.view-cancel[data-order-id="${orderId}"]`) as HTMLButtonElement;
+        if (button) button.style.display = 'none';
+
+      } else {
+        alert('Có lỗi xảy ra khi xác nhận đơn hàng');
+      }
+    } catch (error) {
+      alert('Lỗi kết nối đến máy chủ');
+    }
+  };
+  // Lấy toàn bộ đơn hàng khi component mount
   useEffect(() => {
     const fetchOrders = async () => {
       setIsLoading(true);
       try {
         const { data } = await getAllOrders();
-        let filteredOrders = data;
-
-        // Lọc theo trạng thái đơn hàng
-        if (orderStatusTab !== "all") {
-          filteredOrders = data.filter((order) => order.status.toLowerCase() === orderStatusTab);
-        }
-
-        // Lọc theo tìm kiếm
-        if (searchQuery) {
-          filteredOrders = filteredOrders.filter((order) =>
-            order.order_details.some((item) =>
-              item.product_name.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-          );
-        }
-
-        const totalItems = filteredOrders.length;
-        setTotalPages(Math.ceil(totalItems / itemsPerPage));
-
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const paginatedOrders = filteredOrders.slice(startIndex, endIndex);
-
-        setOrders(paginatedOrders);
+        setAllOrders(data);
       } catch (error) {
         console.error("Lỗi khi lấy đơn hàng:", error);
         setOrderError("Không thể tải danh sách đơn hàng. Vui lòng thử lại sau.");
@@ -74,7 +133,60 @@ const MyAccount = () => {
     };
 
     fetchOrders();
-  }, [currentPage, orderStatusTab, searchQuery]);
+  }, []);
+
+  // Hàm chuẩn hóa từ khóa tìm kiếm
+  const normalizeString = (str: string): string => {
+    return str
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  };
+
+  // Debounce tìm kiếm
+  const debouncedSetSearchQuery = useCallback(
+    debounce((value: string) => {
+      setDebouncedSearchQuery(value);
+      setCurrentPage(1);
+    }, 300),
+    []
+  );
+
+  // Xử lý tìm kiếm
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setSearchQuery(value);
+    debouncedSetSearchQuery(value);
+  };
+
+  // Lọc và phân trang đơn hàng
+  useEffect(() => {
+    let filtered = allOrders;
+
+    if (orderStatusTab !== "all") {
+      filtered = allOrders.filter((order) => order.status.toLowerCase() === orderStatusTab);
+    }
+
+    if (debouncedSearchQuery) {
+      const normalizedQuery = normalizeString(debouncedSearchQuery);
+      filtered = filtered.filter((order) => {
+        const matchesId = `#fv-hn-${order.id}`.includes(normalizedQuery);
+        const matchesProductName = order.order_details.some((item) =>
+          normalizeString(item.product_name).includes(normalizedQuery)
+        );
+        return matchesId || matchesProductName;
+      });
+    }
+
+    const totalItems = filtered.length;
+    setTotalPages(Math.ceil(totalItems / itemsPerPage));
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedOrders = filtered.slice(startIndex, endIndex);
+
+    setDisplayedOrders(paginatedOrders);
+  }, [allOrders, orderStatusTab, debouncedSearchQuery, currentPage, itemsPerPage]);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -84,6 +196,11 @@ const MyAccount = () => {
     setSelectedOrderId(String(orderId));
     setActiveTab("orderDetail");
   };
+
+  // Reset trang khi thay đổi tab trạng thái
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [orderStatusTab]);
 
   const [user, setUser] = useState<Users | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -95,8 +212,6 @@ const MyAccount = () => {
   const [password, setPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
-
-  // State cho địa chỉ
   const [isEditingAddress, setIsEditingAddress] = useState<boolean>(false);
   const [address, setAddress] = useState<string>("");
 
@@ -153,8 +268,6 @@ const MyAccount = () => {
       setNewPassword("");
       setConfirmPassword("");
       toast.success("Thay đổi thông tin thành công");
-
-      // Làm mới thông tin user trong Redux store để cập nhật header
       dispatch(refreshUser());
     } catch (error) {
       alert("Có lỗi xảy ra khi cập nhật thông tin!");
@@ -175,8 +288,6 @@ const MyAccount = () => {
       setUser(response.data.data);
       setIsEditingAddress(false);
       toast.success("Cập nhật địa chỉ thành công");
-
-      // Làm mới thông tin user trong Redux store để cập nhật header
       dispatch(refreshUser());
     } catch (error) {
       alert("Có lỗi xảy ra khi cập nhật địa chỉ!");
@@ -249,9 +360,9 @@ const MyAccount = () => {
                     <div className="order-search">
                       <input
                         type="text"
-                        placeholder="Bạn có thể tìm kiếm theo Tên Sản phẩm hoặc ID đơn hàng"
+                        placeholder="Bạn có thể tìm kiếm theo Tên Sản phẩm hoặc Mã đơn hàng"
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={handleSearchChange}
                       />
                     </div>
                     <div className="order-status-tabs">
@@ -318,10 +429,10 @@ const MyAccount = () => {
                     </div>
                     {isLoading && <div>Đang tải...</div>}
                     {orderError && <div>{orderError}</div>}
-                    {!isLoading && !orderError && orders.length > 0 ? (
+                    {!isLoading && !orderError && displayedOrders.length > 0 ? (
                       <>
                         <div className="order-list">
-                          {orders.map((order) => (
+                          {displayedOrders.map((order) => (
                             <div key={order.id} className="order-card">
                               <div className="order-header">
                                 <div className="order-shop">
@@ -370,6 +481,17 @@ const MyAccount = () => {
                                     </span>
                                   </div>
                                   <div className="order-actions">
+                                    {order.status === 'delivered' && (
+                                      <button
+                                        className="action-btn view-cancel"
+                                        onClick={() => handleConfirmReceipt(order.id)}
+                                        data-order-id={order.id}
+                                      >
+                                        Hoàn tất
+                                      </button>
+                                    )}
+                                  </div>
+                                  <div className="order-actions">
                                     <button
                                       className="action-btn view-cancel"
                                       onClick={() => toggleOrderDetails(order.id)}
@@ -395,8 +517,16 @@ const MyAccount = () => {
                       !orderError && (
                         <div className="order-empty">
                           <Package className="order-empty-icon" />
-                          <h3 className="order-empty-title">Chưa có đơn hàng nào</h3>
-                          <p className="order-empty-text">Bạn chưa có đơn hàng nào.</p>
+                          <h3 className="order-empty-title">
+                            {debouncedSearchQuery
+                              ? "Không tìm thấy đơn hàng"
+                              : "Chưa có đơn hàng nào"}
+                          </h3>
+                          <p className="order-empty-text">
+                            {debouncedSearchQuery
+                              ? "Không có đơn hàng nào khớp với tìm kiếm của bạn."
+                              : "Bạn chưa có đơn hàng nào."}
+                          </p>
                           <Link to="/shop" className="order-empty-link">
                             Tiếp tục mua sắm
                           </Link>
@@ -612,15 +742,15 @@ const MyAccount = () => {
                       <div>Đang tải...</div>
                     ) : (
                       <>
-                        {orders.find((o) => String(o.id) === selectedOrderId) ? (
+                        {allOrders.find((o) => String(o.id) === selectedOrderId) ? (
                           <OrderDetail
-                            order={orders.find((o) => String(o.id) === selectedOrderId)!}
+                            order={allOrders.find((o) => String(o.id) === selectedOrderId)!}
                           />
                         ) : (
                           <div>Không tìm thấy đơn hàng với ID: {selectedOrderId}</div>
                         )}
                         <div className="back-link" onClick={() => setActiveTab("orders")}>
-                          &lt;&lt; Quay lại đơn hàng của tôi
+                          {"<<"} Quay lại đơn hàng của tôi
                         </div>
                       </>
                     )}

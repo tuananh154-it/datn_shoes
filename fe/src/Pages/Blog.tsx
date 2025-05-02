@@ -88,7 +88,7 @@ const Blog = () => {
                             src={article.image}
                             alt={article.name}
                             className="img-fluid"
-                            style={{ width: "800px", height: "200px" }}
+                            style={{ width: "800px", height: "400px" }}
                           />
                         </a>
                         <span className="article__date">

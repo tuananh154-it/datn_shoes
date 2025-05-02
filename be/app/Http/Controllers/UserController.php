@@ -31,7 +31,7 @@ class UserController extends Controller
         }
 
         // Lấy danh sách người dùng sau khi lọc
-        $users = $users->paginate(40)->appends($request->all());
+        $users = $users->paginate(5)->appends($request->all());
 
         // Trả về view danh sách người dùng
         return view('users.index', compact('users'));
@@ -55,9 +55,10 @@ class UserController extends Controller
             'date_of_birth' => 'nullable|date',
             'address' => 'nullable|string|max:255',
             'phone_number' => 'nullable|string|max:15',
-            'role' => 'required|string|in:user,staff,admin,superadmin',
+            'role' => 'required|string|in:user,staff,admin,superadmin', // Xác nhận role
         ]);
 
+        // Tạo người dùng
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -69,6 +70,10 @@ class UserController extends Controller
             'role' => $validated['role'],
         ]);
 
+        // Gán role cho người dùng (dùng Spatie)
+        $user->assignRole($validated['role']);
+
+        // Redirect về danh sách người dùng
         return redirect()->route('users.index')->with('success', 'Người dùng đã được tạo thành công!');
     }
 
@@ -143,6 +148,7 @@ class UserController extends Controller
             'date_of_birth' => $validated['date_of_birth'] ?? null,
             'address' => $validated['address'] ?? null,
             'phone_number' => $validated['phone_number'] ?? null,
+            'role' => $validated['role'] ?? $user->role,
         ]);
 
         // Nếu có password mới thì cập nhật
@@ -150,12 +156,13 @@ class UserController extends Controller
             $user->password = bcrypt($validated['password']);
         }
 
-        // Cập nhật vai trò nếu có
+        // Nếu có thay đổi về role, gán lại role mới
         if (isset($validated['role'])) {
-            $user->role = $validated['role']; // Cập nhật vai trò
+            $user->syncRoles([$validated['role']]);
         }
 
-        $user->save(); // Lưu lại thông tin người dùng
+        // Lưu lại thông tin người dùng
+        $user->save();
 
         return redirect()->route('users.index')->with('success', 'Thông tin người dùng đã được cập nhật!');
     }

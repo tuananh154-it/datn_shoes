@@ -55,7 +55,8 @@
                 <tbody>
                     @foreach ($vouchers as $voucher)
                         <tr>
-                            <td>{{ $loop->index + 1 }}</td>
+                            <!-- <td>{{ $loop->index + 1 }}</td> -->
+                            <td>{{ $voucher->id }}</td>
                             <td>{{ $voucher->name }}</td>
                             <td>{{ $voucher->discount_percent }} %</td>
                             <td>{{ $voucher->quantity }}</td> {{-- Hiển thị số lượng voucher --}}

@@ -65,130 +65,131 @@ class AdminController extends Controller
     }
 
     public function top10(Request $request)
-{
-    $year = $request->input('year', date('Y'));
-    $month = $request->input('month', null);
-    $day = $request->input('day', null);
+    {
+        $year = $request->input('year', date('Y'));
+        $month = $request->input('month', null);
+        $day = $request->input('day', null);
 
-    // Lấy top 10 sản phẩm
-    $query = DB::table('order_details as od')
-        ->join('product_details as pd', 'od.product_detail_id', '=', 'pd.id')
-        ->join('products as p', 'pd.product_id', '=', 'p.id')
-        ->join('orders as o', 'od.order_id', '=', 'o.id')
-        ->select(
-            'p.id as product_id',
-            'p.name as product_name',
-            DB::raw('SUM(od.quantity) as total_sold'),
-            DB::raw('SUM(od.total_price) as total_revenue')
-        )
-        ->whereYear('o.created_at', $year);
+        // Lấy top 10 sản phẩm
+        $query = DB::table('order_details as od')
+            ->join('product_details as pd', 'od.product_detail_id', '=', 'pd.id')
+            ->join('products as p', 'pd.product_id', '=', 'p.id')
+            ->join('orders as o', 'od.order_id', '=', 'o.id')
+            ->select(
+                'p.id as product_id',
+                'p.name as product_name',
+                DB::raw('SUM(od.quantity) as total_sold'),
+                DB::raw('SUM(od.total_price) as total_revenue')
+            )
+            ->where('o.payment_status', 'paid') // Chỉ tính đơn hàng đã thanh toán
+            ->whereYear('o.created_at', $year);
 
-    if ($month) {
-        $query->whereMonth('o.created_at', $month);
+        if ($month) {
+            $query->whereMonth('o.created_at', $month);
+        }
+        if ($day) {
+            $query->whereDay('o.created_at', $day);
+        }
+
+        $topProducts = $query->groupBy('p.id', 'p.name')
+            ->orderByDesc('total_sold')
+            ->limit(10)
+            ->get();
+
+        // Lấy top 10 khách hàng mua nhiều nhất (theo tổng tiền đơn hàng)
+        $topCustomers = DB::table('orders as o')
+            ->join('users as u', 'o.user_id', '=', 'u.id')
+            ->select(
+                'u.id as user_id',
+                'u.name as customer_name',
+                'u.email',
+                DB::raw('COUNT(o.id) as total_orders'),
+                DB::raw('SUM(o.total_price) as total_spent')
+            )
+            ->where('o.payment_status', 'paid') // Chỉ tính đơn hàng đã thanh toán
+            ->whereYear('o.created_at', $year);
+
+        if ($month) {
+            $topCustomers->whereMonth('o.created_at', $month);
+        }
+        if ($day) {
+            $topCustomers->whereDay('o.created_at', $day);
+        }
+
+        $topCustomers = $topCustomers
+            ->groupBy('u.id', 'u.name', 'u.email')
+            ->orderByDesc('total_spent')
+            ->limit(10)
+            ->get();
+
+        return view('dashboards.top10', compact('topProducts', 'topCustomers', 'year', 'month', 'day'));
     }
-    if ($day) {
-        $query->whereDay('o.created_at', $day);
-    }
-
-    $topProducts = $query->groupBy('p.id', 'p.name')
-        ->orderByDesc('total_sold')
-        ->limit(10)
-        ->get();
-
-    // Lấy top 10 khách hàng mua nhiều nhất (theo tổng tiền đơn hàng)
-    $topCustomers = DB::table('orders as o')
-        ->join('users as u', 'o.user_id', '=', 'u.id')  // Liên kết với bảng users
-        ->select(
-            'u.id as user_id',
-            'u.name as customer_name',  // Dùng 'name' từ bảng users
-            'u.email',
-            DB::raw('COUNT(o.id) as total_orders'),
-            DB::raw('SUM(o.total_price) as total_spent') // Dùng 'total_price' từ bảng orders
-        )
-        ->whereYear('o.created_at', $year);
-
-    if ($month) {
-        $topCustomers->whereMonth('o.created_at', $month);
-    }
-    if ($day) {
-        $topCustomers->whereDay('o.created_at', $day);
-    }
-
-    $topCustomers = $topCustomers
-        ->groupBy('u.id', 'u.name', 'u.email')  // Thêm 'u.name' để lấy tên người dùng
-        ->orderByDesc('total_spent')
-        ->limit(10)
-        ->get();
-
-    return view('dashboards.top10', compact('topProducts', 'topCustomers', 'year', 'month', 'day'));
-}
-
-
-    
 
     public function index(Request $request)
     {
         $filterType = $request->input('filter-type', 'year'); // Mặc định là theo năm
         $labels = [];
         $revenues = [];
-    
+
         // Lọc theo ngày (24 giờ)
         if ($filterType === 'day') {
             $date = $request->input('selected-date', Carbon::today()->toDateString());
-    
+
             for ($i = 0; $i < 24; $i++) {
                 $hourLabel = sprintf('%02d:00', $i);
                 $labels[] = $hourLabel;
                 $revenues[$hourLabel] = 0;
             }
-    
+
             $orders = Order::whereDate('created_at', $date)
+                ->where('payment_status', 'paid') // Chỉ tính đơn hàng đã thanh toán
                 ->selectRaw('HOUR(created_at) as hour, SUM(total_price) as revenue')
                 ->groupBy('hour')
                 ->pluck('revenue', 'hour');
-    
+
             foreach ($orders as $hour => $revenue) {
                 $hourLabel = sprintf('%02d:00', $hour);
                 $revenues[$hourLabel] = $revenue;
             }
         }
-    
+
         // Lọc theo tuần (7 ngày)
         elseif ($filterType === 'week') {
             $year = $request->input('selected-year-week', Carbon::now()->year);
             $week = $request->input('selected-week', Carbon::now()->weekOfYear);
             $startOfWeek = Carbon::now()->setISODate($year, $week)->startOfWeek();
             $endOfWeek = $startOfWeek->copy()->endOfWeek();
-    
+
             for ($i = 0; $i < 7; $i++) {
                 $date = $startOfWeek->copy()->addDays($i)->format('Y-m-d');
                 $labels[] = $date;
                 $revenues[$date] = 0;
             }
-    
+
             $orders = Order::whereBetween('created_at', [$startOfWeek, $endOfWeek])
+                ->where('payment_status', 'paid') // Chỉ tính đơn hàng đã thanh toán
                 ->selectRaw('DATE(created_at) as day, SUM(total_price) as revenue')
                 ->groupBy('day')
                 ->pluck('revenue', 'day');
-    
+
             foreach ($orders as $day => $revenue) {
                 if (isset($revenues[$day])) {
                     $revenues[$day] = $revenue;
                 }
             }
         }
-    
+
         // Lọc theo tháng (5 tuần)
         elseif ($filterType === 'month') {
             $month = $request->input('selected-month', Carbon::now()->month);
             $year = $request->input('selected-year-month', Carbon::now()->year);
             $startOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
             $endOfMonth = $startOfMonth->copy()->endOfMonth();
-    
+
             $startWeek = $startOfMonth->copy()->startOfWeek(Carbon::MONDAY);
             $endWeek = $endOfMonth->copy()->endOfWeek(Carbon::SUNDAY);
             $period = CarbonPeriod::create($startWeek, '1 week', $endWeek);
-    
+
             $weekIndex = 1;
             foreach ($period as $weekStart) {
                 $weekLabel = "Tuần $weekIndex";
@@ -196,12 +197,13 @@ class AdminController extends Controller
                 $revenues[$weekLabel] = 0;
                 $weekIndex++;
             }
-    
+
             $orders = Order::whereBetween('created_at', [$startOfMonth, $endOfMonth])
+                ->where('payment_status', 'paid') // Chỉ tính đơn hàng đã thanh toán
                 ->selectRaw('WEEK(created_at, 3) - WEEK(?, 3) + 1 as week, SUM(total_price) as revenue', [$startOfMonth])
                 ->groupBy('week')
                 ->pluck('revenue', 'week');
-    
+
             foreach ($orders as $week => $revenue) {
                 $weekLabel = "Tuần $week";
                 if (isset($revenues[$weekLabel])) {
@@ -209,22 +211,23 @@ class AdminController extends Controller
                 }
             }
         }
-    
+
         // Lọc theo năm (12 tháng)
         elseif ($filterType === 'year') {
             $year = $request->input('selected-year', Carbon::now()->year);
-    
+
             for ($i = 1; $i <= 12; $i++) {
                 $monthLabel = "Tháng $i";
                 $labels[] = $monthLabel;
                 $revenues[$monthLabel] = 0;
             }
-    
+
             $orders = Order::whereYear('created_at', $year)
+                ->where('payment_status', 'paid') // Chỉ tính đơn hàng đã thanh toán
                 ->selectRaw('MONTH(created_at) as month, SUM(total_price) as revenue')
                 ->groupBy('month')
                 ->pluck('revenue', 'month');
-    
+
             foreach ($orders as $month => $revenue) {
                 $monthLabel = "Tháng $month";
                 if (isset($revenues[$monthLabel])) {
@@ -232,73 +235,79 @@ class AdminController extends Controller
                 }
             }
         }
-    
+
         // Lọc theo khoảng thời gian tùy chọn
         elseif ($filterType === 'custom-range') {
             $fromDate = Carbon::parse($request->input('from_date'))->startOfDay();
             $toDate = Carbon::parse($request->input('to_date'))->endOfDay();
-    
+
             $period = CarbonPeriod::create($fromDate, $toDate);
             foreach ($period as $date) {
                 $formatted = $date->format('Y-m-d');
                 $labels[] = $formatted;
                 $revenues[$formatted] = 0;
             }
-    
+
             $orders = Order::whereBetween('created_at', [$fromDate, $toDate])
+                ->where('payment_status', 'paid') // Chỉ tính đơn hàng đã thanh toán
                 ->selectRaw('DATE(created_at) as date, SUM(total_price) as revenue')
                 ->groupBy('date')
                 ->pluck('revenue', 'date');
-    
+
             foreach ($orders as $date => $revenue) {
                 $revenues[$date] = $revenue;
             }
         }
-    
+
         // Trả về dữ liệu cho view
         $finalRevenues = [];
         foreach ($labels as $label) {
             $finalRevenues[] = $revenues[$label] ?? 0;
         }
-    
+
         return view('dashboards.index', [
             'labels' => $labels,
             'revenues' => $finalRevenues,
             'filterType' => $filterType,
         ]);
     }
-    
-    
-  
-// thống kê trạng thái đơn hàng
-public function orderStatus()
-{
-    $orders = DB::table('orders')
-        ->select('status', DB::raw('COUNT(*) as total'))
-        ->groupBy('status')
-        ->get();
 
-    $statuses = [
-        'waiting_for_confirmation' => 'Chờ xác nhận',
-        'waiting_for_pickup' => 'Chờ lấy hàng',
-        'waiting_for_delivery' => 'Đang giao',
-        'delivered' => 'Đã giao',
-        'returned' => 'Đã hoàn trả',
-        'cancelled' => 'Đã hủy',
-    ];
+    // Thống kê trạng thái đơn hàng
+    public function orderStatus()
+    {
+        $orders = DB::table('orders')
+            ->select('status', DB::raw('COUNT(*) as total'))
+            ->groupBy('status')
+            ->get();
 
-    $labels = [];
-    $totals = [];
-    $totalOrders = $orders->sum('total');
+        // Trạng thái chuẩn dựa trên OrderController
+        $statuses = [
+            'pending' => 'Chờ xác nhận',
+            'confirmed' => 'Đã xác nhận',
+            'processing' => 'Đang xử lý',
+            'shipping' => 'Đang giao hàng',
+            'delivered' => 'Đã giao',
+            'completed' => 'Hoàn tất',
+            'cancelled' => 'Đã hủy',
+            'returned' => 'Trả hàng',
+            'refunded' => 'Hoàn tiền',
+        ];
 
-    foreach ($orders as $order) {
-        $labels[] = $statuses[$order->status] ?? ucfirst(str_replace('_', ' ', $order->status));
-        $totals[] = $order->total;
+        $labels = [];
+        $totals = [];
+        $totalOrders = $orders->sum('total');
+
+        foreach ($orders as $order) {
+            $labels[] = $statuses[$order->status] ?? ucfirst(str_replace('_', ' ', $order->status));
+            $totals[] = $order->total;
+        }
+
+        // Tính số đơn hàng delivered nhưng chưa completed (không cần thêm cột)
+        $pendingCompleted = Order::where('status', 'delivered')
+            ->where('payment_status', '!=', 'paid')
+            ->where('payment_method', 'cash_on_delivery')
+            ->count();
+
+        return view('dashboards.orders', compact('labels', 'totals', 'orders', 'statuses', 'totalOrders', 'pendingCompleted'));
     }
-
-    return view('dashboards.orders ', compact('labels', 'totals', 'orders', 'statuses', 'totalOrders'));
-}
-
-
-    
 }

@@ -22,12 +22,13 @@
             background-color: #f9f9f9;
             border-radius: 8px;
             overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
 
         .card-header {
-            background-color: #41CAC0;
-            color: white;
-            padding: 20px;
+            /* background-color: #007bff; */
+            /* color: white; */
+            padding-top: 50px;
         }
 
         .card-header h4 {
@@ -89,7 +90,7 @@
         }
 
         .submit-wrapper {
-            text-align: center;
+            /* text-align: center; */
             margin-top: 30px;
         }
 
@@ -122,7 +123,7 @@
         }
 
         .back-button:hover {
-            background-color: rgb(29, 94, 148);
+            background-color: rgb(149, 154, 158);
         }
 
         .card-header {
@@ -130,20 +131,6 @@
             justify-content: space-between;
             align-items: center;
         }
-
-        .back-button {
-    display: inline-block;
-    background-color: #41CAC0 !important; /* Màu chủ đạo của web */
-    color: white !important;
-    padding: 8px 20px;
-    border-radius: 4px;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-}
-
-.back-button:hover {
-    background-color: #218838 !important; /* Màu hover của nút Quay lại */
-}
 
         .back-button-wrapper {
             padding-top: 20px;
@@ -165,8 +152,8 @@
         }
     </style>
 
-    <div class="container">
-        <div class="form-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <h4>Chỉnh sửa Người Dùng</h4>
@@ -190,7 +177,7 @@
                             </div>
                         @endif
 
-                        <div class="form-grid">
+                        <div class="form-group">
                             <!-- Cột trái -->
                             <div class="form-column">
                                 <div class="form-group">
@@ -245,7 +232,7 @@
     <label>Vai trò</label>
     <div class="radio-group">
         @php
-            $fixedRoles = ['user', 'staff', 'admin', 'superadmin'];
+            $fixedRoles = ['user', 'staff', 'admin'];
         @endphp
         @foreach ($fixedRoles as $role)
             <label>
@@ -262,7 +249,7 @@
                         </div>
 
                         <div class="submit-wrapper">
-                            <button type="submit">Cập nhật Người Dùng</button>
+                            <button type="submit">Cập nhật</button>
                         </div>
                     </form>
                 </div>

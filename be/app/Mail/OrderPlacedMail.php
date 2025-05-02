@@ -23,7 +23,7 @@ class OrderPlacedMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Xác nhận đơn hàng #' . $this->order->id)
+        return $this->subject('Xác nhận hoàn tất đơn hàng #' . $this->order->id)
                     ->view('emails.order_placed');
     }
 }

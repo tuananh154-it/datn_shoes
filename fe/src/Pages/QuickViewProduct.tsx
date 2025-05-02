@@ -70,7 +70,25 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
   const uniqueVariantImages = product?.details
     ? [...new Set(product.details.map((detail) => detail.image))]
     : [];
+     // Lấy danh sách ảnh từ biến thể
+  const detailImages: string[] = product?.details
+  ?.map(detail => detail.image?.[0])
+  .filter((img): img is string => typeof img === 'string') || [];
 
+// Kiểm tra và thêm ảnh chính nếu chưa có trong biến thể
+const allImages = [...detailImages];
+if (product?.image && !detailImages.includes(product.image)) {
+  allImages.unshift(product.image);
+}
+
+// Lọc ảnh không trùng nhau
+const uniqueImages = Array.from(new Set(allImages)).map(img => {
+  return product?.details.find(detail => detail.image[0] === img) || {
+    image: [img], // ảnh chính không có detail nên tạo object giả
+    size: '',
+    color: '',
+  };
+});
   const handleColorSelect = (color: string) => {
     setSelectedColor(color);
     const availableSizes = colorSizeMap[color];
@@ -148,26 +166,15 @@ const QuickViewProduct = ({ productId, onClose }: { productId: string; onClose: 
                       className="imageBienthe overflow-x-auto whitespace-nowrap no-scrollbar"
                       style={{ scrollBehavior: "smooth" }}
                     >
-                      <img
+                      {/* <img
                         src={product.image}
                         alt="Product main"
                         className="inline-block w-24 h-24 object-cover mx-1 cursor-pointer rounded variant-thumb"
                         onClick={() => handleVariantClick(null)}
-                      />
-                      {uniqueVariantImages.map((image, index) => (
-                        <img
-                          key={index}
-                          src={image}
-                          alt={`Variant ${index}`}
-                          className="inline-block w-24 h-24 object-cover mx-1 cursor-pointer rounded variant-thumb"
-                          onClick={() => {
-                            const matchingDetail = product?.details.find(
-                              (d) => d.image === image
-                            );
-                            handleVariantClick(matchingDetail);
-                          }}
-                        />
-                      ))}
+                      /> */}
+                        {uniqueImages.map((image,index)=>(
+                                              <img key={index} src={image.image[0]} alt={`Variant ${index}`} onClick={() => handleVariantClick(image)} />
+                                        ))}
                     </div>
                     {uniqueVariantImages.length + 1 > 2 && (
                       <a className="nav-button right" onClick={() => handleScroll("right")}>

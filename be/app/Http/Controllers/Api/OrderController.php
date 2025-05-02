@@ -389,24 +389,70 @@ class OrderController extends Controller
         return response()->json($formattedOrder);
     }
 
+    // public function cancelOrder($id, Request $request)
+    // {
+    //     $user = $request->user();
+
+    //     $order = Order::where('user_id', $user->id)
+    //         ->where('id', $id)
+    //         ->whereIn('status', ['pending', 'confirmed', 'processing'])
+    //         ->first();
+
+    //     if (!$order) {
+    //         return response()->json(['message' => 'Không thể hủy đơn hàng này'], 400);
+    //     }
+
+    //     $order->update(['status' => 'cancelled']);
+    //     // phát sự kiện realtime
+    //     // broadcast(new OrderPlaced($order))->toOthers();
+    //     return response()->json(['message' => 'Đơn hàng đã được hủy']);
+    // }
     public function cancelOrder($id, Request $request)
     {
         $user = $request->user();
-
+    
+        // Tìm đơn hàng có thể hủy
         $order = Order::where('user_id', $user->id)
             ->where('id', $id)
             ->whereIn('status', ['pending', 'confirmed', 'processing'])
+            ->with('order_details') // Load chi tiết đơn hàng
             ->first();
-
+    
         if (!$order) {
             return response()->json(['message' => 'Không thể hủy đơn hàng này'], 400);
         }
-
-        $order->update(['status' => 'cancelled']);
-
-        return response()->json(['message' => 'Đơn hàng đã được hủy']);
+    
+        // Sử dụng transaction để đảm bảo tính toàn vẹn dữ liệu
+        \DB::beginTransaction();
+        try {
+            // Cập nhật trạng thái đơn hàng thành 'cancelled'
+            $order->update(['status' => 'cancelled']);
+    
+            // Rollback số lượng biến thể
+            foreach ($order->order_details as $orderDetail) {
+                $productDetail = \App\Models\ProductDetail::find($orderDetail->product_detail_id);
+                
+                if ($productDetail) {
+                    // Cộng lại số lượng vào tồn kho
+                    $productDetail->quantity += $orderDetail->quantity;
+                    $productDetail->save();
+                } else {
+                    // Log lỗi nếu biến thể không tồn tại
+                    \Log::warning("Biến thể sản phẩm với ID {$orderDetail->product_detail_id} không tồn tại khi hủy đơn hàng #{$order->id}");
+                }
+            }
+    
+            // Phát sự kiện realtime (nếu cần)
+            // broadcast(new OrderPlaced($order))->toOthers();
+    
+            \DB::commit();
+            return response()->json(['message' => 'Đơn hàng đã được hủy và số lượng sản phẩm đã được khôi phục']);
+        } catch (\Exception $e) {
+            \DB::rollBack();
+            \Log::error("Lỗi khi hủy đơn hàng #{$order->id}: {$e->getMessage()}");
+            return response()->json(['message' => 'Hủy đơn hàng thất bại'], 500);
+        }
     }
-
     public function getCart(Request $request)
     {
         $user = $request->user();
@@ -631,4 +677,26 @@ class OrderController extends Controller
             'total' => $total,
         ]);
     }
+    // public function confirmReceipt($id, Request $request)
+    // {
+    //     $user = $request->user();
+    
+    //     $order = Order::where('id', $id)
+    //         ->where('user_id', $user->id)
+    //         ->first();
+    
+    //     if (!$order) {
+    //         return response()->json(['message' => 'Không tìm thấy đơn hàng'], 404);
+    //     }
+    
+    //     if ($order->status !== 'delivered') {
+    //         return response()->json(['message' => 'Chỉ có thể xác nhận khi đơn hàng đã được giao'], 400);
+    //     }
+    
+    //     $order->status = 'completed';
+    //     $order->payment_status = 'paid';
+    //     $order->save();
+    
+    //     return response()->json(['message' => 'Đã xác nhận đã nhận hàng. Cảm ơn bạn!', 'status' => $order->status], 200);
+    // }
 }

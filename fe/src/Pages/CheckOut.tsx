@@ -950,6 +950,7 @@ const CheckOut = () => {
               `Voucher '${checkout.voucher}' đã được áp dụng! Giảm giá: ${momoResponse.data.discount.toLocaleString()} VNĐ`
             );
           }
+          localStorage.setItem("temp_order_id", momoResponse.data.temp_order_id);
           localStorage.setItem("pendingOrder", JSON.stringify(checkout));
           window.location.href = momoResponse.data.payUrl;
         } else {

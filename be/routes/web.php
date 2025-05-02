@@ -23,6 +23,8 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ReturnRequestController;
+use App\Http\Controllers\ReviewController;
+
 // use App\Http\Controllers\ReturnController;
 
 // Route::middleware('auth')->group(function () {
@@ -88,7 +90,28 @@ Route::get('/order/cancel/{id}', function ($id) {
     return view('order.cancel_success', ['order' => $order]);
 })->name('orders.cancel');
 
+Route::get('/order/complete/{id}', function ($id) {
+    $order = \App\Models\Order::find($id);
 
+    if (!$order) {
+        return view('order.notfound');
+    }
+
+    // Chỉ cho phép xác nhận khi đang [complete_success] trạng thái "delivered"
+    if ($order->status !== 'delivered') {
+        return view('order.already_completed', ['order' => $order]);
+    }
+
+    // Cập nhật trạng thái sang "completed" và đánh dấu thanh toán
+    $order->status = 'completed';
+    $order->payment_status = 'paid';
+    $order->save();
+
+    // Gửi sự kiện để thông báo
+    broadcast(new \App\Events\OrderPlaced($order))->toOthers();
+
+    return view('order.confirm_success', ['order' => $order]);
+})->name('orders.complete');
 Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('dashboards.index');
@@ -441,3 +464,9 @@ Route::middleware('auth')->group(function () {
 Route::put('orders/bulk-update-status', [OrderController::class, 'bulkUpdateStatus'])->name('orders.bulk_update_status');
 // routes gửi mail 
 // Route::put('orders/bulk-update-status', [OrderController::class, 'bulkUpdateStatus'])->name('orders.bulk_update_status');
+Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('reviews/show/{id}', [ReviewController::class, 'show'])->name('reviews.show');
+// Route cho trang danh sách người dùng
+
+Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
+Route::get('reviews/show/{id}', [ReviewController::class, 'show'])->name('reviews.show');

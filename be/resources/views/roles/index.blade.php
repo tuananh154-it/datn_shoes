@@ -3,92 +3,106 @@
 @section('content')
 
     <style>
-        .container {
+        .row {
             padding-top: 60px;
         }
-
-        .table th,
-        .table td {
-            text-align: center;
+        .table th, .table td {
             vertical-align: middle;
+            text-align: center;
         }
 
         .table th {
-            background-color: #78CD51;
-
-            color: white;
+            white-space: nowrap;
+            background-color: #f8f9fa;
         }
 
-
-        .table tbody tr:hover {
-            background-color: #f1f1f1;
+        .table td {
+            word-wrap: break-word;
+            max-width: 300px; /* Giới hạn chiều rộng của ô nội dung */
         }
 
-        .btn-group .btn {
-            margin-right: 5px;
+        .table-responsive {
+            overflow-x: auto;
         }
 
-        .action-btns {
-            display: flex;
-            justify-content: center;
-            align-items: center;
+        .text-truncate {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 250px;
         }
-
-        /* h4{
-            background: black;
-        } */
-
-
+        th,
+        td {
+            text-align: left;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        .table td,
+        .table th {
+            vertical-align: middle;
+        }
     </style>
 
-    <div class="container">
-        <div class="card shadow">
-       <div class="card-header" style="background-color: #41CAC0; color: white;" d-flex justify-content-between align-items-center">
-                <h4 class="mb-0">Danh sách quyền hạn</h4>
-                <a href="{{ route('roles.create') }}" class="btn btn-light" style="margin-top:12px;background-color:#78CD51;color:white;border:#78CD51">
-                    <i class="fa fa-plus"></i> Thêm quyền hạn
-                </a>
-            </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <section class="card">
+                <header class="card-header">
+                    Danh sách phân quyền
+                </header>
 
-            <div class="card-body">
-                <table class="table table-bordered table-hover">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Tên Vai Trò</th>
-                            <th>Hành Động</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($roles as $index => $role)
+
+                <div class="mb-3">
+                    <a href="{{ route('roles.create') }}" class="btn btn-light" style="margin-top:12px;background-color:#78CD51;color:white;border:#78CD51">
+                        <i class="fa fa-plus"></i> Thêm quyền hạn
+                    </a>
+                </div>
+                {{-- Bảng hiển thị bình luận --}}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
                             <tr>
-                                <td>{{ $index + 1 }}</td>
-                                <td>{{ ucfirst($role->name) }}</td>
-                                <td class="action-btns">
-                                    @if (strtolower($role->name) !== 'super-admin')
-                                        <div class="btn-group">
-                                            <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-warning" style="background-color: #41CAC0;border:#41CAC0">
-                                                <i class="fa fa-pencil"></i> Sửa
+                                <th>ID</th>
+                                <th>Tên Vai Trò</th>
+                                <th>Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($roles as $index => $role)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ ucfirst($role->name) }}</td>
+                                    <td class="action-btns">
+                                        @if (strtolower($role->name) !== 'superadmin')
+                                            <a href="{{ route('roles.edit', $role->id) }}" class="btn btn-primary btn-sm">
+                                                <i class="fa fa-pencil"></i>
                                             </a>
 
-                                            {{-- <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
-                                                onsubmit="return confirm('Bạn có chắc muốn xóa?');">
+                                            <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
+                                                onsubmit="return confirm('Bạn có chắc muốn xóa?');" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">
+<button type="submit" class="btn btn-danger btn-sm">
                                                     <i class="fa fa-trash"></i> Xóa
                                                 </button>
-                                            </form> --}}
-                                        </div>
-                                    @else
-                                        <span class="badge bg-secondary">Super Admin</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+                                            </form>
+                                        @else
+                                            <span class="badge bg-secondary">Super Admin</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- PHÂN TRANG --}}
+                {{-- <div class="row">
+                    <div class="col-12">
+                        {{ $roles->links() }}
+                    </div>
+                </div> --}}
+
+            </section>
         </div>
     </div>
 

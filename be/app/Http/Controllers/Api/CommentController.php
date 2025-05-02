@@ -45,7 +45,8 @@ class CommentController extends Controller
                     'id' => $comment->id,
                     'content' => $comment->content,
                     'number_of_likes' => $comment->number_of_likes,
-                    'created_at' => $comment->created_at->diffForHumans(), // Thời gian tạo bình luận
+                    // 'created_at' => $comment->created_at->diffForHumans()
+                    'created_at' => $comment->created_at ? $comment->created_at->format('Y-m-d H:i:s') : 'N/A', // Sửa định dạng thời gian
                     'is_anonymous' => $comment->is_anonymous,
                     'is_edited' => $comment->is_edited,
                     'total_reports' => $comment->reports_count, // Số lượng báo cáo
@@ -154,7 +155,7 @@ class CommentController extends Controller
                 'user_role' => $comment->user->role,
                 'content' => $comment->content,
                 'number_of_likes' => $comment->number_of_likes,
-                'created_at' => $comment->created_at->diffForHumans(),
+                'created_at' => $comment->created_at ? $comment->created_at->format('Y-m-d H:i:s') : 'N/A', // Sửa định dạng thời gian
                 'is_anonymous' => $comment->is_anonymous,
                 'is_edited' => $comment->is_edited,
             ];
@@ -211,7 +212,7 @@ class CommentController extends Controller
                 'user_role' => $comment->user->role,
                 'content' => $comment->content,
                 'number_of_likes' => $comment->number_of_likes,
-                'created_at' => $comment->created_at->diffForHumans(),
+                'created_at' => $comment->created_at ? $comment->created_at->format('Y-m-d H:i:s') : 'N/A', // Sửa định dạng thời gian
                 'is_anonymous' => $comment->is_anonymous,
                 'is_edited' => $comment->is_edited,
             ];

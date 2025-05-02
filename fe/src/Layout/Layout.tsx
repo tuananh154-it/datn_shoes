@@ -8,21 +8,10 @@ import Pusher from "pusher-js";
 interface Order {
   id: number;
   username: string;
-  voucher_id: number | null;
-  status: string;
-  deliver_fee: string;
-  user_id: number;
-  payment_status: string;
-  payment_method: string;
-  address: string;
-  phone_number: string;
-  email: string;
   total_price: string;
-  note: string;
+  status: string;
   created_at: string;
   updated_at: string;
-  deleted_at: string | null;
-  voucher: any;
 }
 
 const Layout = () => {
@@ -40,16 +29,15 @@ const Layout = () => {
 
     // Lắng nghe sự kiện order.placed
     channel.bind("order.placed", (data: Order) => {
-      console.log("Received order.placed event:", data); // Debug log
-      if (data) {
-        setNewOrder(data); // Dữ liệu là đơn hàng trực tiếp
+      console.log("Received order.placed event:", data);
+      if (data && data.status === "pending") {
+        // Chỉ hiển thị thông báo cho đơn hàng mới (status: pending)
+        setNewOrder(data);
         setShowNotification(true);
 
         setTimeout(() => {
           setShowNotification(false);
         }, 10000);
-      } else {
-        console.warn("Dữ liệu từ Pusher không hợp lệ:", data);
       }
     });
 
@@ -88,7 +76,7 @@ const Layout = () => {
         <strong>{order.username}</strong>
         <br />
         <span>
-          Đơn #{order.id} vừa được đặt<br />
+          Đơn #FV-HN-{order.id} vừa được đặt<br />
           Tổng: {parseFloat(order.total_price).toLocaleString()} VND
         </span>
       </div>

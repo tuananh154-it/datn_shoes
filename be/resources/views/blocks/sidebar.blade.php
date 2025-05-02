@@ -79,9 +79,8 @@
                             <li><a href="{{ route('comments.index') }}">Quản lý bình luận</a></li>
                         @endcan
                         
-                        @can('show-returns')
-                            <li><a href="{{ route('return_requests.index') }}">Quản lý yêu cầu hoàn</a></li>
-                        @endcan
+                            <li><a href="{{ route('reviews.index') }}">Quản lý đánh giá</a></li>
+                        
                     </ul>
                 </li>
             @endcanany
@@ -117,17 +116,17 @@
             @endcan
 
             <!-- Quản lý yêu cầu trả lại -->
-            <li>
+            <!-- <li>
                 <a href="{{ route('return_requests.index') }}">
                     <i class="fa fa-undo"></i>
                     <span>Quản lý yêu cầu trả lại</span>
                 </a>
-            </li>
+            </li> -->
 
         </ul>
         <!-- sidebar menu end-->
         <script src="https://js.pusher.com/7.0/pusher.min.js"></script>
-<script>
+<!-- <script>
     document.addEventListener('DOMContentLoaded', function() {
         var pusher = new Pusher("ee494af10a7f4a6e48b6", {
             cluster: "mt1",
@@ -155,27 +154,76 @@
                     <span class="emoji">📦</span>
                     <strong>${data.username}</strong><br>
                     <span>
-                        Đơn #${data.id} vừa được đặt<br>
+                        Đơn #FV-HN-${data.id} vừa được đặt<br>
                         Tổng: ${parseFloat(data.total_price).toLocaleString()} VNĐ<br>
-                        <small>${data.created_at}</small>
+                       
                     </span>
                 `;
                 notificationsDiv.appendChild(notification);
 
-                // Ẩn thông báo sau 5 giây
+                // thoi gian phat realtime
                 setTimeout(() => {
                     notification.style.animation = 'fadeOut 0.5s ease-out';
                     setTimeout(() => {
                         notification.remove();
                     }, 500);
-                }, 9500);
+                }, 4500);
             } else {
                 console.error("Element #admin-notifications not found");
             }
         });
     });
-</script>
+</script> -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var pusher = new Pusher("ee494af10a7f4a6e48b6", {
+            cluster: "mt1",
+        });
+        console.log("Pusher initialized:", pusher);
 
+        var channel = pusher.subscribe('orders');
+        console.log("Subscribed to channel:", channel);
+
+        channel.bind('pusher:subscription_succeeded', function() {
+            console.log("Successfully subscribed to orders");
+        });
+
+        channel.bind('pusher:subscription_error', function(status) {
+            console.error("Subscription error:", status);
+        });
+
+        channel.bind("order.placed", function(data) {
+            console.log("Received order.placed event:", data);
+            // Chỉ hiển thị thông báo nếu status là pending (đơn hàng mới)
+            if (data && data.status === "pending") {
+                const notificationsDiv = document.getElementById("admin-notifications");
+                if (notificationsDiv) {
+                    const notification = document.createElement('div');
+                    notification.className = 'admin-notification';
+                    notification.innerHTML = `
+                        <span class="emoji">📦</span>
+                        <strong>${data.username}</strong><br>
+                        <span>
+                            Đơn #FV-HN-${data.id} vừa được đặt<br>
+                            Tổng: ${parseFloat(data.total_price).toLocaleString()} VNĐ<br>
+                        </span>
+                    `;
+                    notificationsDiv.appendChild(notification);
+
+                    // Thời gian hiển thị thông báo
+                    setTimeout(() => {
+                        notification.style.animation = 'fadeOut 0.5s ease-out';
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 500);
+                    }, 4500);
+                } else {
+                    console.error("Element #admin-notifications not found");
+                }
+            }
+        });
+    });
+</script>
 <div id="admin-notifications"></div>
 
 <style>

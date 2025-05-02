@@ -172,12 +172,16 @@ const HomePages = () => {
             <div className="products">
               {product?.top_selling_products.map((product) => (
                 <div className="product-card">
-                  <div className="label">SALE</div>
+                  <div className="label">TOP</div>
+                  <a href={`/product_detail/${product.id}`}>
                   <img
-                    className="product-image1"
-                    src={product.image}
-                    alt="Product 4"
-                  />
+                  
+                  className="product-image1"
+                  src={product.image}
+                  alt="Product 4"
+                />
+                  </a>
+                
                   <div className="product-name">{product.name}</div>
                   <div className="product-price">
                     <strong>{product?.price

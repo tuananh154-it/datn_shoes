@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderPlaced;
 use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Voucher;
@@ -34,19 +35,6 @@ class OrderController extends Controller
         return view('orders.index', compact('orders'));
     }
 
-    // public function show($id)
-    // {
-    //     $order = Order::with(['order_details.productDetail.product', 'user'])->findOrFail($id);
-
-    //     $total_product_value = $order->order_details->sum(function ($orderDetail) {
-    //         return $orderDetail->quantity * $orderDetail->price;
-    //     });
-
-    //     $shipping_fee = $order->deliver_fee;
-    //     $total_price = $order->total_price;
-
-    //     return view('orders.show', compact('order', 'total_product_value', 'shipping_fee', 'total_price'));
-    // }
     public function show($id)
     {
         $order = Order::with([
@@ -66,6 +54,7 @@ class OrderController extends Controller
     
         return view('orders.show', compact('order', 'total_product_value', 'shipping_fee', 'total_price'));
     }
+
     public function updateStatus(Request $request, $id)
     {
         $order = Order::findOrFail($id);
@@ -79,11 +68,7 @@ class OrderController extends Controller
             return redirect()->back()
                 ->with('error', 'Đơn hàng đã hoàn tất, hoàn tiền hoặc bị hủy. Không thể cập nhật thêm.');
         }
-          // Không cho admin tự chuyển sang confirmed
-        //   if ($currentStatus === 'pending' && $newStatus === 'confirmed') {
-        //     return redirect()->back()
-        //         ->with('error', 'Chỉ người dùng mới có thể xác nhận đơn hàng qua email.');
-        // }
+
         $validTransitions = [
             'pending' => ['confirmed', 'cancelled'],
             'confirmed' => ['processing', 'cancelled'],
@@ -97,26 +82,26 @@ class OrderController extends Controller
             isset($validTransitions[$currentStatus]) &&
             in_array($newStatus, $validTransitions[$currentStatus])
         ) {
-            $order->status = $newStatus;
-
-            if ($newStatus === 'delivered') {
-                $order->payment_status = 'paid';
+            // Ngăn admin chuyển trực tiếp sang "completed"
+            if ($newStatus === 'completed') {
+                return redirect()->back()
+                    ->with('error', 'Chỉ khách hàng mới có thể xác nhận hoàn tất đơn hàng qua email.');
             }
 
+            $order->status = $newStatus;
             $order->save();
+            broadcast(new OrderPlaced($order))->toOthers();
 
-            // Gửi email nếu trạng thái chuyển từ "pending" sang "confirmed"
-            // if ($currentStatus === 'pending' && $newStatus === 'confirmed') {
-            //     try {
-            //         // Tải dữ liệu cần thiết cho email
-            //         $order->load('order_details.productDetail.product');
-            //         // Gửi email bất đồng bộ qua hàng đợi
-            //         Mail::to($order->email)->queue(new \App\Mail\OrderPlacedMail($order));
-            //         Log::info('Email đã được đưa vào hàng đợi cho đơn hàng #' . $order->id);
-            //     } catch (\Exception $e) {
-            //         Log::error('Lỗi đưa email vào hàng đợi cho đơn hàng #' . $order->id . ': ' . $e->getMessage() . ' - Stack trace: ' . $e->getTraceAsString());
-            //     }
-            // }
+            // Gửi email khi trạng thái chuyển sang "delivered"
+            if ($newStatus === 'delivered') {
+                try {
+                    $order->load('order_details.productDetail.product');
+                    Mail::to($order->email)->queue(new \App\Mail\OrderPlacedMail($order));
+                    Log::info('Email xác nhận hoàn tất đã được đưa vào hàng đợi cho đơn hàng #' . $order->id);
+                } catch (\Exception $e) {
+                    Log::error('Lỗi đưa email xác nhận hoàn tất vào hàng đợi cho đơn hàng #' . $order->id . ': ' . $e->getMessage());
+                }
+            }
 
             return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
         }
@@ -152,7 +137,7 @@ class OrderController extends Controller
         ];
 
         $updatedCount = 0;
-        $emailedCount = 0; // Đếm số đơn hàng được gửi email
+        $emailedCount = 0;
 
         foreach ($orders as $order) {
             $currentStatus = $order->status;
@@ -165,35 +150,34 @@ class OrderController extends Controller
                 isset($validTransitions[$currentStatus]) &&
                 in_array($newStatus, $validTransitions[$currentStatus])
             ) {
-                $order->status = $newStatus;
-
-                if ($newStatus === 'delivered') {
-                    $order->payment_status = 'paid';
+                // Ngăn admin chuyển trực tiếp sang "completed"
+                if ($newStatus === 'completed') {
+                    continue;
                 }
 
+                $order->status = $newStatus;
                 $order->save();
                 $updatedCount++;
+                broadcast(new OrderPlaced($order))->toOthers();
 
-                // Gửi email nếu trạng thái chuyển từ "pending" sang "confirmed"
-                // if ($currentStatus === 'pending' && $newStatus === 'confirmed') {
-                //     try {
-                //         // Tải dữ liệu cần thiết cho email
-                //         $order->load('order_details.productDetail.product');
-                //         // Gửi email bất đồng bộ qua hàng đợi
-                //         Mail::to($order->email)->queue(new \App\Mail\OrderPlacedMail($order));
-                //         Log::info('Email đã được đưa vào hàng đợi cho đơn hàng #' . $order->id);
-                //         $emailedCount++;
-                //     } catch (\Exception $e) {
-                //         Log::error('Lỗi đưa email vào hàng đợi cho đơn hàng #' . $order->id . ': ' . $e->getMessage() . ' - Stack trace: ' . $e->getTraceAsString());
-                //     }
-                // }
+                // Gửi email khi trạng thái chuyển sang "delivered"
+                if ($newStatus === 'delivered') {
+                    try {
+                        $order->load('order_details.productDetail.product');
+                        Mail::to($order->email)->queue(new \App\Mail\OrderPlacedMail($order));
+                        Log::info('Email xác nhận hoàn tất đã được đưa vào hàng đợi cho đơn hàng #' . $order->id);
+                        $emailedCount++;
+                    } catch (\Exception $e) {
+                        Log::error('Lỗi đưa email xác nhận hoàn tất vào hàng đợi cho đơn hàng #' . $order->id . ': ' . $e->getMessage());
+                    }
+                }
             }
         }
 
         if ($updatedCount > 0) {
             $message = "Đã cập nhật trạng thái cho $updatedCount đơn hàng.";
             if ($emailedCount > 0) {
-                $message .= " Đã gửi email xác nhận cho $emailedCount đơn hàng.";
+                $message .= " Đã gửi email xác nhận hoàn tất cho $emailedCount đơn hàng.";
             }
             return redirect()->back()->with('success', $message);
         } else {

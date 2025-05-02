@@ -139,7 +139,7 @@ const Wishlist = () => {
                             <div className="td border-bottom" data-title="Product">
                               <div className="product_img d-table-cell">
                                 <img
-                                  src={product.details?.[0]?.image || product.image || "placeholder.jpg"}
+                                  src={ product.image || "placeholder.jpg"}
                                   className="vertical_middle img-fluid"
                                   alt={product.name || "Product"}
                                 />

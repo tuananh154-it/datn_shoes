@@ -17,7 +17,7 @@ const Shop = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedBrands, setSelectedBrands] = useState<string[]>([]);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0,5000000]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0,10000000]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -280,7 +280,7 @@ const Shop = () => {
                             <Slider
                               range
                               min={0}
-                              max={5000000}
+                              max={10000000}
                               step={10000}
                               value={priceRange}
                               onChange={handleChange}
@@ -325,14 +325,14 @@ const Shop = () => {
                         {paginatedProducts.map((last, index) => (
                           <div className="product-card1" key={last.id}>
                             {console.log(`Log 9 - Rendering product ${index + 1}:`, last)}
-                            <a href={`/product_detail/${last.id}`}>
+                            <Link to={`/product_detail/${last.id}`}>
                               <img
                                 className="product-image1"
                                 src={last.image || "https://via.placeholder.com/150"}
                                 alt={last.name}
                                 loading="lazy"
                               />
-                            </a>
+                            </Link>
                             <div className="product-name">
                               {last.name.slice(0, 20) +
                                 (last.name.length > 20 ? "..." : "")}

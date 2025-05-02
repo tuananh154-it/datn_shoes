@@ -1025,10 +1025,11 @@ input[type="range"] {
 .label {
   position: absolute;
   /* top: -20px; */
+  border-radius: 5px;
   left: 10px;
-  background-color: #222;
+  background-color: red;
   color: #fff;
-  padding: 4px 12px;
+  padding: 10px;
   font-size: 12px;
   font-weight: bold;
   text-transform: uppercase;
