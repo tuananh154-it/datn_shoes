@@ -58,6 +58,8 @@ Route::middleware('auth:api')->group(function () {
     Route::get('/orders', [OrderController::class, 'listOrders']);
     Route::get('/orders/{id}', [OrderController::class, 'orderDetail']);
     Route::post('/orders/{id}/cancel', [OrderController::class, 'cancelOrder']);
+    Route::post('/orders/{id}/confirm-receipt', [OrderController::class, 'confirmReceipt']);
+
 
     Route::post('/momo-payment', [OnlineCheckOutController::class, 'momo_payment']);
 

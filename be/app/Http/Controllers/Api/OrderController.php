@@ -596,6 +596,27 @@ class OrderController extends Controller
             'total' => $total,
         ]);
     }
-
+    public function confirmReceipt($id, Request $request)
+    {
+        $user = $request->user();
+    
+        $order = Order::where('id', $id)
+            ->where('user_id', $user->id)
+            ->first();
+    
+        if (!$order) {
+            return response()->json(['message' => 'Không tìm thấy đơn hàng'], 404);
+        }
+    
+        if ($order->status !== 'delivered') {
+            return response()->json(['message' => 'Chỉ có thể xác nhận khi đơn hàng đã được giao'], 400);
+        }
+    
+        $order->status = 'completed';
+        $order->save();
+    
+        return response()->json(['message' => 'Đã xác nhận đã nhận hàng. Cảm ơn bạn!', 'status' => $order->status], 200);
+    }
+    
 }
 

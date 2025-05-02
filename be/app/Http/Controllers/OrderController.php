@@ -42,21 +42,32 @@ class OrderController extends Controller
 
     public function show($id)
     {
-        // Eager load order_details, product_detail, và product
-        $order = Order::with(['order_details.productDetail.product', 'user'])->findOrFail($id);
-
-        // Tính tổng giá trị các sản phẩm trong đơn hàng
+        // Eager load đầy đủ các quan hệ: sản phẩm, biến thể, người dùng, voucher
+        $order = Order::with([
+            'order_details.productDetail.product',
+            'order_details.productDetail.color',
+            'order_details.productDetail.size',
+            'user',
+            'voucher'
+        ])->findOrFail($id);
+    
+        // Tính tổng giá trị sản phẩm (không bao gồm phí ship và giảm giá)
         $total_product_value = $order->order_details->sum(function ($orderDetail) {
             return $orderDetail->quantity * $orderDetail->price;
         });
-
-        // Lấy các thông tin khác của đơn hàng
-        $shipping_fee = $order->deliver_fee; // Phí vận chuyển
-        $total_price = $order->total_price; // Tổng tiền
-
-        // Trả về view với các dữ liệu
-        return view('orders.show', compact('order', 'total_product_value', 'shipping_fee', 'total_price'));
+    
+        // Các thông tin khác
+        $shipping_fee = $order->deliver_fee;
+        $total_price = $order->total_price;
+    
+        return view('orders.show', compact(
+            'order',
+            'total_product_value',
+            'shipping_fee',
+            'total_price'
+        ));
     }
+    
 
     public function updateStatus(Request $request, $id)
     {
