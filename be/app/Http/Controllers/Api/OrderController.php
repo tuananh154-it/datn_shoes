@@ -617,6 +617,29 @@ class OrderController extends Controller
     
         return response()->json(['message' => 'Đã xác nhận đã nhận hàng. Cảm ơn bạn!', 'status' => $order->status], 200);
     }
-    
+    public function confirmFromEmail($id, Request $request)
+{
+    $order = Order::find($id);
+
+    if (!$order) {
+        return redirect('/thank-you')->with('error', 'Không tìm thấy đơn hàng');
+    }
+
+    $expectedToken = sha1($order->id . $order->email . config('app.key'));
+    if ($request->token !== $expectedToken) {
+        return redirect('/thank-you')->with('error', 'Token không hợp lệ');
+    }
+
+    if ($order->status !== 'delivered') {
+        return redirect('/thank-you')->with('error', 'Đơn hàng chưa ở trạng thái đã giao');
+    }
+
+    $order->status = 'completed';
+    $order->save();
+
+    return redirect('/thank-you')->with('success', 'Đơn hàng đã được xác nhận thành công!');
+}
+
+
 }
 

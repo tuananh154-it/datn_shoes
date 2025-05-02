@@ -42,6 +42,9 @@ Route::middleware(['auth'])->group(function () {
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+Route::get('/thank-you', function () {
+    return view('thank_you');
+});
 
 Route::get('/order/confirm/{id}', function ($id) {
     $order = Order::find($id);

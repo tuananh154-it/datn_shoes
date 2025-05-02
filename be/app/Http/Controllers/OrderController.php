@@ -8,6 +8,9 @@ use App\Models\Voucher;
 use App\Models\User;
 use App\Models\ProductDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
+
 
 class OrderController extends Controller
 {
@@ -76,7 +79,6 @@ class OrderController extends Controller
         $currentStatus = $order->status;
         $newStatus = $request->status;
     
-        // Trạng thái không thể chuyển tiếp nữa
         $finalStatuses = ['completed', 'refunded', 'cancelled'];
     
         if (in_array($currentStatus, $finalStatuses)) {
@@ -90,12 +92,18 @@ class OrderController extends Controller
                 ->with('error', 'Chỉ người dùng mới có thể xác nhận đơn hàng qua email.');
         }
     
+        // Không cho phép admin chuyển từ delivered → completed
+        if ($currentStatus === 'delivered' && $newStatus === 'completed') {
+            return redirect()->back()
+                ->with('error', 'Chỉ người dùng mới có thể xác nhận đã nhận hàng để hoàn tất đơn.');
+        }
+    
         $validTransitions = [
             'pending'    => ['cancelled'],
             'confirmed'  => ['processing', 'cancelled'],
             'processing' => ['shipping', 'cancelled'],
             'shipping'   => ['delivered'],
-            'delivered'  => ['completed', 'returned'],
+            'delivered'  => ['returned'],
             'returned'   => ['refunded'],
         ];
     
@@ -107,6 +115,13 @@ class OrderController extends Controller
     
             if ($newStatus === 'delivered') {
                 $order->payment_status = 'paid';
+    
+                // Gửi email xác nhận đã giao hàng
+                try {
+                    Mail::to($order->email)->send(new \App\Mail\OrderDeliveredMail($order));
+                } catch (\Exception $e) {
+                    Log::error('Lỗi gửi mail xác nhận giao hàng: ' . $e->getMessage());
+                }
             }
     
             $order->save();
@@ -118,7 +133,5 @@ class OrderController extends Controller
             ->with('error', 'Không thể chuyển trạng thái từ "' . $currentStatus . '" sang "' . $newStatus . '".');
     }
     
-    
-
    
 }

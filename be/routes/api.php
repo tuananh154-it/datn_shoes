@@ -45,6 +45,9 @@ Route::apiResource('comments', CommentController::class);
 
 Route::apiResource('contacts', ContactController::class);
 Route::apiResource('banners', BannerController::class);
+Route::get('/orders/{id}/confirm-receipt', [OrderController::class, 'confirmFromEmail']);
+
+
 Route::middleware('auth:api')->group(function () {
     Route::get('/cart', [CartController::class, 'index']);
     Route::put('/cart/update/{id_cart_item}', [CartController::class, 'updateCart']);
