@@ -41,7 +41,7 @@
                 </header>
 
                 {{-- Form tìm kiếm --}}
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <form action="{{ route('reviews.index') }}" method="GET">
                         <div class="row">
                             <div class="col-md-3">
@@ -53,7 +53,48 @@
                             </div>
                         </div>
                     </form>
-                </div>
+                </div> --}}
+{{-- Form tìm kiếm --}}
+<div class="mb-3">
+    <form action="{{ route('reviews.index') }}" method="GET">
+        <div class="row">
+            {{-- Nội dung đánh giá --}}
+            <div class="col-md-3 mb-2">
+                <input  type="text"
+                        name="search"
+                        class="form-control"
+                        placeholder="Tìm nội dung đánh giá"
+                        value="{{ request('search') }}">
+            </div>
+
+            {{-- Tên sản phẩm --}}
+            <div class="col-md-3 mb-2">
+                <input  type="text"
+                        name="product"
+                        class="form-control"
+                        placeholder="Tìm theo tên sản phẩm"
+                        value="{{ request('product') }}">
+            </div>
+
+            {{-- Rating (1-5) --}}
+            <div class="col-md-2 mb-2">
+                <select name="rating" class="form-control">
+                    <option value="">Chọn rating</option>
+                    @for ($i = 1; $i <= 5; $i++)
+                        <option value="{{ $i }}" {{ request('rating') == $i ? 'selected' : '' }}>
+                            {{ $i }} sao
+                        </option>
+                    @endfor
+                </select>
+            </div>
+
+            {{-- Nút tìm kiếm --}}
+            <div class="col-md-2 mb-2">
+                <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+            </div>
+        </div>
+    </form>
+</div>
 
                 {{-- Form chọn số lượng hiển thị mỗi trang --}}
                 {{-- <div class="d-flex justify-content-between px-3 py-2">
@@ -75,8 +116,8 @@
                     <table class="table table-striped">
                         <thead class="table-light text-center">
                             <tr>
-                                <th>Người dùng</th>
                                 <th>Order ID</th>
+                                <th>Người dùng</th>
                                 <th>Sản phẩm</th>
                                 <th>Nội dung</th>
                                 <th>Rating</th>
@@ -87,8 +128,8 @@
                         <tbody>
                             @forelse ($reviews as $rv)
                                 <tr>
-                                    <td>{{ $rv->user->name ?? '—' }}</td>
                                     <td>{{ $rv->order->code ?? $rv->order_id }}</td>
+                                    <td>{{ $rv->user->name ?? '—' }}</td>
                                     <td>
                                         {{ optional($rv->orderDetail->productDetail->product)->name ?? '—' }}
                                         @if($rv->orderDetail)

@@ -10,9 +10,9 @@ class ReviewController extends Controller
     // Danh sách đánh giá
     public function index(Request $request)
     {
-        $query = Review::query();
-
-        $search = $request->input('search');
+        $search       = $request->input('search');      // nội dung đánh giá
+        $rating       = $request->input('rating');      // số sao (1-5…)
+        $productName  = $request->input('product');     // tên sản phẩm
 
         $reviews = Review::with([
             'user:id,name',
@@ -21,24 +21,34 @@ class ReviewController extends Controller
             'orderDetail.productDetail.color:id,name',
             'orderDetail.productDetail.size:id,name'
         ])
-            ->when($search, fn($q) =>
-            $q->where('content', 'like', "%$search%"))
+            // lọc theo nội dung
+            ->when($search, function ($q) use ($search) {
+                $q->where('content', 'like', "%{$search}%");
+            })
+            // lọc theo rating
+            ->when($rating, function ($q) use ($rating) {
+                $q->where('rating', $rating);
+            })
+            // lọc theo tên sản phẩm
+            ->when($productName, function ($q) use ($productName) {
+                $q->whereHas('orderDetail.productDetail.product', function ($p) use ($productName) {
+                    $p->where('name', 'like', "%{$productName}%");
+                });
+            })
             ->orderByDesc('created_at')
             ->paginate(10)
-            ->withQueryString();            // giữ tham số search khi chuyển trang
-        $reviews = $query->orderBy('id', 'desc')->paginate(5);
+            ->withQueryString();  // giữ tham số khi chuyển trang
+
         return view('reviews.index', compact('reviews'));
     }
 
     // Chi tiết một đánh giá
-    // app/Http/Controllers/ReviewController.php
-
     public function show($id)
     {
         $review = Review::with([
             'user:id,name,role',
             'order:id',
-            'orderDetail.productDetail.product:id,name,image',   // ← thêm image
+            'orderDetail.productDetail.product:id,name,image',
             'orderDetail.productDetail.color:id,name',
             'orderDetail.productDetail.size:id,name'
         ])->findOrFail($id);

@@ -52,7 +52,7 @@
                     @else
                         <span>Không có ảnh</span>
                     @endif
-                    
+
                     </div>
 
                     <!-- Cập nhật ảnh mới -->

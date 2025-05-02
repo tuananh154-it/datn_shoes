@@ -78,7 +78,7 @@ class AuthController extends Controller
             $user = Auth::user();
 
             // Kiểm tra vai trò bằng middleware sẽ tốt hơn, nhưng giữ logic này nếu cần
-            if (in_array($user->role, ['admin', 'superadmin'])) {
+            if (in_array($user->role, ['admin', 'superadmin', 'staff', 'user'])) {
                 return redirect()->route('dashboards.index')->with('success', 'Đăng nhập thành công!');
             }
 

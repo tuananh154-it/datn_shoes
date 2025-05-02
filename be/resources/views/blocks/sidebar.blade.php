@@ -78,8 +78,9 @@
                         @can('show-comments')
                             <li><a href="{{ route('comments.index') }}">Quản lý bình luận</a></li>
                         @endcan
-                        <li><a href="{{ route('reviews.index') }}">Quản lý đánh giá</a></li>
-
+                        @can('show-returns')
+                            <li><a href="{{ route('reviews.index') }}">Quản lý đánh giá</a></li>
+                        @endcan
                     </ul>
                 </li>
             @endcanany
@@ -116,13 +117,12 @@
 
             <!-- Quản lý yêu cầu trả lại -->
             {{-- @can('show-return-requests') --}}
-            <li>
+            {{-- <li>
                 <a href="{{ route('return_requests.index') }}">
                     <i class="fa fa-undo"></i>
                     <span>Quản lý yêu cầu trả lại</span>
                 </a>
-            </li>
-
+            </li> --}}
             {{-- @endcan --}}
 
         </ul>

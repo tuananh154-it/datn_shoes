@@ -198,11 +198,13 @@ class ReviewController extends Controller
                 'total_reviews' => $totalReviews,
                 'all_price' => $orderTotalPrice,
             ]);
+
         } catch (ModelNotFoundException $e) {
             return response()->json([
                 'success' => false,
                 'message' => 'Không tìm thấy đơn hàng.',
             ], 404);
+
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -270,7 +272,7 @@ class ReviewController extends Controller
                     'is_anonymous' => $reviewData['is_anonymous'] ?? false,
                 ]);
 
-                // Xử lý lưu ảnh
+                // Xử lý lưu ảnh nè
                 if (isset($reviewData['images']) && is_array($reviewData['images'])) {
                     foreach ($reviewData['images'] as $imageFile) {
                         if ($imageFile instanceof \Illuminate\Http\UploadedFile) {
