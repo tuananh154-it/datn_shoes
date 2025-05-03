@@ -10,9 +10,12 @@ export interface Review {
     number_of_likes: number;  // Thay 'likes' thành 'number_of_likes' để thống nhất với backend
     is_liked: boolean;        // Đây là trường xác định xem người dùng đã thích đánh giá hay chưa
     is_anonymous: boolean;    // Nếu bạn muốn hiển thị thông tin ẩn danh
-    reply?: string;           // Phản hồi từ Admin (nếu có)
+    reply?: string;    
+    order_id?: number;      
+    size?: string;            // Thêm size (tùy chọn, vì có thể là 'N/A')
+    color?: string;           // Thêm color (tùy chọn, vì có thể là 'N/A')
+    product_name:string;
 }
-
 export interface ReviewPayload {
     rating: number;
     content: string;
@@ -21,7 +24,9 @@ export interface ReviewPayload {
 export const getReviewsByProductId = (productId: number) => {
     return api.get(`/product/${productId}/reviews`);
 };
-
+export const getMyReviews = () => {
+    return api.get(`/reviews`);
+};
 export const postReview = async (
     productId: string, 
     orderId: string, 

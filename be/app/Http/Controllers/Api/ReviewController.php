@@ -7,99 +7,102 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\ProductDetail;
 use App\Models\Review;
+use App\Models\ReviewImage;
 use App\Models\ReviewInteraction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 Carbon::setLocale('vi');
 
 class ReviewController extends Controller
 {
-    public function index(Request $request, $productId)
+    private function getOrderDetail($orderId, $orderDetailId)
+    {
+        return OrderDetail::where('order_id', $orderId)
+            ->where('id', $orderDetailId)
+            ->with('productDetail.color', 'productDetail.size')
+            ->first();
+    }
+
+    private function formDataBack($review)
+    {
+        $orderDetail = $this->getOrderDetail($review->order_id, $review->order_detail_id);
+
+        return [
+            'user_name' => $review->user->name,
+            'user_role' => $review->user->role,
+            'product_name' => $review->orderDetail->productDetail->product->name,
+            'content' => $review->content,
+            'images' => $review->images->map(fn($img) => asset('storage/' . $img->image_path)),
+            'reply' => $review->reply,
+            'number_of_likes' => $review->helpful_count,
+            'created_at' => $review->created_at->diffForHumans(),
+            'is_anonymous' => $review->is_anonymous,
+            'rating' => $review->rating,
+            'size' => $orderDetail->productDetail->size->name ?? 'N/A',
+            'color' => $orderDetail->productDetail->color->name ?? 'N/A',
+        ];
+    }
+
+    public function index($productId)
     {
         try {
-            $perPage = $request->input('per_page', 10);
-
-            $allReviews = Review::where('product_id', $productId)
-                ->with('user') // Lấy thông tin user
-                ->paginate($perPage);
-
-            // Kiểm tra nếu không có đánh giá nào
-            if ($allReviews->isEmpty()) {
-                return response()->json(['message' => 'Không có đánh giá nào cho sản phẩm này'], 404);
-            }
-
-            $reviewsData = $allReviews->map(function ($review) {
-                return [
-                    'user_name' => $review->user->name,
-                    'user_role' => $review->user->role,
-                    'content' => $review->content,
-                    'reply' => $review->reply, // Phản hồi từ admin
-                    'number_of_likes' => $review->helpful_count,
-                    'created_at' => $review->created_at->diffForHumans(),
-                    'is_anonymous' => $review->is_anonymous,
-                    'rating' => $review->rating, // Thêm rating ở đây
-                ];
-            });
+            $allReviews = Review::whereHas('orderDetail.productDetail', function ($query) use ($productId) {
+                $query->where('product_id', $productId);
+            })
+                ->with([
+                    'user:id,name,role',
+                    'orderDetail.productDetail.color',
+                    'orderDetail.productDetail.size'
+                ])
+                ->select('id', 'user_id', 'order_detail_id', 'content', 'reply', 'helpful_count', 'created_at', 'is_anonymous', 'rating', 'order_id')
+                ->get();
 
             return response()->json([
-                'reviews' => $reviewsData,
+                'reviews' => $allReviews->map(fn($r) => $this->formDataBack($r)),
                 'total_reviews' => $allReviews->count(),
-                'pagination' => [
-                    'total' => $allReviews->total(),
-                    'per_page' => $allReviews->perPage(),
-                    'current_page' => $allReviews->currentPage(),
-                    'last_page' => $allReviews->lastPage(),
-                ]
             ]);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Không thể truy vấn reviews', 'message' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Không thể truy vấn đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
 
-    public function myReviews(Request $request)
+    public function myReviews()
     {
         try {
             $user = Auth::user();
 
-            $perPage = $request->input('per_page', 10);
-
             $reviews = Review::where('user_id', $user->id)
-                ->with(['product']) // Load thông tin sản phẩm đã đánh giá
-                ->orderBy('created_at', 'desc')
-                ->paginate($perPage);
+                ->with('orderDetail.productDetail.color', 'orderDetail.productDetail.size')
+                ->select('id', 'order_detail_id', 'order_id', 'rating', 'content', 'created_at', 'is_anonymous', 'is_edited', 'helpful_count', 'is_reported')
+                ->orderByDesc('created_at')
+                ->get();
 
-            // Kiểm tra nếu không có đánh giá nào
-            if ($reviews->isEmpty()) {
-                return response()->json(['message' => 'Bạn chưa có đánh giá nào'], 404);
-            }
-
-            $reviewsData = $reviews->map(function ($review) {
+            $data = $reviews->map(function ($r) {
+                $od = $this->getOrderDetail($r->order_id, $r->order_detail_id);
                 return [
-                    'product_name' => $review->product->name,
-                    'product_id' => $review->product_id,
-                    'rating' => $review->rating,
-                    'content' => $review->content,
-                    'created_at' => $review->created_at->diffForHumans(),
-                    'is_anonymous' => $review->is_anonymous,
-                    'is_edited' => $review->is_edited,
-                    'helpful_count' => $review->helpful_count,
-                    'is_reported' => $review->is_reported
+                    'product_name' => $od->productDetail->product->name,
+                    'product_id' => $od->productDetail->product->id,
+                    'order_id' => $r->order_id,
+                    'rating' => $r->rating,
+                    'content' => $r->content,
+                    'images' => $r->images->map(fn($img) => asset('storage/' . $img->image_path)),
+                    'created_at' => $r->created_at->diffForHumans(),
+                    'is_anonymous' => $r->is_anonymous,
+                    'is_edited' => $r->is_edited,
+                    'helpful_count' => $r->helpful_count,
+                    'is_reported' => $r->is_reported,
+                    'size' => $od->productDetail->size->name ?? 'N/A',
+                    'color' => $od->productDetail->color->name ?? 'N/A',
                 ];
             });
 
-            return response()->json([
-                'my_reviews' => $reviewsData,
-                'total_reviews' => $reviews->count(),
-                'pagination' => [
-                    'total' => $reviews->total(),
-                    'per_page' => $reviews->perPage(),
-                    'current_page' => $reviews->currentPage(),
-                    'last_page' => $reviews->lastPage(),
-                ]
-            ]);
+            return response()->json(['my_reviews' => $data, 'total_reviews' => $reviews->count()]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể lấy danh sách đánh giá', 'message' => $e->getMessage()], 500);
         }
@@ -110,177 +113,233 @@ class ReviewController extends Controller
         try {
             $user = Auth::user();
 
-            // Lấy đánh giá theo ID, kèm sản phẩm liên quan
-            $review = Review::with('product')->find($reviewId);
+            $review = Review::with('orderDetail.productDetail.product', 'orderDetail.productDetail.color', 'orderDetail.productDetail.size')->find($reviewId);
 
-            $orderDetail = OrderDetail::where('order_id', $review->order_id)
-                ->whereHas('productDetail', function ($query) use ($review) {
-                    $query->where('product_id', $review->product_id);
-                })
-                ->with('productDetail')
-                ->first();
-
-            // Kiểm tra nếu đánh giá không tồn tại
-            if (!$review) {
-                return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
+            if (!$review || ($user->role === 'user' && $review->user_id !== $user->id)) {
+                return response()->json(['message' => !$review ? 'Không tồn tại' : 'Không có quyền truy cập'], 403);
             }
 
-            // Kiểm tra quyền truy cập: Admin có thể xem tất cả, user chỉ xem review của mình
-            if ($user->role == 'user' && $review->user_id !== $user->id) {
-                return response()->json(['message' => 'Bạn không có quyền xem đánh giá này'], 403);
-            }
-
-            // Chuẩn bị dữ liệu trả về
-            $reviewData = [
-                'rating' => $review->rating,
-                'content' => $review->content,
-                'reply' => $review->reply, // Phản hồi từ Admin (nếu có)
-                'service' => $review->service,
-                'packaging' => $review->packaging,
-                'shipping' => $review->shipping,
-                'customer_service' => $review->customer_service,
-                'created_at' => $review->created_at->diffForHumans(),
-                'helpful_count' => $review->helpful_count,
-                'is_anonymous' => $review->is_anonymous,
-                'is_edited' => $review->is_edited,
-                'is_reported' => $review->is_reported
-            ];
+            $productDetail = $review->orderDetail->productDetail;
+            $product = $productDetail->product;
 
             return response()->json([
                 'product' => [
-                    'product_id' => $review->product_id,
-                    'product_name' => $review->product->name,
-                    'product_image' => $review->product->image,
-                    'size' => $orderDetail->productDetail->size->name,
-                    'color' => $orderDetail->productDetail->color->name,
-                    'product_price' => $orderDetail->price,
-                    'quantity' => $orderDetail->quantity,
-                    'total_price' => $orderDetail->total_price,
-
+                    'product_id' => $product->id,
+                    'product_name' => $product->name,
+                    'product_image' => $product->image,
+                    'size' => $productDetail->size->name ?? 'N/A',
+                    'color' => $productDetail->color->name ?? 'N/A',
+                    'product_price' => $review->orderDetail->price,
+                    'quantity' => $review->orderDetail->quantity,
+                    'total_price' => $review->orderDetail->total_price,
                 ],
-                'review' => $reviewData
+                'review' => $this->formDataBack($review),
             ]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể lấy chi tiết đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
 
-    public function storeReviewAfterDelivery(Request $request, $productId, $orderId)
+    public function getOrderReview($orderId)
     {
         try {
-            $userId = Auth::id();
+            $reviews = Review::with([
+                'order',
+                'orderDetail.productDetail.product',
+                'orderDetail.productDetail.color',
+                'orderDetail.productDetail.size',
+            ])->where('order_id', $orderId)->get();
 
-            $order = Order::where('user_id', $userId)->first();
+            if ($reviews->isEmpty()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Không tìm thấy đánh giá nào cho đơn hàng này.'
+                ], 404);
+            }
+
+            $summary = $reviews->map(function ($review) {
+                $detail = $review->orderDetail;
+                $productDetail = $detail->productDetail;
+
+                return [
+                    'product' => [
+                        'product_name' => $productDetail->product->name ?? 'N/A',
+                        'variant' => [
+                            'size' => $productDetail->size->name ?? 'N/A',
+                            'color' => $productDetail->color->name ?? 'N/A',
+                        ],
+                        'quantity' => $detail->quantity,
+                        'product_price' => $detail->price,
+                        'total_price' => $detail->total_price,
+                    ],
+                    'is_reviewed' => true,
+                    'review' => [
+                        'id' => $review->id,
+                        'rating' => $review->rating,
+                        'service' => $review->service,
+                        'packaging' => $review->packaging,
+                        'customer_service' => $review->customer_service,
+                        'content' => $review->content,
+                        'images' => $review->images->map(fn($img) => asset('storage/' . $img->image_path)),
+                        'is_anonymous' => $review->is_anonymous,
+                        'liked_count' => $review->likes()->count(),
+                        'reported_count' => $review->reports()->count(),
+                        'reply' => $review->reply,
+                    ]
+                ];
+            });
+
+            $totalReviews = $reviews->count();
+            $orderTotalPrice = $reviews->first()->order->total_price ?? 0;
+
+            return response()->json([
+                'success' => true,
+                'data' => $summary,
+                'total_reviews' => $totalReviews,
+                'all_price' => $orderTotalPrice,
+            ]);
+        } catch (ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Không tìm thấy đơn hàng.',
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Đã có lỗi xảy ra: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
+    public function storeReviewAfterDelivery(Request $request, $orderId)
+    {
+        try {
+            $user = Auth::user();
+            $userId = $user->id;
+
+            $order = Order::where('id', $orderId)->where('user_id', $userId)->first();
             if (!$order) {
-                return response()->json(['message' => 'Bạn không phải chủ nhân của đơn hàng này'], 404);
+                return response()->json(['message' => 'Đơn hàng không tồn tại hoặc không phải của bạn'], 404);
             }
 
-            // Kiểm tra xem đơn hàng có tồn tại và đã giao hàng chưa
-            $order = Order::where('id', $orderId)
-                ->where('user_id', $userId)
-                ->where('status', 'delivered')
-                ->first();
-
-            if (!$order) {
-                return response()->json(['message' => 'Bạn chỉ có thể đánh giá sau khi đơn hàng đã được giao.'], 403);
+            if (!Order::where('id', $orderId)->where('status', 'delivered')->exists()) {
+                return response()->json(['message' => 'Bạn chỉ có thể đánh giá sau khi đơn hàng hoàn tất'], 403);
             }
 
-            // Lấy tất cả biến thể của sản phẩm gốc
-            $productDetailIds = ProductDetail::where('product_id', $productId)->pluck('id');
-
-            // Kiểm tra xem đơn hàng có chứa bất kỳ biến thể nào của sản phẩm hay không
-            $productInOrder = OrderDetail::where('order_id', $orderId)
-                ->whereIn('product_detail_id', $productDetailIds)
-                ->exists();
-
-            if (!$productInOrder) {
-                return response()->json(['message' => 'Sản phẩm hoặc biến thể không có trong đơn hàng này.'], 403);
-            }
-
-            // Kiểm tra xem người dùng đã đánh giá sản phẩm này chưa
-            $existingReview = Review::where('user_id', $userId)
-                ->where('product_id', $productId)
-                ->where('order_id', $orderId)
-                ->first();
-
-            if ($existingReview) {
-                return response()->json(['message' => 'Bạn đã đánh giá sản phẩm này rồi.'], 403);
-            }
-
-            // Xác thực dữ liệu đánh giá
             $validator = Validator::make($request->all(), [
-                'rating' => 'required|integer|min:1|max:5',
-                'content' => 'nullable|string|max:500',
-                'service' => 'nullable|integer|min:1|max:5',
-                'packaging' => 'nullable|integer|min:1|max:5',
-                'shipping' => 'nullable|integer|min:1|max:5',
-                'customer_service' => 'nullable|integer|min:1|max:5',
-                'is_anonymous' => 'nullable|boolean',
+                'reviews' => 'required|array',
+                'reviews.*.order_detail_id' => 'required|integer|exists:order_details,id',
+                'reviews.*.rating' => 'required|integer|min:1|max:5',
+                'reviews.*.content' => 'nullable|string|max:500',
+                'reviews.*.service' => 'nullable|integer|min:1|max:5',
+                'reviews.*.packaging' => 'nullable|integer|min:1|max:5',
+                'reviews.*.shipping' => 'nullable|integer|min:1|max:5',
+                'reviews.*.customer_service' => 'nullable|integer|min:1|max:5',
+                'reviews.*.is_anonymous' => 'nullable|boolean',
+                'reviews.*.images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 400);
+                return response()->json(['errors' => 'Dữ liệu đầu vào không hợp lệ', 'details' => $validator->errors()], 400);
             }
 
-            // Lưu đánh giá vào database
-            $review = Review::create([
-                'user_id' => $userId,
-                'product_id' => $productId,
-                'order_id' => $orderId,
-                'rating' => $request->rating,
-                'content' => $request->content ?? '',
-                'service' => $request->service ?? 1,
-                'packaging' => $request->packaging ?? 1,
-                'shipping' => $request->shipping ?? 1,
-                'customer_service' => $request->customer_service ?? 1,
-                'is_anonymous' => $request->is_anonymous ?? false,
-            ]);
+            $responseReviews = [];
+
+            foreach ($request->reviews as $reviewData) {
+                $orderDetailId = $reviewData['order_detail_id'];
+
+                $orderDetail = OrderDetail::where('order_id', $orderId)->where('id', $orderDetailId)->first();
+                if (!$orderDetail) {
+                    continue;
+                }
+
+                if (Review::where('user_id', $userId)->where('order_detail_id', $orderDetailId)->where('order_id', $orderId)->exists()) {
+                    continue;
+                }
+
+                $review = Review::create([
+                    'user_id' => $userId,
+                    'order_id' => $orderId,
+                    'order_detail_id' => $orderDetailId,
+                    'rating' => $reviewData['rating'],
+                    'content' => $reviewData['content'] ?? '',
+                    'service' => $reviewData['service'] ?? 1,
+                    'packaging' => $reviewData['packaging'] ?? 1,
+                    'shipping' => $reviewData['shipping'] ?? 1,
+                    'customer_service' => $reviewData['customer_service'] ?? 1,
+                    'is_anonymous' => $reviewData['is_anonymous'] ?? false,
+                ]);
+
+                // Xử lý lưu ảnh
+                if (isset($reviewData['images']) && is_array($reviewData['images'])) {
+                    foreach ($reviewData['images'] as $imageFile) {
+                        if ($imageFile instanceof \Illuminate\Http\UploadedFile) {
+                            $path = $imageFile->store('review_images', 'public');
+
+                            ReviewImage::create([
+                                'review_id' => $review->id,
+                                'image_path' => $path,
+                            ]);
+                        }
+                    }
+                }
+
+                $review->load('user:id,name,role');
+                $productDetail = $orderDetail->productDetail;
+
+                $responseReviews[] = [
+                    'user_name' => $review->user->name,
+                    'user_role' => $review->user->role,
+                    'content' => $review->content,
+                    'images' => $review->images->map(fn($img) => asset('storage/' . $img->image_path)),
+                    'rating' => $review->rating,
+                    'number_of_likes' => $review->helpful_count,
+                    'created_at' => $review->created_at->diffForHumans(),
+                    'is_anonymous' => $review->is_anonymous,
+                    'size' => $productDetail ? $productDetail->size->name : 'N/A',
+                    'color' => $productDetail ? $productDetail->color->name : 'N/A',
+                ];
+            }
 
             return response()->json([
-                'message' => 'Đánh giá thành công!',
-                'review' => $review
+                'message' => 'Các đánh giá đã được gửi thành công!',
+                'reviews' => $responseReviews,
             ], 201);
         } catch (\Exception $e) {
-            return response()->json(['error' => 'Không thể đánh giá sản phẩm', 'message' => $e->getMessage()], 500);
+            return response()->json(['error' => 'Không thể gửi đánh giá', 'message' => $e->getMessage()], 500);
         }
     }
 
     public function reply(Request $request, $reviewId)
     {
         try {
-            // Kiểm tra quyền Admin
             if (Auth::user()->role == 'user') {
-                return response()->json(['message' => 'Bạn không có quyền phản hồi'], 403);
+                return response()->json(['message' => 'Bạn không có quyền phản hồi đánh giá'], 403);
             }
 
-            // Kiểm tra review tồn tại
             $review = Review::find($reviewId);
             if (!$review) {
                 return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
             }
 
-            // Kiểm tra nếu đã phản hồi trước đó
             if ($review->is_replied) {
-                return response()->json(['message' => 'Bạn chỉ có thể phản hồi một lần'], 400);
+                return response()->json(['message' => 'Đánh giá này đã được phản hồi trước đó'], 400);
             }
 
-            // Xác thực input
             $validator = Validator::make($request->all(), [
                 'reply' => 'required|string|max:1000',
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 400);
+                return response()->json(['errors' => 'Dữ liệu phản hồi không hợp lệ', 'details' => $validator->errors()], 400);
             }
 
-            // Cập nhật phản hồi và đánh dấu đã trả lời
             $review->update([
                 'reply' => $request->reply,
-                'is_replied' => true, // Đánh dấu là đã phản hồi
+                'is_replied' => true,
             ]);
 
             return response()->json(['message' => 'Phản hồi đánh giá thành công', 'review' => $review]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể phản hồi đánh giá', 'message' => $e->getMessage()], 500);
         }
@@ -290,55 +349,69 @@ class ReviewController extends Controller
     {
         try {
             $user = Auth::user();
-
-            // Tìm đánh giá
             $review = Review::find($reviewId);
 
-            // Kiểm tra nếu đánh giá không tồn tại
             if (!$review) {
                 return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
             }
 
-            // Chỉ cho phép user sở hữu đánh giá chỉnh sửa
             if ($review->user_id !== $user->id) {
                 return response()->json(['message' => 'Bạn không có quyền chỉnh sửa đánh giá này'], 403);
             }
 
-            // Kiểm tra nếu đánh giá đã bị chỉnh sửa trước đó
             if ($review->is_edited) {
-                return response()->json(['message' => 'Bạn chỉ có thể sửa đánh giá 1 lần'], 400);
+                return response()->json(['message' => 'Bạn chỉ có thể chỉnh sửa đánh giá một lần'], 400);
             }
 
-            // Validate dữ liệu đầu vào
             $validator = Validator::make($request->all(), [
-                'rating' => 'sometimes|integer|min:1|max:5', // Rating chỉ từ 1 đến 5
+                'rating' => 'sometimes|integer|min:1|max:5',
                 'content' => 'required|string|max:1000',
                 'service' => 'sometimes|integer|min:1|max:5',
                 'packaging' => 'sometimes|integer|min:1|max:5',
                 'shipping' => 'sometimes|integer|min:1|max:5',
                 'customer_service' => 'sometimes|integer|min:1|max:5',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             ]);
 
             if ($validator->fails()) {
-                return response()->json(['errors' => $validator->errors()], 400);
+                return response()->json(['errors' => 'Dữ liệu chỉnh sửa không hợp lệ', 'details' => $validator->errors()], 400);
             }
 
-            // Lấy giá trị mới từ request hoặc giữ giá trị mặc định (nếu không có giá trị)
             $updatedData = [
-                'rating' => $request->input('rating', $review->rating), // Dùng rating cũ nếu không có mới
+                'rating' => $request->input('rating', $review->rating),
                 'content' => $request->input('content'),
-                'service' => $request->input('service', $review->service), // Giữ service cũ nếu không có mới
+                'service' => $request->input('service', $review->service),
                 'packaging' => $request->input('packaging', $review->packaging),
                 'shipping' => $request->input('shipping', $review->shipping),
                 'customer_service' => $request->input('customer_service', $review->customer_service),
-                'is_edited' => true, // Đánh dấu là đã chỉnh sửa
+                'is_edited' => true,
             ];
 
-            // Cập nhật thông tin đánh giá
             $review->update($updatedData);
 
-            return response()->json(['message' => 'Cập nhật đánh giá thành công', 'review' => $review]);
+            // Xử lý xóa ảnh theo yêu cầu
+            if ($request->has('deleted_image_ids')) {
+                $imageIdsToDelete = $request->input('deleted_image_ids');
+                foreach ($imageIdsToDelete as $imageId) {
+                    $image = ReviewImage::where('review_id', $review->id)->where('id', $imageId)->first();
+                    if ($image) {
+                        Storage::disk('public')->delete($image->image_path);
+                        $image->delete();
+                    }
+                }
+            }
 
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('review_images', 'public');
+                    ReviewImage::create([
+                        'review_id' => $review->id,
+                        'image_path' => $path,
+                    ]);
+                }
+            }
+
+            return response()->json(['message' => 'Đánh giá đã được cập nhật thành công', 'review' => $review]);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể cập nhật đánh giá', 'message' => $e->getMessage()], 500);
         }
@@ -354,17 +427,15 @@ class ReviewController extends Controller
 
         $userId = Auth::id();
 
-        // Kiểm tra xem đã like chưa
         if ($review->likes()->where('user_id', $userId)->exists()) {
-            $review->likes()->where('user_id', $userId)->delete(); // Xóa like
-            $review->decrement('helpful_count'); // Giảm số lượng likes của đánh giá
-            return response()->json(['message' => 'Đã hủy like thành công'], 200);
+            $review->likes()->where('user_id', $userId)->delete();
+            $review->decrement('helpful_count');
+            return response()->json(['message' => 'Đã bỏ thích đánh giá'], 200);
         }
 
-        $review->increment('helpful_count'); // Tăng số lượng likes của đánh giá
+        $review->increment('helpful_count');
         $review->save();
 
-        // Thêm like
         ReviewInteraction::create([
             'review_id' => $reviewId,
             'user_id' => $userId,
@@ -384,28 +455,25 @@ class ReviewController extends Controller
 
         $userId = Auth::id();
 
-        // Kiểm tra xem người dùng có quyền báo cáo đánh giá này không
         if ($review->user_id === $userId) {
             return response()->json(['message' => 'Bạn không thể báo cáo đánh giá của chính mình'], 403);
         }
-        // Kiểm tra xem người dùng có quyền báo cáo hay không
+
         if (Auth::user()->role == 'admin') {
             return response()->json(['message' => 'Admin không thể báo cáo đánh giá'], 403);
         }
 
-        // Kiểm tra xem đã báo cáo chưa
         if ($review->reports()->where('user_id', $userId)->exists()) {
             return response()->json(['message' => 'Bạn đã báo cáo đánh giá này rồi'], 400);
         }
 
-        // Thêm report
         ReviewInteraction::create([
             'review_id' => $reviewId,
             'user_id' => $userId,
             'type' => 2
         ]);
 
-        return response()->json(['message' => 'Đánh giá đã được báo cáo']);
+        return response()->json(['message' => 'Đã báo cáo đánh giá thành công']);
     }
 
     public function toggleAnonymous($reviewId)
@@ -413,26 +481,53 @@ class ReviewController extends Controller
         try {
             $userId = Auth::id();
 
-            // Tìm đánh giá
             $review = Review::find($reviewId);
 
             if (!$review) {
                 return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
             }
 
-            // Thay đổi trạng thái ẩn danh (ngược lại)
+            if ($review->user_id !== $userId) {
+                return response()->json(['message' => 'Bạn không có quyền thay đổi trạng thái ẩn danh của đánh giá này'], 403);
+            }
+
             $review->is_anonymous = !$review->is_anonymous;
             $review->save();
 
             return response()->json([
-                'message' => $review->is_anonymous ? 'Đánh giá đã được chuyển thành ẩn danh' : 'Đánh giá đã không còn ẩn danh',
+                'message' => $review->is_anonymous ? 'Đánh giá đã được chuyển thành ẩn danh' : 'Đánh giá đã được bỏ ẩn danh',
                 'review' => $review
             ]);
-
         } catch (\Exception $e) {
             return response()->json(['error' => 'Không thể thay đổi trạng thái ẩn danh', 'message' => $e->getMessage()], 500);
         }
     }
 
-    // riêng cái này đéo cho xóa nhé
+    // ẩn đánh giá phía user
+    public function toggleHidden($reviewId)
+    {
+        try {
+            $userId = Auth::id();
+
+            $review = Review::find($reviewId);
+
+            if (!$review) {
+                return response()->json(['message' => 'Đánh giá không tồn tại'], 404);
+            }
+
+            if ($review->user_id !== $userId) {
+                return response()->json(['message' => 'Bạn không có quyền thay đổi trạng thái ẩn/hiện của đánh giá này'], 403);
+            }
+
+            $review->is_hidden = !$review->is_hidden;
+            $review->save();
+
+            return response()->json([
+                'message' => $review->is_hidden ? 'Đánh giá đã được ẩn' : 'Đánh giá đã được hiện lại',
+                'review' => $review
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Không thể thay đổi trạng thái ẩn/hiện', 'message' => $e->getMessage()], 500);
+        }
+    }
 }

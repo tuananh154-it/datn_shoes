@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const MegaMenu = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -10,9 +10,17 @@ const MegaMenu = () => {
             onMouseEnter={() => setIsOpen(true)}
             onMouseLeave={() => setIsOpen(false)}
         >
-            <Link to="/shop" className="nav-link text-uppercase dropdown-toggle hover:text-blue-500">
+            {/* <Link to="/shop" className="nav-link text-uppercase dropdown-toggle hover:text-blue-500">
                 Cửa hàng
-            </Link>
+            </Link> */}
+             <NavLink
+                    to="/shop"
+                    className={({ isActive }) =>
+                      isActive ? "nav-link text-uppercase active" : "nav-link text-uppercase"
+                    }
+                  >
+                  Cửa hàng 
+            </NavLink>
             <span className="menu_arrow flaticon-down-arrow-1"></span>
             <ul className={`dropdown-menu megamenu_full_screen ${isOpen ? "block" : "hidden"}`}>
                 <li className="w-100 text-capitalize">

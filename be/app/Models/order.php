@@ -37,6 +37,11 @@ class Order extends Model
     {
         return $this->hasMany(OrderDetail::class);
     }
+    public function orderDetails()
+    {
+        return $this->hasMany(OrderDetail::class);
+    }
+
     // Quan hệ: Một đơn hàng thuộc về một khách hàng
     public function user()
     {
@@ -48,5 +53,8 @@ class Order extends Model
     {
         return $this->belongsTo(Voucher::class);
     }
-   
+    public function returns()
+    {
+        return $this->hasMany(ReturnOrder::class);
+    }
 }
