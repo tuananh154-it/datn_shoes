@@ -611,3 +611,12 @@ Trace: #0 C:\xampp\htdocs\datn_shoes\be\vendor\laravel\framework\src\Illuminate\
 [2025-04-29 23:49:22] local.INFO: Đường dẫn ảnh tuyệt đối: C:\xampp\htdocs\datn_shoes\be\storage\app/public/variant_images/ProlNruA7ditWLNx0ir0mAMCs3JK1F0bbkq2fdem.png  
 [2025-04-29 23:49:22] local.INFO: Đường dẫn ảnh tuyệt đối: C:\xampp\htdocs\datn_shoes\be\storage\app/public/variant_images/ProlNruA7ditWLNx0ir0mAMCs3JK1F0bbkq2fdem.png  
 [2025-04-29 23:49:22] local.INFO: Đường dẫn ảnh tuyệt đối: C:\xampp\htdocs\datn_shoes\be\storage\app/public/variant_images/ProlNruA7ditWLNx0ir0mAMCs3JK1F0bbkq2fdem.png  
+[2025-05-02 21:16:38] local.ERROR: Command "serr" is not defined. {"exception":"[object] (Symfony\\Component\\Console\\Exception\\CommandNotFoundException(code: 0): Command \"serr\" is not defined. at C:\\xampp\\htdocs\\datn_shoes\\be\\vendor\\symfony\\console\\Application.php:737)
+[stacktrace]
+#0 C:\\xampp\\htdocs\\datn_shoes\\be\\vendor\\symfony\\console\\Application.php(266): Symfony\\Component\\Console\\Application->find('serr')
+#1 C:\\xampp\\htdocs\\datn_shoes\\be\\vendor\\symfony\\console\\Application.php(175): Symfony\\Component\\Console\\Application->doRun(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#2 C:\\xampp\\htdocs\\datn_shoes\\be\\vendor\\laravel\\framework\\src\\Illuminate\\Foundation\\Console\\Kernel.php(201): Symfony\\Component\\Console\\Application->run(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#3 C:\\xampp\\htdocs\\datn_shoes\\be\\artisan(35): Illuminate\\Foundation\\Console\\Kernel->handle(Object(Symfony\\Component\\Console\\Input\\ArgvInput), Object(Symfony\\Component\\Console\\Output\\ConsoleOutput))
+#4 {main}
+"} 
+[2025-05-02 21:19:26] local.INFO: Đường dẫn ảnh tuyệt đối: C:\xampp\htdocs\datn_shoes\be\storage\app/public/variant_images/7CwADY49lR4DGTE3gPC7ZlxcoaNqwx1KF3emR1R1.png  

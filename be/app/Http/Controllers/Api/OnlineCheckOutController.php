@@ -162,6 +162,7 @@ class OnlineCheckOutController extends Controller
             $extraData = "orderId={$order->id}";
             $requestId = Str::uuid()->toString();
             $requestType = "payWithATM";
+            // $requestType = "captureWallet";
 
             $orderIdMomo = $order->id . '-' . Str::uuid();
 
