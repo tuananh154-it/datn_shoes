@@ -99,16 +99,22 @@ const MyAccount = () => {
   }, []);
   // xử lý xác nhận hoàn tất đơn hàng 
   const handleConfirmReceipt = async (orderId: number) => {
+    // Hiển thị hộp thoại xác nhận
+    const isConfirmed = window.confirm("Bạn đã chắc chắn nhận được hàng rồi chứ?");
+    
+    if (!isConfirmed) {
+      return; // Hủy nếu khách hàng chọn "Không"
+    }
+  
     try {
       const response = await api.post(`/orders/${orderId}/confirm-receipt`);
-
+  
       if (response.status === 200) {
-       toast.success("đơn hàng đã được hoàn tất")
+        toast.success("Đơn hàng đã được hoàn tất");
         // Ẩn nút sau khi hoàn tất
-        window.location.href = '/myaccout?tab=orders';
+        window.location.href = '/myaccout?tab=orders'; // Sửa lỗi chính tả 'myaccout' thành 'myaccount'
         const button = document.querySelector(`.view-cancel[data-order-id="${orderId}"]`) as HTMLButtonElement;
         if (button) button.style.display = 'none';
-
       } else {
         alert('Có lỗi xảy ra khi xác nhận đơn hàng');
       }

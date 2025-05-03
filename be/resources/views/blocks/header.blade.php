@@ -3,14 +3,14 @@
             <div class="sidebar-toggle-box">
                 <i class="fa fa-bars"></i>
             </div>
-          <!--logo start-->
-          <a href="{{route('dashboards.index')}}" class="logo">Foot<span>Vibe</span></a>
-          <!--logo end-->
-          <div class="nav notify-row" id="top_menu">
-              <!--  notification start -->
-              <ul class="nav top-menu">
-                  <!-- settings start -->
-                  <!-- <li class="dropdown">
+            <!--logo start-->
+            <a href="{{route('dashboards.index')}}" class="logo">Foot<span>Vibe</span></a>
+            <!--logo end-->
+            <div class="nav notify-row" id="top_menu">
+                <!--  notification start -->
+                <ul class="nav top-menu">
+                    <!-- settings start -->
+                    <!-- <li class="dropdown">
                       <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                           <i class="fa fa-tasks"></i>
                           <span class="badge badge-success">6</span>
@@ -35,9 +35,9 @@
                           </li>
                       </ul>
                   </li> -->
-                  <!-- settings end -->
-                  <!-- inbox dropdown start-->
-                  <!-- <li id="header_inbox_bar" class="dropdown">
+                    <!-- settings end -->
+                    <!-- inbox dropdown start-->
+                    <!-- <li id="header_inbox_bar" class="dropdown">
                       <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                           <i class="fa fa-envelope-o"></i>
                           <span class="badge badge-danger">5</span>
@@ -100,9 +100,9 @@
                           </li>
                       </ul>
                   </li> -->
-                  <!-- inbox dropdown end -->
-                  <!-- notification dropdown start-->
-                  <!-- <li id="header_notification_bar" class="dropdown">
+                    <!-- inbox dropdown end -->
+                    <!-- notification dropdown start-->
+                    <!-- <li id="header_notification_bar" class="dropdown">
                       <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                           <i class="fa fa-bell-o"></i>
                           <span class="badge badge-warning">7</span>
@@ -128,50 +128,57 @@
                           </li>
                       </ul>
                   </li> -->
-                  <!-- notification dropdown end -->
-              </ul>
-              <!--  notification end -->
-          </div>
-          <div class="top-nav ">
-              <!--search & user info start-->
-              <ul class="nav pull-right top-menu">
-                  <li>
-                      <input type="text" class="form-control search" placeholder="Search">
-                  </li>
-                  <!-- user login dropdown start-->
-                  <li class="dropdown">
-                      <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                          <img alt="" src="img/avatar1_small.jpg">
-                          <span class="username">{{ Auth::user()->name }}</span>
-                          <b class="caret"></b>
-                      </a>
-                      <ul class="dropdown-menu extended logout dropdown-menu-right">
-                        <div class="log-arrow-up"></div>
-                        {{-- <li><a href="{{ route('profiles.index', Auth::user()->id) }}">Profile</a></li> --}}
-                        {{-- <li><a href="{{ route('profiles.show') }}">Profile</a></li> --}}
-                        <li><a href="{{ route('profiles.show') }}"><i class="fa fa-user"></i> Profile</a></li>
+                    <!-- notification dropdown end -->
+                </ul>
+                <!--  notification end -->
+            </div>
+            <div class="top-nav ">
+                <!--search & user info start-->
+                <ul class="nav pull-right top-menu">
+                    <li>
+                        <input type="text" class="form-control search" placeholder="Search">
+                    </li>
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        @if(Auth::check())
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                            <img alt="" src="img/avatar1_small.jpg">
+                            <span class="username">{{ Auth::user()->name }}</span>
+                            <b class="caret"></b>
+                        </a>
+                        @else
+                        <script>
+                            window.location.href = "{{ route('login') }}";
+                        </script>
+                        @endif
+                        <ul class="dropdown-menu extended logout dropdown-menu-right">
+                            <div class="log-arrow-up"></div>
+                            {{-- <li><a href="{{ route('profiles.index', Auth::user()->id) }}">Profile</a>
+                    </li> --}}
+                    {{-- <li><a href="{{ route('profiles.show') }}">Profile</a></li> --}}
+                    <li><a href="{{ route('profiles.show') }}"><i class="fa fa-user"></i> Profile</a></li>
 
 
-                        <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
-                        <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
+                    <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
+                    <li><a href="#"><i class="fa fa-bell-o"></i> Notification</a></li>
 
-                        <!-- Form đăng xuất -->
-                        <li>
-                            <form action="{{ route('logout') }}" method="POST" style="display: inline;">
-                                @csrf
-                                <button type="submit" style="background: none; border: none; color: inherit; padding: 10px;">
-                                    <i class="fa fa-key"></i> Đăng Xuất
-                                </button>
-                            </form>
-                        </li>
-                    </ul>
+                    <!-- Form đăng xuất -->
+                    <li>
+                        <form action="{{ route('logout') }}" method="POST" style="display: inline;">
+                            @csrf
+                            <button type="submit" style="background: none; border: none; color: inherit; padding: 10px;">
+                                <i class="fa fa-key"></i> Đăng Xuất
+                            </button>
+                        </form>
+                    </li>
+                </ul>
 
-                  </li>
-                  <li class="sb-toggle-right">
-                      <i class="fa  fa-align-right"></i>
-                  </li>
-                  <!-- user login dropdown end -->
-              </ul>
-              <!--search & user info end-->
-          </div>
-      </header>
+                </li>
+                <li class="sb-toggle-right">
+                    <i class="fa  fa-align-right"></i>
+                </li>
+                <!-- user login dropdown end -->
+                </ul>
+                <!--search & user info end-->
+            </div>
+        </header>
