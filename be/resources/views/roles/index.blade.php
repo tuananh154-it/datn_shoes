@@ -81,14 +81,14 @@
                                                 <i class="fa fa-pencil"></i>
                                             </a>
 
-                                            <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
+                                            <!-- <form action="{{ route('roles.destroy', $role->id) }}" method="POST"
                                                 onsubmit="return confirm('Bạn có chắc muốn xóa?');" style="display:inline;">
                                                 @csrf
                                                 @method('DELETE')
 <button type="submit" class="btn btn-danger btn-sm">
 <i class="fa fa-trash"></i> Xóa
                                                 </button>
-                                            </form>
+                                            </form> -->
                                         @else
                                             <span class="badge bg-secondary">Super Admin</span>
                                         @endif

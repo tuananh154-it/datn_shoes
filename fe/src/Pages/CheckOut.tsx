@@ -828,9 +828,9 @@ const CheckOut = () => {
                       <br />
                       Mọi thắc mắc hoặc sự cố liên quan đến thanh toán qua MoMo, vui lòng liên hệ bộ phận hỗ trợ khách hàng của chúng tôi qua:
                       <br />
-                      📧 Email: [email hỗ trợ]
+                      📧 Email: [nguyenquangkiet123@gmail.com]
                       <br />
-                      📞 Hotline: [số điện thoại]
+                      📞 Hotline: [0352106414]
                     </p>
                   </div>
                 </div>

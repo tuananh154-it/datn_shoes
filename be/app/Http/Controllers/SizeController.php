@@ -49,7 +49,7 @@ class SizeController extends Controller
 
     Size::create($validated);
 
-    return redirect()->route('sizes.index')->with('Thành công', 'Kích thước đã được tạo thành công!');
+    return redirect()->route('sizes.index')->with('success', 'Kích thước đã được tạo thành công!');
 }
 
 

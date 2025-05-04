@@ -26,7 +26,7 @@
 <div class="row">
     <div class="col-lg-12">
         <section class="card">
-            <header class="card-header">Chi tiết bình luận</header>
+            <header class="card-header">Chi tiết đánh giá</header>
 
             <table class="table table-striped table-advance table-hover">
                 <thead>

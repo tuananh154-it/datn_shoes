@@ -367,7 +367,12 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
                                                 {currentOrder.status.toLowerCase() === "completed" && (
                                                     Number.isInteger(item.id) ? (
                                                         hasReviewed[item.id] ? (
-                                                            <span className="action-btn disabled">Đã đánh giá</span>
+                                                            <Link
+                                                            to={`/product_detail/${item.product_id}`}
+                                                            className="action-btn disabled"
+                                                        >
+                                                            Xem đánh giá
+                                                        </Link>
                                                         ) : (
                                                             <button
                                                                 className="action-btn buy-again"

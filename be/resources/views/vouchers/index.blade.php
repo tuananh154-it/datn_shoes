@@ -76,7 +76,7 @@
                 </tbody>
             </table>
 
-            <div class="d-flex justify-content-center">
+            <div class="d-flex">
                 {!! $vouchers->links() !!}
             </div>
         </section>

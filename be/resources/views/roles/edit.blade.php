@@ -32,10 +32,10 @@
                                 <input type="checkbox" id="select-all-edit" class="form-check-input" onclick="toggleSelect('edit')">
                                 Sửa
                             </th>
-                            <th>
+                            <!-- <th>
                                 <input type="checkbox" id="select-all-delete" class="form-check-input" onclick="toggleSelect('delete')">
                                 Xóa
-                            </th>
+                            </th> -->
                             {{-- <th>
                                 <input type="checkbox" id="select-all-approve" class="form-check-input" onclick="toggleSelect('approve')">
                                 Duyệt
@@ -49,7 +49,7 @@
                                 <td class="text-center">{{ $stt++ }}</td>
                                 <td>{{ ucwords(str_replace('_', ' ', $group)) }}</td>
 
-                                @foreach (['show', 'create', 'edit', 'delete'] as $action)
+                                @foreach (['show', 'create', 'edit'] as $action)
                                     @php
                                         $groupName = str_replace('role:', '', $group);
                                         $permissionName = "{$action}-{$groupName}";

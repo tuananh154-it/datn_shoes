@@ -99,7 +99,7 @@ Route::get('/order/complete/{id}', function ($id) {
 
     // Chỉ cho phép xác nhận khi đang [complete_success] trạng thái "delivered"
     if ($order->status !== 'delivered') {
-        return view('order.already_completed', ['order' => $order]);
+        return view('order.already_confirmed', ['order' => $order]);
     }
 
     // Cập nhật trạng thái sang "completed" và đánh dấu thanh toán

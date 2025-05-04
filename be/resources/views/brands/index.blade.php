@@ -20,7 +20,7 @@
                 <form action="{{ route('brands.index') }}" method="GET">
                     <div class="row">
                         <div class="col-md-3">
-                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm sản phẩm" value="{{ request()->search }}">
+                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm thương hiệu" value="{{ request()->search }}">
                         </div>
                         <div class="col-md-3">
                             <select name="status" class="form-control">

@@ -136,7 +136,7 @@ const uniqueImages = Array.from(new Set(allImages)).map(img => {
       case "màu cam": return "#FFA500";
       case "màu tím": return "#800080";
       case "màu hồng": return "#FFC0CB";
-      case "màu nâu": return "#A52A2A";
+      case "màu nâu": return "#EAD3B7";
       case "màu xám": return "#808080";
       case "màu xanh ngọc": return "#00CED1";
       default: return "#000000";

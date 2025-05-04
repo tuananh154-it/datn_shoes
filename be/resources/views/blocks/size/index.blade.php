@@ -32,7 +32,7 @@
                 <form action="{{ route('sizes.index') }}" method="GET">
                     <div class="row">
                         <div class="col-md-3">
-                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm kích cỡ" value="{{ request()->search }}">
+                            <input type="text" name="search" class="form-control" placeholder="Tìm kiếm kích thước" value="{{ request()->search }}">
                         </div>
                         <div class="col-md-3">
                             <select name="status" class="form-control">

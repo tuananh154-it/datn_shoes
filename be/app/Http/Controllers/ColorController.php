@@ -41,7 +41,7 @@ class ColorController extends Controller
     
         Color::create($validated);
         
-        return redirect()->route('colors.index')->with('Thành công', 'Màu đã được tạo thành công!');
+        return redirect()->route('colors.index')->with('success', 'Màu đã được tạo thành công!');
     }
     
     

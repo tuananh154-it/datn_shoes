@@ -181,7 +181,7 @@ const ProductDetail = () => {
       case "màu hồng":
         return "#FFC0CB"; // Hồng
       case "màu nâu":
-        return "#A52A2A"; // Nâu
+        return "#EAD3B7"; // Nâu
       case "màu xám":
         return "#808080"; // Xám
       case "màu xanh ngọc":

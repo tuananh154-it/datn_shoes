@@ -14,13 +14,12 @@
             <header class="card-header">
                 Bảng màu sắc
             </header>
-
             @if(session('success'))
                 <div class="alert alert-success">
                     {{ session('success') }}
                 </div>
             @endif
-
+            
             <div class="mb-3">
                 <form action="{{ route('colors.index') }}" method="GET">
                     <div class="row">
