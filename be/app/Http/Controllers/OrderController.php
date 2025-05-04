@@ -58,26 +58,44 @@ class OrderController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $order = Order::findOrFail($id);
-
+    
         $currentStatus = $order->status;
         $newStatus = $request->status;
-
+    
+        $statusLabels = [
+            'pending'    => 'Chờ xác nhận',
+            'confirmed'  => 'Đã xác nhận',
+            'processing' => 'Đang xử lý',
+            'shipping'   => 'Đang giao hàng',
+            'delivered'  => 'Đã giao',
+            'completed'  => 'Hoàn tất',
+            'cancelled'  => 'Đã hủy',
+            'returned'   => 'Trả hàng',
+            'refunded'   => 'Hoàn tiền',
+        ];
+    
         $finalStatuses = ['completed', 'refunded', 'cancelled'];
-
+    
         if (in_array($currentStatus, $finalStatuses)) {
             return redirect()->back()
-                ->with('error', 'Đơn hàng đã hoàn tất, hoàn tiền hoặc bị hủy. Không thể cập nhật thêm.');
+                ->with('error', 'Đơn hàng đã ở trạng thái "' . ($statusLabels[$currentStatus] ?? $currentStatus) . '". Không thể cập nhật thêm.');
         }
-
+    
         $validTransitions = [
-            'pending' => ['confirmed', 'cancelled'],
-            'confirmed' => ['processing', 'cancelled'],
+            'pending'    => ['confirmed', 'cancelled'],
+            'confirmed'  => ['processing', 'cancelled'],
             'processing' => ['shipping', 'cancelled'],
-            'shipping' => ['delivered'],
-            'delivered' => ['completed', 'returned'],
-            'returned' => ['refunded'],
+            'shipping'   => ['delivered'],
+            'delivered'  => ['completed', 'returned'],
+            'returned'   => ['refunded'],
         ];
-
+    
+        // Kiểm tra nếu trạng thái thanh toán là 'paid' và người dùng cố hủy đơn
+        if ($newStatus === 'cancelled' && $order->payment_status === 'paid') {
+            return redirect()->back()
+                ->with('error', 'Không thể hủy đơn hàng vì trạng thái thanh toán đã là "Đã thanh toán".');
+        }
+    
         if (
             isset($validTransitions[$currentStatus]) &&
             in_array($newStatus, $validTransitions[$currentStatus])
@@ -87,11 +105,11 @@ class OrderController extends Controller
                 return redirect()->back()
                     ->with('error', 'Chỉ khách hàng mới có thể xác nhận hoàn tất đơn hàng qua email.');
             }
-
+    
             $order->status = $newStatus;
             $order->save();
             broadcast(new OrderPlaced($order))->toOthers();
-
+    
             // Gửi email khi trạng thái chuyển sang "delivered"
             if ($newStatus === 'delivered') {
                 try {
@@ -102,13 +120,14 @@ class OrderController extends Controller
                     Log::error('Lỗi đưa email xác nhận hoàn tất vào hàng đợi cho đơn hàng #' . $order->id . ': ' . $e->getMessage());
                 }
             }
-
-            return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật.');
+    
+            return redirect()->back()->with('success', 'Trạng thái đơn hàng đã được cập nhật thành "' . ($statusLabels[$newStatus] ?? $newStatus) . '".');
         }
-
+    
         return redirect()->back()
-            ->with('error', 'Không thể chuyển trạng thái từ "' . $currentStatus . '" sang "' . $newStatus . '".');
+            ->with('error', 'Không thể chuyển trạng thái từ "' . ($statusLabels[$currentStatus] ?? $currentStatus) . '" sang "' . ($statusLabels[$newStatus] ?? $newStatus) . '".');
     }
+    
 
     public function bulkUpdateStatus(Request $request)
     {
@@ -146,6 +165,11 @@ class OrderController extends Controller
                 continue;
             }
 
+            // Kiểm tra nếu trạng thái thanh toán là 'paid' và người dùng cố hủy đơn
+            if ($newStatus === 'cancelled' && $order->payment_status === 'paid') {
+                continue; // Bỏ qua đơn hàng đã thanh toán khi hủy
+            }
+
             if (
                 isset($validTransitions[$currentStatus]) &&
                 in_array($newStatus, $validTransitions[$currentStatus])
@@ -181,7 +205,7 @@ class OrderController extends Controller
             }
             return redirect()->back()->with('success', $message);
         } else {
-            return redirect()->back()->with('error', 'Không có đơn hàng nào được cập nhật. Vui lòng kiểm tra trạng thái.');
+            return redirect()->back()->with('error', 'Không có đơn hàng nào được cập nhật. Vui lòng kiểm tra trạng thái hoặc trạng thái thanh toán.');
         }
     }
 }

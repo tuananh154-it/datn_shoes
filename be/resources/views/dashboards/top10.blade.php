@@ -66,7 +66,7 @@
     </table>
 
     <!-- Bảng khách hàng -->
-    <h4 class="mt-5 fw-bold text-dark">📌 Top 10 khách hàng mua nhiều nhất</h4>
+    <h4 class="mt-5 fw-bold text-dark">📌 Top 10 khách hàng chi tiêu nhiều nhất</h4>
     <table class="table table-striped mt-3">
         <thead>
             <tr>

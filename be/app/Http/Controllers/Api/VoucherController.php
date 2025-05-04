@@ -11,6 +11,7 @@ class VoucherController extends Controller {
             Voucher::where('status', 'active')
                 ->whereNull('deleted_at')
                 ->select('id', 'name', 'discount_amount', 'discount_percent', 'expiration_date', 'min_purchase_amount', 'max_discount_amount', 'status', 'quantity')
+                ->orderBy('created_at', 'desc') // Sắp xếp theo ngày tạo mới nhất
                 ->get()
         );
     }

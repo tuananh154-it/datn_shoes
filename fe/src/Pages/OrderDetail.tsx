@@ -22,8 +22,9 @@ const OrderDetail: React.FC<OrderDetailProps> = ({ order }) => {
     const [hasReviewed, setHasReviewed] = useState<{ [key: number]: boolean }>({});
     const [reviewUpdated, setReviewUpdated] = useState<number>(0);
     const [imageFile, setImageFile] = useState<File | null>(null); // Thêm state cho file ảnh
-    const canCancel = currentOrder.status.toLowerCase() === "pending" && currentOrder.payment_status.toLowerCase() !== "paid";
-
+    
+    // const canCancel = currentOrder.status.toLowerCase() === "pending" && currentOrder.payment_status.toLowerCase() !== "paid";
+    const canCancel = ["pending", "confirmed", "processing"].includes(currentOrder.status.toLowerCase()) && currentOrder.payment_status.toLowerCase() !== "paid";
 
     Modal.setAppElement('#root');
     // Lắng nghe cập nhật trạng thái qua Pusher
