@@ -1,6 +1,7 @@
 @extends('master')
 
 @section('content')
+
     <div class="container">
         <h1>Edit Role</h1>
         <form action="{{ route('roles.update', $role->id) }}" method="POST">

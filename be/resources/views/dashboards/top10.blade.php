@@ -2,25 +2,28 @@
 
 @section('content')
 <div class="container mt-4">
-    <h2 class="mb-4 font-weight-bold mt-5">📊 Top 10 sản phẩm</h2>
-
-    <!-- Menu Tabs -->
+    <h2 class="mb-4 font-weight-bold mt-5 ">📊 Top 10  sản phẩm  </h2>
+    
+    <!-- Thanh Menu -->
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('dashboards.index') ? 'active' : '' }}" href="{{ route('dashboards.index') }}">Doanh thu</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('dashboards.top10') ? 'active' : '' }}" href="{{ route('dashboards.top10') }}">Top 10 sản phẩm bán chạy</a>
+            <a class="nav-link {{ request()->routeIs('dashboards.product') ? 'active' : '' }}" href="{{ route('dashboards.product') }}">Thống kê sản phẩm </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('dashboards.top10') ? 'active' : '' }}" href="{{ route('dashboards.top10') }}">Top 10 sản phẩm bán chạy </a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('dashboards.users') ? 'active' : '' }}" href="{{ route('dashboards.users') }}">Thống kê tài khoản</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{ request()->routeIs('dashboards.orders') ? 'active' : '' }}" href="{{ route('dashboards.orders') }}">Thống kê trạng thái đơn hàng</a>
+            <a class="nav-link {{ request()->routeIs('dashboards.orders') ? 'active' : '' }}" href="{{ route('dashboards.orders') }}">Thống kê trạng thái đơn hàng </a>
         </li>
     </ul>
-
-    <form method="GET" class="mb-4 mt-3">
+    <p></p>
+    <form method="GET" class="mb-4">
         <div class="row g-3">
             <div class="col-md-4">
                 <label>Năm:</label>
@@ -39,11 +42,9 @@
             </div>
         </div>
     </form>
-
+    
     <canvas id="top10Chart"></canvas>
-
-    <!-- Bảng sản phẩm -->
-    <h4 class="mt-4 fw-bold text-dark">📌 Danh sách sản phẩm bán chạy</h4>
+    <h4 class="mt-4 fw-bold text-dark ">📌 Danh sách  sản phẩm bán chạy </h4>
     <table class="table table-striped mt-4">
         <thead>
             <tr>
@@ -64,41 +65,16 @@
             @endforeach
         </tbody>
     </table>
-
-    <!-- Bảng khách hàng -->
-    <h4 class="mt-5 fw-bold text-dark">📌 Top 10 khách hàng mua nhiều nhất</h4>
-    <table class="table table-striped mt-3">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Khách hàng</th>
-                <th>Email</th>
-                <th>Tổng đơn hàng</th>
-                <th>Tổng chi tiêu</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($topCustomers as $index => $customer)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ $customer->customer_name }}</td>
-                    <td>{{ $customer->email }}</td>
-                    <td>{{ $customer->total_orders }}</td>
-                    <td>{{ number_format($customer->total_spent, 0, ',', '.') }} đ</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     var ctx = document.getElementById('top10Chart').getContext('2d');
     var topProducts = @json($topProducts);
-
+    
     var labels = topProducts.map(p => p.product_name);
     var data = topProducts.map(p => p.total_sold);
-
+    
     new Chart(ctx, {
         type: 'bar',
         data: {

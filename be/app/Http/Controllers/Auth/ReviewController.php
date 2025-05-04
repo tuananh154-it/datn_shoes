@@ -135,7 +135,6 @@ class ReviewController extends Controller
                 return response()->json(['message' => 'Bạn chỉ có thể đánh giá sau khi đơn hàng đã được giao.'], 403);
             }
 
-            // Lấy tất cả biến thể của sản phẩm gốc
             $productDetailIds = ProductDetail::where('product_id', $productId)->pluck('id');
 
             // Kiểm tra xem đơn hàng có chứa bất kỳ biến thể nào của sản phẩm hay không
@@ -157,7 +156,6 @@ class ReviewController extends Controller
                 return response()->json(['message' => 'Bạn đã đánh giá sản phẩm này rồi.'], 403);
             }
 
-            // Xác thực dữ liệu đánh giá
             $validator = Validator::make($request->all(), [
                 'rating' => 'required|integer|min:1|max:5',
                 'content' => 'nullable|string|max:500',

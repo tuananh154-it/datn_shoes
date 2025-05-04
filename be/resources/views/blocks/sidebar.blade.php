@@ -4,7 +4,7 @@
         <ul class="sidebar-menu" id="nav-accordion">
 
             <!-- Dashboard -->
-            @can('show-dashboard')
+            @can('show-dashboards')
                 <li>
                     <a class="active" href="{{route('dashboards.index')}}">
                         <i class="fa fa-dashboard"></i>
@@ -78,8 +78,7 @@
                         @can('show-comments')
                             <li><a href="{{ route('comments.index') }}">Quản lý bình luận</a></li>
                         @endcan
-                        <li><a href="{{ route('reviews.index') }}">Quản lý đánh giá</a></li>
-
+                            <li><a href="{{ route('reviews.index') }}">Quản lý đánh giá</a></li>
                     </ul>
                 </li>
             @endcanany
@@ -116,13 +115,12 @@
 
             <!-- Quản lý yêu cầu trả lại -->
             {{-- @can('show-return-requests') --}}
-            <li>
+            {{-- <li>
                 <a href="{{ route('return_requests.index') }}">
                     <i class="fa fa-undo"></i>
                     <span>Quản lý yêu cầu trả lại</span>
                 </a>
-            </li>
-
+            </li> --}}
             {{-- @endcan --}}
 
         </ul>

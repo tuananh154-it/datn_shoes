@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-    /**
-     * Hiển thị danh sách bình luận kèm người dùng & sản phẩm.
-     */
     public function index(Request $request)
     {
         $perPage     = $request->input('per_page', 10);        // Mặc định 10 bản ghi
@@ -28,12 +26,32 @@ class CommentController extends Controller
         return view('comments.list', compact('comments', 'noResults'));
     }
 
-    /**
-     * Hiển thị chi tiết một bình luận.
-     */
+    // public function show(string $id)
+    // {
+    //     $comments = Comment::findOrFail($id); // Lấy tất cả bình luận cùng với user và product liên quan
+    //     return view('comments.show', compact('comments')); // Trả về view kèm dữ liệu bình luận
+
+    // }
     public function show(string $id)
     {
-        $comment = Comment::with(['user', 'product'])->findOrFail($id);
+        // Lấy một bình luận duy nhất
+        $comment = Comment::findOrFail($id); // Lấy bình luận theo ID
+
+        // Trả về view kèm dữ liệu bình luận
         return view('comments.show', compact('comment'));
+    }
+
+
+    public function destroy($id)
+    {
+        $comment = Comment::findOrFail($id);
+        $comment->delete();
+        return redirect()->route('comments.index')->with('success', 'Bình luận đã được xóa thành công (xóa mềm)!');
+    }
+    public function restore($id)
+    {
+        $comment = Comment::withTrashed()->findOrFail($id);
+        $comment->restore();
+        return redirect()->route('comments.index')->with('success', 'Bình luận đã được khôi phục thành công!');
     }
 }

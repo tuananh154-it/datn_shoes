@@ -8,23 +8,11 @@ use Illuminate\Http\Request;
 
 class RoleController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $roles = Role::with('permissions');
-
-        // Kiểm tra nếu có query tìm kiếm
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $roles = $roles->where('name', 'like', '%' . $search . '%');
-        }
-
-        // Lấy danh sách vai trò và phân trang
-        $roles = $roles->paginate(10);
-
+        $roles = Role::with('permissions')->get();
         return view('roles.index', compact('roles'));
     }
-
-
 
     public function create()
     {
@@ -64,7 +52,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         // Nếu vai trò là superadmin thì không cho chỉnh sửa
-        if (strtolower($role->name) === 'super-admin') {
+        if (strtolower($role->name) === 'superadmin') {
             return redirect()->route('roles.index')->with('error', 'Không thể chỉnh sửa vai trò superadmin!');
         }
 
@@ -110,7 +98,7 @@ class RoleController extends Controller
     public function destroy(Role $role)
     {
         // Nếu vai trò là superadmin thì không cho xóa
-        if (strtolower($role->name) === 'super-admin') {
+        if (strtolower($role->name) === 'superadmin') {
             return redirect()->route('roles.index')->with('error', 'Không thể xóa vai trò superadmin!');
         }
 

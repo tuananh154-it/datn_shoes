@@ -17,13 +17,13 @@ class CheckAdminRole
      */
     public function handle(Request $request, Closure $next)
     {
-        // Kiểm tra xem người dùng có phải là admin không
-        if (Auth::check() && Auth::user()->role == 'superadmin') {
-            // Nếu người dùng là admin, tiếp tục với request
+        // Kiểm tra xem người dùng có phải là admin hoặc superadmin không
+        if (Auth::check() && in_array(Auth::user()->role, ['admin', 'superadmin', 'staff'])) {
+            // Nếu người dùng có role 'admin' hoặc 'superadmin', tiếp tục với request
             return $next($request);
         }
 
-        // Nếu người dùng không phải admin, chuyển hướng họ đến trang chủ
+        // Nếu người dùng không phải admin hoặc superadmin, chuyển hướng họ đến trang chủ
         return redirect()->route('home')->with('error', 'Bạn không có quyền truy cập trang này');
     }
 }

@@ -24,7 +24,6 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\ReturnRequestController;
 use App\Http\Controllers\ReviewController;
-
 // use App\Http\Controllers\ReturnController;
 
 // Route::middleware('auth')->group(function () {
@@ -34,11 +33,7 @@ use App\Http\Controllers\ReviewController;
 //     Route::get('my-comments', [CommentController::class, 'myComments']);
 // });
 
-
-
-
-
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', 'role:admin|superadmin|staff'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
 });
 
@@ -296,6 +291,13 @@ Route::prefix('admin')->middleware('auth')->group(function () {
     Route::delete('vouchers/{voucher}', [VoucherController::class, 'destroy'])
         ->name('vouchers.destroy')
         ->middleware('permission:delete-vouchers');
+    Route::get('/reviews', [ReviewController::class, 'index'])
+        ->middleware('permission:show-reviews')
+        ->name('reviews.index');
+
+    Route::get('/reviews/{id}', [ReviewController::class, 'show'])
+        ->middleware('permission:show-reviews')
+        ->name('reviews.show');
 
     // -------------done------------------
     // Categories
@@ -331,6 +333,15 @@ Route::prefix('admin')->middleware('auth')->group(function () {
         ->middleware('permission:delete-categories');
     // --------------------done--------------------
     // Brands
+    // đánh giá
+    Route::get('/reviews', [ReviewController::class, 'index'])
+        ->middleware('permission:show-reviews')
+        ->name('reviews.index');
+
+    Route::get('/reviews/{id}', [ReviewController::class, 'show'])
+        ->middleware('permission:show-reviews')
+        ->name('reviews.show');
+    // ----------------------------------
     Route::resource('brands', BrandController::class)->middleware('permission:show-brands');
     // Dashboard
 
@@ -444,7 +455,6 @@ Route::middleware('auth')->group(function () {
     // Các route xử lý khác (acceptReview, rejectReview, approveReturn, rejectReturn, receiveReturn)
 
 });
-
 Route::get('reviews', [ReviewController::class, 'index'])->name('reviews.index');
 Route::get('reviews/show/{id}', [ReviewController::class, 'show'])->name('reviews.show');
 // Route cho trang danh sách người dùng

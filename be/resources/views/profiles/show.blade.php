@@ -16,7 +16,6 @@
         display: flex;
         justify-content: center;
         margin-left:28%;
-        width: 80%;
     }
 
     /* Card profile */
@@ -81,7 +80,7 @@
 <div class="row">
     <div class="col-lg-12">
         <section class="card">
-            <header style="background-color:#78CD51" class="card-header">
+            <header class="card-header">
                 Thông tin người dùng
             </header>
 

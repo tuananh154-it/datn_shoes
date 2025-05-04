@@ -19,8 +19,7 @@
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
         background-color: #ffffff;
         margin: 0 auto;
-        max-width: 100%; /* Đảm bảo card chiếm toàn bộ chiều rộng */
-        width: 600px; /* Giới hạn độ rộng tối đa */
+        max-width: 600px;
         transition: transform 0.3s ease;
     }
 
@@ -28,9 +27,9 @@
         transform: translateY(-5px);
     }
 
-    /* Header card với gradient hiện đại sử dụng màu #78CD51 */
+    /* Header card với gradient hiện đại */
     .card-header {
-        background: linear-gradient(135deg, #78CD51, #4CAF50); /* Thêm màu gradient */
+        background: linear-gradient(135deg, #007bff, #00c6ff);
         color: #fff;
         padding: 20px;
         font-size: 1.8rem;
@@ -75,7 +74,7 @@
 
     /* Nút cập nhật với gradient và hiệu ứng hover mượt mà */
     .btn-primary {
-        background: linear-gradient(135deg, #78CD51, #4CAF50); /* Thêm gradient cho nút */
+        background: linear-gradient(135deg, #007bff, #00c6ff);
         border: none;
         padding: 12px 20px;
         border-radius: 8px;
@@ -85,7 +84,7 @@
     }
 
     .btn-primary:hover {
-        background: linear-gradient(135deg, #66bb6a, #4caf50);
+        background: linear-gradient(135deg, #0062cc, #008fcf);
     }
 
     /* Thiết kế thông báo lỗi và thành công */
@@ -103,14 +102,6 @@
     .alert-success {
         background-color: #d4edda;
         color: #155724;
-    }
-
-    /* Responsive cho thiết bị di động */
-    @media (max-width: 768px) {
-        .card {
-            width: 100%; /* Card chiếm toàn bộ chiều rộng màn hình nhỏ */
-            padding: 15px;
-        }
     }
 </style>
 
@@ -150,6 +141,20 @@
                         <input type="text" name="name" id="name" class="form-control form-control-lg mb-2"
                                placeholder="Tên người dùng" value="{{ old('name', $user->name) }}" required>
                     </div>
+
+                    <!-- Email -->
+                    {{-- <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" id="email" class="form-control form-control-lg mb-2"
+                               placeholder="Email" value="{{ old('email', $user->email) }}" required>
+                    </div> --}}
+
+                    <!-- Mật khẩu mới (nếu cần thay đổi) -->
+                    {{-- <div class="form-group">
+                        <label for="password">Mật khẩu mới (Để trống nếu không thay đổi)</label>
+                        <input type="password" name="password" id="password" class="form-control form-control-lg mb-2"
+                               placeholder="Mật khẩu mới">
+                    </div> --}}
 
                     <!-- Số điện thoại -->
                     <div class="form-group">

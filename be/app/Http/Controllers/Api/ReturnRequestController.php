@@ -128,6 +128,7 @@ class ReturnRequestController extends Controller
                 ],
                 'all_total' => $returnRequest->orderDetail->total_price,
             ]);
+
         } catch (\Exception $e) {
             Log::error('Lỗi: ' . $e->getMessage());
             return response()->json(['message' => 'Lỗi khi lấy thông tin yêu cầu hoàn'], 500);
@@ -139,12 +140,12 @@ class ReturnRequestController extends Controller
     {
         try {
             $request->validate([
-                'product_detail' => 'required|array',
-                'product_detail.*.id' => 'required|exists:order_details,id',
-                'product_detail.*.reason' => 'required|string|max:255',
-                'product_detail.*.image' => 'nullable|string|max:2048',
-                'product_detail.*.bank_account' => 'required|string|max:255',
-                'product_detail.*.description' => 'nullable|string',
+                'order_detail' => 'required|array',
+                'order_detail.*.id' => 'required|exists:order_details,id',
+                'order_detail.*.reason' => 'required|string|max:255',
+                'order_detail.*.image' => 'nullable|string|max:2048',
+                'order_detail.*.bank_account' => 'required|string|max:255',
+                'order_detail.*.description' => 'nullable|string',
             ]);
 
             // Kiểm tra đơn hàng
@@ -175,7 +176,7 @@ class ReturnRequestController extends Controller
             }
 
             // Tiến hành tạo yêu cầu hoàn trả cho từng sản phẩm
-            $returnRequests = collect($request->product_detail)->map(function ($product) use ($order) {
+            $returnRequests = collect($request->order_detail)->map(function ($product) use ($order) {
                 $orderDetail = $order->orderDetails->firstWhere('id', $product['id']);
 
                 $imagePath = null;
@@ -202,6 +203,7 @@ class ReturnRequestController extends Controller
             });
 
             return response()->json(['return_requests' => $returnRequests, 'message' => 'Yêu cầu hoàn trả đã được gửi thành công'], 201);
+
         } catch (\Exception $e) {
             Log::error('Lỗi khi tạo yêu cầu hoàn: ' . $e->getMessage());
             return response()->json(['message' => 'Lỗi khi gửi yêu cầu hoàn hàng'], 500);
@@ -367,7 +369,7 @@ class ReturnRequestController extends Controller
 
             foreach ($returnRequest->order->orderDetails as $detail) {
                 // Lấy product detail
-                $productDetail = ProductDetail::find($detail->product_detail_id);
+                $productDetail = ProductDetail::find($detail->order_detail_id);
                 if ($productDetail) {
                     $productDetail->increment('quantity', $detail->quantity);
                 }

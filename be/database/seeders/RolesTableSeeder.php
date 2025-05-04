@@ -16,7 +16,7 @@ class RolesTableSeeder extends Seeder
     public function run()
     {
         $roles = [
-            ['name' => 'super-admin', 'guard_name' => 'web'],
+            ['name' => 'superadmin', 'guard_name' => 'web'],
             ['name' => 'admin', 'guard_name' => 'web'],
             ['name' => 'employee', 'guard_name' => 'web'],
             ['name' => 'manager', 'guard_name' => 'web'],
@@ -37,7 +37,7 @@ class RolesTableSeeder extends Seeder
                 'role' => 'superadmin',
             ]);
         }
-        $superAdmin->assignRole('super-admin');
+        $superAdmin->assignRole('superadmin');
 
 
         $permissions = [
