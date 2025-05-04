@@ -1,159 +1,162 @@
 @extends('master')
 
 @section('content')
-    <style>
-        /* public/css/user-form.css */
+<style>
+    /* public/css/user-form.css */
 
-        * {
-            box-sizing: border-box;
-        }
+    * {
+        box-sizing: border-box;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-        }
+    body {
+        font-family: Arial, sans-serif;
+    }
 
-        .container {
-            padding: 60px 20px;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
 
-        .form-wrapper {
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
+    .container {
+        padding: 60px 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
 
-        .card-header {
-            background-color: #007bff;
-            color: white;
-            padding: 20px;
-        }
+    .form-wrapper {
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .card-header h4 {
-            margin: 0;
-        }
+    .card-header {
+        /* background-color: #007bff; */
+        /* color: white; */
+        padding-top: 50px;
+    }
 
-        .card-body {
-            padding: 20px;
-        }
+    .card-header h4 {
+        margin: 0;
+    }
 
-        .alert {
-            background-color: #f8d7da;
-            border: 1px solid #f5c2c7;
-            padding: 10px 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            color: #842029;
-        }
+    .card-body {
+        padding: 20px;
+    }
 
-        .form-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
+    .alert {
+        background-color: #f8d7da;
+        border: 1px solid #f5c2c7;
+        padding: 10px 15px;
+        border-radius: 4px;
+        margin-bottom: 20px;
+        color: #842029;
+    }
 
-        .form-column {
-            flex: 1;
-            min-width: 300px;
-        }
+    .form-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
 
-        .form-group {
-            margin-bottom: 16px;
-        }
+    .form-column {
+        flex: 1;
+        min-width: 300px;
+        margin-left: 20px;
+        margin-right: 20px;
+    }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
+    .form-group {
+        margin-bottom: 16px;
+    }
 
-        .form-group input,
-        .form-group select {
-            width: 100%;
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+    .form-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 600;
+    }
 
-        .radio-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
+    .form-group input,
+    .form-group select {
+        width: 100%;
+        padding: 8px 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
 
-        .radio-group label {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+    .radio-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
 
-        .submit-wrapper {
-            text-align: center;
-            margin-top: 30px;
-        }
+    .radio-group label {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
 
-        .submit-wrapper button {
-            padding: 10px 30px;
-            font-size: 16px;
-            background-color: #28a745;
-            border: none;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
+    .submit-wrapper {
+        /* text-align: center; */
+        margin-top: 30px;
+    }
 
-        .submit-wrapper button:hover {
-            background-color: #218838;
-        }
+    .submit-wrapper button {
+        padding: 10px 30px;
+        font-size: 16px;
+        background-color: #28a745;
+        border: none;
+        color: white;
+        border-radius: 5px;
+        cursor: pointer;
+    }
 
-        .back-button-wrapper {
-            margin-bottom: 20px;
-        }
+    .submit-wrapper button:hover {
+        background-color: #218838;
+    }
 
-        .back-button {
-            display: inline-block;
-            background-color: #6c757d;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: background-color 0.2s ease;
-        }
+    .back-button-wrapper {
+        margin-bottom: 20px;
+    }
 
-        .back-button:hover {
-            background-color: rgb(149, 154, 158);
-        }
+    .back-button {
+        display: inline-block;
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 20px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+    }
 
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .back-button:hover {
+        background-color: rgb(149, 154, 158);
+    }
 
-        .back-button-wrapper {
-            padding-top: 20px;
-            margin-left: auto;
-        }
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .back-button {
-            display: inline-block;
-            background-color: #6c757d;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            transition: background-color 0.2s ease;
-        }
+    .back-button-wrapper {
+        padding-top: 20px;
+        margin-left: auto;
+    }
 
-        .back-button:hover {
-            background-color: #5a6268;
-        }
-    </style>
+    .back-button {
+        display: inline-block;
+        background-color: #6c757d;
+        color: white;
+        padding: 8px 16px;
+        border-radius: 4px;
+        text-decoration: none;
+        transition: background-color 0.2s ease;
+    }
 
-    <div class="container">
-        <div class="form-wrapper">
+    .back-button:hover {
+        background-color: #5a6268;
+    }
+</style>
+
+    <div class="row">
+        <div class="col-lg-12">
             <div class="card">
                 <div class="card-header">
                     <h4>Thêm Người Dùng Mới</h4>
@@ -162,7 +165,7 @@
                     </div>
                 </div>
 
-                <div class="card-body">
+                <div class="form-group">
                     <form action="{{ route('users.store') }}" method="POST">
                         @csrf
 
@@ -227,7 +230,7 @@
                                     <label>Vai trò</label>
                                     <div class="radio-group">
                                         @php
-                                            $fixedRoles = ['user', 'staff', 'admin', 'superadmin'];
+                                            $fixedRoles = ['user', 'staff', 'admin'];  // Không có 'superadmin'
                                         @endphp
                                         @foreach ($fixedRoles as $role)
                                             <label>
@@ -238,11 +241,12 @@
                                     </div>
                                 </div>
 
+
                             </div>
                         </div>
 
                         <div class="submit-wrapper">
-                            <button type="submit">Thêm Người Dùng</button>
+                            <button style="margin-left:20px" type="submit">Thêm </button>
 
                         </div>
 

@@ -162,20 +162,22 @@
                     </thead>
                     <tbody>
                         @foreach ($users as $user)
-                            <tr>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->role }}</td>
-                                <td>
-                                    <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">
-                                        <i class="fa fa-pencil"></i> Sửa
-                                    </a>
+                        @if($user->role != 'superadmin')
+                        <tr>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->role }}</td>
+                            <td>
+                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-primary btn-sm">
+                                    <i class="fa fa-pencil"></i> Sửa
+                                </a>
 
-                                    <a href="{{ route('users.show', $user->id) }}" class="btn btn-danger btn-sm">
-                                        <i class="fa fa-eye"></i> Xem
-                                    </a>
-                                </td>
-                            </tr>
+                                <a href="{{ route('users.show', $user->id) }}" class="btn btn-danger btn-sm">
+                                    <i class="fa fa-eye"></i> Xem
+                                </a>
+                            </td>
+                        </tr>
+                    @endif
                         @endforeach
                     </tbody>
                 </table>

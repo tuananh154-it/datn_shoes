@@ -83,50 +83,7 @@ class UserController extends Controller
     }
 
 
-    // public function update(Request $request, User $user)
-    // {
-    //     // Validate chỉ các trường bắt buộc
-    //     $validated = $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'email' => 'required|email|unique:users,email,' . $user->id,
-    //         'gender' => 'required|string|in:male,female,other',
-    //     ]);
 
-    //     // Cập nhật thông tin người dùng
-    //     $user->name = $validated['name'];
-    //     $user->email = $validated['email'];
-
-    //     // Nếu có thay đổi mật khẩu, thì cập nhật mật khẩu mới
-    //     if ($request->filled('password')) {
-    //         $user->password = bcrypt($request->input('password'));
-    //     }
-
-    //     // Cập nhật các trường bổ sung (không cần validate)
-    //     if ($request->has('date_of_birth')) {
-    //         $user->date_of_birth = $request->input('date_of_birth');
-    //     }
-
-    //     if ($request->has('address')) {
-    //         $user->address = $request->input('address');
-    //     }
-
-    //     if ($request->has('phone_number')) {
-    //         $user->phone_number = $request->input('phone_number');
-    //     }
-
-    //     // Lưu lại thay đổi
-    //     $user->save();
-
-    //     // Cập nhật vai trò cho người dùng (không cần validate)
-    //     if ($request->has('roles')) {
-    //         $user->syncRoles($request->input('roles'));
-    //     } else {
-    //         $user->syncRoles([]); // Xóa tất cả vai trò nếu không chọn vai trò nào
-    //     }
-
-    //     // Chuyển hướng về danh sách người dùng và hiển thị thông báo thành công
-    //     return redirect()->route('users.index')->with('success', 'Thông tin người dùng đã được cập nhật!');
-    // }
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([

@@ -49,13 +49,17 @@
                 <header class="card-header">
                     Danh sách phân quyền
                 </header>
+                @if(session('success'))
+                <div class="alert alert-success">
+                    {{ session('success') }}
+                </div>
+            @endif
 
-
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <a href="{{ route('roles.create') }}" class="btn btn-light" style="margin-top:12px;background-color:#78CD51;color:white;border:#78CD51">
                         <i class="fa fa-plus"></i> Thêm quyền hạn
                     </a>
-                </div>
+                </div> --}}
                 {{-- Bảng hiển thị bình luận --}}
                 <div class="table-responsive">
                     <table class="table table-striped">

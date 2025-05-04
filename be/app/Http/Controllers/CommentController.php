@@ -10,15 +10,17 @@ class CommentController extends Controller
 {
     public function index(Request $request)
     {
-        $searchTerm = $request->input('search');
-        $query = Comment::query();
+        $perPage     = $request->input('per_page', 10);        // Mặc định 10 bản ghi
+        $searchTerm  = $request->input('search');
 
-        $perPage = $request->input('per_page', 10); // Mặc định 10 bản ghi
+        $query = Comment::with(['user', 'product'])
+            ->orderByDesc('id');
 
-        $comments = Comment::withTrashed()
-            ->with('user', 'product')
-            ->orderBy('id', 'desc') // Sắp xếp giảm dần theo cột 'id'
-            ->paginate($perPage);
+        if ($searchTerm) {
+            $query->where('content', 'like', "%{$searchTerm}%");
+        }
+
+        $comments  = $query->paginate($perPage);
         $noResults = $comments->isEmpty();
 
         return view('comments.list', compact('comments', 'noResults'));
